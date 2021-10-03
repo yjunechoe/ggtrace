@@ -1,6 +1,6 @@
 Package: ggtrace
 Type: Package
-Title: Debug ggproto methods with trace
+Title: Programmatically debug ggproto methods with trace
 Version: 0.1.0
 Authors@R: c(
       person(given = "June",
@@ -8,12 +8,15 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "yjchoe@sas.upenn.edu",
            comment = c(ORCID = "0000-0002-0701-921X")))
-Description: Debug ggproto methods with trace. Allows the evaluation of expressions at
-  different locations in the callback and the inspection of the trace dump.
+Description: Programmatically debug ggproto methods with trace. Evaluate arbitrary expressions at
+  any location in the method body and inspect the trace dump from outside of the debugging environment.
+URL:  https://github.com/yjunechoe/ggtrace
+BugReports: https://github.com/yjunechoe/ggtrace/issues
+Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
-Imports: 
-    ggplot2,
-    purrr,
-    rlang,
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Imports: 
+    purrr,
+    rlang

@@ -68,6 +68,7 @@ ggbody <- function(method, obj) {
 #'
 #' @examples
 #' \dontrun{
+#' library(ggplot2)
 #' # `ggbody()` can be used to get the ggproto method's callstack as a list ----
 #'
 #' ## You can pass in the ggproto method to `ggbody()` in two ways:

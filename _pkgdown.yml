@@ -1,0 +1,31 @@
+home:
+  title: ggtrace
+  description: Debug ggproto methods with trace
+
+authors:
+  June Choe:
+    href: https://yjunechoe.github.io
+
+template:
+  bootstrap: 4
+  bootswatch: materia
+
+reference:
+- title: ggtrace
+  desc: Debug ggproto methods with trace
+  contents:
+  - ggtrace
+
+navbar:
+  structure:
+    left: []
+    right: [reference, github]
+
+figures:
+  dev: ragg::agg_png
+  dpi: 150
+  dev.args: []
+  fig.ext: png
+  fig.height: ~
+  fig.retina: 2
+  bg: "white"
