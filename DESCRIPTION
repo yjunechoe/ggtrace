@@ -8,7 +8,12 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "yjchoe@sas.upenn.edu",
            comment = c(ORCID = "0000-0002-0701-921X")))
-Description: Debug ggproto methods with trace
-License: What license is it under?
+Description: Debug ggproto methods with trace. Allows the evaluation of expressions at
+  different locations in the callback and the inspection of the trace dump.
+License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
+Imports: 
+    ggplot2,
+    purrr,
+    rlang,
+RoxygenNote: 7.1.2
