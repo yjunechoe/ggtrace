@@ -1,0 +1,14 @@
+Package: ggtrace
+Type: Package
+Title: Debug ggproto methods with trace
+Version: 0.1.0
+Authors@R: c(
+      person(given = "June",
+           family = "Choe",
+           role = c("aut", "cre"),
+           email = "yjchoe@sas.upenn.edu",
+           comment = c(ORCID = "0000-0002-0701-921X")))
+Description: Debug ggproto methods with trace
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
