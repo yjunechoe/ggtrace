@@ -1,0 +1,23 @@
+---
+title: "Metaprogramming with trace()"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Metaprogramming with trace()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Under construction
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Sneak peak:
+
+- An quick of what trace does (`tracer`, `at`, `edit`) and why it's the best debugging tool ever
+- Getting arbitrary expressions evaluated inside `tracer`
+- How `ggtrace` works

@@ -25,3 +25,7 @@ Imports:
     lifecycle,
     purrr,
     rlang
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr

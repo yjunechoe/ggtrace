@@ -37,7 +37,7 @@ library(ggtrace)
 library(ggplot2) # v3.3.5
 ```
 
-### Example 1 - PositionJitter$compute_layer {ggplot2}
+### Example - `compute_layer` method from `PositionJitter`
 
 ```{r ex-1-setup}
 jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -49,52 +49,45 @@ jitter_plot
 ggbody(PositionJitter$compute_layer)
 ```
 
-```{r ex-1-ggtrace, fig.show='hide'}
+```{r ex-1a-ggtrace, fig.show='hide'}
 ggtrace(
   method = PositionJitter$compute_layer,
-  trace_steps = c(1, 1, 8, 12),
+  trace_steps = c(1, 1, 9, 12),
   trace_exprs = rlang::exprs(
-    head(data),   # What does the data passed in look like?
-    params,       # What do the initial parameters look like?
-    head(~line),  # What is this `dummy_data` thing on Step 8?
-    head(~line)   # What does the last line evaluate to?
-                  # - i.e., what is returned by the method?
+    head(data),        # What does the data passed in look like?
+    params,            # What do the initial parameters look like?
+    head(dummy_data),  # What is `dummy_data` defined at Step 8?
+    head(~line)        # What does the last line evaluate to?
+                       # - i.e., what is returned by the method?
   )
 )
-jitter_plot # plot not printed to save space
+
+# plot not printed to save space
+jitter_plot
 ```
 
-### Example 2 - StatSina$compute_panel {ggforce}
-
-```{r ex-2-setup}
-library(ggforce)
-
-sina_plot <- ggplot(diamonds[diamonds$cut == "Good",][1:25,], aes(cut, depth)) +
-  geom_violin() +
-  geom_sina(seed = 2021)
-sina_plot
-```
-
-```{r ex-2-ggbody}
-ggbody(StatSina$compute_panel)
-```
-
-```{r ex-2-ggtrace, fid.show = 'hide'}
-ggtrace(
-  method = "compute_panel",
-  obj = StatSina,
-  trace_steps = c(1, 12),
-  trace_exprs = rlang::expr(data), # evaluated at Step 1 and Step 12
-  .print = FALSE
-)
-sina_plot # plot not printed to save space
-
-# Sometimes doesn't automatically untrace so this may be required
-untrace("compute_panel", where = StatSina)
-```
-
-```{r ex-2-lastggtrace}
+```{r ex-1a-last}
 last_ggtrace()
 ```
 
+```{r ex-1b-ggtrace, fig.show='hide'}
+ggtrace(
+  method = PositionJitter$compute_layer,
+  trace_steps = c(1, 1, 9, 12),
+  trace_exprs = rlang::exprs(
+    data,
+    params,
+    dummy_data,
+    ~line
+  ),
+  .print = FALSE
+)
+
+# plot not printed to save space
+jitter_plot
+```
+
+```{r ex-1b-last}
+lapply(last_ggtrace(), head)
+```
 

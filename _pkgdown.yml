@@ -18,10 +18,21 @@ reference:
   - ggbody
   - last_ggtrace
 
+articles:
+- title: Usage
+  navbar: Usage
+  contents:
+  - intro
+- title: Miscellaneous
+  navbar: Miscellaneous
+  contents:
+  - comparisons
+  - metaprogramming
+
 navbar:
   structure:
     left: []
-    right: [reference, github]
+    right: [reference, articles, github]
 
 figures:
   dev: ragg::agg_png
