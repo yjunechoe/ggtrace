@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Retrieve the trace dump created by the last ggtrace — last_ggtrace • ggtrace</title>
+<title>Trace a ggproto method — ggtrace • ggtrace</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,8 @@
 
 
 
-<meta property="og:title" content="Retrieve the trace dump created by the last ggtrace — last_ggtrace" />
-<meta property="og:description" content="Retrieve the trace dump created by the last ggtrace
-Return the callstack of a ggproto method as a list
-Trace a ggproto method" />
+<meta property="og:title" content="Trace a ggproto method — ggtrace" />
+<meta property="og:description" content="Trace a ggproto method" />
 
 
 
@@ -110,22 +108,16 @@ Trace a ggproto method" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Retrieve the trace dump created by the last ggtrace</h1>
+    <h1>Trace a ggproto method</h1>
     <small class="dont-index">Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/R/ggtrace.R'><code>R/ggtrace.R</code></a></small>
     <div class="hidden name"><code>ggtrace.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieve the trace dump created by the last ggtrace</p>
-<p>Return the callstack of a ggproto method as a list</p>
-<p>Trace a ggproto method</p>
+    <p>Trace a ggproto method</p>
     </div>
 
-    <pre class="usage"><span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span><span class='op'>)</span>
-
-<span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span>, <span class='va'>trace_steps</span>, <span class='va'>trace_exprs</span>, .print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span>, <span class='va'>trace_steps</span>, <span class='va'>trace_exprs</span>, .print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -133,12 +125,12 @@ Trace a ggproto method" />
     <tr>
       <th>method</th>
       <td><p>The method name as a string. Alternatively an expression
-that evaluates to the ggproto method in the form of `ggproto$method`.</p></td>
+that evaluates to the ggproto method in the form of <code>ggproto$method</code>.</p></td>
     </tr>
     <tr>
       <th>obj</th>
       <td><p>The ggproto object. Can be omitted if the method is an expression
-in the form of `ggproto$method` that evalutes to the ggproto object's method.</p></td>
+in the form of <code>ggproto$method</code> that evalutes to the ggproto object's method.</p></td>
     </tr>
     <tr>
       <th>trace_steps</th>
@@ -147,7 +139,7 @@ in the form of `ggproto$method` that evalutes to the ggproto object's method.</p
     <tr>
       <th>trace_exprs</th>
       <td><p>A list of expressions to evaluate at each position specified
-in `trace_steps`. If a single expression is provided, it is recycled.</p></td>
+in <code>trace_steps</code>. If a single expression is provided, it is recycled.</p></td>
     </tr>
     <tr>
       <th>.print</th>
@@ -157,12 +149,12 @@ in `trace_steps`. If a single expression is provided, it is recycled.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>`ggtrace()` is a wrapper around `base::trace()` which is called on the ggproto method.
- It calls `base::untrace()` on itself on exit by design, so its effect is ephemeral (like `base::debugonce()`).
- A major feature is the ability to pass multiple positions and expressions to `trace_steps` and `trace_exprs`.
- It is recommended to consult the output of `ggbody()` when deciding which expressions to evaluate at which steps.</p>
-<p>The output of the expressions passed to `tracce_exprs` is printed while tracing takes place. The last `ggtrace()`
- trace dump is available for further inspection with `last_ggtrace()`.</p>
+    <p><code>ggtrace()</code> is a wrapper around <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code> which is called on the ggproto method.
+It calls <code><a href='https://rdrr.io/r/base/trace.html'>base::untrace()</a></code> on itself on exit by design, so its effect is ephemeral (like <code><a href='https://rdrr.io/r/base/debug.html'>base::debugonce()</a></code>).
+A major feature is the ability to pass multiple positions and expressions to <code>trace_steps</code> and <code>trace_exprs</code>.
+It is recommended to consult the output of <code><a href='ggbody.html'>ggbody()</a></code> when deciding which expressions to evaluate at which steps.</p>
+<p>The output of the expressions passed to <code>trace_exprs</code> is printed while tracing takes place. The last <code>ggtrace()</code>
+trace dump is available for further inspection with <code><a href='last_ggtrace.html'>last_ggtrace()</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
@@ -170,8 +162,8 @@ in `trace_steps`. If a single expression is provided, it is recycled.</p></td>
 </div><div class='output co'>#&gt; <span class='warning'>Warning: package 'ggplot2' was built under R version 4.1.1</span></div><div class='input'><span class='co'># `ggbody()` can be used to get the ggproto method's callstack as a list ----</span>
 
 <span class='co'>## You can pass in the ggproto method to `ggbody()` in two ways:</span>
-<span class='va'>longform</span> <span class='op'>&lt;-</span> <span class='fu'>ggbody</span><span class='op'>(</span><span class='st'>"compute_group"</span>, <span class='va'>StatCount</span><span class='op'>)</span>
-<span class='va'>shortform</span> <span class='op'>&lt;-</span> <span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatCount</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span>
+<span class='va'>longform</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='st'>"compute_group"</span>, <span class='va'>StatCount</span><span class='op'>)</span>
+<span class='va'>shortform</span> <span class='op'>&lt;-</span> <span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>StatCount</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/identical.html'>identical</a></span><span class='op'>(</span><span class='va'>longform</span>, <span class='va'>shortform</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='va'>longform</span>
 </div><div class='output co'>#&gt; [[1]]
@@ -221,7 +213,7 @@ in `trace_steps`. If a single expression is provided, it is recycled.</p></td>
 <span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>diamonds</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span>,<span class='op'>]</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>cut</span>, <span class='va'>depth</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
   <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/position_jitter.html'>position_jitter</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.2</span>, seed <span class='op'>=</span> <span class='fl'>2021</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>p</span>
-</div><div class='img'><img src='ggtrace-1.png' alt='' width='1094' height='676' /></div><div class='input'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='img'><img src='ggtrace-1.png' alt='' width='1094' height='676' /></div><div class='input'><span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
 #&gt; `{`
 #&gt; 
@@ -362,7 +354,7 @@ in `trace_steps`. If a single expression is provided, it is recycled.</p></td>
 #&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
 <span class='co'>## Example 5 ====</span>
 <span class='co'>## The output of the evaluated expressions can be inspected with `last_ggtrace()`</span>
-<span class='va'>jitter_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+<span class='va'>jitter_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'><a href='last_ggtrace.html'>last_ggtrace</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>jitter_tracedump</span>, <span class='va'>head</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`[Step 1]&gt; data`
 #&gt;   x    y PANEL group

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • ggtrace</title>
+<title>Return the callstack of a ggproto method as a list — ggbody • ggtrace</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Return the callstack of a ggproto method as a list — ggbody" />
+<meta property="og:description" content="Return the callstack of a ggproto method as a list" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -105,54 +106,36 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Return the callstack of a ggproto method as a list</h1>
+    <small class="dont-index">Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/R/ggbody.R'><code>R/ggbody.R</code></a></small>
+    <div class="hidden name"><code>ggbody.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Return the callstack of a ggproto method as a list</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-ggtrace" class="hasAnchor"><a href="#section-ggtrace" class="anchor"></a>ggtrace</h2>
-          <p class="section-desc"><p>Programmatically debug ggproto methods with trace</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="ggtrace.html">ggtrace()</a></code> </p>
-        </td>
-        <td><p>Trace a ggproto method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ggbody.html">ggbody()</a></code> </p>
-        </td>
-        <td><p>Return the callstack of a ggproto method as a list</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="last_ggtrace.html">last_ggtrace()</a></code> </p>
-        </td>
-        <td><p>Retrieve the trace dump created by the last ggtrace</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>method</th>
+      <td><p>The method name as a string. Alternatively an expression
+that evaluates to the ggproto method in the form of <code>ggproto$method</code>.</p></td>
+    </tr>
+    <tr>
+      <th>obj</th>
+      <td><p>The ggproto object. Can be omitted if the method is an expression
+in the form of <code>ggproto$method</code> that evalutes to the ggproto object's method.</p></td>
+    </tr>
     </table>
-  </div>
 
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

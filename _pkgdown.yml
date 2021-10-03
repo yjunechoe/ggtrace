@@ -12,9 +12,11 @@ template:
 
 reference:
 - title: ggtrace
-  desc: Debug ggproto methods with trace
+  desc: Programmatically debug ggproto methods with trace
   contents:
   - ggtrace
+  - ggbody
+  - last_ggtrace
 
 navbar:
   structure:

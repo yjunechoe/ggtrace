@@ -1,55 +1,6 @@
-.ggtrace_store <- function() {
-  .last_ggtrace <- NULL
-  list(
-    get = function() .last_ggtrace,
-    set = function(value) .last_ggtrace <<- value
-  )
-}
-.store <- .ggtrace_store()
-
-set_last_ggtrace <- function(value) .store$set(value)
-
-#' Retrieve the trace dump created by the last ggtrace
-#'
-#' @export
-#' @rdname ggtrace
-#' @keywords internal
-last_ggtrace <- function() .store$get()
-
-split_ggproto_method <- function(x) {
-  label <- rlang::as_label(rlang::enexpr(x))
-  both <- strsplit(label, split = "$", fixed = TRUE)[[1]]
-  list(
-    both[[2]],
-    eval(rlang::parse_expr(both[[1]]))
-  )
-}
-
-#' Return the callstack of a ggproto method as a list
-#'
-#' @param method The method name as a string. Alternatively an expression
-#'   that evaluates to the ggproto method in the form of `ggproto$method`.
-#' @param obj The ggproto object. Can be omitted if the method is an expression
-#'   in the form of `ggproto$method` that evalutes to the ggproto object's method.
-#'
-#' @export
-#' @rdname ggtrace
-ggbody <- function(method, obj) {
-  if (rlang::is_missing(obj)) {
-    method_expr <- rlang::enexpr(method)
-    split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
-    method <- split[[1]]
-    obj <- split[[2]]
-  }
-  as.list(body(get(method, obj)))
-}
-
 #' Trace a ggproto method
 #'
-#' @param method The method name as a string. Alternatively an expression
-#'   that evaluates to the ggproto method in the form of `ggproto$method`.
-#' @param obj The ggproto object. Can be omitted if the method is an expression
-#'   in the form of `ggproto$method` that evalutes to the ggproto object's method.
+#' @inheritParams ggbody
 #' @param trace_steps A list of positions in the method's callstack to trace.
 #' @param trace_exprs A list of expressions to evaluate at each position specified
 #'   in `trace_steps`. If a single expression is provided, it is recycled.
@@ -60,7 +11,7 @@ ggbody <- function(method, obj) {
 #'  A major feature is the ability to pass multiple positions and expressions to `trace_steps` and `trace_exprs`.
 #'  It is recommended to consult the output of `ggbody()` when deciding which expressions to evaluate at which steps.
 #'
-#'  The output of the expressions passed to `tracce_exprs` is printed while tracing takes place. The last `ggtrace()`
+#'  The output of the expressions passed to `trace_exprs` is printed while tracing takes place. The last `ggtrace()`
 #'  trace dump is available for further inspection with `last_ggtrace()`.
 #'
 #' @return NULL
