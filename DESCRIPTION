@@ -10,7 +10,7 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-0701-921X")))
 Description: Programmatically debug ggproto methods with trace. Evaluate arbitrary expressions at
   any location in the method body and inspect the trace dump from outside of the debugging environment.
-URL:  https://github.com/yjunechoe/ggtrace
+URL: https://yjunechoe.github.io/ggtrace, https://github.com/yjunechoe/ggtrace
 BugReports: https://github.com/yjunechoe/ggtrace/issues
 Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
@@ -22,5 +22,6 @@ Collate:
   'last_ggtrace.R'
   'ggtrace.R'
 Imports: 
+    lifecycle,
     purrr,
     rlang

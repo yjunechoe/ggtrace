@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggtrace.R
 \name{ggtrace}
 \alias{ggtrace}
-\title{Trace a ggproto method}
+\title{Programmatically debug ggproto methods with trace}
 \usage{
 ggtrace(method, obj, trace_steps, trace_exprs, .print = TRUE)
 }
@@ -16,12 +16,15 @@ in the form of \code{ggproto$method} that evalutes to the ggproto object's metho
 \item{trace_steps}{A list of positions in the method's callstack to trace.}
 
 \item{trace_exprs}{A list of expressions to evaluate at each position specified
-in \code{trace_steps}. If a single expression is provided, it is recycled.}
+in \code{trace_steps}. If a single expression is provided, it is recycled.
+
+To simply run a step (or reference the expression at a step), you can use the \code{~line} keyword.
+All instances of \code{~line} will get substituted by the expression inside the debugging environment.}
 
 \item{.print}{Whether to print the output of each expression to the console.}
 }
 \description{
-Trace a ggproto method
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }
 \details{
 \code{ggtrace()} is a wrapper around \code{base::trace()} which is called on the ggproto method.
@@ -35,40 +38,16 @@ trace dump is available for further inspection with \code{last_ggtrace()}.
 \examples{
 \dontrun{
 library(ggplot2)
-# `ggbody()` can be used to get the ggproto method's callstack as a list ----
 
-## You can pass in the ggproto method to `ggbody()` in two ways:
-longform <- ggbody("compute_group", StatCount)
-shortform <- ggbody(StatCount$compute_group)
-identical(longform, shortform)
-longform
-
-## Essentially, ggbody does the following under the hood:
-## - `as.list(body(get("compute_group", StatCount)))`
-## This long form of retrieving the ggproto method by specifying both the
-## method and object separately is for compatibility with other ways
-## of inspecting ggproto methods.
-## - For example, this works: `debugonce(get("compute_group", StatCount))`
-## - But this doesn't place a breakpoint: `debugonce(StatCount$compute_group)`
-
-# `ggtrace()` allows you to debug ggproto methods PROGRAMMATICALLY. ----
-
-## Comparisons with other ways of debugging/inspecting:
-## --- <coming soon as a vignette, but sneak peak>:
-## --- debug()/debugonce(), browser(), trace(), layer_data()
-
-## After inspecting the ggproto method with `ggbody`, you can specify
-## which expression(s) to evaluate where, in `trace_steps` and `trace_exprs`.
-
-## Here's a ggplot to demonstrate. Let's imagine that we'd like to inspect PositionJitter
 p <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
   geom_point(position = position_jitter(width = 0.2, seed = 2021))
 p
+
 ggbody(PositionJitter$compute_layer)
 
 ## Example 1 ====
 ## Inspect what `data` look like at the start of the function
-ggtrace(PositionJitter$compute_layer, trace_steps = 1, trace_exprs = rlang::expr(head(data)))
+ggtrace(PositionJitter$compute_layer, trace_steps = 1, trace_exprs = quote(head(data)))
 p
 
 ## Example 2 ====

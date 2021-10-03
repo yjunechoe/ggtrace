@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggbody.R
 \name{ggbody}
 \alias{ggbody}
-\title{Return the callstack of a ggproto method as a list}
+\title{Retrieve the callstack of a ggproto method as a list}
 \usage{
 ggbody(method, obj)
 }
@@ -14,5 +14,33 @@ that evaluates to the ggproto method in the form of \code{ggproto$method}.}
 in the form of \code{ggproto$method} that evalutes to the ggproto object's method.}
 }
 \description{
-Return the callstack of a ggproto method as a list
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+}
+\details{
+Essentially calls \verb{as.list(body(get("<method>", <obj>)))} under the hood.
+}
+\note{
+Despite the convenience of the short form which \code{ggbody()} also works with,
+the long form of retrieving the ggproto method by specifying both the method and
+the object separately exists for compatibility with other ways of inspecting
+ggproto methods.
+
+For example, this works: \code{debugonce(get("compute_group", StatCount))}.
+But this fails to insert a break point: \code{debugonce(StatCount$compute_group)}
+}
+\examples{
+\dontrun{
+library(ggplot2)
+
+longform <- ggbody("compute_group", StatCount)
+longform
+
+shortform <- ggbody(StatCount$compute_group)
+shortform
+
+identical(longform, shortform)
+
+library(ggforce)
+ggbody(StatBezier$compute_panel)
+}
 }

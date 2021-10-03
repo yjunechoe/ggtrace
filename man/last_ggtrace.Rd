@@ -7,6 +7,26 @@
 last_ggtrace()
 }
 \description{
-Retrieve the trace dump created by the last ggtrace
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+}
+\examples{
+\dontrun{
+library(ggplot2)
+
+ggbody(StatSmooth$compute_group)
+
+ggtrace(StatSmooth$compute_group, trace_steps = 12, trace_exprs = quote(head(prediction)))
+ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
+last_ggtrace()
+
+ggtrace(
+  StatSmooth$compute_group,
+  trace_steps = 12,
+  trace_exprs = quote(prediction),
+  .print = FALSE
+)
+ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
+last_ggtrace()
+}
 }
 \keyword{internal}
