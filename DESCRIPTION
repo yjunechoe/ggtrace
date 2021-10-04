@@ -20,6 +20,7 @@ RoxygenNote: 7.1.2
 Collate:
   'ggbody.R'
   'last_ggtrace.R'
+  'ggedit.R'
   'ggtrace.R'
 Imports: 
     rlang
