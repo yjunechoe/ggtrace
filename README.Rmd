@@ -8,6 +8,8 @@ output: github_document
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
+  dev = "jpeg",
+  dev.args = list(quality = 150),
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
@@ -16,22 +18,24 @@ knitr::opts_chunk$set(
 # **{ggtrace}**
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/yjunechoe/ggtrace/workflows/R-CMD-check/badge.svg)](https://github.com/yjunechoe/ggtrace/actions)
 <!-- badges: end -->
 
 An experimental package for programmatically debugging ggproto methods with `trace()`.
 
 ## **Why {ggtrace}?**
 
+
 - **Lightweight** ⚡
     - The only dependency is `{rlang}` (not even `{ggplot2}` is required!)
     - There isn't a lot of code in the package - most of the heavy lifting is done by `base::trace()`
+    
     
 - **User-friendly** ❤
     - Everything happens in your local session - no need to fork a repo to inspect/edit the internals!
     - Multiple expressions can be passed in to be evaluated inside method body
     - Output of evaluated expressions are available for inspection outside of the debugging environment.
     - Calls `untrace()` on itself on exit by default, for extra safety
+  
   
 - **Flexible** 🛠
     - You can either...
@@ -40,7 +44,7 @@ An experimental package for programmatically debugging ggproto methods with `tra
     - Your favorite debugging tools (e.g., `browser()`) can be easily incorporated into this workflow.
     - Can be used to debug other object classes in R, not just ggproto!
 
-More on the pkgdown website: [https://yjunechoe.github.io/ggtrace]()
+More on the 📦 pkgdown website: [https://yjunechoe.github.io/ggtrace](https://yjunechoe.github.io/ggtrace)
 
 ## **Installation**
 

@@ -4,8 +4,6 @@
 # **{ggtrace}**
 
 <!-- badges: start -->
-
-[![R-CMD-check](https://github.com/yjunechoe/ggtrace/workflows/R-CMD-check/badge.svg)](https://github.com/yjunechoe/ggtrace/actions)
 <!-- badges: end -->
 
 An experimental package for programmatically debugging ggproto methods
@@ -37,7 +35,7 @@ with `trace()`.
     -   Can be used to debug other object classes in R, not just
         ggproto!
 
-More on the pkgdown website: [https://yjunechoe.github.io/ggtrace]()
+More on the 📦 pkgdown website: <https://yjunechoe.github.io/ggtrace>
 
 ## **Installation**
 
@@ -67,7 +65,7 @@ jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
 jitter_plot
 ```
 
-<img src="man/figures/README-ex-1-setup-1.png" width="100%" />
+<img src="man/figures/README-ex-1-setup-1.jpeg" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
@@ -300,7 +298,7 @@ smooth_plot
 #> `geom_smooth()` using formula 'y ~ x'
 ```
 
-<img src="man/figures/README-ex-2-setup-1.png" width="100%" />
+<img src="man/figures/README-ex-2-setup-1.jpeg" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
@@ -439,7 +437,7 @@ sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) 
 sina_plot
 ```
 
-<img src="man/figures/README-ex-3-setup-1.png" width="100%" />
+<img src="man/figures/README-ex-3-setup-1.jpeg" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
