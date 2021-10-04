@@ -1,7 +1,5 @@
 #' Programmatically debug ggproto methods with trace
 #'
-#' `r lifecycle::badge('experimental')`
-#'
 #' @inheritParams ggbody
 #' @param trace_steps A list of positions in the method's callstack to trace.
 #' @param trace_exprs A list of expressions to evaluate at each position specified
@@ -94,18 +92,18 @@ ggtrace <- function(method, obj, trace_steps, trace_exprs, .print = TRUE) {
     trace_exprs <- rep(list(trace_exprs), trace_n)
   }
 
-  names(trace_dump) <- purrr::map2_chr(trace_steps, trace_exprs, ~ {
-    paste0("[Step ", .x, "]> ", paste(rlang::expr_deparse(.y), collapse = "\n"))
+  names(trace_dump) <- lapply(seq_len(trace_n), function(i) {
+    paste0("[Step ", trace_steps[[i]], "]> ", paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n"))
   })
 
   method_body <- ggbody(method, obj)
-  trace_exprs <- purrr::map(seq_len(trace_n), ~ {
-    if (grepl("~line", rlang::as_label(trace_exprs[[.x]]))) {
-      step_deparsed <- rlang::expr_deparse(method_body[[trace_steps[.x]]])
-      line_substituted <- gsub("~line", step_deparsed, rlang::as_label(trace_exprs[[.x]]))
+  trace_exprs <- lapply(seq_len(trace_n), function(x) {
+    if (grepl("~line", rlang::as_label(trace_exprs[[x]]))) {
+      step_deparsed <- rlang::expr_deparse(method_body[[trace_steps[x]]])
+      line_substituted <- gsub("~line", step_deparsed, rlang::as_label(trace_exprs[[x]]))
       rlang::parse_expr(line_substituted)
     } else {
-      trace_exprs[[.x]]
+      trace_exprs[[x]]
     }
   })
 

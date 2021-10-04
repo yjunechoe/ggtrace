@@ -11,8 +11,6 @@ set_last_ggtrace <- function(value) .store$set(value)
 
 #' Retrieve the trace dump created by the last ggtrace
 #'
-#' `r lifecycle::badge('experimental')`
-#'
 #' @export
 #' @keywords internal
 #' @examples

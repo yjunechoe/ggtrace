@@ -14,9 +14,6 @@ that evaluates to the ggproto method in the form of \code{ggproto$method}.}
 in the form of \code{ggproto$method} that evalutes to the ggproto object's method.}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-}
-\details{
 Essentially calls \verb{as.list(body(get("<method>", <obj>)))} under the hood.
 }
 \note{

@@ -24,7 +24,7 @@ All instances of \code{~line} will get substituted by the expression inside the 
 \item{.print}{Whether to print the output of each expression to the console.}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+Programmatically debug ggproto methods with trace
 }
 \details{
 \code{ggtrace()} is a wrapper around \code{base::trace()} which is called on the ggproto method.

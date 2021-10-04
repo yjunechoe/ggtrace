@@ -9,8 +9,6 @@ split_ggproto_method <- function(x) {
 
 #' Retrieve the callstack of a ggproto method as a list
 #'
-#' `r lifecycle::badge('experimental')`
-#'
 #' Essentially calls `as.list(body(get("<method>", <obj>)))` under the hood.
 #'
 #' @param method The method name as a string. Alternatively an expression
