@@ -13,10 +13,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# {ggtrace}
+# **{ggtrace}**
 
 <!-- badges: start -->
-`r lifecycle::badge('experimental')`
 <!-- badges: end -->
 
 An experimental package for programmatically debugging ggproto methods with `trace()`.
@@ -37,7 +36,9 @@ library(ggtrace)
 library(ggplot2) # v3.3.5
 ```
 
-### Example - `compute_layer` method from `PositionJitter`
+## Example 1 - `compute_layer` method from `PositionJitter` {ggplot2}
+
+### Step 1. Make plot
 
 ```{r ex-1-setup}
 jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -45,9 +46,13 @@ jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
 jitter_plot
 ```
 
+### Step 2. Inspect callstack of the ggproto of interest
+
 ```{r ex-1-ggbody}
 ggbody(PositionJitter$compute_layer)
 ```
+
+### Step 3a. `ggtrace()` - with expressions wrapped in `head()`
 
 ```{r ex-1a-ggtrace, fig.show='hide'}
 ggtrace(
@@ -66,17 +71,20 @@ ggtrace(
 jitter_plot
 ```
 
+### Step 4a. Inspect trace dumnp
+
 ```{r ex-1a-last}
 last_ggtrace()
 ```
 
+### Step 3b. `ggtrace()` - with `.print = FALSE` (recommended)
+
 ```{r ex-1b-ggtrace, fig.show='hide'}
 ggtrace(
   method = PositionJitter$compute_layer,
-  trace_steps = c(1, 1, 9, 12),
+  trace_steps = c(1, 1, 12),
   trace_exprs = rlang::exprs(
     data,
-    params,
     dummy_data,
     ~line
   ),
@@ -87,7 +95,90 @@ ggtrace(
 jitter_plot
 ```
 
+### Step 4b. Inspect trace dump
+
 ```{r ex-1b-last}
-lapply(last_ggtrace(), head)
+jitter_tracedump <- last_ggtrace()
+lapply(jitter_tracedump, nrow)
+lapply(jitter_tracedump, head)
 ```
 
+## Example 2 - `draw_group` method from `GeomSmooth` {ggplot2}
+
+### Step 1. Make plot
+
+```{r ex-2-setup}
+smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
+  geom_point() +
+  stat_smooth(method = "lm")
+smooth_plot
+```
+
+### Step 2. Inspect callstack of the ggproto of interest
+
+```{r ex-2-ggbody}
+ggbody(GeomSmooth$draw_group)
+```
+
+### Step 3. `ggtrace()` - get gList
+
+```{r ex-2-ggtrace, fig.show='hide'}
+ggtrace(
+  method = GeomSmooth$draw_group,
+  trace_steps = 7,
+  trace_exprs = quote(~line),
+  .print = FALSE
+)
+
+# plot not printed to save space
+smooth_plot
+```
+
+### Step 4. Inspect trace dump
+
+```{r ex-2-last}
+smooth_tracedump <- last_ggtrace()
+smooth_tracedump
+str(smooth_tracedump[[1]])
+```
+
+
+## Example 3 - `compute_group` method from `StatSina` {ggforce}
+
+### Step 1. Make plot
+
+```{r ex-3-setup}
+library(ggforce)
+
+sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) +
+  geom_violin() +
+  geom_sina(seed = 2021)
+sina_plot
+```
+
+### Step 2. Inspect callstack of the ggproto of interest
+
+```{r ex-3-ggbody}
+ggbody(StatSina$compute_group)
+```
+
+### Step 3. `ggtrace()` - with one expression evaluated at multiple steps
+
+```{r ex-3-ggtrace, fig.show='hide'}
+ggtrace(
+  method = StatSina$compute_group,
+  trace_steps = c(1, 8),
+  trace_exprs = quote(data),
+  .print = FALSE
+)
+
+# plot not printed to save space
+sina_plot
+```
+
+### Step 4. Inspect trace dump
+
+```{r ex-3-last}
+sina_tracedump <- last_ggtrace()
+waldo::compare(sina_tracedump[[1]], sina_tracedump[[2]])
+```
