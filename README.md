@@ -6,8 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-An experimental package for programmatically debugging ggproto methods
-with `trace()`.
+An experimental package for programmatically debugging ggproto methods.
 
 ## **Why {ggtrace}?**
 
@@ -22,8 +21,9 @@ with `trace()`.
     -   Multiple expressions can be passed in to be evaluated inside
         method body
     -   Output of evaluated expressions are available for inspection
-        outside of the debugging environment.
-    -   Calls `untrace()` on itself on exit by default, for extra safety
+        outside of the debugging environment
+    -   Calls `untrace()` on itself on exit by default, for extra
+        safety.
 -   **Flexible** 🛠
     -   You can either…
         -   *Programmatically* debug with `ggtrace()`, for testing,
@@ -32,7 +32,10 @@ with `trace()`.
             the source code.
     -   Your favorite debugging tools (e.g., `browser()`) can be easily
         incorporated into this workflow.
-    -   Can be used to debug other object classes in R, not just
+    -   Since `ggtrace()` doesn’t rely on interactivity or side effects,
+        it’s ideal for constructing targeted reproducible examples
+        (e.g., with `{reprex}`)
+    -   Works with other object classes in R (e.g., R6), not just
         ggproto!
 
 More on the 📦 pkgdown website: <https://yjunechoe.github.io/ggtrace>
@@ -122,7 +125,8 @@ ggtrace(
     head(dummy_data),  # What is `dummy_data` defined at Step 8?
     head(~line)        # What does the last line evaluate to?
                        # - i.e., what is returned by the method?
-  )
+  ),
+  .print = FALSE       # Don't print output of evaluated expressions
 )
 
 # plot not printed to save space
@@ -130,51 +134,36 @@ jitter_plot
 #> Tracing method compute_layer from <PstnJttr> ggproto.
 #> 
 #>  [Step 1]> head(data) 
-#>   x    y PANEL group
-#> 1 5 61.5     1     5
-#> 2 4 59.8     1     4
-#> 3 2 56.9     1     2
-#> 4 4 62.4     1     4
-#> 5 2 63.3     1     2
-#> 6 3 62.8     1     3
 #> 
 #>  [Step 1]> params 
-#> $width
-#> [1] 0.2
-#> 
-#> $height
-#> [1] 0.04
-#> 
-#> $seed
-#> [1] 2021
-#> 
 #> 
 #>  [Step 9]> head(dummy_data) 
-#>   x    y
-#> 1 5 61.5
-#> 2 4 59.8
-#> 3 2 56.9
-#> 4 4 62.4
-#> 5 2 63.3
-#> 6 3 62.8
 #> 
 #>  [Step 12]> head(~line) 
-#>          x        y PANEL group
-#> 1 4.980507 61.50684     1     5
-#> 2 4.113512 59.77872     1     4
-#> 3 2.083873 56.86655     1     2
-#> 4 3.952698 62.42703     1     4
-#> 5 2.054530 63.29763     1     2
-#> 6 3.080538 62.77536     1     3
 #> 
 #> Untracing method compute_layer from <PstnJttr> ggproto.
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
-### **Step 4a. Inspect trace dumnp**
+### **Step 4a. Inspect trace dump**
 
 ``` r
-last_ggtrace()
+jitter_tracedump <- last_ggtrace()
+
+lapply(jitter_tracedump, nrow)
+#> $`[Step 1]> head(data)`
+#> [1] 6
+#> 
+#> $`[Step 1]> params`
+#> NULL
+#> 
+#> $`[Step 9]> head(dummy_data)`
+#> [1] 6
+#> 
+#> $`[Step 12]> head(~line)`
+#> [1] 6
+
+lapply(jitter_tracedump, head)
 #> $`[Step 1]> head(data)`
 #>   x    y PANEL group
 #> 1 5 61.5     1     5
@@ -205,78 +194,6 @@ last_ggtrace()
 #> 6 3 62.8
 #> 
 #> $`[Step 12]> head(~line)`
-#>          x        y PANEL group
-#> 1 4.980507 61.50684     1     5
-#> 2 4.113512 59.77872     1     4
-#> 3 2.083873 56.86655     1     2
-#> 4 3.952698 62.42703     1     4
-#> 5 2.054530 63.29763     1     2
-#> 6 3.080538 62.77536     1     3
-```
-
-### **Step 3b. `ggtrace()` - with `.print = FALSE` instead (recommended)**
-
-``` r
-ggtrace(
-  method = PositionJitter$compute_layer,
-  trace_steps = c(1, 9, 12),
-  trace_exprs = rlang::exprs(
-    data,
-    dummy_data,
-    ~line
-  ),
-  .print = FALSE
-)
-
-# plot not printed to save space
-jitter_plot
-#> Tracing method compute_layer from <PstnJttr> ggproto.
-#> 
-#>  [Step 1]> data 
-#> 
-#>  [Step 9]> dummy_data 
-#> 
-#>  [Step 12]> ~line 
-#> 
-#> Untracing method compute_layer from <PstnJttr> ggproto.
-#> Call `last_ggtrace()` to get the trace dump.
-```
-
-### **Step 4b. Inspect trace dump**
-
-``` r
-jitter_tracedump <- last_ggtrace()
-
-lapply(jitter_tracedump, nrow)
-#> $`[Step 1]> data`
-#> [1] 1000
-#> 
-#> $`[Step 9]> dummy_data`
-#> [1] 1000
-#> 
-#> $`[Step 12]> ~line`
-#> [1] 1000
-
-lapply(jitter_tracedump, head)
-#> $`[Step 1]> data`
-#>   x    y PANEL group
-#> 1 5 61.5     1     5
-#> 2 4 59.8     1     4
-#> 3 2 56.9     1     2
-#> 4 4 62.4     1     4
-#> 5 2 63.3     1     2
-#> 6 3 62.8     1     3
-#> 
-#> $`[Step 9]> dummy_data`
-#>   x    y
-#> 1 5 61.5
-#> 2 4 59.8
-#> 3 2 56.9
-#> 4 4 62.4
-#> 5 2 63.3
-#> 6 3 62.8
-#> 
-#> $`[Step 12]> ~line`
 #>          x        y PANEL group
 #> 1 4.980507 61.50684     1     5
 #> 2 4.113512 59.77872     1     4
@@ -356,23 +273,23 @@ smooth_tracedump <- last_ggtrace()
 
 smooth_tracedump
 #> $`[Step 7]> ~line`
-#> (gTree[geom_ribbon.gTree.167], polyline[GRID.polyline.168])
+#> (gTree[geom_ribbon.gTree.132], polyline[GRID.polyline.133])
 
 str(smooth_tracedump[[1]])
 #> List of 2
 #>  $ :List of 5
-#>   ..$ name         : chr "geom_ribbon.gTree.167"
+#>   ..$ name         : chr "geom_ribbon.gTree.132"
 #>   ..$ gp           : NULL
 #>   ..$ vp           : NULL
 #>   ..$ children     :List of 2
-#>   .. ..$ GRID.polygon.164 :List of 7
+#>   .. ..$ GRID.polygon.129 :List of 7
 #>   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...
 #>   .. .. .. ..- attr(*, "unit")= int 4
 #>   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...
 #>   .. .. .. ..- attr(*, "unit")= int 4
 #>   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...
 #>   .. .. ..$ id.lengths: NULL
-#>   .. .. ..$ name      : chr "GRID.polygon.164"
+#>   .. .. ..$ name      : chr "GRID.polygon.129"
 #>   .. .. ..$ gp        :List of 4
 #>   .. .. .. ..$ fill: chr "#99999966"
 #>   .. .. .. ..$ col : logi NA
@@ -381,7 +298,7 @@ str(smooth_tracedump[[1]])
 #>   .. .. .. ..- attr(*, "class")= chr "gpar"
 #>   .. .. ..$ vp        : NULL
 #>   .. .. ..- attr(*, "class")= chr [1:3] "polygon" "grob" "gDesc"
-#>   .. ..$ GRID.polyline.165:List of 8
+#>   .. ..$ GRID.polyline.130:List of 8
 #>   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...
 #>   .. .. .. ..- attr(*, "unit")= int 4
 #>   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...
@@ -389,7 +306,7 @@ str(smooth_tracedump[[1]])
 #>   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...
 #>   .. .. ..$ id.lengths: NULL
 #>   .. .. ..$ arrow     : NULL
-#>   .. .. ..$ name      : chr "GRID.polyline.165"
+#>   .. .. ..$ name      : chr "GRID.polyline.130"
 #>   .. .. ..$ gp        :List of 3
 #>   .. .. .. ..$ col: logi NA
 #>   .. .. .. ..$ lwd: num 2.85
@@ -398,7 +315,7 @@ str(smooth_tracedump[[1]])
 #>   .. .. ..$ vp        : NULL
 #>   .. .. ..- attr(*, "class")= chr [1:3] "polyline" "grob" "gDesc"
 #>   .. ..- attr(*, "class")= chr "gList"
-#>   ..$ childrenOrder: chr [1:2] "GRID.polygon.164" "GRID.polyline.165"
+#>   ..$ childrenOrder: chr [1:2] "GRID.polygon.129" "GRID.polyline.130"
 #>   ..- attr(*, "class")= chr [1:3] "gTree" "grob" "gDesc"
 #>  $ :List of 8
 #>   ..$ x         : 'simpleUnit' num [1:80] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...
@@ -408,7 +325,7 @@ str(smooth_tracedump[[1]])
 #>   ..$ id        : int [1:80] 1 1 1 1 1 1 1 1 1 1 ...
 #>   ..$ id.lengths: NULL
 #>   ..$ arrow     : NULL
-#>   ..$ name      : chr "GRID.polyline.168"
+#>   ..$ name      : chr "GRID.polyline.133"
 #>   ..$ gp        :List of 7
 #>   .. ..$ col      : chr "#3366FF"
 #>   .. ..$ fill     : chr "#3366FF"
@@ -423,13 +340,222 @@ str(smooth_tracedump[[1]])
 #>  - attr(*, "class")= chr "gList"
 ```
 
-## **Example 3 - `compute_group` method from `StatSina` {ggforce}**
+## **Example 3 - `compute_group` method from `StatBoxplot`**
+
+### **Step 1. Make plot**
+
+``` r
+boxplot_plot <- ggplot(diamonds[1:500,], aes(cut, depth)) +
+  geom_boxplot()
+boxplot_plot
+```
+
+<img src="man/figures/README-ex-3-setup-1.jpeg" width="100%" />
+
+### **Step 2. Inspect callstack of the ggproto method**
+
+``` r
+ggbody(StatBoxplot$compute_panel)
+#> Error in get(method, obj): object 'compute_panel' not found
+```
+
+`"compute_panel"` method is not defined for `StatBoxplot`, which means
+it’s being inherited.
+
+``` r
+class(StatBoxplot)
+#> [1] "StatBoxplot" "Stat"        "ggproto"     "gg"
+```
+
+`StatBoxplot` is a child of the parent ggproto `Stat`, and the
+`"compute_panel"` method is inherited from `Stat` as well, so that’s
+what we want to trace:
+
+``` r
+ggbody(Stat$compute_panel)
+#> [[1]]
+#> `{`
+#> 
+#> [[2]]
+#> if (empty(data)) return(new_data_frame())
+#> 
+#> [[3]]
+#> groups <- split(data, data$group)
+#> 
+#> [[4]]
+#> stats <- lapply(groups, function(group) {
+#>     self$compute_group(data = group, scales = scales, ...)
+#> })
+#> 
+#> [[5]]
+#> stats <- mapply(function(new, old) {
+#>     if (empty(new)) 
+#>         return(new_data_frame())
+#>     unique <- uniquecols(old)
+#>     missing <- !(names(unique) %in% names(new))
+#>     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])
+#> }, stats, groups, SIMPLIFY = FALSE)
+#> 
+#> [[6]]
+#> rbind_dfs(stats)
+```
+
+### **Step 3. `ggtrace()` - retrieve the parent environment**
+
+`Stat$compute_panel` does split-apply-combine (Steps 3, 4-5, 6).
+
+Let’s return the split and the combine:
+
+``` r
+ggtrace(
+  Stat$compute_panel,
+  trace_steps = c(3, 6, 6),
+  trace_exprs = list(
+    quote(~line),
+    quote(~line),
+    quote(environment())
+  ),
+  .print = FALSE
+)
+
+# plot not printed to save space
+boxplot_plot
+#> Tracing method compute_panel from <Stat> ggproto.
+#> 
+#>  [Step 3]> ~line 
+#> 
+#>  [Step 6]> ~line 
+#> 
+#>  [Step 6]> environment() 
+#> 
+#> Untracing method compute_panel from <Stat> ggproto.
+#> Call `last_ggtrace()` to get the trace dump.
+```
+
+### **Step 4. Inspect trace dump**
+
+``` r
+boxplot_tracedump <- last_ggtrace()
+
+lapply(boxplot_tracedump[[1]], head)
+#> $`1`
+#>     x    y PANEL group
+#> 9   1 65.1     1     1
+#> 92  1 55.1     1     1
+#> 98  1 66.3     1     1
+#> 124 1 64.5     1     1
+#> 125 1 65.3     1     1
+#> 129 1 64.4     1     1
+#> 
+#> $`2`
+#>    x    y PANEL group
+#> 3  2 56.9     1     2
+#> 5  2 63.3     1     2
+#> 11 2 64.0     1     2
+#> 18 2 63.4     1     2
+#> 19 2 63.8     1     2
+#> 21 2 63.3     1     2
+#> 
+#> $`3`
+#>    x    y PANEL group
+#> 6  3 62.8     1     3
+#> 7  3 62.3     1     3
+#> 8  3 61.9     1     3
+#> 10 3 59.4     1     3
+#> 20 3 62.7     1     3
+#> 22 3 63.8     1     3
+#> 
+#> $`4`
+#>    x    y PANEL group
+#> 2  4 59.8     1     4
+#> 4  4 62.4     1     4
+#> 13 4 60.4     1     4
+#> 15 4 60.2     1     4
+#> 16 4 60.9     1     4
+#> 27 4 62.5     1     4
+#> 
+#> $`5`
+#>    x    y PANEL group
+#> 1  5 61.5     1     5
+#> 12 5 62.8     1     5
+#> 14 5 62.2     1     5
+#> 17 5 62.0     1     5
+#> 40 5 61.8     1     5
+#> 41 5 61.2     1     5
+
+lapply(boxplot_tracedump[[1]], function(group) {
+  quantile(group$y, c(0, 0.25, 0.5, 0.75, 1))
+})
+#> $`1`
+#>     0%    25%    50%    75%   100% 
+#> 53.100 58.850 64.800 65.775 68.100 
+#> 
+#> $`2`
+#>    0%   25%   50%   75%  100% 
+#> 56.90 60.20 63.30 63.95 65.20 
+#> 
+#> $`3`
+#>   0%  25%  50%  75% 100% 
+#> 57.5 60.7 62.0 63.1 64.0 
+#> 
+#> $`4`
+#>     0%    25%    50%    75%   100% 
+#> 58.000 60.700 61.500 62.325 63.000 
+#> 
+#> $`5`
+#>    0%   25%   50%   75%  100% 
+#> 58.80 61.30 61.75 62.20 62.90
+
+boxplot_tracedump[[2]]
+#>   ymin lower middle  upper ymax               outliers notchupper notchlower x
+#> 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1
+#> 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2
+#> 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3
+#> 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4
+#> 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5
+#>   width relvarwidth flipped_aes PANEL group
+#> 1  0.75    5.099020       FALSE     1     1
+#> 2  0.75    7.141428       FALSE     1     2
+#> 3  0.75   11.269428       FALSE     1     3
+#> 4  0.75   12.000000       FALSE     1     4
+#> 5  0.75   12.328828       FALSE     1     5
+
+eval(
+  ggbody(Stat$compute_panel)[[6]],
+  envir = boxplot_tracedump[[3]]
+)
+#>   ymin lower middle  upper ymax               outliers notchupper notchlower x
+#> 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1
+#> 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2
+#> 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3
+#> 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4
+#> 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5
+#>   width relvarwidth flipped_aes PANEL group
+#> 1  0.75    5.099020       FALSE     1     1
+#> 2  0.75    7.141428       FALSE     1     2
+#> 3  0.75   11.269428       FALSE     1     3
+#> 4  0.75   12.000000       FALSE     1     4
+#> 5  0.75   12.328828       FALSE     1     5
+
+ls(envir = boxplot_tracedump[[3]])
+#> [1] "data"   "groups" "scales" "self"   "stats"
+
+eval(
+  quote(StatBoxplot$compute_group(groups[[1]], scales, ...)),
+  envir = boxplot_tracedump[[3]]
+)
+#>   ymin lower middle  upper ymax outliers notchupper notchlower x width
+#> 1 53.1 58.85   64.8 65.775 68.1             66.9458    62.6542 1  0.75
+#>   relvarwidth flipped_aes
+#> 1     5.09902       FALSE
+```
+
+## **Example 4 - `compute_group` method from `StatSina` {ggforce}**
 
 ### **Step 1. Make plot**
 
 ``` r
 library(ggforce) # v.0.3.3
-#> Warning: package 'ggforce' was built under R version 4.1.1
 
 sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) +
   geom_violin() +
@@ -437,7 +563,7 @@ sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) 
 sina_plot
 ```
 
-<img src="man/figures/README-ex-3-setup-1.jpeg" width="100%" />
+<img src="man/figures/README-ex-4-setup-1.jpeg" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
 

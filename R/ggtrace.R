@@ -100,7 +100,7 @@ ggtrace <- function(method, obj, trace_steps, trace_exprs, once = TRUE, .print =
   method_body <- ggbody(method, obj)
   trace_exprs <- lapply(seq_len(trace_n), function(x) {
     if (grepl("~line", rlang::as_label(trace_exprs[[x]]))) {
-      step_deparsed <- rlang::expr_deparse(method_body[[trace_steps[x]]], width = Inf)
+      step_deparsed <- paste(rlang::expr_deparse(method_body[[trace_steps[x]]], width = Inf), collapse = "")
       line_substituted <- gsub("~line", step_deparsed, rlang::as_label(trace_exprs[[x]]))
       rlang::parse_expr(line_substituted)
     } else {

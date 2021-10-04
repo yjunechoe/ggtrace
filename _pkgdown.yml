@@ -29,7 +29,7 @@ articles:
   navbar: Usage
   contents:
   - intro
-  - usecases
+  - usecase-aes_eval
 - title: Miscellaneous
   navbar: Miscellaneous
   contents:

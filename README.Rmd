@@ -20,10 +20,9 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-An experimental package for programmatically debugging ggproto methods with `trace()`.
+An experimental package for programmatically debugging ggproto methods.
 
 ## **Why {ggtrace}?**
-
 
 - **Lightweight** ⚡
     - The only dependency is `{rlang}` (not even `{ggplot2}` is required!)
@@ -33,8 +32,8 @@ An experimental package for programmatically debugging ggproto methods with `tra
 - **User-friendly** ❤
     - Everything happens in your local session - no need to fork a repo to inspect/edit the internals!
     - Multiple expressions can be passed in to be evaluated inside method body
-    - Output of evaluated expressions are available for inspection outside of the debugging environment.
-    - Calls `untrace()` on itself on exit by default, for extra safety
+    - Output of evaluated expressions are available for inspection outside of the debugging environment
+    - Calls `untrace()` on itself on exit by default, for extra safety.
   
   
 - **Flexible** 🛠
@@ -42,7 +41,8 @@ An experimental package for programmatically debugging ggproto methods with `tra
         - _Programmatically_ debug with `ggtrace()`, for testing, building reprexes, etc., OR
         - _Interactively_ debug with `ggedit()` by directly editing the source code.
     - Your favorite debugging tools (e.g., `browser()`) can be easily incorporated into this workflow.
-    - Can be used to debug other object classes in R, not just ggproto!
+    - Since `ggtrace()` doesn't rely on interactivity or side effects, it's ideal for constructing targeted reproducible examples (e.g., with `{reprex}`)
+    - Works with other object classes in R (e.g., R6), not just ggproto!
 
 More on the 📦 pkgdown website: [https://yjunechoe.github.io/ggtrace](https://yjunechoe.github.io/ggtrace)
 
@@ -81,7 +81,7 @@ ggbody(PositionJitter$compute_layer)
 
 ### **Step 3a. `ggtrace()` - with expressions wrapped in `head()`**
 
-```{r ex-1a-ggtrace, fig.show='hide'}
+```{r ex-1-ggtrace, fig.show='hide'}
 ggtrace(
   method = PositionJitter$compute_layer,
   trace_steps = c(1, 1, 9, 12),
@@ -91,40 +91,17 @@ ggtrace(
     head(dummy_data),  # What is `dummy_data` defined at Step 8?
     head(~line)        # What does the last line evaluate to?
                        # - i.e., what is returned by the method?
-  )
-)
-
-# plot not printed to save space
-jitter_plot
-```
-
-### **Step 4a. Inspect trace dumnp**
-
-```{r ex-1a-last}
-last_ggtrace()
-```
-
-### **Step 3b. `ggtrace()` - with `.print = FALSE` instead (recommended)**
-
-```{r ex-1b-ggtrace, fig.show='hide'}
-ggtrace(
-  method = PositionJitter$compute_layer,
-  trace_steps = c(1, 9, 12),
-  trace_exprs = rlang::exprs(
-    data,
-    dummy_data,
-    ~line
   ),
-  .print = FALSE
+  .print = FALSE       # Don't print output of evaluated expressions
 )
 
 # plot not printed to save space
 jitter_plot
 ```
 
-### **Step 4b. Inspect trace dump**
+### **Step 4a. Inspect trace dump**
 
-```{r ex-1b-last}
+```{r ex-1-last}
 jitter_tracedump <- last_ggtrace()
 
 lapply(jitter_tracedump, nrow)
@@ -173,12 +150,88 @@ smooth_tracedump
 str(smooth_tracedump[[1]])
 ```
 
-
-## **Example 3 - `compute_group` method from `StatSina` {ggforce}**
+## **Example 3 - `compute_group` method from `StatBoxplot`**
 
 ### **Step 1. Make plot**
 
 ```{r ex-3-setup}
+boxplot_plot <- ggplot(diamonds[1:500,], aes(cut, depth)) +
+  geom_boxplot()
+boxplot_plot
+```
+
+### **Step 2. Inspect callstack of the ggproto method**
+
+```{r ex-3-ggbody-a, error = TRUE}
+ggbody(StatBoxplot$compute_panel)
+```
+
+`"compute_panel"` method is not defined for `StatBoxplot`, which means it's being inherited. 
+
+```{r ex-3-ggbody-b}
+class(StatBoxplot)
+```
+
+`StatBoxplot` is a child of the parent ggproto `Stat`, and the `"compute_panel"` method is inherited from `Stat` as well, so that's what we want to trace:
+
+```{r ex-3-ggbody-c}
+ggbody(Stat$compute_panel)
+```
+
+### **Step 3. `ggtrace()` - retrieve the parent environment**
+
+`Stat$compute_panel` does split-apply-combine (Steps 3, 4-5, 6).
+
+Let's return the split and the combine:
+
+```{r ex-3-ggtrace, fig.show='hide'}
+ggtrace(
+  Stat$compute_panel,
+  trace_steps = c(3, 6, 6),
+  trace_exprs = list(
+    quote(~line),
+    quote(~line),
+    quote(environment())
+  ),
+  .print = FALSE
+)
+
+# plot not printed to save space
+boxplot_plot
+```
+
+### **Step 4. Inspect trace dump**
+
+```{r ex-3-last}
+boxplot_tracedump <- last_ggtrace()
+
+lapply(boxplot_tracedump[[1]], head)
+
+lapply(boxplot_tracedump[[1]], function(group) {
+  quantile(group$y, c(0, 0.25, 0.5, 0.75, 1))
+})
+
+boxplot_tracedump[[2]]
+
+eval(
+  ggbody(Stat$compute_panel)[[6]],
+  envir = boxplot_tracedump[[3]]
+)
+
+ls(envir = boxplot_tracedump[[3]])
+
+eval(
+  quote(StatBoxplot$compute_group(groups[[1]], scales, ...)),
+  envir = boxplot_tracedump[[3]]
+)
+```
+
+
+## **Example 4 - `compute_group` method from `StatSina` {ggforce}**
+
+### **Step 1. Make plot**
+
+```{r ex-4-setup}
 library(ggforce) # v.0.3.3
 
 sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) +
@@ -189,13 +242,13 @@ sina_plot
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
-```{r ex-3-ggbody}
+```{r ex-4-ggbody}
 ggbody(StatSina$compute_group)
 ```
 
 ### **Step 3. `ggtrace()` - with one expression evaluated at multiple steps**
 
-```{r ex-3-ggtrace, fig.show='hide'}
+```{r ex-4-ggtrace, fig.show='hide'}
 ggtrace(
   method = StatSina$compute_group,
   trace_steps = c(1, 8),
@@ -209,7 +262,7 @@ sina_plot
 
 ### **Step 4. Inspect trace dump**
 
-```{r ex-3-last}
+```{r ex-4-last}
 sina_tracedump <- last_ggtrace()
 
 waldo::compare(sina_tracedump[[1]], sina_tracedump[[2]])
