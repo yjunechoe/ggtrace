@@ -17,6 +17,7 @@ reference:
   - ggtrace
   - ggedit
   - ggbody
+  - gguntrace
 
 - title: Cache and inspect
   desc: Track evaluated expressions and traced methods

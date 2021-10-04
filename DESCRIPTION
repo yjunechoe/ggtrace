@@ -21,6 +21,7 @@ Collate:
   'ggbody.R'
   'last_ggtrace.R'
   'ggedit.R'
+  'gguntrace.R'
   'ggtrace.R'
 Imports: 
     rlang

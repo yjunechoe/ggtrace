@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • ggtrace</title>
+<title>Untrace a ggproto method — gguntrace • ggtrace</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="Untrace a ggproto method — gguntrace" />
+<meta property="og:description" content="For explicitly calling untrace() on a ggproto object." />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -135,41 +136,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+    <h1>Untrace a ggproto method</h1>
+    <small class="dont-index">Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/R/gguntrace.R'><code>R/gguntrace.R</code></a></small>
+    <div class="hidden name"><code>gguntrace.Rd</code></div>
     </div>
 
-    <div id="ggtrace-development-version" class="section level1">
-<h1 class="page-header" data-toc-text="development version">
-<a href="#ggtrace-development-version" class="anchor"></a>ggtrace (development version)</h1>
-<ul>
-<li>
-<code><a href="../reference/gguntrace.html">gguntrace()</a></code> with the same syntax for specifying the ggproto method.</li>
-<li>A new argument for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> that takes an expression to allow <code>tracer</code> to be triggered conditionally</li>
-</ul>
-</div>
-    <div id="ggtrace-011" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.1">
-<a href="#ggtrace-011" class="anchor"></a>ggtrace 0.1.1</h1>
-<ul>
-<li><p>Added <a href="https://yjunechoe.github.io/ggtrace/reference/ggedit.html"><code>ggedit()</code></a> for interactive debugging via directly editing the source code.</p></li>
-<li><p>Refactored <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. The package now only depends on <a href="https://rlang.r-lib.org">rlang</a>.</p></li>
-<li><p>Significant improvements to the readme</p></li>
-</ul>
-</div>
-    <div id="ggtrace-010" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.0">
-<a href="#ggtrace-010" class="anchor"></a>ggtrace 0.1.0</h1>
-<p>Initial release.</p>
-</div>
-  </div>
+    <div class="ref-description">
+    <p>For explicitly calling <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> on a ggproto object.</p>
+    </div>
 
+    <pre class="usage"><span class='fu'>gguntrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>method</th>
+      <td><p>The method name as a string. Alternatively an expression
+that evaluates to the ggproto method in the form of <code>ggproto$method</code>.</p></td>
+    </tr>
+    <tr>
+      <th>obj</th>
+      <td><p>The ggproto object. Can be omitted if the method is an expression
+in the form of <code>ggproto$method</code> that evalutes to the ggproto object's method.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='ggtrace.html'>ggtrace()</a></code>, <code><a href='ggedit.html'>ggedit()</a></code></p></div>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+<span class='co'># jitter_plot &lt;- ggplot(diamonds[1:1000,], aes(cut, depth)) +</span>
+<span class='co'>#   geom_point(position = position_jitter(width = 0.2, seed = 2021))</span>
+<span class='co'># ggedit(PositionJitter$compute_layer)</span>
+<span class='co'># jitter_plot</span>
+<span class='co'># gguntrace(PositionJitter$compute_layer)</span>
+<span class='co'># jitter_plot</span>
+<span class='co'># }</span>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
 
 

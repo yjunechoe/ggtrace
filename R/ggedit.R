@@ -5,6 +5,8 @@
 #' @note Like `base::trace()`, the edit is in place until `untrace()` is called.
 #'   To `untrace()` a ggproto method, the syntax is `untrace(what = "method", where = obj)`
 #'
+#' @seealso [gguntrace()]
+#'
 #' @return NULL
 #' @export
 #'
@@ -13,9 +15,10 @@
 #' # jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
 #' #   geom_point(position = position_jitter(width = 0.2, seed = 2021))
 #' # ggedit(PositionJitter$compute_layer)
-#' # < interactively modify the method's source code in text editor >
+#' # # < interactively modify the method's source code in text editor >
 #' # jitter_plot # Edit is in place
-#' # untrace(what = "compute_layer", where = PositionJitter)
+#' # gguntrace(PositionJitter$compute_layer)
+#' # # Or untrace(what = "compute_layer", where = PositionJitter)
 #' # jitter_plot # Edit is removed
 #' }
 ggedit <- function(method, obj) {
@@ -25,6 +28,6 @@ ggedit <- function(method, obj) {
     method <- split[[1]]
     obj <- split[[2]]
   }
-  trace(what = method, where = obj, edit = TRUE)
+  suppressMessages(trace(what = method, where = obj, edit = TRUE))
   invisible(NULL)
 }

@@ -3,4 +3,5 @@
 export(ggbody)
 export(ggedit)
 export(ggtrace)
+export(gguntrace)
 export(last_ggtrace)

@@ -1,5 +1,6 @@
 # ggtrace (development version)
 
+- `gguntrace()` with the same syntax for specifying the ggproto method.
 - A new argument for `ggtrace()` that takes an expression to allow `tracer` to be triggered conditionally
 
 # ggtrace 0.1.1

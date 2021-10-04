@@ -104,6 +104,9 @@
     <li>
       <a href="../articles/intro.html">Intro to ggtrace()</a>
     </li>
+    <li>
+      <a href="../articles/usecases.html">Usecases</a>
+    </li>
     <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
@@ -163,15 +166,19 @@ in the form of <code>ggproto$method</code> that evalutes to the ggproto object's
 
     <p>Like <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code>, the edit is in place until <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> is called.
 To <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> a ggproto method, the syntax is <code><a href='https://rdrr.io/r/base/trace.html'>untrace(what = "method", where = obj)</a></code></p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='gguntrace.html'>gguntrace()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 <span class='co'># jitter_plot &lt;- ggplot(diamonds[1:1000,], aes(cut, depth)) +</span>
 <span class='co'>#   geom_point(position = position_jitter(width = 0.2, seed = 2021))</span>
 <span class='co'># ggedit(PositionJitter$compute_layer)</span>
-<span class='co'># &lt; interactively modify the method's source code in text editor &gt;</span>
+<span class='co'># # &lt; interactively modify the method's source code in text editor &gt;</span>
 <span class='co'># jitter_plot # Edit is in place</span>
-<span class='co'># untrace(what = "compute_layer", where = PositionJitter)</span>
+<span class='co'># gguntrace(PositionJitter$compute_layer)</span>
+<span class='co'># # Or untrace(what = "compute_layer", where = PositionJitter)</span>
 <span class='co'># jitter_plot # Edit is removed</span>
 <span class='co'># }</span>
 </div></pre>
