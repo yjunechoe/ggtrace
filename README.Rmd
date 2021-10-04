@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 # **{ggtrace}**
 
 <!-- badges: start -->
-[](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/workflows/R-CMD-check/badge.svg)](https://github.com/yjunechoe/ggtrace/actions)
 <!-- badges: end -->
 
@@ -24,17 +23,17 @@ An experimental package for programmatically debugging ggproto methods with `tra
 
 ## **Why {ggtrace}?**
 
-- ⚡ **Lightweight**: 
+- **Lightweight** ⚡
     - The only dependency is `{rlang}` (not even `{ggplot2}` is required!)
     - There isn't a lot of code in the package - most of the heavy lifting is done by `base::trace()`
     
-- ❤ **User-friendly**:
+- **User-friendly** ❤
     - Everything happens in your local session - no need to fork a repo to inspect/edit the internals!
     - Multiple expressions can be passed in to be evaluated inside method body
     - Output of evaluated expressions are available for inspection outside of the debugging environment.
     - Calls `untrace()` on itself on exit by default, for extra safety
   
-- 🛠 **Flexible**:
+- **Flexible** 🛠
     - You can either...
         - _Programmatically_ debug with `ggtrace()`, for testing, building reprexes, etc., OR
         - _Interactively_ debug with `ggedit()` by directly editing the source code.
@@ -55,8 +54,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ```{r setup}
-library(ggtrace)
-library(ggplot2) # v3.3.5
+library(ggtrace) # v0.1.1
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -64,12 +62,14 @@ library(ggplot2) # v3.3.5
 ### **Step 1. Make plot**
 
 ```{r ex-1-setup}
+library(ggplot2) # v3.3.5
+
 jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
   geom_point(position = position_jitter(width = 0.2, seed = 2021))
 jitter_plot
 ```
 
-### **Step 2. Inspect callstack of the ggproto of interest**
+### **Step 2. Inspect callstack of the ggproto method**
 
 ```{r ex-1-ggbody}
 ggbody(PositionJitter$compute_layer)
@@ -122,7 +122,9 @@ jitter_plot
 
 ```{r ex-1b-last}
 jitter_tracedump <- last_ggtrace()
+
 lapply(jitter_tracedump, nrow)
+
 lapply(jitter_tracedump, head)
 ```
 
@@ -137,7 +139,7 @@ smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
 smooth_plot
 ```
 
-### **Step 2. Inspect callstack of the ggproto of interest**
+### **Step 2. Inspect callstack of the ggproto method**
 
 ```{r ex-2-ggbody}
 ggbody(GeomSmooth$draw_group)
@@ -161,7 +163,9 @@ smooth_plot
 
 ```{r ex-2-last}
 smooth_tracedump <- last_ggtrace()
+
 smooth_tracedump
+
 str(smooth_tracedump[[1]])
 ```
 
@@ -179,7 +183,7 @@ sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) 
 sina_plot
 ```
 
-### **Step 2. Inspect callstack of the ggproto of interest**
+### **Step 2. Inspect callstack of the ggproto method**
 
 ```{r ex-3-ggbody}
 ggbody(StatSina$compute_group)
@@ -203,5 +207,6 @@ sina_plot
 
 ```{r ex-3-last}
 sina_tracedump <- last_ggtrace()
+
 waldo::compare(sina_tracedump[[1]], sina_tracedump[[2]])
 ```

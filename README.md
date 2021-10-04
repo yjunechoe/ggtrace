@@ -5,7 +5,6 @@
 
 <!-- badges: start -->
 
-[](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/workflows/R-CMD-check/badge.svg)](https://github.com/yjunechoe/ggtrace/actions)
 <!-- badges: end -->
 
@@ -14,12 +13,12 @@ with `trace()`.
 
 ## **Why {ggtrace}?**
 
--   ⚡ **Lightweight**:
+-   **Lightweight** ⚡
     -   The only dependency is `{rlang}` (not even `{ggplot2}` is
         required!)
     -   There isn’t a lot of code in the package - most of the heavy
         lifting is done by `base::trace()`
--   ❤ **User-friendly**:
+-   **User-friendly** ❤
     -   Everything happens in your local session - no need to fork a
         repo to inspect/edit the internals!
     -   Multiple expressions can be passed in to be evaluated inside
@@ -27,7 +26,7 @@ with `trace()`.
     -   Output of evaluated expressions are available for inspection
         outside of the debugging environment.
     -   Calls `untrace()` on itself on exit by default, for extra safety
--   🛠 **Flexible**:
+-   **Flexible** 🛠
     -   You can either…
         -   *Programmatically* debug with `ggtrace()`, for testing,
             building reprexes, etc., OR
@@ -53,9 +52,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ``` r
-library(ggtrace)
-library(ggplot2) # v3.3.5
-#> Warning: package 'ggplot2' was built under R version 4.1.1
+library(ggtrace) # v0.1.1
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -63,6 +60,8 @@ library(ggplot2) # v3.3.5
 ### **Step 1. Make plot**
 
 ``` r
+library(ggplot2) # v3.3.5
+
 jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
   geom_point(position = position_jitter(width = 0.2, seed = 2021))
 jitter_plot
@@ -70,7 +69,7 @@ jitter_plot
 
 <img src="man/figures/README-ex-1-setup-1.png" width="100%" />
 
-### **Step 2. Inspect callstack of the ggproto of interest**
+### **Step 2. Inspect callstack of the ggproto method**
 
 ``` r
 ggbody(PositionJitter$compute_layer)
@@ -249,6 +248,7 @@ jitter_plot
 
 ``` r
 jitter_tracedump <- last_ggtrace()
+
 lapply(jitter_tracedump, nrow)
 #> $`[Step 1]> data`
 #> [1] 1000
@@ -258,6 +258,7 @@ lapply(jitter_tracedump, nrow)
 #> 
 #> $`[Step 12]> ~line`
 #> [1] 1000
+
 lapply(jitter_tracedump, head)
 #> $`[Step 1]> data`
 #>   x    y PANEL group
@@ -301,7 +302,7 @@ smooth_plot
 
 <img src="man/figures/README-ex-2-setup-1.png" width="100%" />
 
-### **Step 2. Inspect callstack of the ggproto of interest**
+### **Step 2. Inspect callstack of the ggproto method**
 
 ``` r
 ggbody(GeomSmooth$draw_group)
@@ -354,9 +355,11 @@ smooth_plot
 
 ``` r
 smooth_tracedump <- last_ggtrace()
+
 smooth_tracedump
 #> $`[Step 7]> ~line`
 #> (gTree[geom_ribbon.gTree.167], polyline[GRID.polyline.168])
+
 str(smooth_tracedump[[1]])
 #> List of 2
 #>  $ :List of 5
@@ -438,7 +441,7 @@ sina_plot
 
 <img src="man/figures/README-ex-3-setup-1.png" width="100%" />
 
-### **Step 2. Inspect callstack of the ggproto of interest**
+### **Step 2. Inspect callstack of the ggproto method**
 
 ``` r
 ggbody(StatSina$compute_group)
@@ -514,6 +517,7 @@ sina_plot
 
 ``` r
 sina_tracedump <- last_ggtrace()
+
 waldo::compare(sina_tracedump[[1]], sina_tracedump[[2]])
 #> `old` is length 4
 #> `new` is length 8
