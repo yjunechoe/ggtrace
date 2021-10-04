@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Changelog • ggtrace</title>
+<title>Interactively edit the source code of a ggproto method — ggedit • ggtrace</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Changelog" />
+<meta property="og:title" content="Interactively edit the source code of a ggproto method — ggedit" />
+<meta property="og:description" content="Interactively edit the source code of a ggproto method" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-news">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -132,32 +133,54 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1 data-toc-skip>Changelog <small></small></h1>
-      <small>Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
+    <h1>Interactively edit the source code of a ggproto method</h1>
+    <small class="dont-index">Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/R/ggedit.R'><code>R/ggedit.R</code></a></small>
+    <div class="hidden name"><code>ggedit.Rd</code></div>
     </div>
 
-    <div id="penngradlings-development-version" class="section level1">
-<h1 class="page-header" data-toc-text="development version">
-<a href="#penngradlings-development-version" class="anchor"></a>penngradlings (development version)</h1>
-<ul>
-<li>A <code><a href="../reference/ggedit.html">ggedit()</a></code> function for interactively debugging a ggproto method with <code><a href="https://rdrr.io/r/base/trace.html">trace(edit = TRUE)</a></code>
-</li>
-<li>A new argument for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> that takes an expression to allow <code>tracer</code> to be triggered conditionally</li>
-</ul>
-</div>
-    <div id="ggtrace-010" class="section level1">
-<h1 class="page-header" data-toc-text="0.1.0">
-<a href="#ggtrace-010" class="anchor"></a>ggtrace 0.1.0</h1>
-<p>Initial release.</p>
-</div>
-  </div>
+    <div class="ref-description">
+    <p>Interactively edit the source code of a ggproto method</p>
+    </div>
 
+    <pre class="usage"><span class='fu'>ggedit</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>method</th>
+      <td><p>The method name as a string. Alternatively an expression
+that evaluates to the ggproto method in the form of <code>ggproto$method</code>.</p></td>
+    </tr>
+    <tr>
+      <th>obj</th>
+      <td><p>The ggproto object. Can be omitted if the method is an expression
+in the form of <code>ggproto$method</code> that evalutes to the ggproto object's method.</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
+
+    <p>Like <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code>, the edit is in place until <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> is called.
+To <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> a ggproto method, the syntax is <code><a href='https://rdrr.io/r/base/trace.html'>untrace(what = "method", where = obj)</a></code></p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+<span class='co'># jitter_plot &lt;- ggplot(diamonds[1:1000,], aes(cut, depth)) +</span>
+<span class='co'>#   geom_point(position = position_jitter(width = 0.2, seed = 2021))</span>
+<span class='co'># ggedit(PositionJitter$compute_layer)</span>
+<span class='co'># &lt; interactively modify the method's source code in text editor &gt;</span>
+<span class='co'># jitter_plot # Edit is in place</span>
+<span class='co'># untrace(what = "compute_layer", where = PositionJitter)</span>
+<span class='co'># jitter_plot # Edit is removed</span>
+<span class='co'># }</span>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
-
 </div>
 
 

@@ -11,11 +11,16 @@ template:
   bootswatch: materia
 
 reference:
-- title: ggtrace
+- title: Trace and edit
   desc: Programmatically debug ggproto methods with trace
   contents:
   - ggtrace
+  - ggedit
   - ggbody
+
+- title: Cache and inspect
+  desc: Track evaluated expressions and traced methods
+  contents:
   - last_ggtrace
 
 articles:
