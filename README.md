@@ -4,12 +4,43 @@
 # **{ggtrace}**
 
 <!-- badges: start -->
+
+[](https://lifecycle.r-lib.org/articles/figures/lifecycle-experimental.svg)
+[![R-CMD-check](https://github.com/yjunechoe/ggtrace/workflows/R-CMD-check/badge.svg)](https://github.com/yjunechoe/ggtrace/actions)
 <!-- badges: end -->
 
 An experimental package for programmatically debugging ggproto methods
 with `trace()`.
 
-## Installation
+## **Why {ggtrace}?**
+
+-   ⚡ **Lightweight**:
+    -   The only dependency is `{rlang}` (not even `{ggplot2}` is
+        required!)
+    -   There isn’t a lot of code in the package - most of the heavy
+        lifting is done by `base::trace()`
+-   ❤ **User-friendly**:
+    -   Everything happens in your local session - no need to fork a
+        repo to inspect/edit the internals!
+    -   Multiple expressions can be passed in to be evaluated inside
+        method body
+    -   Output of evaluated expressions are available for inspection
+        outside of the debugging environment.
+    -   Calls `untrace()` on itself on exit by default, for extra safety
+-   🛠 **Flexible**:
+    -   You can either…
+        -   *Programmatically* debug with `ggtrace()`, for testing,
+            building reprexes, etc., OR
+        -   *Interactively* debug with `ggedit()` by directly editing
+            the source code.
+    -   Your favorite debugging tools (e.g., `browser()`) can be easily
+        incorporated into this workflow.
+    -   Can be used to debug other object classes in R, not just
+        ggproto!
+
+More on the pkgdown website: [https://yjunechoe.github.io/ggtrace]()
+
+## **Installation**
 
 You can install the development version from
 [GitHub](https://github.com/) with:
@@ -19,7 +50,7 @@ You can install the development version from
 devtools::install_github("yjunechoe/ggtrace")
 ```
 
-## Usage
+## **Usage**
 
 ``` r
 library(ggtrace)
@@ -29,7 +60,7 @@ library(ggplot2) # v3.3.5
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 
-### Step 1. Make plot
+### **Step 1. Make plot**
 
 ``` r
 jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -39,7 +70,7 @@ jitter_plot
 
 <img src="man/figures/README-ex-1-setup-1.png" width="100%" />
 
-### Step 2. Inspect callstack of the ggproto of interest
+### **Step 2. Inspect callstack of the ggproto of interest**
 
 ``` r
 ggbody(PositionJitter$compute_layer)
@@ -82,7 +113,7 @@ ggbody(PositionJitter$compute_layer)
 #>     y_jit)
 ```
 
-### Step 3a. `ggtrace()` - with expressions wrapped in `head()`
+### **Step 3a. `ggtrace()` - with expressions wrapped in `head()`**
 
 ``` r
 ggtrace(
@@ -143,7 +174,7 @@ jitter_plot
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
-### Step 4a. Inspect trace dumnp
+### **Step 4a. Inspect trace dumnp**
 
 ``` r
 last_ggtrace()
@@ -186,7 +217,7 @@ last_ggtrace()
 #> 6 3.080538 62.77536     1     3
 ```
 
-### Step 3b. `ggtrace()` - with `.print = FALSE` instead (**recommended**)
+### **Step 3b. `ggtrace()` - with `.print = FALSE` instead (recommended)**
 
 ``` r
 ggtrace(
@@ -214,7 +245,7 @@ jitter_plot
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
-### Step 4b. Inspect trace dump
+### **Step 4b. Inspect trace dump**
 
 ``` r
 jitter_tracedump <- last_ggtrace()
@@ -256,9 +287,9 @@ lapply(jitter_tracedump, head)
 #> 6 3.080538 62.77536     1     3
 ```
 
-## **Example 2 - `draw_group` method from `GeomSmooth` {ggplot2}**
+## **Example 2 - `draw_group` method from `GeomSmooth`**
 
-### Step 1. Make plot
+### **Step 1. Make plot**
 
 ``` r
 smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
@@ -270,7 +301,7 @@ smooth_plot
 
 <img src="man/figures/README-ex-2-setup-1.png" width="100%" />
 
-### Step 2. Inspect callstack of the ggproto of interest
+### **Step 2. Inspect callstack of the ggproto of interest**
 
 ``` r
 ggbody(GeomSmooth$draw_group)
@@ -298,7 +329,7 @@ ggbody(GeomSmooth$draw_group)
 #>     panel_params, coord))
 ```
 
-### Step 3. `ggtrace()` - get gList
+### **Step 3. `ggtrace()` - get `gList()`**
 
 ``` r
 ggtrace(
@@ -319,7 +350,7 @@ smooth_plot
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
-### Step 4. Inspect trace dump
+### **Step 4. Inspect trace dump**
 
 ``` r
 smooth_tracedump <- last_ggtrace()
@@ -393,10 +424,10 @@ str(smooth_tracedump[[1]])
 
 ## **Example 3 - `compute_group` method from `StatSina` {ggforce}**
 
-### Step 1. Make plot
+### **Step 1. Make plot**
 
 ``` r
-library(ggforce)
+library(ggforce) # v.0.3.3
 #> Warning: package 'ggforce' was built under R version 4.1.1
 
 sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) +
@@ -407,7 +438,7 @@ sina_plot
 
 <img src="man/figures/README-ex-3-setup-1.png" width="100%" />
 
-### Step 2. Inspect callstack of the ggproto of interest
+### **Step 2. Inspect callstack of the ggproto of interest**
 
 ``` r
 ggbody(StatSina$compute_group)
@@ -457,7 +488,7 @@ ggbody(StatSina$compute_group)
 #> data
 ```
 
-### Step 3. `ggtrace()` - with one expression evaluated at multiple steps
+### **Step 3. `ggtrace()` - with one expression evaluated at multiple steps**
 
 ``` r
 ggtrace(
@@ -479,7 +510,7 @@ sina_plot
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
-### Step 4. Inspect trace dump
+### **Step 4. Inspect trace dump**
 
 ``` r
 sina_tracedump <- last_ggtrace()

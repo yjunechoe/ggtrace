@@ -28,6 +28,7 @@ articles:
   navbar: Usage
   contents:
   - intro
+  - usecases
 - title: Miscellaneous
   navbar: Miscellaneous
   contents:
