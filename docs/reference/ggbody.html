@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Retrieve the callstack of a ggproto method as a list — ggbody" />
-<meta property="og:description" content="" />
+<meta property="og:description" content="Essentially calls as.list(body(get(&quot;&amp;lt;method&amp;gt;&quot;, &amp;lt;obj&amp;gt;))) under the hood." />
 
 
 
@@ -139,7 +139,7 @@
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+    <p>Essentially calls <code>as.list(body(get("&lt;method&gt;", &lt;obj&gt;)))</code> under the hood.</p>
     </div>
 
     <pre class="usage"><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span><span class='op'>)</span></pre>
@@ -159,9 +159,6 @@ in the form of <code>ggproto$method</code> that evalutes to the ggproto object's
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Essentially calls <code>as.list(body(get("&lt;method&gt;", &lt;obj&gt;)))</code> under the hood.</p>
     <h2 class="hasAnchor" id="note"><a class="anchor" href="#note"></a>Note</h2>
 
     <p>Despite the convenience of the short form which <code>ggbody()</code> also works with,

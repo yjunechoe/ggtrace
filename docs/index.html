@@ -93,7 +93,8 @@
   <div class="contents col-md-9">
 <div id="ggtrace" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#ggtrace" class="anchor"></a>{ggtrace}</h1></div>
+<a href="#ggtrace" class="anchor"></a><strong>{ggtrace}</strong>
+</h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
 <p>An experimental package for programmatically debugging ggproto methods with <code><a href="https://rdrr.io/r/base/trace.html">trace()</a></code>.</p>
@@ -112,15 +113,22 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span> <span class="co"># v3.3.5</span>
 <span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.1.1</span></code></pre></div>
-<div id="example---compute_layer-method-from-positionjitter" class="section level3">
+</div>
+<div id="example-1---compute_layer-method-from-positionjitter-ggplot2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-1---compute_layer-method-from-positionjitter-ggplot2" class="anchor"></a>Example 1 - <code>compute_layer</code> method from <code>PositionJitter</code> {ggplot2}</h2>
+<div id="step-1-make-plot" class="section level3">
 <h3 class="hasAnchor">
-<a href="#example---compute_layer-method-from-positionjitter" class="anchor"></a>Example - <code>compute_layer</code> method from <code>PositionJitter</code>
-</h3>
+<a href="#step-1-make-plot" class="anchor"></a>Step 1. Make plot</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">jitter_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.2</span>, seed <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span><span class="op">)</span>
 <span class="va">jitter_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-1-setup-1.png" width="100%"></p>
+</div>
+<div id="step-2-inspect-callstack-of-the-ggproto-of-interest" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-2-inspect-callstack-of-the-ggproto-of-interest" class="anchor"></a>Step 2. Inspect callstack of the ggproto of interest</h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
@@ -160,6 +168,11 @@
 <span class="co">#&gt; [[12]]</span>
 <span class="co">#&gt; transform_position(data, function(x) x + x_jit, function(x) x + </span>
 <span class="co">#&gt;     y_jit)</span></code></pre></div>
+</div>
+<div id="step-3a-ggtrace---with-expressions-wrapped-in-head" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-3a-ggtrace---with-expressions-wrapped-in-head" class="anchor"></a>Step 3a. <code>ggtrace()</code> - with expressions wrapped in <code>head()</code>
+</h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span>,
@@ -217,6 +230,10 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Untracing method compute_layer from &lt;PstnJttr&gt; ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
+</div>
+<div id="step-4a-inspect-trace-dumnp" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-4a-inspect-trace-dumnp" class="anchor"></a>Step 4a. Inspect trace dumnp</h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; $`[Step 1]&gt; head(data)`</span>
@@ -256,13 +273,16 @@
 <span class="co">#&gt; 4 3.952698 62.42703     1     4</span>
 <span class="co">#&gt; 5 2.054530 63.29763     1     2</span>
 <span class="co">#&gt; 6 3.080538 62.77536     1     3</span></code></pre></div>
+</div>
+<div id="step-3b-ggtrace---with-print--false-recommended" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-3b-ggtrace---with-print--false-recommended" class="anchor"></a>Step 3b. <code>ggtrace()</code> - with <code>.print = FALSE</code> (recommended)</h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span>,
-  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">12</span><span class="op">)</span>,
+  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span>,
   trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span>
     <span class="va">data</span>,
-    <span class="va">params</span>,
     <span class="va">dummy_data</span>,
     <span class="op">~</span><span class="va">line</span>
   <span class="op">)</span>,
@@ -275,16 +295,28 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 1]&gt; data </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 1]&gt; params </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 9]&gt; dummy_data </span>
+<span class="co">#&gt;  [Step 1]&gt; dummy_data </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 12]&gt; ~line </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Untracing method compute_layer from &lt;PstnJttr&gt; ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
+</div>
+<div id="step-4b-inspect-trace-dump" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-4b-inspect-trace-dump" class="anchor"></a>Step 4b. Inspect trace dump</h3>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">head</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">jitter_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">jitter_tracedump</span>, <span class="va">nrow</span><span class="op">)</span>
+<span class="co">#&gt; $`[Step 1]&gt; data`</span>
+<span class="co">#&gt; [1] 1000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`[Step 1]&gt; dummy_data`</span>
+<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`[Step 12]&gt; ~line`</span>
+<span class="co">#&gt; [1] 1000</span>
+<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">jitter_tracedump</span>, <span class="va">head</span><span class="op">)</span>
 <span class="co">#&gt; $`[Step 1]&gt; data`</span>
 <span class="co">#&gt;   x    y PANEL group</span>
 <span class="co">#&gt; 1 5 61.5     1     5</span>
@@ -294,25 +326,10 @@
 <span class="co">#&gt; 5 2 63.3     1     2</span>
 <span class="co">#&gt; 6 3 62.8     1     3</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 1]&gt; params`</span>
-<span class="co">#&gt; $`[Step 1]&gt; params`$width</span>
-<span class="co">#&gt; [1] 0.2</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 1]&gt; params`$height</span>
-<span class="co">#&gt; [1] 0.04</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 1]&gt; params`$seed</span>
-<span class="co">#&gt; [1] 2021</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 9]&gt; dummy_data`</span>
-<span class="co">#&gt;   x    y</span>
-<span class="co">#&gt; 1 5 61.5</span>
-<span class="co">#&gt; 2 4 59.8</span>
-<span class="co">#&gt; 3 2 56.9</span>
-<span class="co">#&gt; 4 4 62.4</span>
-<span class="co">#&gt; 5 2 63.3</span>
-<span class="co">#&gt; 6 3 62.8</span>
+<span class="co">#&gt; $`[Step 1]&gt; dummy_data`</span>
+<span class="co">#&gt;                                      </span>
+<span class="co">#&gt; 1 function ()                        </span>
+<span class="co">#&gt; 2 new_data_frame(list(x = NA), n = 1)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`[Step 12]&gt; ~line`</span>
 <span class="co">#&gt;          x        y PANEL group</span>
@@ -322,6 +339,258 @@
 <span class="co">#&gt; 4 3.952698 62.42703     1     4</span>
 <span class="co">#&gt; 5 2.054530 63.29763     1     2</span>
 <span class="co">#&gt; 6 3.080538 62.77536     1     3</span></code></pre></div>
+</div>
+</div>
+<div id="example-2---draw_group-method-from-geomsmooth-ggplot2" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-2---draw_group-method-from-geomsmooth-ggplot2" class="anchor"></a>Example 2 - <code>draw_group</code> method from <code>GeomSmooth</code> {ggplot2}</h2>
+<div id="step-1-make-plot-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-1-make-plot-1" class="anchor"></a>Step 1. Make plot</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">smooth_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">stat_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
+<span class="va">smooth_plot</span>
+<span class="co">#&gt; `geom_smooth()` using formula 'y ~ x'</span></code></pre></div>
+<p><img src="reference/figures/README-ex-2-setup-1.png" width="100%"></p>
+</div>
+<div id="step-2-inspect-callstack-of-the-ggproto-of-interest-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-2-inspect-callstack-of-the-ggproto-of-interest-1" class="anchor"></a>Step 2. Inspect callstack of the ggproto of interest</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">GeomSmooth</span><span class="op">$</span><span class="va">draw_group</span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; `{`</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; ribbon &lt;- transform(data, colour = NA)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; path &lt;- transform(data, alpha = NA)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; ymin = flipped_names(flipped_aes)$ymin</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt; ymax = flipped_names(flipped_aes)$ymax</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt; has_ribbon &lt;- se &amp;&amp; !is.null(data[[ymax]]) &amp;&amp; !is.null(data[[ymin]])</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt; gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, </span>
+<span class="co">#&gt;     coord, flipped_aes = flipped_aes), GeomLine$draw_panel(path, </span>
+<span class="co">#&gt;     panel_params, coord))</span></code></pre></div>
+</div>
+<div id="step-3-ggtrace---get-glist" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-3-ggtrace---get-glist" class="anchor"></a>Step 3. <code>ggtrace()</code> - get gList</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
+  method <span class="op">=</span> <span class="va">GeomSmooth</span><span class="op">$</span><span class="va">draw_group</span>,
+  trace_steps <span class="op">=</span> <span class="fl">7</span>,
+  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>,
+  .print <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span>
+
+<span class="co"># plot not printed to save space</span>
+<span class="va">smooth_plot</span>
+<span class="co">#&gt; `geom_smooth()` using formula 'y ~ x'</span>
+<span class="co">#&gt; Tracing method draw_group from &lt;GeomSmth&gt; ggproto.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  [Step 7]&gt; ~line </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Untracing method draw_group from &lt;GeomSmth&gt; ggproto.</span>
+<span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
+</div>
+<div id="step-4-inspect-trace-dump" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-4-inspect-trace-dump" class="anchor"></a>Step 4. Inspect trace dump</h3>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">smooth_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">smooth_tracedump</span>
+<span class="co">#&gt; $`[Step 7]&gt; ~line`</span>
+<span class="co">#&gt; (gTree[geom_ribbon.gTree.167], polyline[GRID.polyline.168])</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">smooth_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="co">#&gt; List of 2</span>
+<span class="co">#&gt;  $ :List of 5</span>
+<span class="co">#&gt;   ..$ name         : chr "geom_ribbon.gTree.167"</span>
+<span class="co">#&gt;   ..$ gp           : NULL</span>
+<span class="co">#&gt;   ..$ vp           : NULL</span>
+<span class="co">#&gt;   ..$ children     :List of 2</span>
+<span class="co">#&gt;   .. ..$ GRID.polygon.164 :List of 7</span>
+<span class="co">#&gt;   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...</span>
+<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
+<span class="co">#&gt;   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...</span>
+<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
+<span class="co">#&gt;   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="co">#&gt;   .. .. ..$ id.lengths: NULL</span>
+<span class="co">#&gt;   .. .. ..$ name      : chr "GRID.polygon.164"</span>
+<span class="co">#&gt;   .. .. ..$ gp        :List of 4</span>
+<span class="co">#&gt;   .. .. .. ..$ fill: chr "#99999966"</span>
+<span class="co">#&gt;   .. .. .. ..$ col : logi NA</span>
+<span class="co">#&gt;   .. .. .. ..$ lwd : num 0</span>
+<span class="co">#&gt;   .. .. .. ..$ lty : num 1</span>
+<span class="co">#&gt;   .. .. .. ..- attr(*, "class")= chr "gpar"</span>
+<span class="co">#&gt;   .. .. ..$ vp        : NULL</span>
+<span class="co">#&gt;   .. .. ..- attr(*, "class")= chr [1:3] "polygon" "grob" "gDesc"</span>
+<span class="co">#&gt;   .. ..$ GRID.polyline.165:List of 8</span>
+<span class="co">#&gt;   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...</span>
+<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
+<span class="co">#&gt;   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...</span>
+<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
+<span class="co">#&gt;   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="co">#&gt;   .. .. ..$ id.lengths: NULL</span>
+<span class="co">#&gt;   .. .. ..$ arrow     : NULL</span>
+<span class="co">#&gt;   .. .. ..$ name      : chr "GRID.polyline.165"</span>
+<span class="co">#&gt;   .. .. ..$ gp        :List of 3</span>
+<span class="co">#&gt;   .. .. .. ..$ col: logi NA</span>
+<span class="co">#&gt;   .. .. .. ..$ lwd: num 2.85</span>
+<span class="co">#&gt;   .. .. .. ..$ lty: num 1</span>
+<span class="co">#&gt;   .. .. .. ..- attr(*, "class")= chr "gpar"</span>
+<span class="co">#&gt;   .. .. ..$ vp        : NULL</span>
+<span class="co">#&gt;   .. .. ..- attr(*, "class")= chr [1:3] "polyline" "grob" "gDesc"</span>
+<span class="co">#&gt;   .. ..- attr(*, "class")= chr "gList"</span>
+<span class="co">#&gt;   ..$ childrenOrder: chr [1:2] "GRID.polygon.164" "GRID.polyline.165"</span>
+<span class="co">#&gt;   ..- attr(*, "class")= chr [1:3] "gTree" "grob" "gDesc"</span>
+<span class="co">#&gt;  $ :List of 8</span>
+<span class="co">#&gt;   ..$ x         : 'simpleUnit' num [1:80] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...</span>
+<span class="co">#&gt;   .. ..- attr(*, "unit")= int 4</span>
+<span class="co">#&gt;   ..$ y         : 'simpleUnit' num [1:80] 0.688native 0.681native 0.674native 0.668native 0.661native ...</span>
+<span class="co">#&gt;   .. ..- attr(*, "unit")= int 4</span>
+<span class="co">#&gt;   ..$ id        : int [1:80] 1 1 1 1 1 1 1 1 1 1 ...</span>
+<span class="co">#&gt;   ..$ id.lengths: NULL</span>
+<span class="co">#&gt;   ..$ arrow     : NULL</span>
+<span class="co">#&gt;   ..$ name      : chr "GRID.polyline.168"</span>
+<span class="co">#&gt;   ..$ gp        :List of 7</span>
+<span class="co">#&gt;   .. ..$ col      : chr "#3366FF"</span>
+<span class="co">#&gt;   .. ..$ fill     : chr "#3366FF"</span>
+<span class="co">#&gt;   .. ..$ lwd      : num 2.85</span>
+<span class="co">#&gt;   .. ..$ lty      : num 1</span>
+<span class="co">#&gt;   .. ..$ lineend  : chr "butt"</span>
+<span class="co">#&gt;   .. ..$ linejoin : chr "round"</span>
+<span class="co">#&gt;   .. ..$ linemitre: num 10</span>
+<span class="co">#&gt;   .. ..- attr(*, "class")= chr "gpar"</span>
+<span class="co">#&gt;   ..$ vp        : NULL</span>
+<span class="co">#&gt;   ..- attr(*, "class")= chr [1:3] "polyline" "grob" "gDesc"</span>
+<span class="co">#&gt;  - attr(*, "class")= chr "gList"</span></code></pre></div>
+</div>
+</div>
+<div id="example-3---compute_group-method-from-statsina-ggforce" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-3---compute_group-method-from-statsina-ggforce" class="anchor"></a>Example 3 - <code>compute_group</code> method from <code>StatSina</code> {ggforce}</h2>
+<div id="step-1-make-plot-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-1-make-plot-2" class="anchor"></a>Step 1. Make plot</h3>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggforce.data-imaginist.com">ggforce</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'ggforce' was built under R version 4.1.1</span>
+
+<span class="va">sina_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="va">diamonds</span><span class="op">$</span><span class="va">cut</span> <span class="op">==</span> <span class="st">"Ideal"</span>,<span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html">geom_violin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggforce.data-imaginist.com/reference/geom_sina.html">geom_sina</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span>
+<span class="va">sina_plot</span></code></pre></div>
+<p><img src="reference/figures/README-ex-3-setup-1.png" width="100%"></p>
+</div>
+<div id="step-2-inspect-callstack-of-the-ggproto-of-interest-2" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-2-inspect-callstack-of-the-ggproto-of-interest-2" class="anchor"></a>Step 2. Inspect callstack of the ggproto of interest</h3>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatSina</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; `{`</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; if (nrow(data) == 0) return(NULL)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; if (nrow(data) &lt; 3) {</span>
+<span class="co">#&gt;     data$density &lt;- 0</span>
+<span class="co">#&gt;     data$scaled &lt;- 1</span>
+<span class="co">#&gt; } else if (method == "density") {</span>
+<span class="co">#&gt;     range &lt;- range(data$y, na.rm = TRUE)</span>
+<span class="co">#&gt;     bw &lt;- calc_bw(data$y, bw)</span>
+<span class="co">#&gt;     dens &lt;- compute_density(data$y, data$w, from = range[1], </span>
+<span class="co">#&gt;         to = range[2], bw = bw, adjust = adjust, kernel = kernel)</span>
+<span class="co">#&gt;     densf &lt;- stats::approxfun(dens$x, dens$density, rule = 2)</span>
+<span class="co">#&gt;     data$density &lt;- densf(data$y)</span>
+<span class="co">#&gt;     data$scaled &lt;- data$density/max(dens$density)</span>
+<span class="co">#&gt;     data</span>
+<span class="co">#&gt; } else {</span>
+<span class="co">#&gt;     bin_index &lt;- cut(data$y, bins, include.lowest = TRUE, labels = FALSE)</span>
+<span class="co">#&gt;     data$density &lt;- tapply(bin_index, bin_index, length)[as.character(bin_index)]</span>
+<span class="co">#&gt;     data$density[data$density &lt;= bin_limit] &lt;- 0</span>
+<span class="co">#&gt;     data$scaled &lt;- data$density/max(data$density)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; if (length(unique(data$x)) &gt; 1) {</span>
+<span class="co">#&gt;     width &lt;- diff(range(data$x)) * maxwidth</span>
+<span class="co">#&gt; } else {</span>
+<span class="co">#&gt;     width &lt;- maxwidth</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt; data$width &lt;- width</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt; data$n &lt;- nrow(data)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt; data$x &lt;- mean(range(data$x))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt; data</span></code></pre></div>
+</div>
+<div id="step-3-ggtrace---with-one-expression-evaluated-at-multiple-steps" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-3-ggtrace---with-one-expression-evaluated-at-multiple-steps" class="anchor"></a>Step 3. <code>ggtrace()</code> - with one expression evaluated at multiple steps</h3>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
+  method <span class="op">=</span> <span class="va">StatSina</span><span class="op">$</span><span class="va">compute_group</span>,
+  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>,
+  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,
+  .print <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span>
+
+<span class="co"># plot not printed to save space</span>
+<span class="va">sina_plot</span>
+<span class="co">#&gt; Tracing method compute_group from &lt;StatSina&gt; ggproto.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  [Step 1]&gt; data </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  [Step 8]&gt; data </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Untracing method compute_group from &lt;StatSina&gt; ggproto.</span>
+<span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
+</div>
+<div id="step-4-inspect-trace-dump-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#step-4-inspect-trace-dump-1" class="anchor"></a>Step 4. Inspect trace dump</h3>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">sina_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html">compare</a></span><span class="op">(</span><span class="va">sina_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">sina_tracedump</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="co">#&gt; `old` is length 4</span>
+<span class="co">#&gt; `new` is length 8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; `names(old)[2:4]`: "y" "PANEL" "group"                               </span>
+<span class="co">#&gt; `names(new)[2:8]`: "y" "PANEL" "group" "density" "scaled" "width" "n"</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; `old$x` is an S3 object of class &lt;mapped_discrete/numeric&gt;, an integer vector</span>
+<span class="co">#&gt; `new$x` is a double vector (1, 1, 1, 1, 1, ...)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; `old$density` is absent</span>
+<span class="co">#&gt; `new$density` is a double vector (0.46323885621947, 0.213496721362797, 0.497309776120959, 0.543803948542487, 0.539050969762089, ...)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; `old$scaled` is absent</span>
+<span class="co">#&gt; `new$scaled` is a double vector (0.845470465475205, 0.38965896311279, 0.907654274371047, 0.992512116219465, 0.983837318913703, ...)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; `old$width` is absent</span>
+<span class="co">#&gt; `new$width` is a double vector (0.9, 0.9, 0.9, 0.9, 0.9, ...)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; `old$n` is absent</span>
+<span class="co">#&gt; `new$n` is an integer vector (50, 50, 50, 50, 50, ...)</span></code></pre></div>
 </div>
 </div>
 </div>
