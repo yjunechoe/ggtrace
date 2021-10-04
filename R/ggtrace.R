@@ -8,10 +8,11 @@
 #'   To simply run a step (or reference the expression at a step), you can use the `~line` keyword.
 #'   All instances of `~line` will get substituted by the expression inside the debugging environment.
 #'
-#' @param .print Whether to print the output of each expression to the console.
+#' @param once Whether to `untrace()` itself on exit. Defaults to `TRUE`.
+#' @param .print Whether to print the output of each expression to the console. Defaults to `TRUE`.
 #'
 #' @details `ggtrace()` is a wrapper around `base::trace()` which is called on the ggproto method.
-#'  It calls `base::untrace()` on itself on exit by design, so its effect is ephemeral (like `base::debugonce()`).
+#'  It calls `base::untrace()` on itself on exit by default, to make its effect ephemeral (like `base::debugonce()`).
 #'  A major feature is the ability to pass multiple positions and expressions to `trace_steps` and `trace_exprs`.
 #'  It is recommended to consult the output of `ggbody()` when deciding which expressions to evaluate at which steps.
 #'
@@ -74,7 +75,7 @@
 #' lapply(jitter_tracedump, head)
 #' hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
 #' }
-ggtrace <- function(method, obj, trace_steps, trace_exprs, .print = TRUE) {
+ggtrace <- function(method, obj, trace_steps, trace_exprs, once = TRUE, .print = TRUE) {
 
   if (rlang::is_missing(obj)) {
     method_expr <- rlang::enexpr(method)
@@ -134,9 +135,13 @@ ggtrace <- function(method, obj, trace_steps, trace_exprs, .print = TRUE) {
       },
       print = FALSE,
       exit = rlang::expr({
-        cat("\n");
-        suppressMessages(untrace(!!method, where = !!obj));
-        cat("Untracing method", !!method, "from", !!obj_name, "ggproto.\n");
+        cat("\n")
+        if (!!once) {
+          suppressMessages(untrace(!!method, where = !!obj))
+          cat("Untracing method", !!method, "from", !!obj_name, "ggproto.\n")
+        } else {
+          message("Creating a persistent trace. Remember to `gguntrace()`!")
+        }
         cat("Call `last_ggtrace()` to get the trace dump.\n")
       })
     )

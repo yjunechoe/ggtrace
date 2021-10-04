@@ -4,7 +4,7 @@
 \alias{ggtrace}
 \title{Programmatically debug ggproto methods with trace}
 \usage{
-ggtrace(method, obj, trace_steps, trace_exprs, .print = TRUE)
+ggtrace(method, obj, trace_steps, trace_exprs, once = TRUE, .print = TRUE)
 }
 \arguments{
 \item{method}{The method name as a string. Alternatively an expression
@@ -21,14 +21,16 @@ in \code{trace_steps}. If a single expression is provided, it is recycled.
 To simply run a step (or reference the expression at a step), you can use the \code{~line} keyword.
 All instances of \code{~line} will get substituted by the expression inside the debugging environment.}
 
-\item{.print}{Whether to print the output of each expression to the console.}
+\item{once}{Whether to \code{untrace()} itself on exit. Defaults to \code{TRUE}.}
+
+\item{.print}{Whether to print the output of each expression to the console. Defaults to \code{TRUE}.}
 }
 \description{
 Programmatically debug ggproto methods with trace
 }
 \details{
 \code{ggtrace()} is a wrapper around \code{base::trace()} which is called on the ggproto method.
-It calls \code{base::untrace()} on itself on exit by design, so its effect is ephemeral (like \code{base::debugonce()}).
+It calls \code{base::untrace()} on itself on exit by default, to make its effect ephemeral (like \code{base::debugonce()}).
 A major feature is the ability to pass multiple positions and expressions to \code{trace_steps} and \code{trace_exprs}.
 It is recommended to consult the output of \code{ggbody()} when deciding which expressions to evaluate at which steps.
 

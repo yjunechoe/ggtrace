@@ -104,6 +104,9 @@
     <li>
       <a href="../articles/intro.html">Intro to ggtrace()</a>
     </li>
+    <li>
+      <a href="../articles/usecases.html">Usecases</a>
+    </li>
     <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
@@ -142,7 +145,7 @@
     <p>Programmatically debug ggproto methods with trace</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span>, <span class='va'>trace_steps</span>, <span class='va'>trace_exprs</span>, .print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span>, <span class='va'>trace_steps</span>, <span class='va'>trace_exprs</span>, once <span class='op'>=</span> <span class='cn'>TRUE</span>, .print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -169,15 +172,19 @@ in <code>trace_steps</code>. If a single expression is provided, it is recycled.
 All instances of <code>~line</code> will get substituted by the expression inside the debugging environment.</p></td>
     </tr>
     <tr>
+      <th>once</th>
+      <td><p>Whether to <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> itself on exit. Defaults to <code>TRUE</code>.</p></td>
+    </tr>
+    <tr>
       <th>.print</th>
-      <td><p>Whether to print the output of each expression to the console.</p></td>
+      <td><p>Whether to print the output of each expression to the console. Defaults to <code>TRUE</code>.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p><code>ggtrace()</code> is a wrapper around <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code> which is called on the ggproto method.
-It calls <code><a href='https://rdrr.io/r/base/trace.html'>base::untrace()</a></code> on itself on exit by design, so its effect is ephemeral (like <code><a href='https://rdrr.io/r/base/debug.html'>base::debugonce()</a></code>).
+It calls <code><a href='https://rdrr.io/r/base/trace.html'>base::untrace()</a></code> on itself on exit by default, to make its effect ephemeral (like <code><a href='https://rdrr.io/r/base/debug.html'>base::debugonce()</a></code>).
 A major feature is the ability to pass multiple positions and expressions to <code>trace_steps</code> and <code>trace_exprs</code>.
 It is recommended to consult the output of <code><a href='ggbody.html'>ggbody()</a></code> when deciding which expressions to evaluate at which steps.</p>
 <p>The output of the expressions passed to <code>trace_exprs</code> is printed while tracing takes place. The last <code>ggtrace()</code>

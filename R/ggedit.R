@@ -29,5 +29,6 @@ ggedit <- function(method, obj) {
     obj <- split[[2]]
   }
   suppressMessages(trace(what = method, where = obj, edit = TRUE))
+  message("Creating a persistent trace. Remember to `gguntrace()`!")
   invisible(NULL)
 }
