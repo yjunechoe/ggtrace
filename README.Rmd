@@ -36,7 +36,7 @@ library(ggtrace)
 library(ggplot2) # v3.3.5
 ```
 
-## Example 1 - `compute_layer` method from `PositionJitter` {ggplot2}
+## **Example 1 - `compute_layer` method from `PositionJitter`**
 
 ### Step 1. Make plot
 
@@ -77,12 +77,12 @@ jitter_plot
 last_ggtrace()
 ```
 
-### Step 3b. `ggtrace()` - with `.print = FALSE` (recommended)
+### Step 3b. `ggtrace()` - with `.print = FALSE` instead (**recommended**)
 
 ```{r ex-1b-ggtrace, fig.show='hide'}
 ggtrace(
   method = PositionJitter$compute_layer,
-  trace_steps = c(1, 1, 12),
+  trace_steps = c(1, 9, 12),
   trace_exprs = rlang::exprs(
     data,
     dummy_data,
@@ -103,7 +103,7 @@ lapply(jitter_tracedump, nrow)
 lapply(jitter_tracedump, head)
 ```
 
-## Example 2 - `draw_group` method from `GeomSmooth` {ggplot2}
+## **Example 2 - `draw_group` method from `GeomSmooth` {ggplot2}**
 
 ### Step 1. Make plot
 
@@ -143,7 +143,7 @@ str(smooth_tracedump[[1]])
 ```
 
 
-## Example 3 - `compute_group` method from `StatSina` {ggforce}
+## **Example 3 - `compute_group` method from `StatSina` {ggforce}**
 
 ### Step 1. Make plot
 

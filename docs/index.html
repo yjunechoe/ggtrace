@@ -114,9 +114,10 @@
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span> <span class="co"># v3.3.5</span>
 <span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.1.1</span></code></pre></div>
 </div>
-<div id="example-1---compute_layer-method-from-positionjitter-ggplot2" class="section level2">
+<div id="example-1---compute_layer-method-from-positionjitter" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-1---compute_layer-method-from-positionjitter-ggplot2" class="anchor"></a>Example 1 - <code>compute_layer</code> method from <code>PositionJitter</code> {ggplot2}</h2>
+<a href="#example-1---compute_layer-method-from-positionjitter" class="anchor"></a><strong>Example 1 - <code>compute_layer</code> method from <code>PositionJitter</code></strong>
+</h2>
 <div id="step-1-make-plot" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot" class="anchor"></a>Step 1. Make plot</h3>
@@ -274,13 +275,13 @@
 <span class="co">#&gt; 5 2.054530 63.29763     1     2</span>
 <span class="co">#&gt; 6 3.080538 62.77536     1     3</span></code></pre></div>
 </div>
-<div id="step-3b-ggtrace---with-print--false-recommended" class="section level3">
+<div id="step-3b-ggtrace---with-print--false-instead-recommended" class="section level3">
 <h3 class="hasAnchor">
-<a href="#step-3b-ggtrace---with-print--false-recommended" class="anchor"></a>Step 3b. <code>ggtrace()</code> - with <code>.print = FALSE</code> (recommended)</h3>
+<a href="#step-3b-ggtrace---with-print--false-instead-recommended" class="anchor"></a>Step 3b. <code>ggtrace()</code> - with <code>.print = FALSE</code> instead (<strong>recommended</strong>)</h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span>,
-  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span>,
+  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">12</span><span class="op">)</span>,
   trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span>
     <span class="va">data</span>,
     <span class="va">dummy_data</span>,
@@ -295,7 +296,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 1]&gt; data </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 1]&gt; dummy_data </span>
+<span class="co">#&gt;  [Step 9]&gt; dummy_data </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 12]&gt; ~line </span>
 <span class="co">#&gt; </span>
@@ -311,8 +312,8 @@
 <span class="co">#&gt; $`[Step 1]&gt; data`</span>
 <span class="co">#&gt; [1] 1000</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 1]&gt; dummy_data`</span>
-<span class="co">#&gt; NULL</span>
+<span class="co">#&gt; $`[Step 9]&gt; dummy_data`</span>
+<span class="co">#&gt; [1] 1000</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`[Step 12]&gt; ~line`</span>
 <span class="co">#&gt; [1] 1000</span>
@@ -326,10 +327,14 @@
 <span class="co">#&gt; 5 2 63.3     1     2</span>
 <span class="co">#&gt; 6 3 62.8     1     3</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 1]&gt; dummy_data`</span>
-<span class="co">#&gt;                                      </span>
-<span class="co">#&gt; 1 function ()                        </span>
-<span class="co">#&gt; 2 new_data_frame(list(x = NA), n = 1)</span>
+<span class="co">#&gt; $`[Step 9]&gt; dummy_data`</span>
+<span class="co">#&gt;   x    y</span>
+<span class="co">#&gt; 1 5 61.5</span>
+<span class="co">#&gt; 2 4 59.8</span>
+<span class="co">#&gt; 3 2 56.9</span>
+<span class="co">#&gt; 4 4 62.4</span>
+<span class="co">#&gt; 5 2 63.3</span>
+<span class="co">#&gt; 6 3 62.8</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`[Step 12]&gt; ~line`</span>
 <span class="co">#&gt;          x        y PANEL group</span>
@@ -343,7 +348,8 @@
 </div>
 <div id="example-2---draw_group-method-from-geomsmooth-ggplot2" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-2---draw_group-method-from-geomsmooth-ggplot2" class="anchor"></a>Example 2 - <code>draw_group</code> method from <code>GeomSmooth</code> {ggplot2}</h2>
+<a href="#example-2---draw_group-method-from-geomsmooth-ggplot2" class="anchor"></a><strong>Example 2 - <code>draw_group</code> method from <code>GeomSmooth</code> {ggplot2}</strong>
+</h2>
 <div id="step-1-make-plot-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot-1" class="anchor"></a>Step 1. Make plot</h3>
@@ -479,7 +485,8 @@
 </div>
 <div id="example-3---compute_group-method-from-statsina-ggforce" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-3---compute_group-method-from-statsina-ggforce" class="anchor"></a>Example 3 - <code>compute_group</code> method from <code>StatSina</code> {ggforce}</h2>
+<a href="#example-3---compute_group-method-from-statsina-ggforce" class="anchor"></a><strong>Example 3 - <code>compute_group</code> method from <code>StatSina</code> {ggforce}</strong>
+</h2>
 <div id="step-1-make-plot-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot-2" class="anchor"></a>Step 1. Make plot</h3>

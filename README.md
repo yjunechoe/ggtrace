@@ -27,7 +27,7 @@ library(ggplot2) # v3.3.5
 #> Warning: package 'ggplot2' was built under R version 4.1.1
 ```
 
-## Example 1 - `compute_layer` method from `PositionJitter` {ggplot2}
+## **Example 1 - `compute_layer` method from `PositionJitter`**
 
 ### Step 1. Make plot
 
@@ -186,12 +186,12 @@ last_ggtrace()
 #> 6 3.080538 62.77536     1     3
 ```
 
-### Step 3b. `ggtrace()` - with `.print = FALSE` (recommended)
+### Step 3b. `ggtrace()` - with `.print = FALSE` instead (**recommended**)
 
 ``` r
 ggtrace(
   method = PositionJitter$compute_layer,
-  trace_steps = c(1, 1, 12),
+  trace_steps = c(1, 9, 12),
   trace_exprs = rlang::exprs(
     data,
     dummy_data,
@@ -206,7 +206,7 @@ jitter_plot
 #> 
 #>  [Step 1]> data 
 #> 
-#>  [Step 1]> dummy_data 
+#>  [Step 9]> dummy_data 
 #> 
 #>  [Step 12]> ~line 
 #> 
@@ -222,8 +222,8 @@ lapply(jitter_tracedump, nrow)
 #> $`[Step 1]> data`
 #> [1] 1000
 #> 
-#> $`[Step 1]> dummy_data`
-#> NULL
+#> $`[Step 9]> dummy_data`
+#> [1] 1000
 #> 
 #> $`[Step 12]> ~line`
 #> [1] 1000
@@ -237,10 +237,14 @@ lapply(jitter_tracedump, head)
 #> 5 2 63.3     1     2
 #> 6 3 62.8     1     3
 #> 
-#> $`[Step 1]> dummy_data`
-#>                                      
-#> 1 function ()                        
-#> 2 new_data_frame(list(x = NA), n = 1)
+#> $`[Step 9]> dummy_data`
+#>   x    y
+#> 1 5 61.5
+#> 2 4 59.8
+#> 3 2 56.9
+#> 4 4 62.4
+#> 5 2 63.3
+#> 6 3 62.8
 #> 
 #> $`[Step 12]> ~line`
 #>          x        y PANEL group
@@ -252,7 +256,7 @@ lapply(jitter_tracedump, head)
 #> 6 3.080538 62.77536     1     3
 ```
 
-## Example 2 - `draw_group` method from `GeomSmooth` {ggplot2}
+## **Example 2 - `draw_group` method from `GeomSmooth` {ggplot2}**
 
 ### Step 1. Make plot
 
@@ -387,7 +391,7 @@ str(smooth_tracedump[[1]])
 #>  - attr(*, "class")= chr "gList"
 ```
 
-## Example 3 - `compute_group` method from `StatSina` {ggforce}
+## **Example 3 - `compute_group` method from `StatSina` {ggforce}**
 
 ### Step 1. Make plot
 
