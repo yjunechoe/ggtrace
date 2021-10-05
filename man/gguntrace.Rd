@@ -16,6 +16,17 @@ in the form of \code{ggproto$method} that evalutes to the ggproto object's metho
 \description{
 For explicitly calling \code{untrace()} on a ggproto object.
 }
+\section{Gotchas}{
+
+\itemize{
+\item If you try to untrace a method that is not currently being traced,
+you will get a \verb{count not find function "<method>"} error. This is
+in contrast to if you tried to untrace simple functions like in
+\code{untrace(mean)}. Future updates to \code{gguntrace()} will improve
+handling of this default behavior from \code{base::trace()}.
+}
+}
+
 \examples{
 \dontrun{
 # jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +

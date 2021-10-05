@@ -16,7 +16,7 @@ in the form of \code{ggproto$method} that evalutes to the ggproto object's metho
 \description{
 Interactively edit the source code of a ggproto method
 }
-\note{
+\details{
 Like \code{base::trace()}, the edit is in place until \code{untrace()} is called.
 To \code{untrace()} a ggproto method, the syntax is \code{untrace(what = "method", where = obj)}
 }

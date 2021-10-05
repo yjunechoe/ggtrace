@@ -24,9 +24,10 @@ Despite the convenience of the short form which \code{ggbody()} also works with,
 the long form of retrieving the ggproto method by specifying both the method and
 the object separately exists for compatibility with other ways of inspecting
 ggproto methods.
-
-For example, this works: \code{debugonce(get("compute_group", StatCount))}.
-But this fails to insert a break point: \code{debugonce(StatCount$compute_group)}
+\itemize{
+\item For example, this works: \code{debugonce(get("compute_group", StatCount))}
+\item But this fails to insert a break point: \code{debugonce(StatCount$compute_group)}
+}
 }
 \examples{
 \dontrun{

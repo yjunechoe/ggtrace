@@ -21,8 +21,18 @@
 #'  The output of the expressions passed to `trace_exprs` is printed while tracing takes place. The last `ggtrace()`
 #'  trace dump is available for further inspection with `last_ggtrace()`.
 #'
-#' @return NULL
+#' @section Gotchas:
+#'  - If you wrap a ggplot in `invisible()` to silence `ggtrace()`, the plot will not build, which also means that
+#'    the tracing is not triggered. The print/plot method of ggplot is what triggers the evaluation of the plot
+#'    code. It is recommended to allow `ggtrace()` to print messages for safety, but if you'd really like to silence
+#'    it, you can do so by wrapping the plot in `invisible(capture.output(<plot>))`.
+#'  - If for any reason `ggtrace(once = TRUE)` fails to untrace itself on exit, you may accidentally trigger
+#'    the tracing again. To check if a method is being traced, call `ggbody()` on it and inspect its body. If you
+#'    see `.doTrace()` scattered around the body, that's a sign the method is still being traced.
 #'
+#' @seealso [last_ggtrace()], [gguntrace()]
+#'
+#' @return NULL
 #' @export
 #'
 #' @examples

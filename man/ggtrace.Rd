@@ -39,6 +39,19 @@ It is recommended to consult the output of \code{ggbody()} when deciding which e
 The output of the expressions passed to \code{trace_exprs} is printed while tracing takes place. The last \code{ggtrace()}
 trace dump is available for further inspection with \code{last_ggtrace()}.
 }
+\section{Gotchas}{
+
+\itemize{
+\item If you wrap a ggplot in \code{invisible()} to silence \code{ggtrace()}, the plot will not build, which also means that
+the tracing is not triggered. The print/plot method of ggplot is what triggers the evaluation of the plot
+code. It is recommended to allow \code{ggtrace()} to print messages for safety, but if you'd really like to silence
+it, you can do so by wrapping the plot in \verb{invisible(capture.output(<plot>))}.
+\item If for any reason \code{ggtrace(once = TRUE)} fails to untrace itself on exit, you may accidentally trigger
+the tracing again. To check if a method is being traced, call \code{ggbody()} on it and inspect its body. If you
+see \code{.doTrace()} scattered around the body, that's a sign the method is still being traced.
+}
+}
+
 \examples{
 \dontrun{
 library(ggplot2)
@@ -84,4 +97,7 @@ jitter_tracedump <- last_ggtrace()
 lapply(jitter_tracedump, head)
 hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
 }
+}
+\seealso{
+\code{\link[=last_ggtrace]{last_ggtrace()}}, \code{\link[=gguntrace]{gguntrace()}}
 }

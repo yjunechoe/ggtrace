@@ -4,6 +4,13 @@
 #'
 #' @inheritParams ggbody
 #'
+#' @section Gotchas:
+#'  - If you try to untrace a method that is not currently being traced,
+#'    you will get a `count not find function "<method>"` error. This is
+#'    in contrast to if you tried to untrace simple functions like in
+#'    `untrace(mean)`. Future updates to `gguntrace()` will improve
+#'    handling of this default behavior from `base::trace()`.
+#'
 #' @seealso [ggtrace()], [ggedit()]
 #'
 #' @return NULL
@@ -25,6 +32,9 @@ gguntrace <- function(method, obj) {
     method <- split[[1]]
     obj <- split[[2]]
   }
+  obj_name <- rlang::as_label(obj)
   suppressMessages(untrace(what = method, where = obj))
+  message(paste("Removed tracing on", method, "from", obj_name))
   invisible(NULL)
 }
+

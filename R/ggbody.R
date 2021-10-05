@@ -23,8 +23,9 @@ split_ggproto_method <- function(x) {
 #'   the object separately exists for compatibility with other ways of inspecting
 #'   ggproto methods.
 #'
-#'   For example, this works: `debugonce(get("compute_group", StatCount))`.
-#'   But this fails to insert a break point: `debugonce(StatCount$compute_group)`
+#'   - For example, this works: `debugonce(get("compute_group", StatCount))`
+#'
+#'   - But this fails to insert a break point: `debugonce(StatCount$compute_group)`
 #'
 #' @export
 #' @examples

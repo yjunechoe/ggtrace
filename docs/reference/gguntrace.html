@@ -162,6 +162,18 @@ in the form of <code>ggproto$method</code> that evalutes to the ggproto object's
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="gotchas"><a class="anchor" href="#gotchas"></a>Gotchas</h2>
+
+    
+
+<ul>
+<li><p>If you try to untrace a method that is not currently being traced,
+you will get a <code>count not find function "&lt;method&gt;"</code> error. This is
+in contrast to if you tried to untrace simple functions like in
+<code><a href='https://rdrr.io/r/base/trace.html'>untrace(mean)</a></code>. Future updates to <code>gguntrace()</code> will improve
+handling of this default behavior from <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code>.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='ggtrace.html'>ggtrace()</a></code>, <code><a href='ggedit.html'>ggedit()</a></code></p></div>

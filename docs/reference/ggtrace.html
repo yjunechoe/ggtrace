@@ -145,7 +145,7 @@
     <p>Programmatically debug ggproto methods with trace</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span>, <span class='va'>trace_steps</span>, <span class='va'>trace_exprs</span>, once <span class='op'>=</span> <span class='cn'>TRUE</span>, .print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>trace_steps</span>, <span class='va'>trace_exprs</span>, <span class='va'>obj</span>, once <span class='op'>=</span> <span class='cn'>TRUE</span>, .print <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -156,11 +156,6 @@
 that evaluates to the ggproto method in the form of <code>ggproto$method</code>.</p></td>
     </tr>
     <tr>
-      <th>obj</th>
-      <td><p>The ggproto object. Can be omitted if the method is an expression
-in the form of <code>ggproto$method</code> that evalutes to the ggproto object's method.</p></td>
-    </tr>
-    <tr>
       <th>trace_steps</th>
       <td><p>A list of positions in the method's callstack to trace.</p></td>
     </tr>
@@ -168,8 +163,14 @@ in the form of <code>ggproto$method</code> that evalutes to the ggproto object's
       <th>trace_exprs</th>
       <td><p>A list of expressions to evaluate at each position specified
 in <code>trace_steps</code>. If a single expression is provided, it is recycled.</p>
-<p>To simply run a step (or reference the expression at a step), you can use the <code>~line</code> keyword.
-All instances of <code>~line</code> will get substituted by the expression inside the debugging environment.</p></td>
+<p>To simply run a step and return its output, you can use the <code>~step</code> keyword. If the step
+assigns a value to a local variable, the value of that local variable is returned.</p>
+<p>If <code>trace_exprs</code> is not provided, <code>ggtrace()</code> is called with <code>~step</code> by default.</p></td>
+    </tr>
+    <tr>
+      <th>obj</th>
+      <td><p>The ggproto object. Can be omitted if the method is an expression
+in the form of <code>ggproto$method</code> that evalutes to the ggproto object's method.</p></td>
     </tr>
     <tr>
       <th>once</th>
@@ -189,6 +190,23 @@ A major feature is the ability to pass multiple positions and expressions to <co
 It is recommended to consult the output of <code><a href='ggbody.html'>ggbody()</a></code> when deciding which expressions to evaluate at which steps.</p>
 <p>The output of the expressions passed to <code>trace_exprs</code> is printed while tracing takes place. The last <code>ggtrace()</code>
 trace dump is available for further inspection with <code><a href='last_ggtrace.html'>last_ggtrace()</a></code>.</p>
+    <h2 class="hasAnchor" id="gotchas"><a class="anchor" href="#gotchas"></a>Gotchas</h2>
+
+    
+
+<ul>
+<li><p>If you wrap a ggplot in <code><a href='https://rdrr.io/r/base/invisible.html'>invisible()</a></code> to silence <code>ggtrace()</code>, the plot will not build, which also means that
+the tracing is not triggered. The print/plot method of ggplot is what triggers the evaluation of the plot
+code. It is recommended to allow <code>ggtrace()</code> to print messages for safety, but if you'd really like to silence
+it, you can do so by wrapping the plot in <code>invisible(capture.output(&lt;plot&gt;))</code>.</p></li>
+<li><p>If for any reason <code>ggtrace(once = TRUE)</code> fails to untrace itself on exit, you may accidentally trigger
+the tracing again. To check if a method is being traced, call <code><a href='ggbody.html'>ggbody()</a></code> on it and inspect its body. If you
+see <code><a href='https://rdrr.io/r/base/trace.html'>.doTrace()</a></code> scattered around the body, that's a sign the method is still being traced.</p></li>
+</ul>
+
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='last_ggtrace.html'>last_ggtrace()</a></code>, <code><a href='gguntrace.html'>gguntrace()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
@@ -258,18 +276,17 @@ trace dump is available for further inspection with <code><a href='last_ggtrace.
 <span class='co'>## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter</span>
 <span class='co'>## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To</span>
 <span class='co'>## address this, `ggtrace()` offers a `~list` keyword which gets substituted for the current line.</span>
-<span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>, trace_steps <span class='op'>=</span> <span class='fl'>12</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>line</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='co'>## We also set `.print = FALSE` to disable printing of the output</span>
+<span class='fu'>ggtrace</span><span class='op'>(</span>
+  <span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>,
+  trace_steps <span class='op'>=</span> <span class='fl'>12</span>,
+  trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>step</span><span class='op'>)</span>,
+  .print <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
 <span class='va'>p</span>
 </div><div class='img'><img src='ggtrace-3.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_layer from &lt;PstnJttr&gt; ggproto.
 #&gt; 
-#&gt;  [Step 12]&gt; head(~line) 
-#&gt;          x        y PANEL group
-#&gt; 1 4.980507 61.50684     1     5
-#&gt; 2 4.113512 59.77872     1     4
-#&gt; 3 2.083873 56.86655     1     2
-#&gt; 4 3.952698 62.42703     1     4
-#&gt; 5 2.054530 63.29763     1     2
-#&gt; 6 3.080538 62.77536     1     3
+#&gt;  [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
 #&gt; 
 #&gt; Untracing method compute_layer from &lt;PstnJttr&gt; ggproto.
 #&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
@@ -278,66 +295,20 @@ trace dump is available for further inspection with <code><a href='last_ggtrace.
 <span class='co'>## of expressions. We use `rlang::exprs()` here to conveniently construct a list of expressions.</span>
 <span class='fu'>ggtrace</span><span class='op'>(</span>
   <span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>,
-  trace_steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>1</span>, <span class='fl'>12</span><span class='op'>)</span>,
-  trace_exprs <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>exprs</a></span><span class='op'>(</span>
-    <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>,
-    <span class='va'>params</span>,
-    <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>line</span><span class='op'>)</span>
-  <span class='op'>)</span>
+  trace_steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>12</span><span class='op'>)</span>,
+  trace_exprs <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>exprs</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='op'>~</span><span class='va'>step</span><span class='op'>)</span>,
+  .print <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 <span class='va'>p</span>
 </div><div class='img'><img src='ggtrace-4.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_layer from &lt;PstnJttr&gt; ggproto.
 #&gt; 
-#&gt;  [Step 1]&gt; head(data) 
-#&gt;   x    y PANEL group
-#&gt; 1 5 61.5     1     5
-#&gt; 2 4 59.8     1     4
-#&gt; 3 2 56.9     1     2
-#&gt; 4 4 62.4     1     4
-#&gt; 5 2 63.3     1     2
-#&gt; 6 3 62.8     1     3
+#&gt;  [Step 1]&gt; data 
 #&gt; 
-#&gt;  [Step 1]&gt; params 
-#&gt; $width
-#&gt; [1] 0.2
-#&gt; 
-#&gt; $height
-#&gt; [1] 0.04
-#&gt; 
-#&gt; $seed
-#&gt; [1] 2021
-#&gt; 
-#&gt; 
-#&gt;  [Step 12]&gt; head(~line) 
-#&gt;          x        y PANEL group
-#&gt; 1 4.980507 61.50684     1     5
-#&gt; 2 4.113512 59.77872     1     4
-#&gt; 3 2.083873 56.86655     1     2
-#&gt; 4 3.952698 62.42703     1     4
-#&gt; 5 2.054530 63.29763     1     2
-#&gt; 6 3.080538 62.77536     1     3
+#&gt;  [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
 #&gt; 
 #&gt; Untracing method compute_layer from &lt;PstnJttr&gt; ggproto.
 #&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
 <span class='co'>## Example 4 ====</span>
-<span class='co'>## We've been using `head()` for cleaner printing,</span>
-<span class='co'>## but we can also disable this with `.print = FALSE`</span>
-<span class='fu'>ggtrace</span><span class='op'>(</span>
-  <span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>,
-  trace_steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>12</span><span class='op'>)</span>,
-  trace_exprs <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>exprs</a></span><span class='op'>(</span><span class='va'>data</span>, <span class='op'>~</span><span class='va'>line</span><span class='op'>)</span>,
-  .print <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-<span class='va'>p</span>
-</div><div class='img'><img src='ggtrace-5.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_layer from &lt;PstnJttr&gt; ggproto.
-#&gt; 
-#&gt;  [Step 1]&gt; data 
-#&gt; 
-#&gt;  [Step 12]&gt; ~line 
-#&gt; 
-#&gt; Untracing method compute_layer from &lt;PstnJttr&gt; ggproto.
-#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
-<span class='co'>## Example 5 ====</span>
 <span class='co'>## The output of the evaluated expressions can be inspected with `last_ggtrace()`</span>
 <span class='va'>jitter_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'><a href='last_ggtrace.html'>last_ggtrace</a></span><span class='op'>(</span><span class='op'>)</span>
 <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>jitter_tracedump</span>, <span class='va'>head</span><span class='op'>)</span>
@@ -350,7 +321,7 @@ trace dump is available for further inspection with <code><a href='last_ggtrace.
 #&gt; 5 2 63.3     1     2
 #&gt; 6 3 62.8     1     3
 #&gt; 
-#&gt; $`[Step 12]&gt; ~line`
+#&gt; $`[Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
 #&gt;          x        y PANEL group
 #&gt; 1 4.980507 61.50684     1     5
 #&gt; 2 4.113512 59.77872     1     4
@@ -359,7 +330,7 @@ trace dump is available for further inspection with <code><a href='last_ggtrace.
 #&gt; 5 2.054530 63.29763     1     2
 #&gt; 6 3.080538 62.77536     1     3
 #&gt; </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>jitter_tracedump</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>x</span> <span class='op'>-</span> <span class='va'>jitter_tracedump</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>x</span><span class='op'>)</span>
-</div><div class='img'><img src='ggtrace-6.png' alt='' width='1094' height='676' /></div><div class='input'><span class='co'># }</span>
+</div><div class='img'><img src='ggtrace-5.png' alt='' width='1094' height='676' /></div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
