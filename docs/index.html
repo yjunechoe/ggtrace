@@ -176,7 +176,7 @@
 <span class="va">jitter_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.2</span>, seed <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span><span class="op">)</span>
 <span class="va">jitter_plot</span></code></pre></div>
-<p><img src="reference/figures/README-ex-1-setup-1.jpeg" width="100%"></p>
+<p><img src="reference/figures/README-ex-1-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-callstack-of-the-ggproto-method" class="section level3">
 <h3 class="hasAnchor">
@@ -237,7 +237,7 @@
     <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>        <span class="co"># What does the last line evaluate to?</span>
                        <span class="co"># - i.e., what is returned by the method?</span>
   <span class="op">)</span>,
-  .print <span class="op">=</span> <span class="cn">FALSE</span>       <span class="co"># Don't print output of evaluated expressions</span>
+  .print <span class="op">=</span> <span class="cn">FALSE</span>       <span class="co"># Don't print evaluated expressions to console</span>
 <span class="op">)</span>
 
 <span class="co"># plot not printed to save space</span>
@@ -326,10 +326,10 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">smooth_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">stat_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">stat_smooth</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">smooth_plot</span>
-<span class="co">#&gt; `geom_smooth()` using formula 'y ~ x'</span></code></pre></div>
-<p><img src="reference/figures/README-ex-2-setup-1.jpeg" width="100%"></p>
+<span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span></code></pre></div>
+<p><img src="reference/figures/README-ex-2-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-callstack-of-the-ggproto-method-1" class="section level3">
 <h3 class="hasAnchor">
@@ -374,7 +374,7 @@
 
 <span class="co"># plot not printed to save space</span>
 <span class="va">smooth_plot</span>
-<span class="co">#&gt; `geom_smooth()` using formula 'y ~ x'</span>
+<span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span>
 <span class="co">#&gt; Tracing method draw_group from &lt;GeomSmth&gt; ggproto.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 7]&gt; ~line </span>
@@ -386,76 +386,58 @@
 <h3 class="hasAnchor">
 <a href="#step-4-inspect-trace-dump-1" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
+<p>Get grobs in the gList and do some weird stuff with it</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">smooth_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="va">smooth_tracedump</span>
-<span class="co">#&gt; $`[Step 7]&gt; ~line`</span>
+<span class="va">smooth_gList</span> <span class="op">&lt;-</span> <span class="va">smooth_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+
+<span class="va">smooth_gList</span>
 <span class="co">#&gt; (gTree[geom_ribbon.gTree.132], polyline[GRID.polyline.133])</span>
 
-<span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span><span class="op">(</span><span class="va">smooth_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; List of 2</span>
-<span class="co">#&gt;  $ :List of 5</span>
-<span class="co">#&gt;   ..$ name         : chr "geom_ribbon.gTree.132"</span>
-<span class="co">#&gt;   ..$ gp           : NULL</span>
-<span class="co">#&gt;   ..$ vp           : NULL</span>
-<span class="co">#&gt;   ..$ children     :List of 2</span>
-<span class="co">#&gt;   .. ..$ GRID.polygon.129 :List of 7</span>
-<span class="co">#&gt;   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...</span>
-<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
-<span class="co">#&gt;   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...</span>
-<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
-<span class="co">#&gt;   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;   .. .. ..$ id.lengths: NULL</span>
-<span class="co">#&gt;   .. .. ..$ name      : chr "GRID.polygon.129"</span>
-<span class="co">#&gt;   .. .. ..$ gp        :List of 4</span>
-<span class="co">#&gt;   .. .. .. ..$ fill: chr "#99999966"</span>
-<span class="co">#&gt;   .. .. .. ..$ col : logi NA</span>
-<span class="co">#&gt;   .. .. .. ..$ lwd : num 0</span>
-<span class="co">#&gt;   .. .. .. ..$ lty : num 1</span>
-<span class="co">#&gt;   .. .. .. ..- attr(*, "class")= chr "gpar"</span>
-<span class="co">#&gt;   .. .. ..$ vp        : NULL</span>
-<span class="co">#&gt;   .. .. ..- attr(*, "class")= chr [1:3] "polygon" "grob" "gDesc"</span>
-<span class="co">#&gt;   .. ..$ GRID.polyline.130:List of 8</span>
-<span class="co">#&gt;   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...</span>
-<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
-<span class="co">#&gt;   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...</span>
-<span class="co">#&gt;   .. .. .. ..- attr(*, "unit")= int 4</span>
-<span class="co">#&gt;   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;   .. .. ..$ id.lengths: NULL</span>
-<span class="co">#&gt;   .. .. ..$ arrow     : NULL</span>
-<span class="co">#&gt;   .. .. ..$ name      : chr "GRID.polyline.130"</span>
-<span class="co">#&gt;   .. .. ..$ gp        :List of 3</span>
-<span class="co">#&gt;   .. .. .. ..$ col: logi NA</span>
-<span class="co">#&gt;   .. .. .. ..$ lwd: num 2.85</span>
-<span class="co">#&gt;   .. .. .. ..$ lty: num 1</span>
-<span class="co">#&gt;   .. .. .. ..- attr(*, "class")= chr "gpar"</span>
-<span class="co">#&gt;   .. .. ..$ vp        : NULL</span>
-<span class="co">#&gt;   .. .. ..- attr(*, "class")= chr [1:3] "polyline" "grob" "gDesc"</span>
-<span class="co">#&gt;   .. ..- attr(*, "class")= chr "gList"</span>
-<span class="co">#&gt;   ..$ childrenOrder: chr [1:2] "GRID.polygon.129" "GRID.polyline.130"</span>
-<span class="co">#&gt;   ..- attr(*, "class")= chr [1:3] "gTree" "grob" "gDesc"</span>
-<span class="co">#&gt;  $ :List of 8</span>
-<span class="co">#&gt;   ..$ x         : 'simpleUnit' num [1:80] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...</span>
-<span class="co">#&gt;   .. ..- attr(*, "unit")= int 4</span>
-<span class="co">#&gt;   ..$ y         : 'simpleUnit' num [1:80] 0.688native 0.681native 0.674native 0.668native 0.661native ...</span>
-<span class="co">#&gt;   .. ..- attr(*, "unit")= int 4</span>
-<span class="co">#&gt;   ..$ id        : int [1:80] 1 1 1 1 1 1 1 1 1 1 ...</span>
-<span class="co">#&gt;   ..$ id.lengths: NULL</span>
-<span class="co">#&gt;   ..$ arrow     : NULL</span>
-<span class="co">#&gt;   ..$ name      : chr "GRID.polyline.133"</span>
-<span class="co">#&gt;   ..$ gp        :List of 7</span>
-<span class="co">#&gt;   .. ..$ col      : chr "#3366FF"</span>
-<span class="co">#&gt;   .. ..$ fill     : chr "#3366FF"</span>
-<span class="co">#&gt;   .. ..$ lwd      : num 2.85</span>
-<span class="co">#&gt;   .. ..$ lty      : num 1</span>
-<span class="co">#&gt;   .. ..$ lineend  : chr "butt"</span>
-<span class="co">#&gt;   .. ..$ linejoin : chr "round"</span>
-<span class="co">#&gt;   .. ..$ linemitre: num 10</span>
-<span class="co">#&gt;   .. ..- attr(*, "class")= chr "gpar"</span>
-<span class="co">#&gt;   ..$ vp        : NULL</span>
-<span class="co">#&gt;   ..- attr(*, "class")= chr [1:3] "polyline" "grob" "gDesc"</span>
-<span class="co">#&gt;  - attr(*, "class")= chr "gList"</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/grid/grid.ls.html">grid.ls</a></span><span class="op">(</span><span class="va">smooth_gList</span><span class="op">)</span>
+<span class="co">#&gt; geom_ribbon.gTree.132</span>
+<span class="co">#&gt;   GRID.polygon.129</span>
+<span class="co">#&gt;   GRID.polyline.130</span>
+<span class="co">#&gt; GRID.polyline.133</span>
+
+<span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html">grid.newpage</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html">grid.draw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html">gTree</a></span><span class="op">(</span>children <span class="op">=</span> <span class="va">smooth_gList</span>, vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html">viewport</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-ex-2-last-a-1.png" width="20%"></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># The weird stuff</span>
+
+<span class="va">smooth_ribbon_polygon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html">editGrob</a></span><span class="op">(</span>
+  <span class="va">smooth_gList</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,
+  <span class="st">"polygon"</span>,
+  grep <span class="op">=</span> <span class="cn">TRUE</span>,
+  gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html">gpar</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"#b742ce"</span>, alpha <span class="op">=</span> <span class="fl">0.7</span>, lwd <span class="op">=</span> <span class="fl">3</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">smooth_ribbon_gTree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html">gTree</a></span><span class="op">(</span>
+  children <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html">gList</a></span><span class="op">(</span>
+    <span class="va">smooth_ribbon_polygon</span>,
+    <span class="fu"><a href="https://rdrr.io/r/grid/grid.text.html">textGrob</a></span><span class="op">(</span><span class="st">"Weee"</span>, x <span class="op">=</span> <span class="fl">.7</span>, gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html">gpar</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, fontsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"pt"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">)</span>,
+  vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>, default.units <span class="op">=</span> <span class="st">"in"</span>, angle <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html">grid.newpage</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html">grid.draw</a></span><span class="op">(</span><span class="va">smooth_ribbon_gTree</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-ex-2-last-a-2.png" width="20%"></p>
+<p>I guess you could use this for some fancy <em>data-driven legends</em> or something but it’s meant to be exploratory not practical</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span>
+<span class="va">smooth_plot</span> <span class="op">+</span>
+  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/inset_element.html">inset_element</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_elements.html">wrap_elements</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">smooth_ribbon_gTree</span><span class="op">)</span> <span class="op">+</span>
+      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>,
+    left <span class="op">=</span> <span class="fl">0.5</span>, bottom <span class="op">=</span> <span class="fl">0.5</span>, right <span class="op">=</span> <span class="fl">0.8</span>, top <span class="op">=</span> <span class="fl">0.8</span>
+  <span class="op">)</span>
+<span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span></code></pre></div>
+<p><img src="reference/figures/README-ex-2-last-b-1.png" width="100%"></p>
+<p>But I will just add that the above way of “intercepting” and retrieving a grob is kinda nice because you know what will be there ahead of the time from your knowledge of that Geom (whereas if you wanted to grab a grob after the ggplot is built, you’d have to navigate the whole <code>ggplotGrob(smooth_plot)[["grobs"]]</code>).</p>
 </div>
 </div>
 <div id="example-3---compute_group-method-from-statboxplot" class="section level2">
@@ -466,25 +448,25 @@
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot-2" class="anchor"></a><strong>Step 1. Make plot</strong>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">boxplot_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">500</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">boxplot_plot</span></code></pre></div>
-<p><img src="reference/figures/README-ex-3-setup-1.jpeg" width="100%"></p>
+<p><img src="reference/figures/README-ex-3-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-callstack-of-the-ggproto-method-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-2-inspect-callstack-of-the-ggproto-method-2" class="anchor"></a><strong>Step 2. Inspect callstack of the ggproto method</strong>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p><code>"compute_panel"</code> method is not defined for <code>StatBoxplot</code>, which means it’s being inherited.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
 <span class="co">#&gt; Error in get(method, obj): object 'compute_panel' not found</span></code></pre></div>
-<p><code>"compute_panel"</code> method is not defined for <code>StatBoxplot</code>, which means it’s being inherited.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<p><code>StatBoxplot</code> is a child of the parent ggproto <code>Stat</code>, and the <code>"compute_panel"</code> method is inherited from <code>Stat</code> as well, so that’s what we want to trace instead:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">)</span>
 <span class="co">#&gt; [1] "StatBoxplot" "Stat"        "ggproto"     "gg"</span></code></pre></div>
-<p><code>StatBoxplot</code> is a child of the parent ggproto <code>Stat</code>, and the <code>"compute_panel"</code> method is inherited from <code>Stat</code> as well, so that’s what we want to trace:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
@@ -518,7 +500,7 @@
 </h3>
 <p><code>Stat$compute_panel</code> does split-apply-combine (Steps 3, 4-5, 6).</p>
 <p>Let’s return the split and the combine:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span>,
   trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span>,
@@ -547,7 +529,7 @@
 <h3 class="hasAnchor">
 <a href="#step-4-inspect-trace-dump-2" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">boxplot_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># The splits</span>
@@ -678,20 +660,20 @@
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot-3" class="anchor"></a><strong>Step 1. Make plot</strong>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggforce.data-imaginist.com">ggforce</a></span><span class="op">)</span> <span class="co"># v.0.3.3</span>
 
 <span class="va">sina_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="va">diamonds</span><span class="op">$</span><span class="va">cut</span> <span class="op">==</span> <span class="st">"Ideal"</span>,<span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html">geom_violin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggforce.data-imaginist.com/reference/geom_sina.html">geom_sina</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span>
 <span class="va">sina_plot</span></code></pre></div>
-<p><img src="reference/figures/README-ex-4-setup-1.jpeg" width="100%"></p>
+<p><img src="reference/figures/README-ex-4-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-callstack-of-the-ggproto-method-3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-2-inspect-callstack-of-the-ggproto-method-3" class="anchor"></a><strong>Step 2. Inspect callstack of the ggproto method</strong>
 </h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatSina</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
@@ -742,7 +724,7 @@
 <h3 class="hasAnchor">
 <a href="#step-3-ggtrace---with-one-expression-evaluated-at-multiple-steps" class="anchor"></a><strong>Step 3. <code>ggtrace()</code> - with one expression evaluated at multiple steps</strong>
 </h3>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="va">StatSina</span><span class="op">$</span><span class="va">compute_group</span>,
   trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>,
@@ -765,7 +747,7 @@
 <h3 class="hasAnchor">
 <a href="#step-4-inspect-trace-dump-3" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sina_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># The returned data has some new columns</span>

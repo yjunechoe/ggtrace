@@ -69,7 +69,7 @@ jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
 jitter_plot
 ```
 
-<img src="man/figures/README-ex-1-setup-1.jpeg" width="100%" />
+<img src="man/figures/README-ex-1-setup-1.png" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
@@ -127,7 +127,7 @@ ggtrace(
     head(~line)        # What does the last line evaluate to?
                        # - i.e., what is returned by the method?
   ),
-  .print = FALSE       # Don't print output of evaluated expressions
+  .print = FALSE       # Don't print evaluated expressions to console
 )
 
 # plot not printed to save space
@@ -211,12 +211,12 @@ lapply(jitter_tracedump, head)
 ``` r
 smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
   geom_point() +
-  stat_smooth(method = "lm")
+  stat_smooth()
 smooth_plot
-#> `geom_smooth()` using formula 'y ~ x'
+#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
-<img src="man/figures/README-ex-2-setup-1.jpeg" width="100%" />
+<img src="man/figures/README-ex-2-setup-1.png" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
@@ -258,7 +258,7 @@ ggtrace(
 
 # plot not printed to save space
 smooth_plot
-#> `geom_smooth()` using formula 'y ~ x'
+#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 #> Tracing method draw_group from <GeomSmth> ggproto.
 #> 
 #>  [Step 7]> ~line 
@@ -269,77 +269,74 @@ smooth_plot
 
 ### **Step 4. Inspect trace dump**
 
+Get grobs in the gList and do some weird stuff with it
+
 ``` r
 smooth_tracedump <- last_ggtrace()
 
-smooth_tracedump
-#> $`[Step 7]> ~line`
+smooth_gList <- smooth_tracedump[[1]]
+
+smooth_gList
 #> (gTree[geom_ribbon.gTree.132], polyline[GRID.polyline.133])
 
-str(smooth_tracedump[[1]])
-#> List of 2
-#>  $ :List of 5
-#>   ..$ name         : chr "geom_ribbon.gTree.132"
-#>   ..$ gp           : NULL
-#>   ..$ vp           : NULL
-#>   ..$ children     :List of 2
-#>   .. ..$ GRID.polygon.129 :List of 7
-#>   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...
-#>   .. .. .. ..- attr(*, "unit")= int 4
-#>   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...
-#>   .. .. .. ..- attr(*, "unit")= int 4
-#>   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...
-#>   .. .. ..$ id.lengths: NULL
-#>   .. .. ..$ name      : chr "GRID.polygon.129"
-#>   .. .. ..$ gp        :List of 4
-#>   .. .. .. ..$ fill: chr "#99999966"
-#>   .. .. .. ..$ col : logi NA
-#>   .. .. .. ..$ lwd : num 0
-#>   .. .. .. ..$ lty : num 1
-#>   .. .. .. ..- attr(*, "class")= chr "gpar"
-#>   .. .. ..$ vp        : NULL
-#>   .. .. ..- attr(*, "class")= chr [1:3] "polygon" "grob" "gDesc"
-#>   .. ..$ GRID.polyline.130:List of 8
-#>   .. .. ..$ x         : 'simpleUnit' num [1:160] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...
-#>   .. .. .. ..- attr(*, "unit")= int 4
-#>   .. .. ..$ y         : 'simpleUnit' num [1:160] 0.767native 0.758native 0.75native 0.741native 0.733native ...
-#>   .. .. .. ..- attr(*, "unit")= int 4
-#>   .. .. ..$ id        : int [1:160] 1 1 1 1 1 1 1 1 1 1 ...
-#>   .. .. ..$ id.lengths: NULL
-#>   .. .. ..$ arrow     : NULL
-#>   .. .. ..$ name      : chr "GRID.polyline.130"
-#>   .. .. ..$ gp        :List of 3
-#>   .. .. .. ..$ col: logi NA
-#>   .. .. .. ..$ lwd: num 2.85
-#>   .. .. .. ..$ lty: num 1
-#>   .. .. .. ..- attr(*, "class")= chr "gpar"
-#>   .. .. ..$ vp        : NULL
-#>   .. .. ..- attr(*, "class")= chr [1:3] "polyline" "grob" "gDesc"
-#>   .. ..- attr(*, "class")= chr "gList"
-#>   ..$ childrenOrder: chr [1:2] "GRID.polygon.129" "GRID.polyline.130"
-#>   ..- attr(*, "class")= chr [1:3] "gTree" "grob" "gDesc"
-#>  $ :List of 8
-#>   ..$ x         : 'simpleUnit' num [1:80] 0.0455native 0.057native 0.0685native 0.08native 0.0915native ...
-#>   .. ..- attr(*, "unit")= int 4
-#>   ..$ y         : 'simpleUnit' num [1:80] 0.688native 0.681native 0.674native 0.668native 0.661native ...
-#>   .. ..- attr(*, "unit")= int 4
-#>   ..$ id        : int [1:80] 1 1 1 1 1 1 1 1 1 1 ...
-#>   ..$ id.lengths: NULL
-#>   ..$ arrow     : NULL
-#>   ..$ name      : chr "GRID.polyline.133"
-#>   ..$ gp        :List of 7
-#>   .. ..$ col      : chr "#3366FF"
-#>   .. ..$ fill     : chr "#3366FF"
-#>   .. ..$ lwd      : num 2.85
-#>   .. ..$ lty      : num 1
-#>   .. ..$ lineend  : chr "butt"
-#>   .. ..$ linejoin : chr "round"
-#>   .. ..$ linemitre: num 10
-#>   .. ..- attr(*, "class")= chr "gpar"
-#>   ..$ vp        : NULL
-#>   ..- attr(*, "class")= chr [1:3] "polyline" "grob" "gDesc"
-#>  - attr(*, "class")= chr "gList"
+library(grid)
+
+grid.ls(smooth_gList)
+#> geom_ribbon.gTree.132
+#>   GRID.polygon.129
+#>   GRID.polyline.130
+#> GRID.polyline.133
+
+grid.newpage()
+grid.draw(gTree(children = smooth_gList, vp = viewport()))
 ```
+
+<img src="man/figures/README-ex-2-last-a-1.png" width="20%" />
+
+``` r
+# The weird stuff
+
+smooth_ribbon_polygon <- editGrob(
+  smooth_gList[1][[1]],
+  "polygon",
+  grep = TRUE,
+  gp = gpar(fill = "#b742ce", alpha = 0.7, lwd = 3, col = "black")
+)
+smooth_ribbon_gTree <- gTree(
+  children = gList(
+    smooth_ribbon_polygon,
+    textGrob("Weee", x = .7, gp = gpar(col = "red", fontsize = unit(10, "pt")))
+  ),
+  vp = viewport(width = 1, height = 1, default.units = "in", angle = 30)
+)
+
+grid.newpage()
+grid.draw(smooth_ribbon_gTree)
+```
+
+<img src="man/figures/README-ex-2-last-a-2.png" width="20%" />
+
+I guess you could use this for some fancy *data-driven legends* or
+something but it’s meant to be exploratory not practical
+
+``` r
+library(patchwork)
+smooth_plot +
+  inset_element(
+    wrap_elements(full = smooth_ribbon_gTree) +
+      theme(plot.background = element_rect(fill = NA, color = NA)),
+    left = 0.5, bottom = 0.5, right = 0.8, top = 0.8
+  )
+#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+```
+
+<img src="man/figures/README-ex-2-last-b-1.png" width="100%" />
+
+But I will just add that the above way of “intercepting” and retrieving
+a grob is kinda nice because you know what will be there ahead of the
+time from your knowledge of that Geom (whereas if you wanted to grab a
+grob after the ggplot is built, you’d have to navigate the whole
+`ggplotGrob(smooth_plot)[["grobs"]]`).
 
 ## **Example 3 - `compute_group` method from `StatBoxplot`**
 
@@ -351,26 +348,26 @@ boxplot_plot <- ggplot(diamonds[1:500,], aes(cut, depth)) +
 boxplot_plot
 ```
 
-<img src="man/figures/README-ex-3-setup-1.jpeg" width="100%" />
+<img src="man/figures/README-ex-3-setup-1.png" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
+
+`"compute_panel"` method is not defined for `StatBoxplot`, which means
+it’s being inherited.
 
 ``` r
 ggbody(StatBoxplot$compute_panel)
 #> Error in get(method, obj): object 'compute_panel' not found
 ```
 
-`"compute_panel"` method is not defined for `StatBoxplot`, which means
-it’s being inherited.
+`StatBoxplot` is a child of the parent ggproto `Stat`, and the
+`"compute_panel"` method is inherited from `Stat` as well, so that’s
+what we want to trace instead:
 
 ``` r
 class(StatBoxplot)
 #> [1] "StatBoxplot" "Stat"        "ggproto"     "gg"
 ```
-
-`StatBoxplot` is a child of the parent ggproto `Stat`, and the
-`"compute_panel"` method is inherited from `Stat` as well, so that’s
-what we want to trace:
 
 ``` r
 ggbody(Stat$compute_panel)
@@ -571,7 +568,7 @@ sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) 
 sina_plot
 ```
 
-<img src="man/figures/README-ex-4-setup-1.jpeg" width="100%" />
+<img src="man/figures/README-ex-4-setup-1.png" width="100%" />
 
 ### **Step 2. Inspect callstack of the ggproto method**
 

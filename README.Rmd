@@ -5,11 +5,13 @@ output: github_document
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
+ragg_png = function(...) {
+  ragg::agg_png(..., res = 150, units = "in")
+}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  dev = "jpeg",
-  dev.args = list(quality = 150),
+  dev = "ragg_png",
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
@@ -94,7 +96,7 @@ ggtrace(
     head(~line)        # What does the last line evaluate to?
                        # - i.e., what is returned by the method?
   ),
-  .print = FALSE       # Don't print output of evaluated expressions
+  .print = FALSE       # Don't print evaluated expressions to console
 )
 
 # plot not printed to save space
@@ -118,7 +120,7 @@ lapply(jitter_tracedump, head)
 ```{r ex-2-setup}
 smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
   geom_point() +
-  stat_smooth(method = "lm")
+  stat_smooth()
 smooth_plot
 ```
 
@@ -144,13 +146,55 @@ smooth_plot
 
 ### **Step 4. Inspect trace dump**
 
-```{r ex-2-last}
+Get grobs in the gList and do some weird stuff with it
+
+```{r ex-2-last-a, out.width="20%", fig.width=1.5, fig.height=1}
 smooth_tracedump <- last_ggtrace()
 
-smooth_tracedump
+smooth_gList <- smooth_tracedump[[1]]
 
-str(smooth_tracedump[[1]])
+smooth_gList
+
+library(grid)
+
+grid.ls(smooth_gList)
+
+grid.newpage()
+grid.draw(gTree(children = smooth_gList, vp = viewport()))
+
+# The weird stuff
+
+smooth_ribbon_polygon <- editGrob(
+  smooth_gList[1][[1]],
+  "polygon",
+  grep = TRUE,
+  gp = gpar(fill = "#b742ce", alpha = 0.7, lwd = 3, col = "black")
+)
+smooth_ribbon_gTree <- gTree(
+  children = gList(
+    smooth_ribbon_polygon,
+    textGrob("Weee", x = .7, gp = gpar(col = "red", fontsize = unit(10, "pt")))
+  ),
+  vp = viewport(width = 1, height = 1, default.units = "in", angle = 30)
+)
+
+grid.newpage()
+grid.draw(smooth_ribbon_gTree)
 ```
+
+I guess you could use this for some fancy _data-driven legends_ or something but it's meant to be exploratory not practical
+
+```{r ex-2-last-b}
+library(patchwork)
+smooth_plot +
+  inset_element(
+    wrap_elements(full = smooth_ribbon_gTree) +
+      theme(plot.background = element_rect(fill = NA, color = NA)),
+    left = 0.5, bottom = 0.5, right = 0.8, top = 0.8
+  )
+```
+
+But I will just add that the above way of "intercepting" and retrieving a grob is kinda nice because you know what will be there ahead of the time from your knowledge of that Geom (whereas if you wanted to grab a grob after the ggplot is built, you'd have to navigate the whole `ggplotGrob(smooth_plot)[["grobs"]]`).
 
 ## **Example 3 - `compute_group` method from `StatBoxplot`**
 
@@ -164,17 +208,17 @@ boxplot_plot
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
+`"compute_panel"` method is not defined for `StatBoxplot`, which means it's being inherited. 
+
 ```{r ex-3-ggbody-a, error = TRUE}
 ggbody(StatBoxplot$compute_panel)
 ```
 
-`"compute_panel"` method is not defined for `StatBoxplot`, which means it's being inherited. 
+`StatBoxplot` is a child of the parent ggproto `Stat`, and the `"compute_panel"` method is inherited from `Stat` as well, so that's what we want to trace instead:
 
 ```{r ex-3-ggbody-b}
 class(StatBoxplot)
 ```
-
-`StatBoxplot` is a child of the parent ggproto `Stat`, and the `"compute_panel"` method is inherited from `Stat` as well, so that's what we want to trace:
 
 ```{r ex-3-ggbody-c}
 ggbody(Stat$compute_panel)
