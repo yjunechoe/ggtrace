@@ -11,32 +11,33 @@ An experimental package for programmatically debugging ggproto methods.
 ## **Why {ggtrace}?**
 
 -   **Lightweight** ⚡
-    -   The only dependency is `{rlang}` (not even `{ggplot2}` is
-        required!)
+    -   The only dependency is `{rlang}` (not even `{ggplot2}`!)
     -   There isn’t a lot of code in the package - most of the heavy
         lifting is done by `base::trace()`
 -   **User-friendly** ❤
     -   Everything happens in your local session - no need to fork a
         repo to inspect/edit the internals!
-    -   Multiple expressions can be passed in to be evaluated inside
-        method body
+    -   Multiple expressions can be passed in for evaluation inside
+        method body at specified steps
     -   Output of evaluated expressions are available for inspection
         outside of the debugging environment
-    -   Calls `untrace()` on itself on exit by default, for extra
-        safety.
+    -   Calls `untrace()`/`gguntrace()` on itself on exit by default,
+        for extra safety.
 -   **Flexible** 🛠
-    -   You can either…
-        -   *Programmatically* debug with `ggtrace()`, for testing,
-            building reprexes, etc., OR
-        -   *Interactively* debug with `ggedit()` by directly editing
-            the source code.
-    -   Your favorite debugging tools (e.g., `browser()`) can be easily
-        incorporated into this workflow.
+    -   You can *programmatically* debug with `ggtrace()` or
+        *interactively* debug with `ggedit()`
+    -   Plays nice with existing debugging tools (e.g., `browser()`).
     -   Since `ggtrace()` doesn’t rely on interactivity or side effects,
-        it’s ideal for constructing targeted reproducible examples
-        (e.g., with `{reprex}`)
-    -   Works with other object classes in R (e.g., R6), not just
-        ggproto!
+        it’s ideal for making targeted `{reprex}`-es
+    -   Works with other object oriented systems in R (e.g., R6), not
+        just ggproto!
+-   **Powerful** 💪
+    -   You can return the method’s whole environment with `ggtrace()`
+        for further inspection
+    -   You can test changes to the source code with `ggedit()`, which
+        is restored upon `gguntrace()`
+    -   You can insert`browser()` calls inside deep parts of the method
+        body with `ggedit()`
 
 More on the 📦 pkgdown website: <https://yjunechoe.github.io/ggtrace>
 
@@ -113,7 +114,7 @@ ggbody(PositionJitter$compute_layer)
 #>     y_jit)
 ```
 
-### **Step 3a. `ggtrace()` - with expressions wrapped in `head()`**
+### **Step 3. `ggtrace()` - with expressions wrapped in `head()`**
 
 ``` r
 ggtrace(
@@ -145,7 +146,7 @@ jitter_plot
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
-### **Step 4a. Inspect trace dump**
+### **Step 4. Inspect trace dump**
 
 ``` r
 jitter_tracedump <- last_ggtrace()
@@ -251,7 +252,7 @@ ggbody(GeomSmooth$draw_group)
 ggtrace(
   method = GeomSmooth$draw_group,
   trace_steps = 7,
-  trace_exprs = quote(~line),
+  trace_exprs = quote(~line), # Grab the gList() object it returns
   .print = FALSE
 )
 
@@ -411,9 +412,9 @@ ggtrace(
   Stat$compute_panel,
   trace_steps = c(3, 6, 6),
   trace_exprs = list(
-    quote(~line),
-    quote(~line),
-    quote(environment())
+    quote(~line),         # What are the splits?
+    quote(~line),         # What does the combined result look like?
+    quote(environment())  # Grab the method environment
   ),
   .print = FALSE
 )
@@ -437,6 +438,7 @@ boxplot_plot
 ``` r
 boxplot_tracedump <- last_ggtrace()
 
+# The splits
 lapply(boxplot_tracedump[[1]], head)
 #> $`1`
 #>     x    y PANEL group
@@ -483,6 +485,7 @@ lapply(boxplot_tracedump[[1]], head)
 #> 40 5 61.8     1     5
 #> 41 5 61.2     1     5
 
+# Manually calculating some boxplot parameters
 lapply(boxplot_tracedump[[1]], function(group) {
   quantile(group$y, c(0, 0.25, 0.5, 0.75, 1))
 })
@@ -506,6 +509,7 @@ lapply(boxplot_tracedump[[1]], function(group) {
 #>    0%   25%   50%   75%  100% 
 #> 58.80 61.30 61.75 62.20 62.90
 
+# The combined result
 boxplot_tracedump[[2]]
 #>   ymin lower middle  upper ymax               outliers notchupper notchlower x
 #> 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1
@@ -520,6 +524,7 @@ boxplot_tracedump[[2]]
 #> 4  0.75   12.000000       FALSE     1     4
 #> 5  0.75   12.328828       FALSE     1     5
 
+# Evaluating Step 6 with the cached method environment
 eval(
   ggbody(Stat$compute_panel)[[6]],
   envir = boxplot_tracedump[[3]]
@@ -537,9 +542,12 @@ eval(
 #> 4  0.75   12.000000       FALSE     1     4
 #> 5  0.75   12.328828       FALSE     1     5
 
+# What is inside the environment?
 ls(envir = boxplot_tracedump[[3]])
 #> [1] "data"   "groups" "scales" "self"   "stats"
 
+# Use compute_group method from StatBoxplot to apply
+# transformation to the first group using the method environment
 eval(
   quote(StatBoxplot$compute_group(groups[[1]], scales, ...)),
   envir = boxplot_tracedump[[3]]
@@ -621,7 +629,7 @@ ggbody(StatSina$compute_group)
 ggtrace(
   method = StatSina$compute_group,
   trace_steps = c(1, 8),
-  trace_exprs = quote(data),
+  trace_exprs = quote(data), # What does the data look like at start and end?
   .print = FALSE
 )
 
@@ -642,6 +650,7 @@ sina_plot
 ``` r
 sina_tracedump <- last_ggtrace()
 
+# The returned data has some new columns
 waldo::compare(sina_tracedump[[1]], sina_tracedump[[2]])
 #> `old` is length 4
 #> `new` is length 8

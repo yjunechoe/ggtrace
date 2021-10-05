@@ -109,7 +109,7 @@
 <li>
 <strong>Lightweight</strong> ⚡
 <ul>
-<li>The only dependency is <a href="https://rlang.r-lib.org">rlang</a> (not even <a href="https://ggplot2.tidyverse.org">ggplot2</a> is required!)</li>
+<li>The only dependency is <a href="https://rlang.r-lib.org">rlang</a> (not even <a href="https://ggplot2.tidyverse.org">ggplot2</a>!)</li>
 <li>There isn’t a lot of code in the package - most of the heavy lifting is done by <code><a href="https://rdrr.io/r/base/trace.html">base::trace()</a></code>
 </li>
 </ul>
@@ -118,25 +118,29 @@
 <strong>User-friendly</strong> ❤
 <ul>
 <li>Everything happens in your local session - no need to fork a repo to inspect/edit the internals!</li>
-<li>Multiple expressions can be passed in to be evaluated inside method body</li>
+<li>Multiple expressions can be passed in for evaluation inside method body at specified steps</li>
 <li>Output of evaluated expressions are available for inspection outside of the debugging environment</li>
-<li>Calls <code><a href="https://rdrr.io/r/base/trace.html">untrace()</a></code> on itself on exit by default, for extra safety.</li>
+<li>Calls <code><a href="https://rdrr.io/r/base/trace.html">untrace()</a></code>/<code><a href="reference/gguntrace.html">gguntrace()</a></code> on itself on exit by default, for extra safety.</li>
 </ul>
 </li>
 <li>
 <strong>Flexible</strong> 🛠
 <ul>
-<li>You can either…
-<ul>
-<li>
-<em>Programmatically</em> debug with <code><a href="reference/ggtrace.html">ggtrace()</a></code>, for testing, building reprexes, etc., OR</li>
-<li>
-<em>Interactively</em> debug with <code><a href="reference/ggedit.html">ggedit()</a></code> by directly editing the source code.</li>
+<li>You can <em>programmatically</em> debug with <code><a href="reference/ggtrace.html">ggtrace()</a></code> or <em>interactively</em> debug with <code><a href="reference/ggedit.html">ggedit()</a></code>
+</li>
+<li>Plays nice with existing debugging tools (e.g., <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code>).</li>
+<li>Since <code><a href="reference/ggtrace.html">ggtrace()</a></code> doesn’t rely on interactivity or side effects, it’s ideal for making targeted <a href="https://reprex.tidyverse.org">reprex</a>-es</li>
+<li>Works with other object oriented systems in R (e.g., R6), not just ggproto!</li>
 </ul>
 </li>
-<li>Your favorite debugging tools (e.g., <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code>) can be easily incorporated into this workflow.</li>
-<li>Since <code><a href="reference/ggtrace.html">ggtrace()</a></code> doesn’t rely on interactivity or side effects, it’s ideal for constructing targeted reproducible examples (e.g., with <a href="https://reprex.tidyverse.org">reprex</a>)</li>
-<li>Works with other object classes in R (e.g., R6), not just ggproto!</li>
+<li>
+<strong>Powerful</strong> 💪
+<ul>
+<li>You can return the method’s whole environment with <code><a href="reference/ggtrace.html">ggtrace()</a></code> for further inspection</li>
+<li>You can test changes to the source code with <code><a href="reference/ggedit.html">ggedit()</a></code>, which is restored upon <code><a href="reference/gguntrace.html">gguntrace()</a></code>
+</li>
+<li>You can insert<code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> calls inside deep parts of the method body with <code><a href="reference/ggedit.html">ggedit()</a></code>
+</li>
 </ul>
 </li>
 </ul>
@@ -218,9 +222,9 @@
 <span class="co">#&gt; transform_position(data, function(x) x + x_jit, function(x) x + </span>
 <span class="co">#&gt;     y_jit)</span></code></pre></div>
 </div>
-<div id="step-3a-ggtrace---with-expressions-wrapped-in-head" class="section level3">
+<div id="step-3-ggtrace---with-expressions-wrapped-in-head" class="section level3">
 <h3 class="hasAnchor">
-<a href="#step-3a-ggtrace---with-expressions-wrapped-in-head" class="anchor"></a><strong>Step 3a. <code>ggtrace()</code> - with expressions wrapped in <code>head()</code></strong>
+<a href="#step-3-ggtrace---with-expressions-wrapped-in-head" class="anchor"></a><strong>Step 3. <code>ggtrace()</code> - with expressions wrapped in <code>head()</code></strong>
 </h3>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
@@ -251,9 +255,9 @@
 <span class="co">#&gt; Untracing method compute_layer from &lt;PstnJttr&gt; ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
 </div>
-<div id="step-4a-inspect-trace-dump" class="section level3">
+<div id="step-4-inspect-trace-dump" class="section level3">
 <h3 class="hasAnchor">
-<a href="#step-4a-inspect-trace-dump" class="anchor"></a><strong>Step 4a. Inspect trace dump</strong>
+<a href="#step-4-inspect-trace-dump" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">jitter_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
@@ -364,7 +368,7 @@
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="va">GeomSmooth</span><span class="op">$</span><span class="va">draw_group</span>,
   trace_steps <span class="op">=</span> <span class="fl">7</span>,
-  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>,
+  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>, <span class="co"># Grab the gList() object it returns</span>
   .print <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
 
@@ -378,9 +382,9 @@
 <span class="co">#&gt; Untracing method draw_group from &lt;GeomSmth&gt; ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
 </div>
-<div id="step-4-inspect-trace-dump" class="section level3">
+<div id="step-4-inspect-trace-dump-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#step-4-inspect-trace-dump" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
+<a href="#step-4-inspect-trace-dump-1" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">smooth_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
@@ -519,9 +523,9 @@
   <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span>,
   trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span>,
   trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>,
-    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>,
-    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/environment.html">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>,         <span class="co"># What are the splits?</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">line</span><span class="op">)</span>,         <span class="co"># What does the combined result look like?</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/environment.html">environment</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Grab the method environment</span>
   <span class="op">)</span>,
   .print <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
@@ -539,13 +543,14 @@
 <span class="co">#&gt; Untracing method compute_panel from &lt;Stat&gt; ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
 </div>
-<div id="step-4-inspect-trace-dump-1" class="section level3">
+<div id="step-4-inspect-trace-dump-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#step-4-inspect-trace-dump-1" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
+<a href="#step-4-inspect-trace-dump-2" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">boxplot_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 
+<span class="co"># The splits</span>
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">head</span><span class="op">)</span>
 <span class="co">#&gt; $`1`</span>
 <span class="co">#&gt;     x    y PANEL group</span>
@@ -592,6 +597,7 @@
 <span class="co">#&gt; 40 5 61.8     1     5</span>
 <span class="co">#&gt; 41 5 61.2     1     5</span>
 
+<span class="co"># Manually calculating some boxplot parameters</span>
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">{</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">group</span><span class="op">$</span><span class="va">y</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span>
@@ -615,6 +621,7 @@
 <span class="co">#&gt;    0%   25%   50%   75%  100% </span>
 <span class="co">#&gt; 58.80 61.30 61.75 62.20 62.90</span>
 
+<span class="co"># The combined result</span>
 <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt;   ymin lower middle  upper ymax               outliers notchupper notchlower x</span>
 <span class="co">#&gt; 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1</span>
@@ -629,6 +636,7 @@
 <span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span>
 <span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span>
 
+<span class="co"># Evaluating Step 6 with the cached method environment</span>
 <span class="fu"><a href="https://rdrr.io/r/base/eval.html">eval</a></span><span class="op">(</span>
   <span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span>,
   envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
@@ -646,9 +654,12 @@
 <span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span>
 <span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span>
 
+<span class="co"># What is inside the environment?</span>
 <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt; [1] "data"   "groups" "scales" "self"   "stats"</span>
 
+<span class="co"># Use compute_group method from StatBoxplot to apply</span>
+<span class="co"># transformation to the first group using the method environment</span>
 <span class="fu"><a href="https://rdrr.io/r/base/eval.html">eval</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="fu">compute_group</span><span class="op">(</span><span class="va">groups</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">scales</span>, <span class="va">...</span><span class="op">)</span><span class="op">)</span>,
   envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
@@ -735,7 +746,7 @@
 <code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="va">StatSina</span><span class="op">$</span><span class="va">compute_group</span>,
   trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>,
-  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,
+  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, <span class="co"># What does the data look like at start and end?</span>
   .print <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
 
@@ -750,13 +761,14 @@
 <span class="co">#&gt; Untracing method compute_group from &lt;StatSina&gt; ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
 </div>
-<div id="step-4-inspect-trace-dump-2" class="section level3">
+<div id="step-4-inspect-trace-dump-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#step-4-inspect-trace-dump-2" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
+<a href="#step-4-inspect-trace-dump-3" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sina_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 
+<span class="co"># The returned data has some new columns</span>
 <span class="fu">waldo</span><span class="fu">::</span><span class="fu"><a href="https://waldo.r-lib.org/reference/compare.html">compare</a></span><span class="op">(</span><span class="va">sina_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">sina_tracedump</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt; `old` is length 4</span>
 <span class="co">#&gt; `new` is length 8</span>
