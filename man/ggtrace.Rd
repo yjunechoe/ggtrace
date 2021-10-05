@@ -18,8 +18,8 @@ in the form of \code{ggproto$method} that evalutes to the ggproto object's metho
 \item{trace_exprs}{A list of expressions to evaluate at each position specified
 in \code{trace_steps}. If a single expression is provided, it is recycled.
 
-To simply run a step (or reference the expression at a step), you can use the \code{~line} keyword.
-All instances of \code{~line} will get substituted by the expression inside the debugging environment.}
+To simply run a step and return its output, you can use the \code{~step} keyword. If the step
+assigns a value to a local variable, the value of that local variable is returned.}
 
 \item{once}{Whether to \code{untrace()} itself on exit. Defaults to \code{TRUE}.}
 
@@ -56,7 +56,13 @@ p
 ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
 ## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To
 ## address this, `ggtrace()` offers a `~list` keyword which gets substituted for the current line.
-ggtrace(PositionJitter$compute_layer, trace_steps = 12, trace_exprs = quote(head(~line)))
+## We also set `.print = FALSE` to disable printing of the output
+ggtrace(
+  PositionJitter$compute_layer,
+  trace_steps = 12,
+  trace_exprs = quote(~step),
+  .print = FALSE
+)
 p
 
 ## Example 3 ====
@@ -64,27 +70,13 @@ p
 ## of expressions. We use `rlang::exprs()` here to conveniently construct a list of expressions.
 ggtrace(
   PositionJitter$compute_layer,
-  trace_steps = c(1, 1, 12),
-  trace_exprs = rlang::exprs(
-    head(data),
-    params,
-    head(~line)
-  )
-)
-p
-
-## Example 4 ====
-## We've been using `head()` for cleaner printing,
-## but we can also disable this with `.print = FALSE`
-ggtrace(
-  PositionJitter$compute_layer,
   trace_steps = c(1, 12),
-  trace_exprs = rlang::exprs(data, ~line),
+  trace_exprs = rlang::exprs(data, ~step),
   .print = FALSE
 )
 p
 
-## Example 5 ====
+## Example 4 ====
 ## The output of the evaluated expressions can be inspected with `last_ggtrace()`
 jitter_tracedump <- last_ggtrace()
 lapply(jitter_tracedump, head)

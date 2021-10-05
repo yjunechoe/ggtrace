@@ -54,7 +54,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ``` r
-library(ggtrace) # v0.1.1
+library(ggtrace) # v0.1.2
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -114,33 +114,33 @@ ggbody(PositionJitter$compute_layer)
 #>     y_jit)
 ```
 
-### **Step 3. `ggtrace()` - with expressions wrapped in `head()`**
+### **Step 3. `ggtrace()` - including the last line with keyword `~step`**
 
 ``` r
 ggtrace(
   method = PositionJitter$compute_layer,
   trace_steps = c(1, 1, 9, 12),
   trace_exprs = rlang::exprs(
-    head(data),        # What does the data passed in look like?
-    params,            # What do the initial parameters look like?
-    head(dummy_data),  # What is `dummy_data` defined at Step 8?
-    head(~line)        # What does the last line evaluate to?
-                       # - i.e., what is returned by the method?
+    data,            # What does the data passed in look like?
+    params,          # What do the initial parameters look like?
+    dummy_data,      # What is `dummy_data` defined at Step 8?
+    ~step            # What does the last line evaluate to?
+                     # - i.e., what is returned by the method?
   ),
-  .print = FALSE       # Don't print evaluated expressions to console
+  .print = FALSE     # Don't print evaluated expressions to console
 )
 
 # plot not printed to save space
 jitter_plot
 #> Tracing method compute_layer from <PstnJttr> ggproto.
 #> 
-#>  [Step 1]> head(data) 
+#>  [Step 1]> data 
 #> 
 #>  [Step 1]> params 
 #> 
-#>  [Step 9]> head(dummy_data) 
+#>  [Step 9]> dummy_data 
 #> 
-#>  [Step 12]> head(~line) 
+#>  [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
 #> 
 #> Untracing method compute_layer from <PstnJttr> ggproto.
 #> Call `last_ggtrace()` to get the trace dump.
@@ -152,20 +152,20 @@ jitter_plot
 jitter_tracedump <- last_ggtrace()
 
 lapply(jitter_tracedump, nrow)
-#> $`[Step 1]> head(data)`
-#> [1] 6
+#> $`[Step 1]> data`
+#> [1] 1000
 #> 
 #> $`[Step 1]> params`
 #> NULL
 #> 
-#> $`[Step 9]> head(dummy_data)`
-#> [1] 6
+#> $`[Step 9]> dummy_data`
+#> [1] 1000
 #> 
-#> $`[Step 12]> head(~line)`
-#> [1] 6
+#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
+#> [1] 1000
 
 lapply(jitter_tracedump, head)
-#> $`[Step 1]> head(data)`
+#> $`[Step 1]> data`
 #>   x    y PANEL group
 #> 1 5 61.5     1     5
 #> 2 4 59.8     1     4
@@ -185,7 +185,7 @@ lapply(jitter_tracedump, head)
 #> [1] 2021
 #> 
 #> 
-#> $`[Step 9]> head(dummy_data)`
+#> $`[Step 9]> dummy_data`
 #>   x    y
 #> 1 5 61.5
 #> 2 4 59.8
@@ -194,7 +194,7 @@ lapply(jitter_tracedump, head)
 #> 5 2 63.3
 #> 6 3 62.8
 #> 
-#> $`[Step 12]> head(~line)`
+#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
 #>          x        y PANEL group
 #> 1 4.980507 61.50684     1     5
 #> 2 4.113512 59.77872     1     4
@@ -246,13 +246,13 @@ ggbody(GeomSmooth$draw_group)
 #>     panel_params, coord))
 ```
 
-### **Step 3. `ggtrace()` - get `gList()`**
+### **Step 3. `ggtrace()` - get the `gList()`**
 
 ``` r
 ggtrace(
   method = GeomSmooth$draw_group,
   trace_steps = 7,
-  trace_exprs = quote(~line), # Grab the gList() object it returns
+  trace_exprs = quote(~step), # Grab the gList() object it returns
   .print = FALSE
 )
 
@@ -261,7 +261,8 @@ smooth_plot
 #> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 #> Tracing method draw_group from <GeomSmth> ggproto.
 #> 
-#>  [Step 7]> ~line 
+#>  [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
+#>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord)) 
 #> 
 #> Untracing method draw_group from <GeomSmth> ggproto.
 #> Call `last_ggtrace()` to get the trace dump.
@@ -409,8 +410,8 @@ ggtrace(
   Stat$compute_panel,
   trace_steps = c(3, 6, 6),
   trace_exprs = list(
-    quote(~line),         # What are the splits?
-    quote(~line),         # What does the combined result look like?
+    quote(~step),         # What are the splits?
+    quote(~step),         # What does the combined result look like?
     quote(environment())  # Grab the method environment
   ),
   .print = FALSE
@@ -420,9 +421,9 @@ ggtrace(
 boxplot_plot
 #> Tracing method compute_panel from <Stat> ggproto.
 #> 
-#>  [Step 3]> ~line 
+#>  [Step 3]> groups <- split(data, data$group) 
 #> 
-#>  [Step 6]> ~line 
+#>  [Step 6]> rbind_dfs(stats) 
 #> 
 #>  [Step 6]> environment() 
 #> 
@@ -436,6 +437,9 @@ boxplot_plot
 boxplot_tracedump <- last_ggtrace()
 
 # The splits
+sapply(boxplot_tracedump[[1]], nrow)
+#>   1   2   3   4   5 
+#>  26  51 127 144 152
 lapply(boxplot_tracedump[[1]], head)
 #> $`1`
 #>     x    y PANEL group
@@ -521,7 +525,7 @@ boxplot_tracedump[[2]]
 #> 4  0.75   12.000000       FALSE     1     4
 #> 5  0.75   12.328828       FALSE     1     5
 
-# Evaluating Step 6 with the cached method environment
+# Evaluate the expression in Step 6 with the cached method environment
 eval(
   ggbody(Stat$compute_panel)[[6]],
   envir = boxplot_tracedump[[3]]
@@ -539,11 +543,11 @@ eval(
 #> 4  0.75   12.000000       FALSE     1     4
 #> 5  0.75   12.328828       FALSE     1     5
 
-# What is inside the environment?
+# What was inside the method environment?
 ls(envir = boxplot_tracedump[[3]])
 #> [1] "data"   "groups" "scales" "self"   "stats"
 
-# Use compute_group method from StatBoxplot to apply
+# Manually call the compute_group method from StatBoxplot to apply
 # transformation to the first group using the method environment
 eval(
   quote(StatBoxplot$compute_group(groups[[1]], scales, ...)),

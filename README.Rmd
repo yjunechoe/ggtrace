@@ -62,7 +62,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ```{r setup}
-library(ggtrace) # v0.1.1
+library(ggtrace) # v0.1.2
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -83,20 +83,20 @@ jitter_plot
 ggbody(PositionJitter$compute_layer)
 ```
 
-### **Step 3. `ggtrace()` - with expressions wrapped in `head()`**
+### **Step 3. `ggtrace()` - including the last line with keyword `~step`**
 
 ```{r ex-1-ggtrace, fig.show='hide'}
 ggtrace(
   method = PositionJitter$compute_layer,
   trace_steps = c(1, 1, 9, 12),
   trace_exprs = rlang::exprs(
-    head(data),        # What does the data passed in look like?
-    params,            # What do the initial parameters look like?
-    head(dummy_data),  # What is `dummy_data` defined at Step 8?
-    head(~line)        # What does the last line evaluate to?
-                       # - i.e., what is returned by the method?
+    data,            # What does the data passed in look like?
+    params,          # What do the initial parameters look like?
+    dummy_data,      # What is `dummy_data` defined at Step 8?
+    ~step            # What does the last line evaluate to?
+                     # - i.e., what is returned by the method?
   ),
-  .print = FALSE       # Don't print evaluated expressions to console
+  .print = FALSE     # Don't print evaluated expressions to console
 )
 
 # plot not printed to save space
@@ -130,13 +130,13 @@ smooth_plot
 ggbody(GeomSmooth$draw_group)
 ```
 
-### **Step 3. `ggtrace()` - get `gList()`**
+### **Step 3. `ggtrace()` - get the `gList()`**
 
 ```{r ex-2-ggtrace, fig.show='hide'}
 ggtrace(
   method = GeomSmooth$draw_group,
   trace_steps = 7,
-  trace_exprs = quote(~line), # Grab the gList() object it returns
+  trace_exprs = quote(~step), # Grab the gList() object it returns
   .print = FALSE
 )
 
@@ -235,8 +235,8 @@ ggtrace(
   Stat$compute_panel,
   trace_steps = c(3, 6, 6),
   trace_exprs = list(
-    quote(~line),         # What are the splits?
-    quote(~line),         # What does the combined result look like?
+    quote(~step),         # What are the splits?
+    quote(~step),         # What does the combined result look like?
     quote(environment())  # Grab the method environment
   ),
   .print = FALSE
@@ -252,6 +252,7 @@ boxplot_plot
 boxplot_tracedump <- last_ggtrace()
 
 # The splits
+sapply(boxplot_tracedump[[1]], nrow)
 lapply(boxplot_tracedump[[1]], head)
 
 # Manually calculating some boxplot parameters
@@ -262,16 +263,16 @@ lapply(boxplot_tracedump[[1]], function(group) {
 # The combined result
 boxplot_tracedump[[2]]
 
-# Evaluating Step 6 with the cached method environment
+# Evaluate the expression in Step 6 with the cached method environment
 eval(
   ggbody(Stat$compute_panel)[[6]],
   envir = boxplot_tracedump[[3]]
 )
 
-# What is inside the environment?
+# What was inside the method environment?
 ls(envir = boxplot_tracedump[[3]])
 
-# Use compute_group method from StatBoxplot to apply
+# Manually call the compute_group method from StatBoxplot to apply
 # transformation to the first group using the method environment
 eval(
   quote(StatBoxplot$compute_group(groups[[1]], scales, ...)),
