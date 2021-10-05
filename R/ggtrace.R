@@ -67,7 +67,7 @@
 #' lapply(jitter_tracedump, head)
 #' hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
 #' }
-ggtrace <- function(method, obj, trace_steps, trace_exprs, once = TRUE, .print = TRUE) {
+ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE) {
 
   if (rlang::is_missing(obj)) {
     method_expr <- rlang::enexpr(method)
