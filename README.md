@@ -338,7 +338,7 @@ time from your knowledge of that Geom (whereas if you wanted to grab a
 grob after the ggplot is built, you’d have to navigate the whole
 `ggplotGrob(smooth_plot)[["grobs"]]`).
 
-## **Example 3 - `compute_group` method from `StatBoxplot`**
+## **Example 3 - `compute_panel` method from `StatBoxplot`**
 
 ### **Step 1. Make plot**
 
@@ -352,8 +352,8 @@ boxplot_plot
 
 ### **Step 2. Inspect callstack of the ggproto method**
 
-`"compute_panel"` method is not defined for `StatBoxplot`, which means
-it’s being inherited.
+Actually, `"compute_panel"` method is not defined for `StatBoxplot`,
+which means that it’s being inherited.
 
 ``` r
 ggbody(StatBoxplot$compute_panel)

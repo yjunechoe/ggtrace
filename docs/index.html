@@ -440,9 +440,9 @@
 <p>But I will just add that the above way of “intercepting” and retrieving a grob is kinda nice because you know what will be there ahead of the time from your knowledge of that Geom (whereas if you wanted to grab a grob after the ggplot is built, you’d have to navigate the whole <code>ggplotGrob(smooth_plot)[["grobs"]]</code>).</p>
 </div>
 </div>
-<div id="example-3---compute_group-method-from-statboxplot" class="section level2">
+<div id="example-3---compute_panel-method-from-statboxplot" class="section level2">
 <h2 class="hasAnchor">
-<a href="#example-3---compute_group-method-from-statboxplot" class="anchor"></a><strong>Example 3 - <code>compute_group</code> method from <code>StatBoxplot</code></strong>
+<a href="#example-3---compute_panel-method-from-statboxplot" class="anchor"></a><strong>Example 3 - <code>compute_panel</code> method from <code>StatBoxplot</code></strong>
 </h2>
 <div id="step-1-make-plot-2" class="section level3">
 <h3 class="hasAnchor">
@@ -458,7 +458,7 @@
 <h3 class="hasAnchor">
 <a href="#step-2-inspect-callstack-of-the-ggproto-method-2" class="anchor"></a><strong>Step 2. Inspect callstack of the ggproto method</strong>
 </h3>
-<p><code>"compute_panel"</code> method is not defined for <code>StatBoxplot</code>, which means it’s being inherited.</p>
+<p>Actually, <code>"compute_panel"</code> method is not defined for <code>StatBoxplot</code>, which means that it’s being inherited.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
 <span class="co">#&gt; Error in get(method, obj): object 'compute_panel' not found</span></code></pre></div>
