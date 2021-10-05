@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.2</span>
       </span>
     </div>
 
@@ -142,10 +142,14 @@
     <div id="ggtrace-development-version" class="section level1">
 <h1 class="page-header" data-toc-text="development version">
 <a href="#ggtrace-development-version" class="anchor"></a>ggtrace (development version)</h1>
+</div>
+    <div id="ggtrace-012" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.2">
+<a href="#ggtrace-012" class="anchor"></a>ggtrace 0.1.2</h1>
 <ul>
-<li>
-<code><a href="../reference/gguntrace.html">gguntrace()</a></code> with the same syntax for specifying the ggproto method.</li>
-<li>A new argument for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> that takes an expression to allow <code>tracer</code> to be triggered conditionally</li>
+<li><p>New function <code><a href="../reference/gguntrace.html">gguntrace()</a></code> with the same syntax for specifying the ggproto method.</p></li>
+<li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gains a <code>once = TRUE</code> argument, which can be set to <code>FALSE</code> for persistent tracing</p></li>
+<li><p>Fix bug in <code><a href="../reference/ggtrace.html">ggtrace()</a></code> where <code>step_deparsed</code> was being returned as a multi-length vector</p></li>
 </ul>
 </div>
     <div id="ggtrace-011" class="section level1">
@@ -154,7 +158,7 @@
 <ul>
 <li><p>Added <a href="https://yjunechoe.github.io/ggtrace/reference/ggedit.html"><code>ggedit()</code></a> for interactive debugging via directly editing the source code.</p></li>
 <li><p>Refactored <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. The package now only depends on <a href="https://rlang.r-lib.org">rlang</a>.</p></li>
-<li><p>Significant improvements to the readme</p></li>
+<li><p>Significant improvements to the readme / documentation</p></li>
 </ul>
 </div>
     <div id="ggtrace-010" class="section level1">

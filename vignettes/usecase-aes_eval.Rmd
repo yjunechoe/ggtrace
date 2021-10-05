@@ -2,7 +2,7 @@
 title: "Usecase: aes_eval"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{usecase-aes_eval}
+  %\VignetteIndexEntry{Usecase: aes_eval}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -27,5 +27,5 @@ https://ggplot2.tidyverse.org/reference/aes_eval.html
 
 How can I know the transformed variables that I can reference inside `after_stat()` and `after_scale()`?
 
-- **after_stat**
-- **after_scale**: https://github.com/tidyverse/ggplot2/blob/87e9b85dd9f2a294f339d88a353d0c11c851489d/R/geom-.r#L124-L150
+- **after_stat**: `Stat` - 
+- **after_scale**: `Geom` - https://github.com/tidyverse/ggplot2/blob/87e9b85dd9f2a294f339d88a353d0c11c851489d/R/geom-.r#L124-L150
