@@ -9,8 +9,6 @@ split_ggproto_method <- function(x) {
 
 #' Retrieve the callstack of a ggproto method as a list
 #'
-#' Essentially calls `as.list(body(get("<method>", <obj>)))` under the hood.
-#'
 #' @param method The method name as a string. Alternatively an expression
 #'   that evaluates to the ggproto method in the form of `ggproto$method`.
 #' @param obj The ggproto object. Can be omitted if the method is an expression
@@ -20,7 +18,7 @@ split_ggproto_method <- function(x) {
 #'
 #' @details Despite the convenience of the short form which `ggbody()` also works with,
 #'   the long form of retrieving the ggproto method by specifying both the method and
-#'   the object separately exists for compatibility with other ways of inspecting
+#'   the object separately exists for consistency with other ways of inspecting
 #'   ggproto methods.
 #'
 #'   - For example, this works: `debugonce(get("compute_group", StatCount))`
@@ -68,8 +66,7 @@ ggbody <- function(method, obj, inherit = FALSE) {
         error = function(e) { NULL }
       )
       if (!is.null(parent_method)) {
-        message(paste0("Returning ", method, " from ", parent,
-                       " - `ggbody(", parent, "$", method, ")`"))
+        message(paste0("Returning `ggbody(", parent, "$", method, ")`"))
         # Break and return when found
         return(as.list(body(parent_method)))
       }

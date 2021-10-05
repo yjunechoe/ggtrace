@@ -9,9 +9,13 @@
 
 set_last_ggtrace <- function(value) .store$set(value)
 
-#' Retrieve the trace dump created by the last ggtrace
+#' Retrieve the trace dump created by the last `ggtrace()`
 #'
+#' @seealso [ggtrace()]
+#'
+#' @return A list
 #' @export
+#'
 #' @keywords internal
 #' @examples
 #' \dontrun{
@@ -20,7 +24,9 @@ set_last_ggtrace <- function(value) .store$set(value)
 #' ggbody(StatSmooth$compute_group)
 #'
 #' ggtrace(StatSmooth$compute_group, trace_steps = 12, trace_exprs = quote(head(prediction)))
+#'
 #' ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
+#'
 #' last_ggtrace()
 #'
 #' ggtrace(
@@ -29,7 +35,9 @@ set_last_ggtrace <- function(value) .store$set(value)
 #'   trace_exprs = quote(prediction),
 #'   .print = FALSE
 #' )
+#'
 #' ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
+#'
 #' last_ggtrace()
 #' }
 last_ggtrace <- function() .store$get()

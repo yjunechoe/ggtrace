@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Retrieve the trace dump created by the last ggtrace — last_ggtrace • ggtrace</title>
+<title>Retrieve the trace dump created by the last ggtrace() — last_ggtrace • ggtrace</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Retrieve the trace dump created by the last ggtrace — last_ggtrace" />
-<meta property="og:description" content="Retrieve the trace dump created by the last ggtrace" />
+<meta property="og:title" content="Retrieve the trace dump created by the last ggtrace() — last_ggtrace" />
+<meta property="og:description" content="Retrieve the trace dump created by the last ggtrace()" />
 
 
 
@@ -136,18 +136,24 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Retrieve the trace dump created by the last ggtrace</h1>
+    <h1>Retrieve the trace dump created by the last <code>ggtrace()</code></h1>
     <small class="dont-index">Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/R/last_ggtrace.R'><code>R/last_ggtrace.R</code></a></small>
     <div class="hidden name"><code>last_ggtrace.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieve the trace dump created by the last ggtrace</p>
+    <p>Retrieve the trace dump created by the last <code><a href='ggtrace.html'>ggtrace()</a></code></p>
     </div>
 
     <pre class="usage"><span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='ggtrace.html'>ggtrace()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
@@ -225,6 +231,7 @@
 #&gt; flip_data(prediction, flipped_aes)
 #&gt; </div><div class='input'>
 <span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>StatSmooth</span><span class='op'>$</span><span class='va'>compute_group</span>, trace_steps <span class='op'>=</span> <span class='fl'>12</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>prediction</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>'lm'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='img'><img src='last_ggtrace-1.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_group from &lt;StatSmth&gt; ggproto.
 #&gt; 
@@ -238,7 +245,8 @@
 #&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743
 #&gt; 
 #&gt; Untracing method compute_group from &lt;StatSmth&gt; ggproto.
-#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'><span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
+<span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`[Step 12]&gt; head(prediction)`
 #&gt;          x        y     ymin     ymax       se
 #&gt; 1 10.40000 232.2531 201.8649 262.6414 14.87963
@@ -254,13 +262,15 @@
   trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='va'>prediction</span><span class='op'>)</span>,
   .print <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
+
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>'lm'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='img'><img src='last_ggtrace-2.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_group from &lt;StatSmth&gt; ggproto.
 #&gt; 
 #&gt;  [Step 12]&gt; prediction 
 #&gt; 
 #&gt; Untracing method compute_group from &lt;StatSmth&gt; ggproto.
-#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'><span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
+<span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`[Step 12]&gt; prediction`
 #&gt;           x         y       ymin      ymax        se
 #&gt; 1  10.40000 232.25311 201.864857 262.64137 14.879628

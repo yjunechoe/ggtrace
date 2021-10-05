@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Retrieve the callstack of a ggproto method as a list — ggbody" />
-<meta property="og:description" content="Essentially calls as.list(body(get(&quot;&amp;lt;method&amp;gt;&quot;, &amp;lt;obj&amp;gt;))) under the hood." />
+<meta property="og:description" content="Retrieve the callstack of a ggproto method as a list" />
 
 
 
@@ -142,7 +142,7 @@
     </div>
 
     <div class="ref-description">
-    <p>Essentially calls <code>as.list(body(get("&lt;method&gt;", &lt;obj&gt;)))</code> under the hood.</p>
+    <p>Retrieve the callstack of a ggproto method as a list</p>
     </div>
 
     <pre class="usage"><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span>, inherit <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
@@ -171,7 +171,7 @@ Defaults to <code>FALSE</code>.</p></td>
 
     <p>Despite the convenience of the short form which <code>ggbody()</code> also works with,
 the long form of retrieving the ggproto method by specifying both the method and
-the object separately exists for compatibility with other ways of inspecting
+the object separately exists for consistency with other ways of inspecting
 ggproto methods.</p><ul>
 <li><p>For example, this works: <code><a href='https://rdrr.io/r/base/debug.html'>debugonce(get("compute_group", StatCount))</a></code></p></li>
 <li><p>But this fails to insert a break point: <code><a href='https://rdrr.io/r/base/debug.html'>debugonce(StatCount$compute_group)</a></code></p></li>
@@ -290,7 +290,7 @@ ggproto methods.</p><ul>
 <span class='co'># `inherit = TRUE` will return the method from the closest parent</span>
 
 <span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatBoxplot</span><span class='op'>$</span><span class='va'>compute_panel</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Returning compute_panel from Stat - `ggbody(Stat$compute_panel)`</span></div><div class='output co'>#&gt; [[1]]
+</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(Stat$compute_panel)`</span></div><div class='output co'>#&gt; [[1]]
 #&gt; `{`
 #&gt; 
 #&gt; [[2]]

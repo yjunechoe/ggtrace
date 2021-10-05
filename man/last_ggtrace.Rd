@@ -2,12 +2,15 @@
 % Please edit documentation in R/last_ggtrace.R
 \name{last_ggtrace}
 \alias{last_ggtrace}
-\title{Retrieve the trace dump created by the last ggtrace}
+\title{Retrieve the trace dump created by the last \code{ggtrace()}}
 \usage{
 last_ggtrace()
 }
+\value{
+A list
+}
 \description{
-Retrieve the trace dump created by the last ggtrace
+Retrieve the trace dump created by the last \code{ggtrace()}
 }
 \examples{
 \dontrun{
@@ -16,7 +19,9 @@ library(ggplot2)
 ggbody(StatSmooth$compute_group)
 
 ggtrace(StatSmooth$compute_group, trace_steps = 12, trace_exprs = quote(head(prediction)))
+
 ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
+
 last_ggtrace()
 
 ggtrace(
@@ -25,8 +30,13 @@ ggtrace(
   trace_exprs = quote(prediction),
   .print = FALSE
 )
+
 ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
+
 last_ggtrace()
 }
+}
+\seealso{
+\code{\link[=ggtrace]{ggtrace()}}
 }
 \keyword{internal}

@@ -17,12 +17,12 @@ in the form of \code{ggproto$method} that evalutes to the ggproto object's metho
 Defaults to \code{FALSE}.}
 }
 \description{
-Essentially calls \verb{as.list(body(get("<method>", <obj>)))} under the hood.
+Retrieve the callstack of a ggproto method as a list
 }
 \details{
 Despite the convenience of the short form which \code{ggbody()} also works with,
 the long form of retrieving the ggproto method by specifying both the method and
-the object separately exists for compatibility with other ways of inspecting
+the object separately exists for consistency with other ways of inspecting
 ggproto methods.
 \itemize{
 \item For example, this works: \code{debugonce(get("compute_group", StatCount))}

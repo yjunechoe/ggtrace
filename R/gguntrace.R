@@ -6,7 +6,7 @@
 #'
 #' @section Gotchas:
 #'  - If you try to untrace a method that is not currently being traced,
-#'    you will get a `count not find function "<method>"` error. This is
+#'    you will get a `could not find function "<method>"` error. This is
 #'    in contrast to if you tried to untrace simple functions like in
 #'    `untrace(mean)`. Future updates to `gguntrace()` will improve
 #'    handling of this default behavior from `base::trace()`.
