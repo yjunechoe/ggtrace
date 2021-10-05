@@ -4,7 +4,7 @@
 \alias{ggbody}
 \title{Retrieve the callstack of a ggproto method as a list}
 \usage{
-ggbody(method, obj)
+ggbody(method, obj, inherit = FALSE)
 }
 \arguments{
 \item{method}{The method name as a string. Alternatively an expression
@@ -12,11 +12,14 @@ that evaluates to the ggproto method in the form of \code{ggproto$method}.}
 
 \item{obj}{The ggproto object. Can be omitted if the method is an expression
 in the form of \code{ggproto$method} that evalutes to the ggproto object's method.}
+
+\item{inherit}{Whether the method should be returned from its closest parent.
+Defaults to \code{FALSE}.}
 }
 \description{
 Essentially calls \verb{as.list(body(get("<method>", <obj>)))} under the hood.
 }
-\note{
+\details{
 Despite the convenience of the short form which \code{ggbody()} also works with,
 the long form of retrieving the ggproto method by specifying both the method and
 the object separately exists for compatibility with other ways of inspecting
@@ -29,6 +32,8 @@ But this fails to insert a break point: \code{debugonce(StatCount$compute_group)
 \dontrun{
 library(ggplot2)
 
+# Methods can be specified in both long form and short form
+
 longform <- ggbody("compute_group", StatCount)
 longform
 
@@ -37,7 +42,15 @@ shortform
 
 identical(longform, shortform)
 
+# Works for ggproto in extension packages
+
 library(ggforce)
 ggbody(StatBezier$compute_panel)
+
+# `inherit = TRUE` will return the method from the closest parent
+
+ggbody(StatBoxplot$compute_panel, inherit = TRUE)
+ggbody(Stat$compute_panel)
+
 }
 }

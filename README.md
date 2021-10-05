@@ -371,6 +371,7 @@ class(StatBoxplot)
 ```
 
 ``` r
+# See also: `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`
 ggbody(Stat$compute_panel)
 #> [[1]]
 #> `{`

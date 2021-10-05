@@ -468,7 +468,8 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">)</span>
 <span class="co">#&gt; [1] "StatBoxplot" "Stat"        "ggproto"     "gg"</span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># See also: `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`</span>
+<span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
 <span class="co">#&gt; </span>
@@ -534,6 +535,9 @@
 <code class="sourceCode R"><span class="va">boxplot_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># The splits</span>
+<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">nrow</span><span class="op">)</span>
+<span class="co">#&gt;   1   2   3   4   5 </span>
+<span class="co">#&gt;  26  51 127 144 152</span>
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">head</span><span class="op">)</span>
 <span class="co">#&gt; $`1`</span>
 <span class="co">#&gt;     x    y PANEL group</span>
@@ -619,7 +623,7 @@
 <span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span>
 <span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span>
 
-<span class="co"># Evaluating Step 6 with the cached method environment</span>
+<span class="co"># Evaluate the expression in Step 6 with the cached method environment</span>
 <span class="fu"><a href="https://rdrr.io/r/base/eval.html">eval</a></span><span class="op">(</span>
   <span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span>,
   envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
@@ -637,11 +641,11 @@
 <span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span>
 <span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span>
 
-<span class="co"># What is inside the environment?</span>
+<span class="co"># What was inside the method environment?</span>
 <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
 <span class="co">#&gt; [1] "data"   "groups" "scales" "self"   "stats"</span>
 
-<span class="co"># Use compute_group method from StatBoxplot to apply</span>
+<span class="co"># Manually call the compute_group method from StatBoxplot to apply</span>
 <span class="co"># transformation to the first group using the method environment</span>
 <span class="fu"><a href="https://rdrr.io/r/base/eval.html">eval</a></span><span class="op">(</span>
   <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="fu">compute_group</span><span class="op">(</span><span class="va">groups</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">scales</span>, <span class="va">...</span><span class="op">)</span><span class="op">)</span>,
