@@ -1,8 +1,8 @@
 ---
-title: "Usecase: aes_eval"
+title: "Usecase: aes evaluation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Usecase: aes_eval}
+  %\VignetteIndexEntry{Usecase: aes evaluation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -1,5 +1,7 @@
 # ggtrace (development version)
 
+# ggtrace 0.2.0
+
 ### **Breaking changes**
 
 - The `~line` keyword for `ggtrace()` is renamed to `~step` for consistency with the argument name `trace_steps`

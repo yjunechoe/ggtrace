@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically debug ggproto methods with trace
-Version: 0.1.2
+Version: 0.2.0
 Authors@R: c(
       person(given = "June",
            family = "Choe",
@@ -24,9 +24,9 @@ Collate:
   'gguntrace.R'
   'ggtrace.R'
 Imports: 
-    rlang
+    rlang (>= 0.4.10)
 Suggests: 
-    ggplot2,
+    ggplot2 (>= 3.3.0),
     rmarkdown,
     knitr
 VignetteBuilder: knitr

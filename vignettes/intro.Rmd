@@ -1,8 +1,8 @@
 ---
-title: "Intro to ggtrace()"
+title: "Introduction to ggtrace()"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Intro to ggtrace()}
+  %\VignetteIndexEntry{Introduction to ggtrace()}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -54,7 +54,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ``` r
-library(ggtrace) # v0.1.2
+library(ggtrace) # v0.2.0
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
