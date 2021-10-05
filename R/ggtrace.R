@@ -8,6 +8,8 @@
 #'   To simply run a step and return its output, you can use the `~step` keyword. If the step
 #'   assigns a value to a local variable, the value of that local variable is returned.
 #'
+#'   If `trace_exprs` is not provided, `ggtrace()` is called with `~step` by default.
+#'
 #' @param once Whether to `untrace()` itself on exit. Defaults to `TRUE`.
 #' @param .print Whether to print the output of each expression to the console. Defaults to `TRUE`.
 #'
@@ -20,6 +22,7 @@
 #'  trace dump is available for further inspection with `last_ggtrace()`.
 #'
 #' @return NULL
+#'
 #' @export
 #'
 #' @examples
@@ -69,6 +72,7 @@
 #' }
 ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE) {
 
+  # Parse `ggproto$method` into its parts
   if (rlang::is_missing(obj)) {
     method_expr <- rlang::enexpr(method)
     split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
@@ -76,30 +80,36 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
     obj <- split[[2]]
   }
 
+  # Get ggproto name as string
   obj_name <- rlang::as_label(obj)
 
+  # Initialize trace dump for caching output
   trace_n <- length(trace_steps)
   trace_dump <- vector("list", trace_n)
 
-  if (!is.list(trace_exprs)) {
+  # Ensure `trace_exprs` is a list of expressions
+  if (rlang::is_missing(trace_exprs)) {
+    trace_exprs <- rep(list(rlang::expr(~step)), trace_n)
+  } else if (!is.list(trace_exprs)) {
     trace_exprs <- rep(list(trace_exprs), trace_n)
   }
 
+  # Substitute `~step` keyword
   method_body <- ggbody(method, obj)
   trace_exprs <- lapply(seq_len(trace_n), function(x) {
     if (rlang::as_label(trace_exprs[[x]]) == "~step") {
-      step_deparsed <- paste(rlang::expr_deparse(method_body[[trace_steps[x]]], width = Inf), collapse = "")
-      line_substituted <- gsub("~step", step_deparsed, rlang::as_label(trace_exprs[[x]]))
-      rlang::parse_expr(line_substituted)
+      method_body[[trace_steps[x]]]
     } else {
       trace_exprs[[x]]
     }
   })
 
+  # Printing step and expression to console
   names(trace_dump) <- lapply(seq_len(trace_n), function(i) {
     paste0("[Step ", trace_steps[[i]], "]> ", paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n"))
   })
 
+  # For incrementally storing results to `trace_dump`
   trace_idx <- 1
 
   suppressMessages(
@@ -108,22 +118,30 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
       where = obj,
       at = trace_steps,
       tracer = function() {
+
         if (trace_idx == 1) {
           cat("Tracing method", method, "from", obj_name, "ggproto.\n")
         }
-        trace_expr <- trace_exprs[[trace_idx]]
+
         trace_print <- gsub("\\n", "\n ", names(trace_dump)[trace_idx])
+
+        # Evaluate and store output to trace dump
+        trace_expr <- trace_exprs[[trace_idx]]
         trace_dump[[trace_idx]] <- eval(rlang::expr({
           cat("\n", !!trace_print, "\n")
           if (!!.print) { print(!!trace_expr) }
           return(!!trace_expr)
-        }), envir = parent.frame())
-        trace_dump <<- trace_dump
+        }), envir = parent.frame()) # This is needed to escape the debugging environment
+
         if (trace_idx == length(trace_exprs)) {
           set_last_ggtrace(trace_dump)
         } else {
           trace_idx <<- trace_idx + 1
         }
+
+        # Store output
+        trace_dump <<- trace_dump
+
       },
       print = FALSE,
       exit = rlang::expr({
@@ -132,7 +150,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
           suppressMessages(untrace(!!method, where = !!obj))
           cat("Untracing method", !!method, "from", !!obj_name, "ggproto.\n")
         } else {
-          message("Creating a persistent trace. Remember to `gguntrace()`!")
+          message("Creating a persistent trace. Remember to `gguntrace(ggproto$method)`!")
         }
         cat("Call `last_ggtrace()` to get the trace dump.\n")
       })
