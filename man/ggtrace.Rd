@@ -36,19 +36,44 @@ It calls \code{base::untrace()} on itself on exit by default, to make its effect
 A major feature is the ability to pass multiple positions and expressions to \code{trace_steps} and \code{trace_exprs}.
 It is recommended to consult the output of \code{ggbody()} when deciding which expressions to evaluate at which steps.
 
-The output of the expressions passed to \code{trace_exprs} is printed while tracing takes place. The last \code{ggtrace()}
-trace dump is available for further inspection with \code{last_ggtrace()}.
+The output of the expressions passed to \code{trace_exprs} is printed while tracing takes place. The
+list of outputs from the last \code{ggtrace()} can be returned for further inspection with \code{last_ggtrace()}.
 }
+\section{Tips & Tricks}{
+
+\itemize{
+\item If the intent is to, run complex calculations, it is recommended to use \code{ggtrace()} to simply return the method's
+environment by passing \code{quote(environment())} to \code{trace_exprs}. The returned environment is the method's execution
+environment which also contextualizes the \code{self} object in addition to making all local variables available. This
+allows more complex explorations outside of the debugger, and is recommended for safety reasons.
+\item To modify the behavior of a method as it runs, you can pass in expressions that make assignments inside the
+method environment. for example, \code{trace_steps = c(1, 10)} with \code{rlang::exprs(a <- 5, a)} will first assign a new
+variable \code{a} at step 1, and then return its value \code{5} at step 10. This can also be used to modify important
+variables like \verb{quote(data <- <...>)}. Note that this doesn't edit the source code (for that, see \code{\link[=ggedit]{ggedit()}}).
+}
+}
+
 \section{Gotchas}{
 
 \itemize{
 \item If you wrap a ggplot in \code{invisible()} to silence \code{ggtrace()}, the plot will not build, which also means that
 the tracing is not triggered. The print/plot method of ggplot is what triggers the evaluation of the plot
-code. It is recommended to allow \code{ggtrace()} to print messages for safety, but if you'd really like to silence
-it, you can do so by wrapping the plot in \verb{invisible(capture.output(<plot>))}.
+code. It is recommended to allow \code{ggtrace()} to print messages, but if you'd really like to silence
+it, you can do so by wrapping the plot in \verb{invisible(capture.output(<plot_object>))}.
 \item If for any reason \code{ggtrace(once = TRUE)} fails to untrace itself on exit, you may accidentally trigger
 the tracing again. To check if a method is being traced, call \code{ggbody()} on it and inspect its body. If you
 see \code{.doTrace()} scattered around the body, that's a sign the method is still being traced.
+\item Environments are mutable, which means that the returning \code{environment()} at different steps in the body
+will still reference the same object. To get a snapshot of the method's environment at a particular step,
+it is recommended to use \code{rlang::env_clone(environment())} instead.
+\itemize{
+\item Note that the execution environment is created anew each time the method is ran, so modifying the
+environment from its previous execution will not affect future calls to the method as long as
+the method is untraced (which happens by default).
+\item Because \code{trace()} wraps the method body in a special environment, it is not possible to inspect the
+higher method which called it, even with something like \code{rlang::caller_env()}. You will traverse through
+a few enclosing environments created by \code{trace()} which eventually ends up looping around.
+}
 }
 }
 
@@ -70,12 +95,12 @@ p
 ## Example 2 ====
 ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
 ## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To
-## address this, `ggtrace()` offers a `~list` keyword which gets substituted for the current line.
+## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.
 ## We also set `.print = FALSE` to disable printing of the output
 ggtrace(
   PositionJitter$compute_layer,
   trace_steps = 12,
-  trace_exprs = quote(~step),
+  trace_exprs = quote(~step), # This the default if `trace_exprs` is not provided
   .print = FALSE
 )
 p

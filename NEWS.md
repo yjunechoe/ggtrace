@@ -1,5 +1,9 @@
 # ggtrace (development version)
 
+### **Improvements**
+
+- Added a Tips & Tricks section to the documentation for `ggtrace()`
+
 ### **Bug fixes**
 
 - Internal variable `.store` renamed to `.ggtrace_storage` to prevent overriding `ggplot2::.store` (#18)

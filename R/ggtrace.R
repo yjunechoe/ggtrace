@@ -18,17 +18,36 @@
 #'  A major feature is the ability to pass multiple positions and expressions to `trace_steps` and `trace_exprs`.
 #'  It is recommended to consult the output of `ggbody()` when deciding which expressions to evaluate at which steps.
 #'
-#'  The output of the expressions passed to `trace_exprs` is printed while tracing takes place. The last `ggtrace()`
-#'  trace dump is available for further inspection with `last_ggtrace()`.
+#'  The output of the expressions passed to `trace_exprs` is printed while tracing takes place. The
+#'  list of outputs from the last `ggtrace()` can be returned for further inspection with `last_ggtrace()`.
+#'
+#' @section Tips & Tricks:
+#'  - If the intent is to, run complex calculations, it is recommended to use `ggtrace()` to simply return the method's
+#'    environment by passing `quote(environment())` to `trace_exprs`. The returned environment is the method's execution
+#'    environment which also contextualizes the `self` object in addition to making all local variables available. This
+#'    allows more complex explorations outside of the debugger, and is recommended for safety reasons.
+#'  - To modify the behavior of a method as it runs, you can pass in expressions that make assignments inside the
+#'    method environment. for example, `trace_steps = c(1, 10)` with `rlang::exprs(a <- 5, a)` will first assign a new
+#'    variable `a` at step 1, and then return its value `5` at step 10. This can also be used to modify important
+#'    variables like `quote(data <- <...>)`. Note that this doesn't edit the source code (for that, see [ggedit()]).
 #'
 #' @section Gotchas:
 #'  - If you wrap a ggplot in `invisible()` to silence `ggtrace()`, the plot will not build, which also means that
 #'    the tracing is not triggered. The print/plot method of ggplot is what triggers the evaluation of the plot
-#'    code. It is recommended to allow `ggtrace()` to print messages for safety, but if you'd really like to silence
-#'    it, you can do so by wrapping the plot in `invisible(capture.output(<plot>))`.
+#'    code. It is recommended to allow `ggtrace()` to print messages, but if you'd really like to silence
+#'    it, you can do so by wrapping the plot in `invisible(capture.output(<plot_object>))`.
 #'  - If for any reason `ggtrace(once = TRUE)` fails to untrace itself on exit, you may accidentally trigger
 #'    the tracing again. To check if a method is being traced, call `ggbody()` on it and inspect its body. If you
 #'    see `.doTrace()` scattered around the body, that's a sign the method is still being traced.
+#'  - Environments are mutable, which means that the returning `environment()` at different steps in the body
+#'    will still reference the same object. To get a snapshot of the method's environment at a particular step,
+#'    it is recommended to use `rlang::env_clone(environment())` instead.
+#'      - Note that the execution environment is created anew each time the method is ran, so modifying the
+#'        environment from its previous execution will not affect future calls to the method as long as
+#'        the method is untraced (which happens by default).
+#'      - Because `trace()` wraps the method body in a special environment, it is not possible to inspect the
+#'        higher method which called it, even with something like `rlang::caller_env()`. You will traverse through
+#'        a few enclosing environments created by `trace()` which eventually ends up looping around.
 #'
 #' @seealso [last_ggtrace()], [gguntrace()]
 #'
@@ -53,12 +72,12 @@
 #' ## Example 2 ====
 #' ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
 #' ## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To
-#' ## address this, `ggtrace()` offers a `~list` keyword which gets substituted for the current line.
+#' ## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.
 #' ## We also set `.print = FALSE` to disable printing of the output
 #' ggtrace(
 #'   PositionJitter$compute_layer,
 #'   trace_steps = 12,
-#'   trace_exprs = quote(~step),
+#'   trace_exprs = quote(~step), # This the default if `trace_exprs` is not provided
 #'   .print = FALSE
 #' )
 #' p
