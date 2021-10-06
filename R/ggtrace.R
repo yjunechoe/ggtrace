@@ -80,7 +80,7 @@
 #' lapply(jitter_tracedump, head)
 #' hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
 #' }
-ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE) {
+ggtrace <- function(method, trace_steps, trace_exprs, trace_cond, obj, once = TRUE, .print = TRUE) {
 
   # Parse `ggproto$method` into its parts
   if (rlang::is_missing(obj)) {
@@ -88,10 +88,16 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
     split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
     method <- split[[1]]
     obj <- split[[2]]
+    # Get ggproto name as string
+    obj_name <- rlang::as_label(obj)
   }
 
-  # Get ggproto name as string
-  obj_name <- rlang::as_label(obj)
+  # Capture trace condition
+  if (rlang::is_missing(trace_cond)) {
+    trace_cond <- TRUE
+  } else {
+    trace_cond <- enexpr(trace_cond)
+  }
 
   # Initialize trace dump for caching output
   trace_n <- length(trace_steps)
@@ -129,28 +135,29 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
       at = trace_steps,
       tracer = function() {
 
-        if (trace_idx == 1) {
-          cat("Tracing method", method, "from", obj_name, "ggproto.\n")
+        if (eval(trace_cond, envir = parent.frame())) {
+
+          if (trace_idx == 1) { cat("Tracing method", method, "from", obj_name, "ggproto.\n") }
+
+          trace_print <- names(trace_dump)[trace_idx]
+
+          # Evaluate and store output to trace dump
+          trace_expr <- trace_exprs[[trace_idx]]
+          trace_dump[[trace_idx]] <- eval(rlang::expr({
+            cat("\n", !!trace_print, "\n")
+            if (!!.print) { print(!!trace_expr) }
+            return(!!trace_expr)
+          }), envir = parent.frame())
+
+          if (trace_idx == length(trace_exprs)) {
+            set_last_ggtrace(trace_dump)
+          } else {
+            trace_idx <<- trace_idx + 1
+          }
+
+          # Store output
+          trace_dump <<- trace_dump
         }
-
-        trace_print <- gsub("\\n", "\n ", names(trace_dump)[trace_idx])
-
-        # Evaluate and store output to trace dump
-        trace_expr <- trace_exprs[[trace_idx]]
-        trace_dump[[trace_idx]] <- eval(rlang::expr({
-          cat("\n", !!trace_print, "\n")
-          if (!!.print) { print(!!trace_expr) }
-          return(!!trace_expr)
-        }), envir = parent.frame()) # This is needed to escape the debugging environment
-
-        if (trace_idx == length(trace_exprs)) {
-          set_last_ggtrace(trace_dump)
-        } else {
-          trace_idx <<- trace_idx + 1
-        }
-
-        # Store output
-        trace_dump <<- trace_dump
 
       },
       print = FALSE,
