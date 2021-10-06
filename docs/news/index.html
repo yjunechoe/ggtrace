@@ -101,7 +101,7 @@
     <li class="divider"></li>
     <li class="dropdown-header">Usage</li>
     <li>
-      <a href="../articles/intro.html">Intro to ggtrace()</a>
+      <a href="../articles/intro.html">Introduction to ggtrace()</a>
     </li>
     <li>
       <a href="../articles/usecase-aes_eval.html">Usecase: aes evaluation</a>
@@ -142,6 +142,14 @@
     <div id="ggtrace-development-version" class="section level1">
 <h1 class="page-header" data-toc-text="development version">
 <a href="#ggtrace-development-version" class="anchor"></a>ggtrace (development version)</h1>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a><strong>Bug fixes</strong>
+</h3>
+<ul>
+<li>Internal variable <code>.store</code> renamed to <code>.ggtrace_storage</code> to prevent overriding <code>ggplot2::.store</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/18'>#18</a>)</li>
+</ul>
+</div>
 </div>
     <div id="ggtrace-020" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
@@ -151,9 +159,16 @@
 <a href="#breaking-changes" class="anchor"></a><strong>Breaking changes</strong>
 </h3>
 <ul>
-<li><p>The <code>~line</code> keyword for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is renamed to <code>~step</code> for consistency with the argument name <code>trace_steps</code></p></li>
-<li><p>For safety reasons, the <code>~step</code> keyword will now only be substituted for the expression at the current step only if <code>~step</code> is by itself (i.e., an exact match). For example, <code>~step</code> will not be substituted if <code><a href="https://rdrr.io/r/base/substitute.html">quote(head(~step))</a></code> is passed to <code>trace_exprs</code>. Users are encouraged to return the method’s environment with <code><a href="https://rdrr.io/r/base/substitute.html">quote(environment())</a></code> or interactively debug with <code><a href="../reference/ggedit.html">ggedit()</a></code> if they want to manipulate the expression.</p></li>
-<li><p>The position of the <code>obj</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> has been moved from second to fourth, to allow for shortcuts like <code><a href="../reference/ggtrace.html">ggtrace(method = ..., 2:3, quote(data))</a></code>, which will evaluate and store the output of the <code>data</code> variable at the second and third steps of the method body.</p></li>
+<li><p>The <code>~line</code> keyword for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is renamed to <code>~step</code> for consistency with the argument name <code>trace_steps</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/14'>#14</a>)</p></li>
+<li>
+<p>For safety reasons, the <code>~step</code> keyword will now only be substituted for the expression at the current step only if <code>~step</code> is by itself (i.e., is an exact match) (<a href='https://github.com/yjunechoe/ggtrace/issues/16'>#16</a>, <a href='https://github.com/yjunechoe/ggtrace/issues/11'>#11</a>).</p>
+<ul>
+<li><p>
+For example, <code>~step</code> will not be substituted if <code><a href="https://rdrr.io/r/base/substitute.html">quote(head(~step))</a></code> is passed to <code>trace_exprs</code>. Users are encouraged to return the method’s environment with <code><a href="https://rdrr.io/r/base/substitute.html">quote(environment())</a></code> or interactively debug with <code><a href="../reference/ggedit.html">ggedit()</a></code> if they want to manipulate the expression.
+</p></li>
+</ul>
+</li>
+<li><p>The position of the <code>obj</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> has been moved from second to fourth, to allow for shortcuts like <code><a href="../reference/ggtrace.html">ggtrace(method = ..., 2:3, quote(data))</a></code>, which will evaluate and store the output of the <code>data</code> variable at the second and third steps of the method body. (<a href='https://github.com/yjunechoe/ggtrace/issues/15'>#15</a>)</p></li>
 </ul>
 </div>
 <div id="new-features" class="section level3">
@@ -161,8 +176,8 @@
 <a href="#new-features" class="anchor"></a><strong>New features</strong>
 </h3>
 <ul>
-<li>
-<code>trace_exprs</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is now optional. If not provided, defaults to <code>~step</code>.</li>
+<li><p><code>trace_exprs</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is now optional. If not provided, defaults to <code>~step</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/13'>#13</a>)</p></li>
+<li><p>You can now tell <code><a href="../reference/ggbody.html">ggbody()</a></code> to (recursively) search for the method from its parents with <code>inherit = TRUE</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/12'>#12</a>)</p></li>
 </ul>
 </div>
 <div id="improvements" class="section level3">
@@ -170,13 +185,8 @@
 <a href="#improvements" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
-<li>Documentation for some of the functions now contain a <strong>Gotchas</strong> section for explanations of / solutions to common problems</li>
+<li>Documentation for some of the functions now contain a <strong>Gotchas</strong> section for explanations of / solutions to common problems (<a href='https://github.com/yjunechoe/ggtrace/issues/10'>#10</a>)</li>
 </ul>
-</div>
-<div id="bug-fixes" class="section level3">
-<h3 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a><strong>Bug fixes</strong>
-</h3>
 </div>
 </div>
     <div id="ggtrace-012" class="section level1">

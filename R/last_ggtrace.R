@@ -5,9 +5,9 @@
     set = function(value) .last_ggtrace <<- value
   )
 }
-.store <- .ggtrace_store()
+.ggtrace_storage <- .ggtrace_store()
 
-set_last_ggtrace <- function(value) .store$set(value)
+set_last_ggtrace <- function(value) .ggtrace_storage$set(value)
 
 #' Retrieve the trace dump created by the last `ggtrace()`
 #'
@@ -40,4 +40,4 @@ set_last_ggtrace <- function(value) .store$set(value)
 #'
 #' last_ggtrace()
 #' }
-last_ggtrace <- function() .store$get()
+last_ggtrace <- function() .ggtrace_storage$get()
