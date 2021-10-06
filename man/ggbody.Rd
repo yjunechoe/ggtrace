@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggbody.R
 \name{ggbody}
 \alias{ggbody}
-\title{Retrieve the callstack of a ggproto method as a list}
+\title{Retrieve the body of a ggproto method as a list}
 \usage{
 ggbody(method, obj, inherit = FALSE)
 }
@@ -17,7 +17,7 @@ in the form of \code{ggproto$method} that evalutes to the ggproto object's metho
 Defaults to \code{FALSE}.}
 }
 \description{
-Retrieve the callstack of a ggproto method as a list
+Retrieve the body of a ggproto method as a list
 }
 \details{
 Despite the convenience of the short form which \code{ggbody()} also works with,

@@ -1,7 +1,7 @@
 #' Programmatically debug ggproto methods with trace
 #'
 #' @inheritParams ggbody
-#' @param trace_steps A list of positions in the method's callstack to trace.
+#' @param trace_steps A list of positions in the method's body to trace.
 #' @param trace_exprs A list of expressions to evaluate at each position specified
 #'   in `trace_steps`. If a single expression is provided, it is recycled.
 #'

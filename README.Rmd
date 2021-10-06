@@ -77,7 +77,7 @@ jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
 jitter_plot
 ```
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 ```{r ex-1-ggbody}
 ggbody(PositionJitter$compute_layer)
@@ -124,7 +124,7 @@ smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
 smooth_plot
 ```
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 ```{r ex-2-ggbody}
 ggbody(GeomSmooth$draw_group)
@@ -206,7 +206,7 @@ boxplot_plot <- ggplot(diamonds[1:500,], aes(cut, depth)) +
 boxplot_plot
 ```
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 Actually, `"compute_panel"` method is not defined for `StatBoxplot`, which means that it's being inherited. 
 
@@ -295,23 +295,34 @@ sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) 
 sina_plot
 ```
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 ```{r ex-4-ggbody}
 ggbody(StatSina$compute_group)
 ```
 
-### **Step 3. `ggtrace()` - with one expression evaluated at multiple steps**
+### **Step 3. `ggtrace()` - inject code that modifies method env**
 
-```{r ex-4-ggtrace, fig.show='hide'}
+```{r ex-4-ggtrace}
 ggtrace(
   method = StatSina$compute_group,
-  trace_steps = c(1, 8),
-  trace_exprs = quote(data), # What does the data look like at start and end?
+  trace_steps = c(1, 1, 8),
+  trace_exprs = rlang::exprs(
+    data, # 1. What does the data passed in look like at the start?
+    # 2. Modify data in-place in the method environment
+    data <- dplyr::mutate(
+      data,         
+      y = y + 1,    # Shift the points up
+      x = x - .2    # Shift the points left
+    ),
+    data # 3. What do the stat transformations on the
+         #    _manipulated_ data look like at the end?
+  ),
   .print = FALSE
 )
 
-# plot not printed to save space
+# This effect is ephemeral with the `once = TRUE` default,
+# meaning that only this plot is built with the modifications
 sina_plot
 ```
 
@@ -320,6 +331,9 @@ sina_plot
 ```{r ex-4-last}
 sina_tracedump <- last_ggtrace()
 
-# The returned data has some new columns
-waldo::compare(sina_tracedump[[1]], sina_tracedump[[2]])
+# StatSina did calculations on the modified data
+lapply(sina_tracedump, head)
+
+# Confirming that the method is restored on exit
+sina_plot
 ```

@@ -71,7 +71,7 @@ jitter_plot
 
 <img src="man/figures/README-ex-1-setup-1.png" width="100%" />
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 ``` r
 ggbody(PositionJitter$compute_layer)
@@ -218,7 +218,7 @@ smooth_plot
 
 <img src="man/figures/README-ex-2-setup-1.png" width="100%" />
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 ``` r
 ggbody(GeomSmooth$draw_group)
@@ -351,7 +351,7 @@ boxplot_plot
 
 <img src="man/figures/README-ex-3-setup-1.png" width="100%" />
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 Actually, `"compute_panel"` method is not defined for `StatBoxplot`,
 which means that it’s being inherited.
@@ -575,7 +575,7 @@ sina_plot
 
 <img src="man/figures/README-ex-4-setup-1.png" width="100%" />
 
-### **Step 2. Inspect callstack of the ggproto method**
+### **Step 2. Inspect body of the ggproto method**
 
 ``` r
 ggbody(StatSina$compute_group)
@@ -625,53 +625,80 @@ ggbody(StatSina$compute_group)
 #> data
 ```
 
-### **Step 3. `ggtrace()` - with one expression evaluated at multiple steps**
+### **Step 3. `ggtrace()` - inject code that modifies method env**
 
 ``` r
 ggtrace(
   method = StatSina$compute_group,
-  trace_steps = c(1, 8),
-  trace_exprs = quote(data), # What does the data look like at start and end?
+  trace_steps = c(1, 1, 8),
+  trace_exprs = rlang::exprs(
+    data, # 1. What does the data passed in look like at the start?
+    # 2. Modify data in-place in the method environment
+    data <- dplyr::mutate(
+      data,         
+      y = y + 1,    # Shift the points up
+      x = x - .2    # Shift the points left
+    ),
+    data # 3. What do the stat transformations on the
+         #    _manipulated_ data look like at the end?
+  ),
   .print = FALSE
 )
 
-# plot not printed to save space
+# This effect is ephemeral with the `once = TRUE` default,
+# meaning that only this plot is built with the modifications
 sina_plot
-#> Tracing method compute_group from <StatSina> ggproto.
-#> 
-#>  [Step 1]> data 
-#> 
-#>  [Step 8]> data 
-#> 
-#> Untracing method compute_group from <StatSina> ggproto.
-#> Call `last_ggtrace()` to get the trace dump.
 ```
+
+<img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />
+
+    #> Tracing method compute_group from <StatSina> ggproto.
+    #> 
+    #>  [Step 1]> data 
+    #> 
+    #>  [Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2) 
+    #> 
+    #>  [Step 8]> data 
+    #> 
+    #> Untracing method compute_group from <StatSina> ggproto.
+    #> Call `last_ggtrace()` to get the trace dump.
 
 ### **Step 4. Inspect trace dump**
 
 ``` r
 sina_tracedump <- last_ggtrace()
 
-# The returned data has some new columns
-waldo::compare(sina_tracedump[[1]], sina_tracedump[[2]])
-#> `old` is length 4
-#> `new` is length 8
+# StatSina did calculations on the modified data
+lapply(sina_tracedump, head)
+#> $`[Step 1]> data`
+#>   x    y PANEL group
+#> 1 1 61.5     1     1
+#> 2 1 62.8     1     1
+#> 3 1 62.2     1     1
+#> 4 1 62.0     1     1
+#> 5 1 61.8     1     1
+#> 6 1 61.2     1     1
 #> 
-#> `names(old)[2:4]`: "y" "PANEL" "group"                               
-#> `names(new)[2:8]`: "y" "PANEL" "group" "density" "scaled" "width" "n"
+#> $`[Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2)`
+#>     x    y PANEL group
+#> 1 0.8 62.5     1     1
+#> 2 0.8 63.8     1     1
+#> 3 0.8 63.2     1     1
+#> 4 0.8 63.0     1     1
+#> 5 0.8 62.8     1     1
+#> 6 0.8 62.2     1     1
 #> 
-#> `old$x` is an S3 object of class <mapped_discrete/numeric>, an integer vector
-#> `new$x` is a double vector (1, 1, 1, 1, 1, ...)
-#> 
-#> `old$density` is absent
-#> `new$density` is a double vector (0.46323885621947, 0.213496721362797, 0.497309776120959, 0.543803948542487, 0.539050969762089, ...)
-#> 
-#> `old$scaled` is absent
-#> `new$scaled` is a double vector (0.845470465475205, 0.38965896311279, 0.907654274371047, 0.992512116219465, 0.983837318913703, ...)
-#> 
-#> `old$width` is absent
-#> `new$width` is a double vector (0.9, 0.9, 0.9, 0.9, 0.9, ...)
-#> 
-#> `old$n` is absent
-#> `new$n` is an integer vector (50, 50, 50, 50, 50, ...)
+#> $`[Step 8]> data`
+#>     x    y PANEL group   density    scaled width  n
+#> 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50
+#> 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50
+#> 3 0.8 63.2     1     1 0.4973098 0.9076543   0.9 50
+#> 4 0.8 63.0     1     1 0.5438039 0.9925121   0.9 50
+#> 5 0.8 62.8     1     1 0.5390510 0.9838373   0.9 50
+#> 6 0.8 62.2     1     1 0.3596117 0.6563376   0.9 50
+
+# Confirming that the method is restored on exit
+sina_plot
 ```
+
+<img src="man/figures/README-ex-4-last-1.png" width="100%" />

@@ -7,7 +7,7 @@ split_ggproto_method <- function(x) {
   )
 }
 
-#' Retrieve the callstack of a ggproto method as a list
+#' Retrieve the body of a ggproto method as a list
 #'
 #' @param method The method name as a string. Alternatively an expression
 #'   that evaluates to the ggproto method in the form of `ggproto$method`.
