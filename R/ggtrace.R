@@ -10,6 +10,9 @@
 #'
 #'   If `trace_exprs` is not provided, `ggtrace()` is called with `~step` by default.
 #'
+#' @param trace_cond (EXPERIMENTAL) An expression that conditions the evaluation of the expressions
+#'   passed to `trace_exprs`.
+#'
 #' @param once Whether to `untrace()` itself on exit. Defaults to `TRUE`.
 #' @param .print Whether to print the output of each expression to the console. Defaults to `TRUE`.
 #'

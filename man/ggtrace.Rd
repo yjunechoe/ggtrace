@@ -4,7 +4,15 @@
 \alias{ggtrace}
 \title{Programmatically debug ggproto methods with trace}
 \usage{
-ggtrace(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE)
+ggtrace(
+  method,
+  trace_steps,
+  trace_exprs,
+  trace_cond,
+  obj,
+  once = TRUE,
+  .print = TRUE
+)
 }
 \arguments{
 \item{method}{The method name as a string. Alternatively an expression
