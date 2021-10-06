@@ -95,8 +95,10 @@ ggtrace <- function(method, trace_steps, trace_exprs, trace_cond, obj, once = TR
   # Capture trace condition
   if (rlang::is_missing(trace_cond)) {
     trace_cond <- TRUE
+    trace_conditioned <- FALSE
   } else {
     trace_cond <- enexpr(trace_cond)
+    trace_conditioned <- TRUE
   }
 
   # Initialize trace dump for caching output
@@ -125,8 +127,21 @@ ggtrace <- function(method, trace_steps, trace_exprs, trace_cond, obj, once = TR
     paste0("[Step ", trace_steps[[i]], "]> ", paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n"))
   })
 
-  # For incrementally storing results to `trace_dump`
-  trace_idx <- 1
+  # A closure for controlling the flow of trace
+  trace_closure <- (function() {
+    trace_idx <- 1
+    exit <- FALSE
+    cur_env <- rlang::current_env()
+    list(
+      get_env = function() { cur_env },
+      get_idx = function() { trace_idx },
+      increment_idx = function() { trace_idx <<- trace_idx + 1 },
+      finish = function(trace_dump) {
+        set_last_ggtrace(trace_dump)
+        exit <<- TRUE
+      }
+    )
+  })()
 
   suppressMessages(
     trace(
@@ -137,11 +152,12 @@ ggtrace <- function(method, trace_steps, trace_exprs, trace_cond, obj, once = TR
 
         if (eval(trace_cond, envir = parent.frame())) {
 
+          trace_idx <- trace_closure$get_idx()
           if (trace_idx == 1) { cat("Tracing method", method, "from", obj_name, "ggproto.\n") }
 
           trace_print <- names(trace_dump)[trace_idx]
 
-          # Evaluate and store output to trace dump
+          # Evaluate expression and push to trace dump
           trace_expr <- trace_exprs[[trace_idx]]
           trace_dump[[trace_idx]] <- eval(rlang::expr({
             cat("\n", !!trace_print, "\n")
@@ -150,26 +166,29 @@ ggtrace <- function(method, trace_steps, trace_exprs, trace_cond, obj, once = TR
           }), envir = parent.frame())
 
           if (trace_idx == length(trace_exprs)) {
-            set_last_ggtrace(trace_dump)
+            trace_closure$finish(trace_dump)
           } else {
-            trace_idx <<- trace_idx + 1
+            trace_closure$increment_idx()
           }
 
-          # Store output
+          # carry over trace_dump
           trace_dump <<- trace_dump
+
         }
 
       },
       print = FALSE,
       exit = rlang::expr({
         cat("\n")
-        if (!!once) {
+        if (!!once && eval(rlang::expr(exit), !!trace_closure$get_env())) {
+          # If you are conditioning the trace, `once = TRUE` is necessary
           suppressMessages(untrace(!!method, where = !!obj))
           cat("Untracing method", !!method, "from", !!obj_name, "ggproto.\n")
+          cat("Call `last_ggtrace()` to get the trace dump.\n")
         } else {
-          message("Creating a persistent trace. Remember to `gguntrace(ggproto$method)`!")
+          # If you are using `once = FALSE`, send message
+          message("Running with a persistent trace.")
         }
-        cat("Call `last_ggtrace()` to get the trace dump.\n")
       })
     )
   )
