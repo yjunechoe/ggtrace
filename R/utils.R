@@ -1,5 +1,8 @@
 split_ggproto_method <- function(method_expr) {
   method_deparsed <- rlang::as_label(rlang::enexpr(method_expr))
+  if (!grepl("\\$", method_deparsed)) {
+    rlang::abort("Invalid method expression. See `?ggbody` for valid forms.")
+  }
   both <- strsplit(method_deparsed, split = "$", fixed = TRUE)[[1]]
   obj_expr <- rlang::parse_expr(both[[1]])
   list(

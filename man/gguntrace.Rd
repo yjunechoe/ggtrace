@@ -9,7 +9,9 @@ gguntrace(method, ...)
 \arguments{
 \item{method}{An expression that evaluates to the ggproto method.
 This may be specified using any of the following forms:\preformatted{- `ggproto$method`
+
 - `namespace::ggproto$method`
+
 - `namespace:::ggproto$method`
 }}
 

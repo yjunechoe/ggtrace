@@ -4,7 +4,9 @@
 #'   This may be specified using any of the following forms:
 #'
 #'     - `ggproto$method`
+#'
 #'     - `namespace::ggproto$method`
+#'
 #'     - `namespace:::ggproto$method`
 #'
 #' @param inherit Whether the method should be returned from its closest parent.
@@ -51,8 +53,15 @@
 #' }
 ggbody <- function(method, inherit = FALSE) {
 
-  # Parse/deparse method and obj
+  # Capture method expression
   method_expr <- rlang::enexpr(method)
+
+  # Check if method is a call
+  if (!rlang::is_call(method_expr)) {
+    rlang::abort("`method` must be a call. See `?ggbody` for valid forms.")
+  }
+
+  # Parse/deparse method and obj
   method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
