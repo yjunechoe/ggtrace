@@ -21,8 +21,8 @@ assigns a value to a local variable, the value of that local variable is returne
 
 If \code{trace_exprs} is not provided, \code{ggtrace()} is called with \code{~step} by default.}
 
-\item{obj}{The ggproto object. Can be omitted if the method is an expression
-in the form of \code{ggproto$method} that evalutes to the ggproto object's method.}
+\item{obj}{The ggproto object asn an expression. Can be omitted if the method is an
+expression in the form of \code{ggproto$method} that evalutes to the object's method.}
 
 \item{once}{Whether to \code{untrace()} itself on exit. Defaults to \code{TRUE}.}
 

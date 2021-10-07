@@ -10,8 +10,8 @@ ggedit(method, obj)
 \item{method}{The method name as a string. Alternatively an expression
 that evaluates to the ggproto method in the form of \code{ggproto$method}.}
 
-\item{obj}{The ggproto object. Can be omitted if the method is an expression
-in the form of \code{ggproto$method} that evalutes to the ggproto object's method.}
+\item{obj}{The ggproto object asn an expression. Can be omitted if the method is an
+expression in the form of \code{ggproto$method} that evalutes to the object's method.}
 }
 \description{
 Interactively edit the source code of a ggproto method

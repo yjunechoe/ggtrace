@@ -102,23 +102,23 @@
 #' }
 ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE) {
 
-  # Parse `ggproto$method` into its parts
+  # Parse/deparse method and obj
   if (rlang::is_missing(obj)) {
     method_expr <- rlang::enexpr(method)
-    split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
-    method <- split[[1]]
-    obj <- split[[2]]
+    method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
+    method <- method_split[["method"]]
+    obj <- method_split[["obj"]]
+    obj_name <- method_split[["obj_name"]]
+  } else {
+    obj_name <- rlang::as_string(rlang::enexpr(obj))
   }
-
-  # Get ggproto name as string
-  obj_name <- rlang::as_label(obj)
 
   # Initialize trace dump for caching output
   n_steps <- length(trace_steps)
   trace_dump <- vector("list", n_steps)
 
   # Sanitize:
-  method_body <- ggbody(method, obj)
+  method_body <- as.list(body(get(method, obj)))
 
   ## Ensure `trace_exprs` is a list of expressions
   if (rlang::is_missing(trace_exprs)) {

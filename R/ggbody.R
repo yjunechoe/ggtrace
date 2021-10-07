@@ -1,9 +1,11 @@
 split_ggproto_method <- function(x) {
   label <- rlang::as_label(rlang::enexpr(x))
   both <- strsplit(label, split = "$", fixed = TRUE)[[1]]
+  obj_expr <- rlang::parse_expr(both[[1]])
   list(
-    both[[2]],
-    eval(rlang::parse_expr(both[[1]]))
+    method = both[[2]],
+    obj = eval(obj_expr),
+    obj_name = rlang::as_label(obj_expr)
   )
 }
 
@@ -11,15 +13,17 @@ split_ggproto_method <- function(x) {
 #'
 #' @param method The method name as a string. Alternatively an expression
 #'   that evaluates to the ggproto method in the form of `ggproto$method`.
-#' @param obj The ggproto object. Can be omitted if the method is an expression
-#'   in the form of `ggproto$method` that evalutes to the ggproto object's method.
+#' @param obj The ggproto object asn an expression. Can be omitted if the method is an
+#'   expression in the form of `ggproto$method` that evalutes to the object's method.
+#'
 #' @param inherit Whether the method should be returned from its closest parent.
 #'   Defaults to `FALSE`.
 #'
-#' @details Despite the convenience of the short form which `ggbody()` also works with,
-#'   the long form of retrieving the ggproto method by specifying both the method and
-#'   the object separately exists for consistency with other ways of inspecting
-#'   ggproto methods.
+#' @details For interactive uses, using the short form is recommended. For
+#'   programmatic uses, `as.list(body(get("method", ggproto)))` is recommended.
+#'
+#'   The `get("method", ggproto)` syntax is the long form of `ggproto$method` with
+#'   subtle but important differences;
 #'
 #'   - For example, this works: `debugonce(get("compute_group", StatCount))`
 #'
@@ -52,12 +56,18 @@ split_ggproto_method <- function(x) {
 #'
 #' }
 ggbody <- function(method, obj, inherit = FALSE) {
+
+  # Parse/deparse method and obj
   if (rlang::is_missing(obj)) {
     method_expr <- rlang::enexpr(method)
-    split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
-    method <- split[[1]]
-    obj <- split[[2]]
+    method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
+    method <- method_split[["method"]]
+    obj <- method_split[["obj"]]
+    obj_name <- method_split[["obj_name"]]
+  } else {
+    obj_name <- rlang::as_string(rlang::enexpr(obj))
   }
+
   if (inherit) {
     parents <- setdiff(class(obj)[-1], c("ggproto", "gg"))
     for (parent in parents) {

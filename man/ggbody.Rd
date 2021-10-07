@@ -10,8 +10,8 @@ ggbody(method, obj, inherit = FALSE)
 \item{method}{The method name as a string. Alternatively an expression
 that evaluates to the ggproto method in the form of \code{ggproto$method}.}
 
-\item{obj}{The ggproto object. Can be omitted if the method is an expression
-in the form of \code{ggproto$method} that evalutes to the ggproto object's method.}
+\item{obj}{The ggproto object asn an expression. Can be omitted if the method is an
+expression in the form of \code{ggproto$method} that evalutes to the object's method.}
 
 \item{inherit}{Whether the method should be returned from its closest parent.
 Defaults to \code{FALSE}.}
@@ -20,10 +20,11 @@ Defaults to \code{FALSE}.}
 Retrieve the body of a ggproto method as a list
 }
 \details{
-Despite the convenience of the short form which \code{ggbody()} also works with,
-the long form of retrieving the ggproto method by specifying both the method and
-the object separately exists for consistency with other ways of inspecting
-ggproto methods.
+For interactive uses, using the short form is recommended. For
+programmatic uses, \code{as.list(body(get("method", ggproto)))} is recommended.
+
+The \code{get("method", ggproto)} syntax is the long form of \code{ggproto$method} with
+subtle but important differences;
 \itemize{
 \item For example, this works: \code{debugonce(get("compute_group", StatCount))}
 \item But this fails to insert a break point: \code{debugonce(StatCount$compute_group)}

@@ -132,7 +132,7 @@ ggtrace(
 
 # plot not printed to save space
 jitter_plot
-#> Tracing method compute_layer from <PstnJttr> ggproto.
+#> Tracing method compute_layer from PositionJitter ggproto.
 #> 
 #>  [Step 1]> data 
 #> 
@@ -142,7 +142,7 @@ jitter_plot
 #> 
 #>  [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
 #> 
-#> Untracing method compute_layer from <PstnJttr> ggproto.
+#> Untracing method compute_layer from PositionJitter ggproto.
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
@@ -259,12 +259,12 @@ ggtrace(
 # plot not printed to save space
 smooth_plot
 #> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
-#> Tracing method draw_group from <GeomSmth> ggproto.
+#> Tracing method draw_group from GeomSmooth ggproto.
 #> 
 #>  [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
 #>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord)) 
 #> 
-#> Untracing method draw_group from <GeomSmth> ggproto.
+#> Untracing method draw_group from GeomSmooth ggproto.
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
@@ -420,7 +420,7 @@ ggtrace(
 
 # plot not printed to save space
 boxplot_plot
-#> Tracing method compute_panel from <Stat> ggproto.
+#> Tracing method compute_panel from Stat ggproto.
 #> 
 #>  [Step 3]> groups <- split(data, data$group) 
 #> 
@@ -428,7 +428,7 @@ boxplot_plot
 #> 
 #>  [Step 6]> environment() 
 #> 
-#> Untracing method compute_panel from <Stat> ggproto.
+#> Untracing method compute_panel from Stat ggproto.
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
@@ -652,7 +652,7 @@ sina_plot
 
 <img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />
 
-    #> Tracing method compute_group from <StatSina> ggproto.
+    #> Tracing method compute_group from StatSina ggproto.
     #> 
     #>  [Step 1]> data 
     #> 
@@ -660,7 +660,7 @@ sina_plot
     #> 
     #>  [Step 8]> data 
     #> 
-    #> Untracing method compute_group from <StatSina> ggproto.
+    #> Untracing method compute_group from StatSina ggproto.
     #> Call `last_ggtrace()` to get the trace dump.
 
 ### **Step 4. Inspect trace dump**
