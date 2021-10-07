@@ -220,9 +220,10 @@ ggbody(StatBoxplot$compute_panel)
 class(StatBoxplot)
 ```
 
+With `inherit = TRUE`, `ggbody()` returns the method as defined in the closest parent, and the corresponding code to get it. We confirm that we should be passing `Stat$compute_panel` to the `method` argument for `ggtrace()`.
+
 ```{r ex-3-ggbody-c}
-# See also: `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`
-ggbody(Stat$compute_panel)
+ggbody(StatBoxplot$compute_panel, inherit = TRUE)
 ```
 
 ### **Step 3. `ggtrace()` - retrieve the parent environment**
@@ -264,14 +265,15 @@ lapply(boxplot_tracedump[[1]], function(group) {
 # The combined result
 boxplot_tracedump[[2]]
 
+
+# What was inside the method environment?
+ls(envir = boxplot_tracedump[[3]])
+
 # Evaluate the expression in Step 6 with the cached method environment
 eval(
   ggbody(Stat$compute_panel)[[6]],
   envir = boxplot_tracedump[[3]]
 )
-
-# What was inside the method environment?
-ls(envir = boxplot_tracedump[[3]])
 
 # Manually call the compute_group method from StatBoxplot to apply
 # transformation to the first group using the method environment
@@ -321,19 +323,25 @@ ggtrace(
   .print = FALSE
 )
 
-# This effect is ephemeral with the `once = TRUE` default,
-# meaning that only this plot is built with the modifications
 sina_plot
 ```
+
+This effect is ephemeral with the `once = TRUE` default in `ggtrace()`, meaning that only this last plot is built with the modifications.
+
+Here we confirm that the method is restored on exit:
+
+```{r ex-4-ggtrace-restored}
+sina_plot
+```
+
 
 ### **Step 4. Inspect trace dump**
 
 ```{r ex-4-last}
 sina_tracedump <- last_ggtrace()
 
-# StatSina did calculations on the modified data
+# StatSina did calculations on the modified data in the last `ggtrace()`
 lapply(sina_tracedump, head)
 
-# Confirming that the method is restored on exit
-sina_plot
+lapply(sina_tracedump, function(df) { df$x })
 ```

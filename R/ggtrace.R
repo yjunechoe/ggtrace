@@ -102,8 +102,13 @@
 #' }
 ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE) {
 
-  # Parse/deparse method and obj
+  # Capture method expression
   method_expr <- rlang::enexpr(method)
+
+  # Validate method
+  method_body <- eval(rlang::expr(ggbody(!!method_expr)))
+
+  # Parse/deparse method and obj
   method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
@@ -112,9 +117,6 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   # Initialize trace dump for caching output
   n_steps <- length(trace_steps)
   trace_dump <- vector("list", n_steps)
-
-  # Sanitize:
-  method_body <- as.list(body(get(method_name, obj)))
 
   ## Ensure `trace_exprs` is a list of expressions
   if (rlang::is_missing(trace_exprs)) {

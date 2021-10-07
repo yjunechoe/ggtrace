@@ -23,8 +23,13 @@
 #' }
 ggedit <- function(method, obj) {
 
-  # Parse/deparse method and obj
+  # Capture method expression
   method_expr <- rlang::enexpr(method)
+
+  # Validate method
+  method_body <- eval(rlang::expr(ggbody(!!method_expr)))
+
+  # Parse/deparse method and obj
   method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]

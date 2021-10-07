@@ -4,7 +4,7 @@
 \alias{gguntrace}
 \title{Untrace a ggproto method}
 \usage{
-gguntrace(method)
+gguntrace(method, ...)
 }
 \arguments{
 \item{method}{An expression that evaluates to the ggproto method.
@@ -12,6 +12,8 @@ This may be specified using any of the following forms:\preformatted{- `ggproto$
 - `namespace::ggproto$method`
 - `namespace:::ggproto$method`
 }}
+
+\item{...}{Ignored}
 }
 \description{
 For explicitly calling \code{untrace()} on a ggproto object.

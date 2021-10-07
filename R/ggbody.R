@@ -1,23 +1,3 @@
-split_ggproto_method <- function(method_expr) {
-  method_deparsed <- rlang::as_label(rlang::enexpr(method_expr))
-  both <- strsplit(method_deparsed, split = "$", fixed = TRUE)[[1]]
-  obj_expr <- rlang::parse_expr(both[[1]])
-  list(
-    method_name = both[[2]],
-    obj = eval(obj_expr),
-    obj_name = both[[1]],
-    ns = gsub("(^|:::?)[^:]*?$", "", method_deparsed)
-  )
-}
-
-resolve_method <- function(got) {
-  if (is.function(got)) {
-    as.list(body(got))
-  } else {
-    got
-  }
-}
-
 #' Retrieve the body of a ggproto method as a list
 #'
 #' @param method An expression that evaluates to the ggproto method.
@@ -83,7 +63,14 @@ ggbody <- function(method, inherit = FALSE) {
     for (parent in parents) {
       parent_method <- tryCatch(
         expr = get(method_name, eval(rlang::parse_expr(parent))),
-        error = function(e) { NULL }
+        error = function(e) {
+          if (parent == parents[length(parents)]) {
+            rlang::abort(paste0(
+              "Method ", method_name, " is not inherited for ", obj_name,
+              "\nMake sure that all relevant libraries have been loaded."
+            ))
+          }
+        }
       )
       if (!is.null(parent_method)) {
         message(paste0("Returning `ggbody(", parent, "$", method_name, ")`"))
@@ -92,6 +79,12 @@ ggbody <- function(method, inherit = FALSE) {
       }
     }
   } else {
-    resolve_method(get(method_name, obj))
+    tryCatch(
+      expr = resolve_method(get(method_name, obj)),
+      error = function(e) {
+        sanitize_get_error(e, method_name, obj_name)
+      }
+    )
+
   }
 }

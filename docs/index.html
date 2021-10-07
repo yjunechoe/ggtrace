@@ -462,14 +462,16 @@
 <p>Actually, <code>"compute_panel"</code> method is not defined for <code>StatBoxplot</code>, which means that it’s being inherited.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
-<span class="co">#&gt; Error in get(method_name, obj): object 'compute_panel' not found</span></code></pre></div>
+<span class="co">#&gt; Error: Method compute_panel is not defined for StatBoxplot</span>
+<span class="co">#&gt; Check inheritance with `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`</span></code></pre></div>
 <p><code>StatBoxplot</code> is a child of the parent ggproto <code>Stat</code>, and the <code>"compute_panel"</code> method is inherited from <code>Stat</code> as well, so that’s what we want to trace instead:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">)</span>
 <span class="co">#&gt; [1] "StatBoxplot" "Stat"        "ggproto"     "gg"</span></code></pre></div>
+<p>With <code>inherit = TRUE</code>, <code><a href="reference/ggbody.html">ggbody()</a></code> returns the method as defined in the closest parent, and the corresponding code to get it. We confirm that we should be passing <code>Stat$compute_panel</code> to the <code>method</code> argument for <code><a href="reference/ggtrace.html">ggtrace()</a></code>.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># See also: `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`</span>
-<span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_panel</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; Returning `ggbody(Stat$compute_panel)`</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
 <span class="co">#&gt; </span>

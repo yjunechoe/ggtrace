@@ -358,7 +358,8 @@ which means that it’s being inherited.
 
 ``` r
 ggbody(StatBoxplot$compute_panel)
-#> Error in get(method_name, obj): object 'compute_panel' not found
+#> Error: Method compute_panel is not defined for StatBoxplot
+#> Check inheritance with `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`
 ```
 
 `StatBoxplot` is a child of the parent ggproto `Stat`, and the
@@ -370,9 +371,14 @@ class(StatBoxplot)
 #> [1] "StatBoxplot" "Stat"        "ggproto"     "gg"
 ```
 
+With `inherit = TRUE`, `ggbody()` returns the method as defined in the
+closest parent, and the corresponding code to get it. We confirm that we
+should be passing `Stat$compute_panel` to the `method` argument for
+`ggtrace()`.
+
 ``` r
-# See also: `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`
-ggbody(Stat$compute_panel)
+ggbody(StatBoxplot$compute_panel, inherit = TRUE)
+#> Returning `ggbody(Stat$compute_panel)`
 #> [[1]]
 #> `{`
 #> 

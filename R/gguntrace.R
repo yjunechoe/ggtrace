@@ -3,6 +3,7 @@
 #' For explicitly calling `untrace()` on a ggproto object.
 #'
 #' @inheritParams ggbody
+#' @param ... Ignored
 #'
 #' @section Gotchas:
 #'  - If you try to untrace a method that is not currently being traced,
@@ -25,10 +26,15 @@
 #' # gguntrace(PositionJitter$compute_layer)
 #' # jitter_plot
 #' }
-gguntrace <- function(method) {
+gguntrace <- function(method, ...) {
+
+  # Capture method expression
+  method_expr <- rlang::enexpr(method)
+
+  # Validate method
+  method_body <- eval(rlang::expr(ggbody(!!method_expr)))
 
   # Parse/deparse method and obj
-  method_expr <- rlang::enexpr(method)
   method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
