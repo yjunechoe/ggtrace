@@ -10,6 +10,14 @@ split_ggproto_method <- function(method_expr) {
   )
 }
 
+resolve_method <- function(got) {
+  if (is.function(got)) {
+    as.list(body(got))
+  } else {
+    got
+  }
+}
+
 #' Retrieve the body of a ggproto method as a list
 #'
 #' @param method An expression that evaluates to the ggproto method.
@@ -53,7 +61,12 @@ split_ggproto_method <- function(method_expr) {
 #' ggbody(StatBoxplot$compute_panel, inherit = TRUE)
 #' ggbody(Stat$compute_panel)
 #'
-#' ggbody(ggforce::GeomArc$draw_key, inherit = TRUE)
+#' # Navigating complex inheritance
+#' class(GeomArcBar)
+#' invisible(ggbody(GeomArcBar$default_aes, inherit = TRUE)) # self
+#' invisible(ggbody(GeomArcBar$draw_panel, inherit = TRUE))  # parent
+#' invisible(ggbody(GeomArcBar$draw_key, inherit = TRUE))    # grandparent
+#' invisible(ggbody(GeomArcBar$draw_group, inherit = TRUE))  # top-level
 #'
 #' }
 ggbody <- function(method, inherit = FALSE) {
@@ -66,7 +79,7 @@ ggbody <- function(method, inherit = FALSE) {
   obj_name <- method_split[["obj_name"]]
 
   if (inherit) {
-    parents <- setdiff(class(obj)[-1], c("ggproto", "gg"))
+    parents <- setdiff(class(obj), c("ggproto", "gg"))
     for (parent in parents) {
       parent_method <- tryCatch(
         expr = get(method_name, eval(rlang::parse_expr(parent))),
@@ -75,10 +88,10 @@ ggbody <- function(method, inherit = FALSE) {
       if (!is.null(parent_method)) {
         message(paste0("Returning `ggbody(", parent, "$", method_name, ")`"))
         # Break and return when found
-        return(as.list(body(parent_method)))
+        return(resolve_method(parent_method))
       }
     }
   } else {
-    as.list(body(get(method_name, obj)))
+    resolve_method(get(method_name, obj))
   }
 }

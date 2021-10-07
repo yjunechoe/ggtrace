@@ -50,7 +50,12 @@ ggbody(StatBezier$compute_panel)
 ggbody(StatBoxplot$compute_panel, inherit = TRUE)
 ggbody(Stat$compute_panel)
 
-ggbody(ggforce::GeomArc$draw_key, inherit = TRUE)
+# Navigating complex inheritance
+class(GeomArcBar)
+invisible(ggbody(GeomArcBar$default_aes, inherit = TRUE)) # self
+invisible(ggbody(GeomArcBar$draw_panel, inherit = TRUE))  # parent
+invisible(ggbody(GeomArcBar$draw_key, inherit = TRUE))    # grandparent
+invisible(ggbody(GeomArcBar$draw_group, inherit = TRUE))  # top-level
 
 }
 }
