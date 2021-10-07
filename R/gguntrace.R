@@ -25,21 +25,17 @@
 #' # gguntrace(PositionJitter$compute_layer)
 #' # jitter_plot
 #' }
-gguntrace <- function(method, obj) {
+gguntrace <- function(method) {
 
   # Parse/deparse method and obj
-  if (rlang::is_missing(obj)) {
-    method_expr <- rlang::enexpr(method)
-    method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
-    method <- method_split[["method"]]
-    obj <- method_split[["obj"]]
-    obj_name <- method_split[["obj_name"]]
-  } else {
-    obj_name <- rlang::as_string(rlang::enexpr(obj))
-  }
+  method_expr <- rlang::enexpr(method)
+  method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
+  method_name <- method_split[["method_name"]]
+  obj <- method_split[["obj"]]
+  obj_name <- method_split[["obj_name"]]
 
-  suppressMessages(untrace(what = method, where = obj))
-  message(paste("Removed tracing on", method, "from", obj_name))
+  suppressMessages(untrace(what = method_name, where = obj))
+  message(paste("Removed tracing on", method_name, "from", obj_name))
   invisible(NULL)
 }
 

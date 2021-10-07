@@ -1,8 +1,37 @@
 # ggtrace (development version)
 
+# ggtrace 0.3.0
+
+### **Breaking changes**
+
+- The `obj` argument is completely removed from all functions in the package. The constraint on
+supplying methods as expressions forces users to be intentional about tracing ggproto methods
+by having to provide them as code. This also allows the functions to return more informative
+messages, which was the main motivation for this breaking change.
+
+    - <p>Because the `obj` argument was only designed for compatibility with the
+    `get("method", ggproto)` syntax for retrieving the function body of ggproto
+    methods, it should not affect interactive workflows. In fact, the shortform
+    `method = ggproto$method` is more convenient and has always been recommended
+    for passing a ggproto method to `{ggtrace}` functions.</p>
+
+- As a reminder, all functions that take the ggproto method in the `method` argument expects an
+expression in the following forms (this part hasn't changed):
+
+    - `ggproto$method`
+    - `namespace::ggproto$method`
+    - `namespace:::ggproto$method`
+  
 ### **Improvements**
 
-- Added a Tips & Tricks section to the documentation for `ggtrace()`
+- Accurate string conversion for ggproto objects (#9), made possible by the breaking change.
+
+- `trace_steps` argument can now take negative indices (#22) and has better error handling for
+  out of range indices.
+  
+- Better deparsing for the internal function `split_ggproto_method()`.
+
+- Added a Tips & Tricks section to the documentation for `ggtrace()`.
 
 ### **Bug fixes**
 

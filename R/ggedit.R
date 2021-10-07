@@ -24,19 +24,15 @@
 ggedit <- function(method, obj) {
 
   # Parse/deparse method and obj
-  if (rlang::is_missing(obj)) {
-    method_expr <- rlang::enexpr(method)
-    method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
-    method <- method_split[["method"]]
-    obj <- method_split[["obj"]]
-    obj_name <- method_split[["obj_name"]]
-  } else {
-    obj_name <- rlang::as_string(rlang::enexpr(obj))
-  }
+  method_expr <- rlang::enexpr(method)
+  method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
+  method_name <- method_split[["method_name"]]
+  obj <- method_split[["obj"]]
+  obj_name <- method_split[["obj_name"]]
 
-  suppressMessages(trace(what = method, where = obj, edit = TRUE))
-  message("Creating a persistent trace on ", method, " from ", obj_name,
-          "\nCall `gguntrace(", obj_name, "$", method,  ")` to untrace")
+  suppressMessages(trace(what = method_name, where = obj, edit = TRUE))
+  message("Creating a persistent trace on ", method_name, " from ", obj_name,
+          "\nCall `gguntrace(", obj_name, "$", method_name,  ")` to untrace")
   invisible(NULL)
 }
 

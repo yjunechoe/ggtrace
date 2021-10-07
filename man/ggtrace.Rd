@@ -4,11 +4,14 @@
 \alias{ggtrace}
 \title{Programmatically debug ggproto methods with trace}
 \usage{
-ggtrace(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE)
+ggtrace(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE)
 }
 \arguments{
-\item{method}{The method name as a string. Alternatively an expression
-that evaluates to the ggproto method in the form of \code{ggproto$method}.}
+\item{method}{An expression that evaluates to the ggproto method.
+This may be specified using any of the following forms:\preformatted{- `ggproto$method`
+- `namespace::ggproto$method`
+- `namespace:::ggproto$method`
+}}
 
 \item{trace_steps}{A list of positions in the method's body to trace. Negative indices
 reference steps from the last, where \code{-1} references the last step in the body.}
@@ -20,9 +23,6 @@ To simply run a step and return its output, you can use the \code{~step} keyword
 assigns a value to a local variable, the value of that local variable is returned.
 
 If \code{trace_exprs} is not provided, \code{ggtrace()} is called with \code{~step} by default.}
-
-\item{obj}{The ggproto object asn an expression. Can be omitted if the method is an
-expression in the form of \code{ggproto$method} that evalutes to the object's method.}
 
 \item{once}{Whether to \code{untrace()} itself on exit. Defaults to \code{TRUE}.}
 

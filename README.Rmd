@@ -45,7 +45,7 @@ An experimental package for programmatically debugging ggproto methods.
 - **Powerful** 💪
     - You can return the method's whole environment with `ggtrace()` for further inspection
     - You can test changes to the source code with `ggedit()`, which is restored upon `gguntrace()`
-    - You can insert` browser()` calls inside deep parts of the method body with `ggedit()`
+    - You can insert `browser()` calls inside deep parts of the method body with `ggedit()`
 
 
 More on the 📦 pkgdown website: [https://yjunechoe.github.io/ggtrace](https://yjunechoe.github.io/ggtrace)
@@ -62,7 +62,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ```{r setup}
-library(ggtrace) # v0.2.0
+library(ggtrace) # v0.2.1
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**

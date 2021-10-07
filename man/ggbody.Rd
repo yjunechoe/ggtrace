@@ -4,14 +4,14 @@
 \alias{ggbody}
 \title{Retrieve the body of a ggproto method as a list}
 \usage{
-ggbody(method, obj, inherit = FALSE)
+ggbody(method, inherit = FALSE)
 }
 \arguments{
-\item{method}{The method name as a string. Alternatively an expression
-that evaluates to the ggproto method in the form of \code{ggproto$method}.}
-
-\item{obj}{The ggproto object asn an expression. Can be omitted if the method is an
-expression in the form of \code{ggproto$method} that evalutes to the object's method.}
+\item{method}{An expression that evaluates to the ggproto method.
+This may be specified using any of the following forms:\preformatted{- `ggproto$method`
+- `namespace::ggproto$method`
+- `namespace:::ggproto$method`
+}}
 
 \item{inherit}{Whether the method should be returned from its closest parent.
 Defaults to \code{FALSE}.}
@@ -34,25 +34,23 @@ subtle but important differences;
 \dontrun{
 library(ggplot2)
 
-# Methods can be specified in both long form and short form
-
-longform <- ggbody("compute_group", StatCount)
-longform
-
-shortform <- ggbody(StatCount$compute_group)
-shortform
-
-identical(longform, shortform)
+ggbody(StatCount$compute_group)
 
 # Works for ggproto in extension packages
+
+ggbody(ggforce::StatDelaunaySegment$compute_group)
 
 library(ggforce)
 ggbody(StatBezier$compute_panel)
 
 # `inherit = TRUE` will return the method from the closest parent
 
+# ERRORS:
+# ggbody(StatBoxplot$compute_panel)
 ggbody(StatBoxplot$compute_panel, inherit = TRUE)
 ggbody(Stat$compute_panel)
+
+ggbody(ggforce::GeomArc$draw_key, inherit = TRUE)
 
 }
 }

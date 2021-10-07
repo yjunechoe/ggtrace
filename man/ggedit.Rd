@@ -7,11 +7,11 @@
 ggedit(method, obj)
 }
 \arguments{
-\item{method}{The method name as a string. Alternatively an expression
-that evaluates to the ggproto method in the form of \code{ggproto$method}.}
-
-\item{obj}{The ggproto object asn an expression. Can be omitted if the method is an
-expression in the form of \code{ggproto$method} that evalutes to the object's method.}
+\item{method}{An expression that evaluates to the ggproto method.
+This may be specified using any of the following forms:\preformatted{- `ggproto$method`
+- `namespace::ggproto$method`
+- `namespace:::ggproto$method`
+}}
 }
 \description{
 Interactively edit the source code of a ggproto method

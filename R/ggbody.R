@@ -1,20 +1,23 @@
-split_ggproto_method <- function(x) {
-  label <- rlang::as_label(rlang::enexpr(x))
-  both <- strsplit(label, split = "$", fixed = TRUE)[[1]]
+split_ggproto_method <- function(method_expr) {
+  method_deparsed <- rlang::as_label(rlang::enexpr(method_expr))
+  both <- strsplit(method_deparsed, split = "$", fixed = TRUE)[[1]]
   obj_expr <- rlang::parse_expr(both[[1]])
   list(
-    method = both[[2]],
+    method_name = both[[2]],
     obj = eval(obj_expr),
-    obj_name = rlang::as_label(obj_expr)
+    obj_name = both[[1]],
+    ns = gsub("(^|:::?)[^:]*?$", "", method_deparsed)
   )
 }
 
 #' Retrieve the body of a ggproto method as a list
 #'
-#' @param method The method name as a string. Alternatively an expression
-#'   that evaluates to the ggproto method in the form of `ggproto$method`.
-#' @param obj The ggproto object asn an expression. Can be omitted if the method is an
-#'   expression in the form of `ggproto$method` that evalutes to the object's method.
+#' @param method An expression that evaluates to the ggproto method.
+#'   This may be specified using any of the following forms:
+#'
+#'     - `ggproto$method`
+#'     - `namespace::ggproto$method`
+#'     - `namespace:::ggproto$method`
 #'
 #' @param inherit Whether the method should be returned from its closest parent.
 #'   Defaults to `FALSE`.
@@ -34,54 +37,48 @@ split_ggproto_method <- function(x) {
 #' \dontrun{
 #' library(ggplot2)
 #'
-#' # Methods can be specified in both long form and short form
-#'
-#' longform <- ggbody("compute_group", StatCount)
-#' longform
-#'
-#' shortform <- ggbody(StatCount$compute_group)
-#' shortform
-#'
-#' identical(longform, shortform)
+#' ggbody(StatCount$compute_group)
 #'
 #' # Works for ggproto in extension packages
+#'
+#' ggbody(ggforce::StatDelaunaySegment$compute_group)
 #'
 #' library(ggforce)
 #' ggbody(StatBezier$compute_panel)
 #'
 #' # `inherit = TRUE` will return the method from the closest parent
 #'
+#' # ERRORS:
+#' # ggbody(StatBoxplot$compute_panel)
 #' ggbody(StatBoxplot$compute_panel, inherit = TRUE)
 #' ggbody(Stat$compute_panel)
 #'
+#' ggbody(ggforce::GeomArc$draw_key, inherit = TRUE)
+#'
 #' }
-ggbody <- function(method, obj, inherit = FALSE) {
+ggbody <- function(method, inherit = FALSE) {
 
   # Parse/deparse method and obj
-  if (rlang::is_missing(obj)) {
-    method_expr <- rlang::enexpr(method)
-    method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
-    method <- method_split[["method"]]
-    obj <- method_split[["obj"]]
-    obj_name <- method_split[["obj_name"]]
-  } else {
-    obj_name <- rlang::as_string(rlang::enexpr(obj))
-  }
+  method_expr <- rlang::enexpr(method)
+  method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
+  method_name <- method_split[["method_name"]]
+  obj <- method_split[["obj"]]
+  obj_name <- method_split[["obj_name"]]
 
   if (inherit) {
     parents <- setdiff(class(obj)[-1], c("ggproto", "gg"))
     for (parent in parents) {
       parent_method <- tryCatch(
-        expr = get(method, eval(rlang::parse_expr(parent))),
+        expr = get(method_name, eval(rlang::parse_expr(parent))),
         error = function(e) { NULL }
       )
       if (!is.null(parent_method)) {
-        message(paste0("Returning `ggbody(", parent, "$", method, ")`"))
+        message(paste0("Returning `ggbody(", parent, "$", method_name, ")`"))
         # Break and return when found
         return(as.list(body(parent_method)))
       }
     }
   } else {
-    as.list(body(get(method, obj)))
+    as.list(body(get(method_name, obj)))
   }
 }

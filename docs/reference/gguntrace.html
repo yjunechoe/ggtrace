@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -145,20 +145,18 @@
     <p>For explicitly calling <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> on a ggproto object.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>gguntrace</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>obj</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>gguntrace</span><span class='op'>(</span><span class='va'>method</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>method</th>
-      <td><p>The method name as a string. Alternatively an expression
-that evaluates to the ggproto method in the form of <code>ggproto$method</code>.</p></td>
-    </tr>
-    <tr>
-      <th>obj</th>
-      <td><p>The ggproto object. Can be omitted if the method is an expression
-in the form of <code>ggproto$method</code> that evalutes to the ggproto object's method.</p></td>
+      <td><p>An expression that evaluates to the ggproto method.
+This may be specified using any of the following forms:</p><pre><span class='op'>-</span> <span class='va'>`ggproto$method`</span>
+<span class='op'>-</span> <span class='va'>`namespace::ggproto$method`</span>
+<span class='op'>-</span> <span class='va'>`namespace:::ggproto$method`</span>
+</pre></td>
     </tr>
     </table>
 

@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -139,7 +139,7 @@
 <li>You can return the method’s whole environment with <code><a href="reference/ggtrace.html">ggtrace()</a></code> for further inspection</li>
 <li>You can test changes to the source code with <code><a href="reference/ggedit.html">ggedit()</a></code>, which is restored upon <code><a href="reference/gguntrace.html">gguntrace()</a></code>
 </li>
-<li>You can insert<code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> calls inside deep parts of the method body with <code><a href="reference/ggedit.html">ggedit()</a></code>
+<li>You can insert <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> calls inside deep parts of the method body with <code><a href="reference/ggedit.html">ggedit()</a></code>
 </li>
 </ul>
 </li>
@@ -160,7 +160,7 @@
 <a href="#usage" class="anchor"></a><strong>Usage</strong>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span> <span class="co"># v0.2.0</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span> <span class="co"># v0.2.1</span></code></pre></div>
 </div>
 <div id="example-1---compute_layer-method-from-positionjitter" class="section level2">
 <h2 class="hasAnchor">
@@ -242,7 +242,7 @@
 
 <span class="co"># plot not printed to save space</span>
 <span class="va">jitter_plot</span>
-<span class="co">#&gt; Tracing method compute_layer from &lt;PstnJttr&gt; ggproto.</span>
+<span class="co">#&gt; Tracing method compute_layer from PositionJitter ggproto.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 1]&gt; data </span>
 <span class="co">#&gt; </span>
@@ -252,7 +252,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit) </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Untracing method compute_layer from &lt;PstnJttr&gt; ggproto.</span>
+<span class="co">#&gt; Untracing method compute_layer from PositionJitter ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
 </div>
 <div id="step-4-inspect-trace-dump" class="section level3">
@@ -375,12 +375,12 @@
 <span class="co"># plot not printed to save space</span>
 <span class="va">smooth_plot</span>
 <span class="co">#&gt; `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span>
-<span class="co">#&gt; Tracing method draw_group from &lt;GeomSmth&gt; ggproto.</span>
+<span class="co">#&gt; Tracing method draw_group from GeomSmooth ggproto.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 7]&gt; gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,</span>
 <span class="co">#&gt;    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord)) </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Untracing method draw_group from &lt;GeomSmth&gt; ggproto.</span>
+<span class="co">#&gt; Untracing method draw_group from GeomSmooth ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
 </div>
 <div id="step-4-inspect-trace-dump-1" class="section level3">
@@ -462,7 +462,7 @@
 <p>Actually, <code>"compute_panel"</code> method is not defined for <code>StatBoxplot</code>, which means that it’s being inherited.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
-<span class="co">#&gt; Error in get(method, obj): object 'compute_panel' not found</span></code></pre></div>
+<span class="co">#&gt; Error in get(method_name, obj): object 'compute_panel' not found</span></code></pre></div>
 <p><code>StatBoxplot</code> is a child of the parent ggproto <code>Stat</code>, and the <code>"compute_panel"</code> method is inherited from <code>Stat</code> as well, so that’s what we want to trace instead:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">)</span>
@@ -516,7 +516,7 @@
 
 <span class="co"># plot not printed to save space</span>
 <span class="va">boxplot_plot</span>
-<span class="co">#&gt; Tracing method compute_panel from &lt;Stat&gt; ggproto.</span>
+<span class="co">#&gt; Tracing method compute_panel from Stat ggproto.</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 3]&gt; groups &lt;- split(data, data$group) </span>
 <span class="co">#&gt; </span>
@@ -524,7 +524,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  [Step 6]&gt; environment() </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; Untracing method compute_panel from &lt;Stat&gt; ggproto.</span>
+<span class="co">#&gt; Untracing method compute_panel from Stat ggproto.</span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></code></pre></div>
 </div>
 <div id="step-4-inspect-trace-dump-2" class="section level3">
@@ -751,7 +751,7 @@
 <span class="co"># meaning that only this plot is built with the modifications</span>
 <span class="va">sina_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-ggtrace-1.png" width="100%"></p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tracing method compute_group from &lt;StatSina&gt; ggproto.</span></span>
+<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tracing method compute_group from StatSina ggproto.</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [Step 1]&gt; data </span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -759,7 +759,7 @@
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [Step 8]&gt; data </span></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing method compute_group from &lt;StatSina&gt; ggproto.</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing method compute_group from StatSina ggproto.</span></span>
 <span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></span></code></pre></div>
 </div>
 <div id="step-4-inspect-trace-dump-3" class="section level3">

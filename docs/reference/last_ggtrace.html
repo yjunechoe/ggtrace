@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -233,7 +233,7 @@
 <span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>StatSmooth</span><span class='op'>$</span><span class='va'>compute_group</span>, trace_steps <span class='op'>=</span> <span class='fl'>12</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>prediction</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>'lm'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='img'><img src='last_ggtrace-1.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_group from &lt;StatSmth&gt; ggproto.
+</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='img'><img src='last_ggtrace-1.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_group from StatSmooth ggproto.
 #&gt; 
 #&gt;  [Step 12]&gt; head(prediction) 
 #&gt;          x        y     ymin     ymax       se
@@ -244,7 +244,7 @@
 #&gt; 5 11.58987 221.7468 194.0230 249.4707 13.57502
 #&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743
 #&gt; 
-#&gt; Untracing method compute_group from &lt;StatSmth&gt; ggproto.
+#&gt; Untracing method compute_group from StatSmooth ggproto.
 #&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
 <span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`[Step 12]&gt; head(prediction)`
@@ -264,11 +264,11 @@
 <span class='op'>)</span>
 
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>'lm'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='img'><img src='last_ggtrace-2.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_group from &lt;StatSmth&gt; ggproto.
+</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='img'><img src='last_ggtrace-2.png' alt='' width='1094' height='676' /></div><div class='output co'>#&gt; Tracing method compute_group from StatSmooth ggproto.
 #&gt; 
 #&gt;  [Step 12]&gt; prediction 
 #&gt; 
-#&gt; Untracing method compute_group from &lt;StatSmth&gt; ggproto.
+#&gt; Untracing method compute_group from StatSmooth ggproto.
 #&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='input'>
 <span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; $`[Step 12]&gt; prediction`

@@ -100,25 +100,21 @@
 #' lapply(jitter_tracedump, head)
 #' hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
 #' }
-ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE) {
+ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE) {
 
   # Parse/deparse method and obj
-  if (rlang::is_missing(obj)) {
-    method_expr <- rlang::enexpr(method)
-    method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
-    method <- method_split[["method"]]
-    obj <- method_split[["obj"]]
-    obj_name <- method_split[["obj_name"]]
-  } else {
-    obj_name <- rlang::as_string(rlang::enexpr(obj))
-  }
+  method_expr <- rlang::enexpr(method)
+  method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
+  method_name <- method_split[["method_name"]]
+  obj <- method_split[["obj"]]
+  obj_name <- method_split[["obj_name"]]
 
   # Initialize trace dump for caching output
   n_steps <- length(trace_steps)
   trace_dump <- vector("list", n_steps)
 
   # Sanitize:
-  method_body <- as.list(body(get(method, obj)))
+  method_body <- as.list(body(get(method_name, obj)))
 
   ## Ensure `trace_exprs` is a list of expressions
   if (rlang::is_missing(trace_exprs)) {
@@ -150,13 +146,13 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
 
   suppressMessages(
     trace(
-      what = method,
+      what = method_name,
       where = obj,
       at = trace_steps,
       tracer = function() {
 
         if (trace_idx == 1) {
-          cat("Tracing method", method, "from", obj_name, "ggproto.\n")
+          cat("Tracing method", method_name, "from", obj_name, "ggproto.\n")
         }
 
         trace_print <- gsub("\\n", "\n ", names(trace_dump)[trace_idx])
@@ -183,8 +179,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
       exit = rlang::expr({
         cat("\n")
         if (!!once) {
-          suppressMessages(untrace(!!method, where = !!obj))
-          cat("Untracing method", !!method, "from", !!obj_name, "ggproto.\n")
+          suppressMessages(untrace(!!method_name, where = !!obj))
+          cat("Untracing method", !!method_name, "from", !!obj_name, "ggproto.\n")
         } else {
           message("Creating a persistent trace. Remember to `gguntrace(ggproto$method)`!")
         }

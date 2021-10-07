@@ -36,7 +36,7 @@ An experimental package for programmatically debugging ggproto methods.
         for further inspection
     -   You can test changes to the source code with `ggedit()`, which
         is restored upon `gguntrace()`
-    -   You can insert`browser()` calls inside deep parts of the method
+    -   You can insert `browser()` calls inside deep parts of the method
         body with `ggedit()`
 
 More on the 📦 pkgdown website: <https://yjunechoe.github.io/ggtrace>
@@ -54,7 +54,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ``` r
-library(ggtrace) # v0.2.0
+library(ggtrace) # v0.2.1
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -358,7 +358,7 @@ which means that it’s being inherited.
 
 ``` r
 ggbody(StatBoxplot$compute_panel)
-#> Error in get(method, obj): object 'compute_panel' not found
+#> Error in get(method_name, obj): object 'compute_panel' not found
 ```
 
 `StatBoxplot` is a child of the parent ggproto `Stat`, and the

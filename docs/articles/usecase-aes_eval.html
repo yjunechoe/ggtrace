@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -115,40 +115,6 @@
 <div id="sneak-peak" class="section level2">
 <h2 class="hasAnchor">
 <a href="#sneak-peak" class="anchor"></a>Sneak peak:</h2>
-<p><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="uri">https://ggplot2.tidyverse.org/reference/aes_eval.html</a></p>
-<p>How can I know the transformed variables that I can reference inside <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">after_stat()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html">after_scale()</a></code>?</p>
-<ul>
-<li>
-<strong>after_stat</strong>: <code>Layer$compute_statistic</code>
-</li>
-<li>
-<strong>after_scale</strong>: <code>Geom$use_defaults (Step 6)</code> - <a href="https://github.com/tidyverse/ggplot2/blob/87e9b85dd9f2a294f339d88a353d0c11c851489d/R/geom-.r#L124-L150" class="uri">https://github.com/tidyverse/ggplot2/blob/87e9b85dd9f2a294f339d88a353d0c11c851489d/R/geom-.r#L124-L150</a>
-</li>
-</ul>
-<!--
-# example... abt after scale
-
-
-
-# example... abt after stat
-
-We need to trace Layer but it's internal... -- but that's okay!
-
-`ggbody()` is written such that it parses everything to the left of `$` and sets the result as the ggproto object.
-
-
-
-
-# notes....
-
-an aside on color<->colour
-
-It did use to error while the PR was under review - https://github.com/tidyverse/ggplot2/pull/3534#issuecomment-533784628
-ggplot actually always does this, so it was just a matter of this new `"mapped"` aesthetic getting standardized as well - https://github.com/tidyverse/ggplot2/blob/b5606624cbd3cc5bb09fe2e008d1fada82daf44e/R/aes.r#L150-L163
-
-hexadecimals
-
--->
 </div>
   </div>
 

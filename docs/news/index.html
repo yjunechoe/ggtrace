@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
@@ -142,6 +142,44 @@
     <div id="ggtrace-development-version" class="section level1">
 <h1 class="page-header" data-toc-text="development version">
 <a href="#ggtrace-development-version" class="anchor"></a>ggtrace (development version)</h1>
+</div>
+    <div id="ggtrace-030" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.0">
+<a href="#ggtrace-030" class="anchor"></a>ggtrace 0.3.0</h1>
+<div id="breaking-changes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#breaking-changes" class="anchor"></a><strong>Breaking changes</strong>
+</h3>
+<ul>
+<li>
+<p>The <code>obj</code> argument is completely removed from all functions in the package. The constraint on supplying methods as expressions forces users to be intentional about tracing ggproto methods by having to provide them as code. This also allows the functions to return more informative messages, which was the main motivation for this breaking change.</p>
+<ul>
+<li><p>
+Because the <code>obj</code> argument was only designed for compatibility with the <code><a href="https://rdrr.io/r/base/get.html">get("method", ggproto)</a></code> syntax for retrieving the function body of ggproto methods, it should not affect interactive workflows. In fact, the shortform <code>method = ggproto$method</code> is more convenient and has always been recommended for passing a ggproto method to <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> functions.
+</p></li>
+</ul>
+</li>
+<li>
+<p>As a reminder, all functions that take the ggproto method in the <code>method</code> argument expects an expression in the following forms (this part hasn’t changed):</p>
+<ul>
+<li><code>ggproto$method</code></li>
+<li><code>namespace::ggproto$method</code></li>
+<li><code>namespace:::ggproto$method</code></li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="improvements" class="section level3">
+<h3 class="hasAnchor">
+<a href="#improvements" class="anchor"></a><strong>Improvements</strong>
+</h3>
+<ul>
+<li><p>Accurate string conversion for ggproto objects (<a href='https://github.com/yjunechoe/ggtrace/issues/9'>#9</a>), made possible by the breaking change.</p></li>
+<li><p><code>trace_steps</code> argument can now take negative indices (<a href='https://github.com/yjunechoe/ggtrace/issues/22'>#22</a>) and has better error handling for out of range indices.</p></li>
+<li><p>Better deparsing for the internal function <code>split_ggproto_method()</code>.</p></li>
+<li><p>Added a Tips &amp; Tricks section to the documentation for <code><a href="../reference/ggtrace.html">ggtrace()</a></code>.</p></li>
+</ul>
+</div>
 <div id="bug-fixes" class="section level3">
 <h3 class="hasAnchor">
 <a href="#bug-fixes" class="anchor"></a><strong>Bug fixes</strong>
@@ -154,9 +192,9 @@
     <div id="ggtrace-020" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
 <a href="#ggtrace-020" class="anchor"></a>ggtrace 0.2.0</h1>
-<div id="breaking-changes" class="section level3">
+<div id="breaking-changes-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#breaking-changes" class="anchor"></a><strong>Breaking changes</strong>
+<a href="#breaking-changes-1" class="anchor"></a><strong>Breaking changes</strong>
 </h3>
 <ul>
 <li><p>The <code>~line</code> keyword for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is renamed to <code>~step</code> for consistency with the argument name <code>trace_steps</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/14'>#14</a>)</p></li>
@@ -180,9 +218,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li><p>You can now tell <code><a href="../reference/ggbody.html">ggbody()</a></code> to (recursively) search for the method from its parents with <code>inherit = TRUE</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/12'>#12</a>)</p></li>
 </ul>
 </div>
-<div id="improvements" class="section level3">
+<div id="improvements-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-1" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li>Documentation for some of the functions now contain a <strong>Gotchas</strong> section for explanations of / solutions to common problems (<a href='https://github.com/yjunechoe/ggtrace/issues/10'>#10</a>)</li>
@@ -221,9 +259,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li>New function <a href="https://yjunechoe.github.io/ggtrace/reference/ggedit.html"><code>ggedit()</code></a> for interactive debugging via directly editing the source code.</li>
 </ul>
 </div>
-<div id="improvements-1" class="section level3">
+<div id="improvements-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-1" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-2" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>Refactored <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. The package now only depends on <a href="https://rlang.r-lib.org">rlang</a>.</p></li>
