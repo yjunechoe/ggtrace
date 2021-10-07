@@ -182,7 +182,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
           suppressMessages(untrace(!!method_name, where = !!obj))
           cat("Untracing method", !!method_name, "from", !!obj_name, "ggproto.\n")
         } else {
-          message("Creating a persistent trace. Remember to `gguntrace(ggproto$method)`!")
+          message("Creating a persistent trace. Remember to ",
+                  "`gguntrace(", obj_name, "$", method_name, ")`!")
         }
         cat("Call `last_ggtrace()` to get the trace dump.\n")
       })
