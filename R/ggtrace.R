@@ -1,7 +1,8 @@
 #' Programmatically debug ggproto methods with trace
 #'
 #' @inheritParams ggbody
-#' @param trace_steps A list of positions in the method's body to trace.
+#' @param trace_steps A list of positions in the method's body to trace. Negative indices
+#'   reference steps from the last, where `-1` references the last step in the body.
 #' @param trace_exprs A list of expressions to evaluate at each position specified
 #'   in `trace_steps`. If a single expression is provided, it is recycled.
 #'
@@ -113,19 +114,25 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
   obj_name <- rlang::as_label(obj)
 
   # Initialize trace dump for caching output
-  trace_n <- length(trace_steps)
-  trace_dump <- vector("list", trace_n)
+  n_steps <- length(trace_steps)
+  trace_dump <- vector("list", n_steps)
 
-  # Ensure `trace_exprs` is a list of expressions
+  # Sanitize:
+  method_body <- ggbody(method, obj)
+
+  ## Ensure `trace_exprs` is a list of expressions
   if (rlang::is_missing(trace_exprs)) {
-    trace_exprs <- rep(list(rlang::expr(~step)), trace_n)
+    trace_exprs <- rep(list(rlang::expr(~step)), n_steps)
   } else if (!is.list(trace_exprs)) {
-    trace_exprs <- rep(list(trace_exprs), trace_n)
+    trace_exprs <- rep(list(trace_exprs), n_steps)
   }
 
-  # Substitute `~step` keyword
-  method_body <- ggbody(method, obj)
-  trace_exprs <- lapply(seq_len(trace_n), function(x) {
+  ## Ensure trace_steps is within bounds
+  trace_steps[trace_steps < 0] <- 1 + length(method_body) + trace_steps[trace_steps < 0]
+  if (any(trace_steps <= 0 | trace_steps > length(method_body))) { stop("`trace_steps` out of range") }
+
+  ## Substitute `~step` keyword
+  trace_exprs <- lapply(seq_len(n_steps), function(x) {
     if (rlang::as_label(trace_exprs[[x]]) == "~step") {
       method_body[[trace_steps[x]]]
     } else {
@@ -133,8 +140,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, obj, once = TRUE, .print =
     }
   })
 
-  # Printing step and expression to console
-  names(trace_dump) <- lapply(seq_len(trace_n), function(i) {
+  # Setup printing to console
+  names(trace_dump) <- lapply(seq_len(n_steps), function(i) {
     paste0("[Step ", trace_steps[[i]], "]> ", paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n"))
   })
 

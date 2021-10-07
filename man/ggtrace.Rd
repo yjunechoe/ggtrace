@@ -10,7 +10,8 @@ ggtrace(method, trace_steps, trace_exprs, obj, once = TRUE, .print = TRUE)
 \item{method}{The method name as a string. Alternatively an expression
 that evaluates to the ggproto method in the form of \code{ggproto$method}.}
 
-\item{trace_steps}{A list of positions in the method's body to trace.}
+\item{trace_steps}{A list of positions in the method's body to trace. Negative indices
+reference steps from the last, where \code{-1} references the last step in the body.}
 
 \item{trace_exprs}{A list of expressions to evaluate at each position specified
 in \code{trace_steps}. If a single expression is provided, it is recycled.

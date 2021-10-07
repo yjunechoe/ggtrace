@@ -251,7 +251,7 @@ ggbody(GeomSmooth$draw_group)
 ``` r
 ggtrace(
   method = GeomSmooth$draw_group,
-  trace_steps = 7,
+  trace_steps = -1,           # Trace the last line
   trace_exprs = quote(~step), # Grab the gList() object it returns
   .print = FALSE
 )

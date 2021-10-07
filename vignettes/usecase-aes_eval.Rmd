@@ -30,14 +30,49 @@ How can I know the transformed variables that I can reference inside `after_stat
 - **after_stat**: `Layer$compute_statistic` 
 - **after_scale**: `Geom$use_defaults (Step 6)` - https://github.com/tidyverse/ggplot2/blob/87e9b85dd9f2a294f339d88a353d0c11c851489d/R/geom-.r#L124-L150
 
-
 <!--
+
+```{r}
+ggtrace_aes <- function(context) {
+  params <- switch(context,
+    "stage" = list(
+      "layer_data",
+      2,
+      quote(~step),
+      ggplot2:::Layer
+    ),
+    "after_stat" = list(
+      "compute_statistic",
+      5,
+      quote(~step),
+      ggplot2:::Layer
+    ),
+    "after_scale" = list(
+      "use_defaults",
+      7,
+      quote(data),
+      ggplot2::Geom
+    )
+  )
+  ggtrace(
+    method = params[[1]],
+    trace_steps = params[[2]],
+    trace_exprs =  params[[3]],
+    obj = params[[4]]
+  )
+}
+```
+
+
 # example... abt after scale
 
 ```{r, include = FALSE}
+
+switch()
+
 ggbody(Geom$use_defaults)
 
-ggtrace(Geom$use_defaults, 5:6)
+ggtrace(Geom$use_defaults, 6:7, quote(data))
 
 ggplot(mpg, aes(class, hwy)) +
   geom_boxplot(aes(colour = class, fill = after_scale(alpha(colour, 0.4))))
