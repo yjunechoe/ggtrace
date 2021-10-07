@@ -362,24 +362,14 @@ subtle but important differences;</p><ul>
 #&gt; [[6]]
 #&gt; rbind_dfs(stats)
 #&gt; </div><div class='input'>
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='fu'>ggforce</span><span class='fu'>::</span><span class='va'><a href='https://ggforce.data-imaginist.com/reference/ggforce-extensions.html'>GeomArc</a></span><span class='op'>$</span><span class='va'>draw_key</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(GeomPath$draw_key)`</span></div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; if (is.null(data$linetype)) {
-#&gt;     data$linetype &lt;- 0
-#&gt; } else {
-#&gt;     data$linetype[is.na(data$linetype)] &lt;- 0
-#&gt; }
-#&gt; 
-#&gt; [[3]]
-#&gt; segmentsGrob(0.1, 0.5, 0.9, 0.5, gp = gpar(col = alpha(data$colour %||% 
-#&gt;     data$fill %||% "black", data$alpha), fill = alpha(params$arrow.fill %||% 
-#&gt;     data$colour %||% data$fill %||% "black", data$alpha), lwd = (data$size %||% 
-#&gt;     0.5) * .pt, lty = data$linetype %||% 1, lineend = "butt"), 
-#&gt;     arrow = params$arrow)
-#&gt; </div><div class='input'>
+<span class='co'># Navigating complex inheritance</span>
+<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "GeomArcBar"  "GeomShape"   "GeomPolygon" "Geom"        "ggproto"    
+#&gt; [6] "gg"         </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>default_aes</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># self</span>
+</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(GeomArcBar$default_aes)`</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_panel</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># parent</span>
+</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(GeomShape$draw_panel)`</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_key</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># grandparent</span>
+</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(GeomPolygon$draw_key)`</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_group</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># top-level</span>
+</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(Geom$draw_group)`</span></div><div class='input'>
 <span class='co'># }</span>
 </div></pre>
   </div>
