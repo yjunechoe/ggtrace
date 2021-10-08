@@ -15,7 +15,7 @@ This may be specified using any of the following forms:\preformatted{- `ggproto$
 - `namespace:::ggproto$method`
 }}
 
-\item{...}{Ignored}
+\item{...}{Ignored. Designed for the ease of calling this function by modifying the call to other \code{{ggtrace}} functions.}
 }
 \description{
 For explicitly calling \code{untrace()} on a ggproto object.

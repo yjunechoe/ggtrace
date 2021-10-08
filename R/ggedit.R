@@ -1,6 +1,7 @@
 #' Interactively edit the source code of a ggproto method
 #'
 #' @inheritParams ggbody
+#' @inheritParams gguntrace
 #'
 #' @details Like `base::trace()`, the edit is in place until `untrace()` is called.
 #'   To `untrace()` a ggproto method, the syntax is `untrace(what = "method", where = obj)`
@@ -21,7 +22,7 @@
 #' # # Or untrace(what = "compute_layer", where = PositionJitter)
 #' # jitter_plot # Edit is removed
 #' }
-ggedit <- function(method, obj) {
+ggedit <- function(method, ...) {
 
   # Capture method expression
   method_expr <- rlang::enexpr(method)

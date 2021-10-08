@@ -4,7 +4,7 @@
 \alias{ggedit}
 \title{Interactively edit the source code of a ggproto method}
 \usage{
-ggedit(method, obj)
+ggedit(method, ...)
 }
 \arguments{
 \item{method}{An expression that evaluates to the ggproto method.
@@ -14,6 +14,8 @@ This may be specified using any of the following forms:\preformatted{- `ggproto$
 
 - `namespace:::ggproto$method`
 }}
+
+\item{...}{Ignored. Designed for the ease of calling this function by modifying the call to other \code{{ggtrace}} functions.}
 }
 \description{
 Interactively edit the source code of a ggproto method

@@ -3,7 +3,7 @@
 #' For explicitly calling `untrace()` on a ggproto object.
 #'
 #' @inheritParams ggbody
-#' @param ... Ignored
+#' @param ... Ignored. Designed for the ease of calling this function by modifying the call to other `{ggtrace}` functions.
 #'
 #' @section Gotchas:
 #'  - If you try to untrace a method that is not currently being traced,
