@@ -38,8 +38,8 @@
 #'
 #' # `inherit = TRUE` will return the method from the closest parent
 #'
-#' # ERRORS:
-#' # ggbody(StatBoxplot$compute_panel)
+#' ## ERRORS:
+#' ## ggbody(StatBoxplot$compute_panel)
 #' ggbody(StatBoxplot$compute_panel, inherit = TRUE)
 #' ggbody(Stat$compute_panel)
 #'
@@ -49,6 +49,32 @@
 #' invisible(ggbody(GeomArcBar$draw_panel, inherit = TRUE))  # parent
 #' invisible(ggbody(GeomArcBar$draw_key, inherit = TRUE))    # grandparent
 #' invisible(ggbody(GeomArcBar$draw_group, inherit = TRUE))  # top-level
+#'
+#' # Works for custom ggproto
+#' # - Example from {ggplot2} "Extending ggplot2" vignette
+#' StatDensityCommon <- ggproto("StatDensityCommon", Stat,
+#'   required_aes = "x",
+#'
+#'   setup_params = function(data, params) {
+#'     if (!is.null(params$bandwidth))
+#'       return(params)
+#'
+#'     xs <- split(data$x, data$group)
+#'     bws <- vapply(xs, bw.nrd0, numeric(1))
+#'     bw <- mean(bws)
+#'     message("Picking bandwidth of ", signif(bw, 3))
+#'
+#'     params$bandwidth <- bw
+#'     params
+#'   },
+#'
+#'   compute_group = function(data, scales, bandwidth = 1) {
+#'     d <- density(data$x, bw = bandwidth)
+#'     data.frame(x = d$x, y = d$y)
+#'   }
+#' )
+#'
+#' ggbody(StatDensityCommon$compute_group)
 #'
 #' }
 ggbody <- function(method, inherit = FALSE) {
@@ -66,7 +92,6 @@ ggbody <- function(method, inherit = FALSE) {
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]
-  formatted_call <- method_split[["formatted_call"]]
 
   if (inherit) {
     parents <- setdiff(class(obj), c("ggproto", "gg"))
@@ -83,8 +108,12 @@ ggbody <- function(method, inherit = FALSE) {
         }
       )
       if (!is.null(parent_method)) {
-        message(paste0("Returning `ggbody(", formatted_call, ")`"))
-        # Break and return when found
+        if (parent == parents[1]) {
+          message("Method ", method_name, " is defined for ", obj_name, ", not inherited.")
+        } else {
+          message("Returning `ggbody(", parent, "$", method_name, ")`")
+        }
+        # Break loop and return when found
         return(resolve_method(parent_method))
       }
     }

@@ -47,8 +47,8 @@ ggbody(StatBezier$compute_panel)
 
 # `inherit = TRUE` will return the method from the closest parent
 
-# ERRORS:
-# ggbody(StatBoxplot$compute_panel)
+## ERRORS:
+## ggbody(StatBoxplot$compute_panel)
 ggbody(StatBoxplot$compute_panel, inherit = TRUE)
 ggbody(Stat$compute_panel)
 
@@ -58,6 +58,32 @@ invisible(ggbody(GeomArcBar$default_aes, inherit = TRUE)) # self
 invisible(ggbody(GeomArcBar$draw_panel, inherit = TRUE))  # parent
 invisible(ggbody(GeomArcBar$draw_key, inherit = TRUE))    # grandparent
 invisible(ggbody(GeomArcBar$draw_group, inherit = TRUE))  # top-level
+
+# Works for custom ggproto
+# - Example from {ggplot2} "Extending ggplot2" vignette
+StatDensityCommon <- ggproto("StatDensityCommon", Stat,
+  required_aes = "x",
+
+  setup_params = function(data, params) {
+    if (!is.null(params$bandwidth))
+      return(params)
+
+    xs <- split(data$x, data$group)
+    bws <- vapply(xs, bw.nrd0, numeric(1))
+    bw <- mean(bws)
+    message("Picking bandwidth of ", signif(bw, 3))
+
+    params$bandwidth <- bw
+    params
+  },
+
+  compute_group = function(data, scales, bandwidth = 1) {
+    d <- density(data$x, bw = bandwidth)
+    data.frame(x = d$x, y = d$y)
+  }
+)
+
+ggbody(StatDensityCommon$compute_group)
 
 }
 }

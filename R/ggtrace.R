@@ -128,7 +128,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
 
   ## Ensure trace_steps is within bounds
   trace_steps[trace_steps < 0] <- 1 + length(method_body) + trace_steps[trace_steps < 0]
-  if (any(trace_steps <= 0 | trace_steps > length(method_body))) { stop("`trace_steps` out of range") }
+  if (any(trace_steps <= 0 | trace_steps > length(method_body))) { rlang::abort("`trace_steps` out of range") }
 
   ## Substitute `~step` keyword
   trace_exprs <- lapply(seq_len(n_steps), function(x) {
@@ -155,7 +155,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
       tracer = function() {
 
         if (trace_idx == 1) {
-          cat("Triggering trace on ", formatted_call, "\n")
+          cat("Triggering trace on", formatted_call, "\n")
         }
 
         trace_print <- gsub("\\n", "\n ", names(trace_dump)[trace_idx])
@@ -183,10 +183,10 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
         cat("\n")
         if (!!once) {
           suppressMessages(untrace(!!method_name, where = !!obj))
-          cat("Untracing ", formatted_call, "\n")
+          cat("Untracing", !!formatted_call, "\n")
         } else {
           message(formatted_call, " has a persistent trace. Remember to ",
-            "`gguntrace(", formatted_call, ")`!")
+            "`gguntrace(", !!formatted_call, ")`!")
         }
         cat("Call `last_ggtrace()` to get the trace dump.\n")
       })

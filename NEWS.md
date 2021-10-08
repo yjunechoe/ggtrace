@@ -4,19 +4,24 @@
 
 ### **Improvements**
 
+- The unary functions `ggedit()` and `gguntrace()` gain dynamic dots `...` as the second argument, which gets ignored. This now makes it easy to call these function by modifying the call to an earlier`{ggtrace}` function from the console or in other interactive contexts.
+
+
 - Significant re-write of `ggbody()` for better error handling (#23)
 
-    - Aborts if method is not a call or is not of the accepted form, with specific error messages for each. 
+    - Aborts if method is not a call or is not of the accepted form, with specific error messages for each.
 
     - If a method doesn't exist in a parent, directs users to call `ggbody(, inherit = TRUE)`
     
     - If the recursive search with `inherit = TRUE` fails, directs users to load all relevant packages
+    
+    - Notifies if `inherit = TRUE` but method is defined for the object, not inherited
 
 - Better error handling for `gguntrace()` when the method is no longer being traced (#24)
 
     - Uses the re-written `ggbody()` to validate the method
     
-    - Unlike `base::untrace()`, no longer errors if given a method not currently being traced. It now prints a message saying so instead.
+    - Unlike `base::untrace()`, no longer errors if given a method not currently being traced. It now prints a message saying so instead
 
 - Standardization of messages printed by all `{ggtrace}` functions. Messages are now more informative and refer to the ggproto method in the callable format `ggproto$method`.
 

@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-An experimental package for programmatically debugging ggproto methods.
+#### **Programmatically inspect, debug, and manipulate ggproto methods**
 
 ## **Why {ggtrace}?**
 
@@ -54,7 +54,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ``` r
-library(ggtrace) # v0.3.0
+library(ggtrace) # v0.3.1
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -129,10 +129,11 @@ ggtrace(
   ),
   .print = FALSE     # Don't print evaluated expressions to console
 )
+#> PositionJitter$compute_layer now being traced
 
 # plot not printed to save space
 jitter_plot
-#> Tracing method compute_layer from PositionJitter ggproto.
+#> Triggering trace on PositionJitter$compute_layer 
 #> 
 #>  [Step 1]> data 
 #> 
@@ -142,7 +143,7 @@ jitter_plot
 #> 
 #>  [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
 #> 
-#> Untracing method compute_layer from PositionJitter ggproto.
+#> Untracing PositionJitter$compute_layer 
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
@@ -151,12 +152,19 @@ jitter_plot
 ``` r
 jitter_tracedump <- last_ggtrace()
 
-lapply(jitter_tracedump, nrow)
+jitter_tracedump[[2]]
+#> $width
+#> [1] 0.2
+#> 
+#> $height
+#> [1] 0.04
+#> 
+#> $seed
+#> [1] 2021
+
+lapply(jitter_tracedump[-2], nrow)
 #> $`[Step 1]> data`
 #> [1] 1000
-#> 
-#> $`[Step 1]> params`
-#> NULL
 #> 
 #> $`[Step 9]> dummy_data`
 #> [1] 1000
@@ -164,44 +172,24 @@ lapply(jitter_tracedump, nrow)
 #> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
 #> [1] 1000
 
-lapply(jitter_tracedump, head)
+lapply(jitter_tracedump[-2], head, 3)
 #> $`[Step 1]> data`
 #>   x    y PANEL group
 #> 1 5 61.5     1     5
 #> 2 4 59.8     1     4
 #> 3 2 56.9     1     2
-#> 4 4 62.4     1     4
-#> 5 2 63.3     1     2
-#> 6 3 62.8     1     3
-#> 
-#> $`[Step 1]> params`
-#> $`[Step 1]> params`$width
-#> [1] 0.2
-#> 
-#> $`[Step 1]> params`$height
-#> [1] 0.04
-#> 
-#> $`[Step 1]> params`$seed
-#> [1] 2021
-#> 
 #> 
 #> $`[Step 9]> dummy_data`
 #>   x    y
 #> 1 5 61.5
 #> 2 4 59.8
 #> 3 2 56.9
-#> 4 4 62.4
-#> 5 2 63.3
-#> 6 3 62.8
 #> 
 #> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
 #>          x        y PANEL group
 #> 1 4.980507 61.50684     1     5
 #> 2 4.113512 59.77872     1     4
 #> 3 2.083873 56.86655     1     2
-#> 4 3.952698 62.42703     1     4
-#> 5 2.054530 63.29763     1     2
-#> 6 3.080538 62.77536     1     3
 ```
 
 ## **Example 2 - `draw_group` method from `GeomSmooth`**
@@ -255,22 +243,26 @@ ggtrace(
   trace_exprs = quote(~step), # Grab the gList() object it returns
   .print = FALSE
 )
+#> GeomSmooth$draw_group now being traced
 
 # plot not printed to save space
 smooth_plot
 #> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
-#> Tracing method draw_group from GeomSmooth ggproto.
+#> Triggering trace on GeomSmooth$draw_group 
 #> 
 #>  [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
 #>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord)) 
 #> 
-#> Untracing method draw_group from GeomSmooth ggproto.
+#> Untracing GeomSmooth$draw_group 
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
 ### **Step 4. Inspect trace dump**
 
-Get grobs in the gList and do some weird stuff with it
+Get grobs in the gList and do some weird stuff with it.
+
+This is nice because you don’t have to navigate the whole list of
+`ggplotGrob(smooth_plot)[["grobs"]]`.
 
 ``` r
 smooth_tracedump <- last_ggtrace()
@@ -317,8 +309,8 @@ grid.draw(smooth_ribbon_gTree)
 
 <img src="man/figures/README-ex-2-last-a-2.png" width="20%" />
 
-I guess you could use this for some fancy *data-driven legends* or
-something but it’s meant to be exploratory not practical
+You might use this for some fancy *data-driven legends* or something,
+though it’s meant to be exploratory not practical.
 
 ``` r
 library(patchwork)
@@ -332,12 +324,6 @@ smooth_plot +
 ```
 
 <img src="man/figures/README-ex-2-last-b-1.png" width="100%" />
-
-But I will just add that the above way of “intercepting” and retrieving
-a grob is kinda nice because you know what will be there ahead of the
-time from your knowledge of that Geom (whereas if you wanted to grab a
-grob after the ggplot is built, you’d have to navigate the whole
-`ggplotGrob(smooth_plot)[["grobs"]]`).
 
 ## **Example 3 - `compute_panel` method from `StatBoxplot`**
 
@@ -353,8 +339,8 @@ boxplot_plot
 
 ### **Step 2. Inspect body of the ggproto method**
 
-Actually, `"compute_panel"` method is not defined for `StatBoxplot`,
-which means that it’s being inherited.
+Actually, `"compute_panel"` method is not defined for `StatBoxplot`.
+`ggbody()` gives you a hint that it may be inherited.
 
 ``` r
 ggbody(StatBoxplot$compute_panel)
@@ -423,10 +409,11 @@ ggtrace(
   ),
   .print = FALSE
 )
+#> Stat$compute_panel now being traced
 
 # plot not printed to save space
 boxplot_plot
-#> Tracing method compute_panel from Stat ggproto.
+#> Triggering trace on Stat$compute_panel 
 #> 
 #>  [Step 3]> groups <- split(data, data$group) 
 #> 
@@ -434,7 +421,7 @@ boxplot_plot
 #> 
 #>  [Step 6]> environment() 
 #> 
-#> Untracing method compute_panel from Stat ggproto.
+#> Untracing Stat$compute_panel 
 #> Call `last_ggtrace()` to get the trace dump.
 ```
 
@@ -447,51 +434,37 @@ boxplot_tracedump <- last_ggtrace()
 sapply(boxplot_tracedump[[1]], nrow)
 #>   1   2   3   4   5 
 #>  26  51 127 144 152
-lapply(boxplot_tracedump[[1]], head)
+
+lapply(boxplot_tracedump[[1]], head, 3)
 #> $`1`
-#>     x    y PANEL group
-#> 9   1 65.1     1     1
-#> 92  1 55.1     1     1
-#> 98  1 66.3     1     1
-#> 124 1 64.5     1     1
-#> 125 1 65.3     1     1
-#> 129 1 64.4     1     1
+#>    x    y PANEL group
+#> 9  1 65.1     1     1
+#> 92 1 55.1     1     1
+#> 98 1 66.3     1     1
 #> 
 #> $`2`
 #>    x    y PANEL group
 #> 3  2 56.9     1     2
 #> 5  2 63.3     1     2
 #> 11 2 64.0     1     2
-#> 18 2 63.4     1     2
-#> 19 2 63.8     1     2
-#> 21 2 63.3     1     2
 #> 
 #> $`3`
-#>    x    y PANEL group
-#> 6  3 62.8     1     3
-#> 7  3 62.3     1     3
-#> 8  3 61.9     1     3
-#> 10 3 59.4     1     3
-#> 20 3 62.7     1     3
-#> 22 3 63.8     1     3
+#>   x    y PANEL group
+#> 6 3 62.8     1     3
+#> 7 3 62.3     1     3
+#> 8 3 61.9     1     3
 #> 
 #> $`4`
 #>    x    y PANEL group
 #> 2  4 59.8     1     4
 #> 4  4 62.4     1     4
 #> 13 4 60.4     1     4
-#> 15 4 60.2     1     4
-#> 16 4 60.9     1     4
-#> 27 4 62.5     1     4
 #> 
 #> $`5`
 #>    x    y PANEL group
 #> 1  5 61.5     1     5
 #> 12 5 62.8     1     5
 #> 14 5 62.2     1     5
-#> 17 5 62.0     1     5
-#> 40 5 61.8     1     5
-#> 41 5 61.2     1     5
 
 # Manually calculating some boxplot parameters
 lapply(boxplot_tracedump[[1]], function(group) {
@@ -531,8 +504,16 @@ boxplot_tracedump[[2]]
 #> 3  0.75   11.269428       FALSE     1     3
 #> 4  0.75   12.000000       FALSE     1     4
 #> 5  0.75   12.328828       FALSE     1     5
+```
 
-# Evaluate the expression in Step 6 with the cached method environment
+Using the returned environment opens up more powerful manipulations:
+
+``` r
+# What was inside the method environment?
+ls(envir = boxplot_tracedump[[3]])
+#> [1] "data"   "groups" "scales" "self"   "stats"
+
+# Evaluate the expression in Step 6 with the method's runtime environment
 eval(
   ggbody(Stat$compute_panel)[[6]],
   envir = boxplot_tracedump[[3]]
@@ -549,10 +530,6 @@ eval(
 #> 3  0.75   11.269428       FALSE     1     3
 #> 4  0.75   12.000000       FALSE     1     4
 #> 5  0.75   12.328828       FALSE     1     5
-
-# What was inside the method environment?
-ls(envir = boxplot_tracedump[[3]])
-#> [1] "data"   "groups" "scales" "self"   "stats"
 
 # Manually call the compute_group method from StatBoxplot to apply
 # transformation to the first group using the method environment
@@ -650,15 +627,14 @@ ggtrace(
   ),
   .print = FALSE
 )
+#> StatSina$compute_group now being traced
 
-# This effect is ephemeral with the `once = TRUE` default,
-# meaning that only this plot is built with the modifications
 sina_plot
 ```
 
 <img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />
 
-    #> Tracing method compute_group from StatSina ggproto.
+    #> Triggering trace on StatSina$compute_group 
     #> 
     #>  [Step 1]> data 
     #> 
@@ -666,45 +642,42 @@ sina_plot
     #> 
     #>  [Step 8]> data 
     #> 
-    #> Untracing method compute_group from StatSina ggproto.
+    #> Untracing StatSina$compute_group 
     #> Call `last_ggtrace()` to get the trace dump.
+
+This effect is ephemeral with the `once = TRUE` default in `ggtrace()`,
+meaning that only this last plot is built with the modifications.
+
+Here we confirm that the method is restored on exit:
+
+``` r
+sina_plot
+```
+
+<img src="man/figures/README-ex-4-ggtrace-restored-1.png" width="100%" />
 
 ### **Step 4. Inspect trace dump**
 
 ``` r
 sina_tracedump <- last_ggtrace()
 
-# StatSina did calculations on the modified data
-lapply(sina_tracedump, head)
+# StatSina did calculations on the modified data in the last `ggtrace()`
+lapply(sina_tracedump, head, 3)
 #> $`[Step 1]> data`
 #>   x    y PANEL group
 #> 1 1 61.5     1     1
 #> 2 1 62.8     1     1
 #> 3 1 62.2     1     1
-#> 4 1 62.0     1     1
-#> 5 1 61.8     1     1
-#> 6 1 61.2     1     1
 #> 
 #> $`[Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2)`
 #>     x    y PANEL group
 #> 1 0.8 62.5     1     1
 #> 2 0.8 63.8     1     1
 #> 3 0.8 63.2     1     1
-#> 4 0.8 63.0     1     1
-#> 5 0.8 62.8     1     1
-#> 6 0.8 62.2     1     1
 #> 
 #> $`[Step 8]> data`
 #>     x    y PANEL group   density    scaled width  n
 #> 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50
 #> 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50
 #> 3 0.8 63.2     1     1 0.4973098 0.9076543   0.9 50
-#> 4 0.8 63.0     1     1 0.5438039 0.9925121   0.9 50
-#> 5 0.8 62.8     1     1 0.5390510 0.9838373   0.9 50
-#> 6 0.8 62.2     1     1 0.3596117 0.6563376   0.9 50
-
-# Confirming that the method is restored on exit
-sina_plot
 ```
-
-<img src="man/figures/README-ex-4-last-1.png" width="100%" />
