@@ -113,6 +113,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]
+  formatted_call <- method_split[["formatted_call"]]
 
   # Initialize trace dump for caching output
   n_steps <- length(trace_steps)
@@ -154,7 +155,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
       tracer = function() {
 
         if (trace_idx == 1) {
-          cat("Tracing method", method_name, "from", obj_name, "ggproto.\n")
+          cat("Triggering trace on ", formatted_call, "\n")
         }
 
         trace_print <- gsub("\\n", "\n ", names(trace_dump)[trace_idx])
@@ -182,16 +183,17 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
         cat("\n")
         if (!!once) {
           suppressMessages(untrace(!!method_name, where = !!obj))
-          cat("Untracing method", !!method_name, "from", !!obj_name, "ggproto.\n")
+          cat("Untracing ", formatted_call, "\n")
         } else {
-          message("Creating a persistent trace. Remember to ",
-                  "`gguntrace(", obj_name, "$", method_name, ")`!")
+          message(formatted_call, " has a persistent trace. Remember to ",
+            "`gguntrace(", formatted_call, ")`!")
         }
         cat("Call `last_ggtrace()` to get the trace dump.\n")
       })
     )
   )
 
+  message(formatted_call, " now being traced")
   invisible(NULL)
 
 }

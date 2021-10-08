@@ -5,12 +5,14 @@ split_ggproto_method <- function(method_expr) {
   }
   both <- strsplit(method_deparsed, split = "$", fixed = TRUE)[[1]]
   obj_expr <- rlang::parse_expr(both[[1]])
-  list(
+  split_list <- list(
     method_name = both[[2]],
     obj = eval(obj_expr),
     obj_name = both[[1]],
     ns = gsub("(^|:::?)[^:]*?$", "", method_deparsed)
   )
+  split_list$formatted_call <- paste0(split_list[["obj_name"]], "$", split_list[["method_name"]])
+  split_list
 }
 
 resolve_method <- function(got) {

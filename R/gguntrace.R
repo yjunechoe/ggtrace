@@ -39,9 +39,19 @@ gguntrace <- function(method, ...) {
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]
+  formatted_call <- method_split[["formatted_call"]]
 
-  suppressMessages(untrace(what = method_name, where = obj))
-  message(paste("Removed tracing on", method_name, "from", obj_name))
+  tryCatch(
+    expr = {
+      suppressMessages(untrace(what = method_name, where = obj))
+      message(paste(formatted_call, " no longer being traced."))
+    },
+    error = function(e) {
+      if (!grepl("^\\{ +.doTrace\\(", deparse1(method_body[[length(method_body)]]))) {
+        message(formatted_call, " not currently being traced.")
+      }
+    }
+  )
   invisible(NULL)
 }
 

@@ -66,6 +66,7 @@ ggbody <- function(method, inherit = FALSE) {
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]
+  formatted_call <- method_split[["formatted_call"]]
 
   if (inherit) {
     parents <- setdiff(class(obj), c("ggproto", "gg"))
@@ -82,7 +83,7 @@ ggbody <- function(method, inherit = FALSE) {
         }
       )
       if (!is.null(parent_method)) {
-        message(paste0("Returning `ggbody(", parent, "$", method_name, ")`"))
+        message(paste0("Returning `ggbody(", formatted_call, ")`"))
         # Break and return when found
         return(resolve_method(parent_method))
       }

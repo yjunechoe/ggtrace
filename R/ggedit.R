@@ -34,10 +34,11 @@ ggedit <- function(method, obj) {
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]
+  formatted_call <- method_split[["formatted_call"]]
 
   suppressMessages(trace(what = method_name, where = obj, edit = TRUE))
   message("Creating a persistent trace on ", method_name, " from ", obj_name,
-          "\nCall `gguntrace(", obj_name, "$", method_name,  ")` to untrace")
+          "\nCall `gguntrace(", formatted_call,  ")` to untrace")
   invisible(NULL)
 }
 

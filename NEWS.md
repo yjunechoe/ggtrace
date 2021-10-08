@@ -6,6 +6,8 @@
 
 - Better error handling for inherited methods in `ggbody()` (#23)
 
+    - Aborts if method is not a call or is not of the accepted form, with specific error messages for each. 
+
     - If a method doesn't exist in a parent, directs users to call `ggbody(, inherit = TRUE)`
     
     - If the recursive search with `inherit = TRUE` fails, directs users to load all relevant packages
