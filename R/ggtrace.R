@@ -146,7 +146,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   })
   ## Use names from named elements
   names(trace_dump) <- lapply(seq_len(n_steps), function(i) {
-    if (names(trace_exprs[i]) == "") {
+    if (is.null(names(trace_exprs[i])) || names(trace_exprs[i]) == "") {
       trace_name <- names(trace_dump[i])
     } else {
       trace_name <- paste0('"', names(trace_exprs[i]), '"')

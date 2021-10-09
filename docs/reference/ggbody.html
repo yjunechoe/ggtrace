@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -162,21 +162,24 @@ This may be specified using any of the following forms:</p><pre><span class='op'
     </tr>
     <tr>
       <th>inherit</th>
-      <td><p>Whether the method should be returned from its closest parent.
-Defaults to <code>FALSE</code>.</p></td>
+      <td><p>Whether the method should be returned from its closest parent. Defaults to <code>FALSE</code>.
+If <code>TRUE</code>, returns the parent's method and the corresponding <code>ggbody()</code> code as a message.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A list</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>For interactive uses, using the short form is recommended. For
-programmatic uses, <code><a href='https://rdrr.io/r/base/list.html'>as.list(body(get("method", ggproto)))</a></code> is recommended.</p>
-<p>The <code><a href='https://rdrr.io/r/base/get.html'>get("method", ggproto)</a></code> syntax is the long form of <code>ggproto$method</code> with
-subtle but important differences;</p><ul>
+    <p><code>ggbody()</code> calls <code><a href='https://rdrr.io/r/base/list.html'>as.list(body(get("method", ggproto)))</a></code> under the hood.
+The <code><a href='https://rdrr.io/r/base/get.html'>get("method", ggproto)</a></code> syntax is the long form of <code>ggproto$method</code> which retrieves
+the actual function body. This is a subtle but important difference for inspecting ggproto methods.</p><ul>
 <li><p>For example, this works: <code><a href='https://rdrr.io/r/base/debug.html'>debugonce(get("compute_group", StatCount))</a></code></p></li>
 <li><p>But this fails to insert a break point: <code><a href='https://rdrr.io/r/base/debug.html'>debugonce(StatCount$compute_group)</a></code></p></li>
 </ul>
 
+<p><code>ggbody()</code> was designed so that you do not have to worry about this distinction.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>

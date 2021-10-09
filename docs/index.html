@@ -249,13 +249,13 @@
 <span class="va">jitter_plot</span>
 <span class="co">#&gt; Triggering trace on PositionJitter$compute_layer </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 1]&gt; "" </span>
+<span class="co">#&gt;  [Step 1]&gt; data </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 1]&gt; "" </span>
+<span class="co">#&gt;  [Step 1]&gt; params </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 9]&gt; "" </span>
+<span class="co">#&gt;  [Step 9]&gt; dummy_data </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 12]&gt; "" </span>
+<span class="co">#&gt;  [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit) </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span>
 <span class="co">#&gt; Untracing PositionJitter$compute_layer</span></code></pre></div>
@@ -278,29 +278,29 @@
 <span class="co">#&gt; [1] 2021</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">jitter_tracedump</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">]</span>, <span class="va">nrow</span><span class="op">)</span>
-<span class="co">#&gt; $`[Step 1]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 1]&gt; data`</span>
 <span class="co">#&gt; [1] 1000</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 9]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 9]&gt; dummy_data`</span>
 <span class="co">#&gt; [1] 1000</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 12]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`</span>
 <span class="co">#&gt; [1] 1000</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">jitter_tracedump</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">]</span>, <span class="va">head</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="co">#&gt; $`[Step 1]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 1]&gt; data`</span>
 <span class="co">#&gt;   x    y PANEL group</span>
 <span class="co">#&gt; 1 5 61.5     1     5</span>
 <span class="co">#&gt; 2 4 59.8     1     4</span>
 <span class="co">#&gt; 3 2 56.9     1     2</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 9]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 9]&gt; dummy_data`</span>
 <span class="co">#&gt;   x    y</span>
 <span class="co">#&gt; 1 5 61.5</span>
 <span class="co">#&gt; 2 4 59.8</span>
 <span class="co">#&gt; 3 2 56.9</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 12]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`</span>
 <span class="co">#&gt;          x        y PANEL group</span>
 <span class="co">#&gt; 1 4.980507 61.50684     1     5</span>
 <span class="co">#&gt; 2 4.113512 59.77872     1     4</span>
@@ -731,11 +731,11 @@
 <span class="va">sina_plot</span>
 <span class="co">#&gt; Triggering trace on StatSina$compute_group </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 1]&gt; "" </span>
+<span class="co">#&gt;  [Step 1]&gt; data </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 1]&gt; "" </span>
+<span class="co">#&gt;  [Step 1]&gt; data &lt;- dplyr::mutate(data, y = y + 1, x = x - 0.2) </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt;  [Step 8]&gt; "" </span>
+<span class="co">#&gt;  [Step 8]&gt; data </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span>
 <span class="co">#&gt; Untracing StatSina$compute_group</span></code></pre></div>
@@ -755,19 +755,19 @@
 
 <span class="co"># StatSina did calculations on the modified data in the last `ggtrace()`</span>
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">sina_tracedump</span>, <span class="va">head</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="co">#&gt; $`[Step 1]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 1]&gt; data`</span>
 <span class="co">#&gt;   x    y PANEL group</span>
 <span class="co">#&gt; 1 1 61.5     1     1</span>
 <span class="co">#&gt; 2 1 62.8     1     1</span>
 <span class="co">#&gt; 3 1 62.2     1     1</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 1]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 1]&gt; data &lt;- dplyr::mutate(data, y = y + 1, x = x - 0.2)`</span>
 <span class="co">#&gt;     x    y PANEL group</span>
 <span class="co">#&gt; 1 0.8 62.5     1     1</span>
 <span class="co">#&gt; 2 0.8 63.8     1     1</span>
 <span class="co">#&gt; 3 0.8 63.2     1     1</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`[Step 8]&gt; ""`</span>
+<span class="co">#&gt; $`[Step 8]&gt; data`</span>
 <span class="co">#&gt;     x    y PANEL group   density    scaled width  n</span>
 <span class="co">#&gt; 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50</span>
 <span class="co">#&gt; 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50</span>

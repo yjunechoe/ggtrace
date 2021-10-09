@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
       </span>
     </div>
 
@@ -143,12 +143,35 @@
 <h1 class="page-header" data-toc-text="development version">
 <a href="#ggtrace-development-version" class="anchor"></a>ggtrace (development version)</h1>
 </div>
-    <div id="ggtrace-031" class="section level1">
-<h1 class="page-header" data-toc-text="0.3.1">
-<a href="#ggtrace-031" class="anchor"></a>ggtrace 0.3.1</h1>
+    <div id="ggtrace-032" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.2">
+<a href="#ggtrace-032" class="anchor"></a>ggtrace 0.3.2</h1>
 <div id="improvements" class="section level3">
 <h3 class="hasAnchor">
 <a href="#improvements" class="anchor"></a><strong>Improvements</strong>
+</h3>
+<ul>
+<li><p><code>trace_exprs</code> argument can now take a named list of expressions</p></li>
+<li><p>Improved documentation for <code><a href="../reference/ggbody.html">ggbody()</a></code></p></li>
+<li><p>More informative messages for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and <code><a href="../reference/gguntrace.html">gguntrace()</a></code></p></li>
+</ul>
+</div>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a><strong>Bug fixes</strong>
+</h3>
+<ul>
+<li>No longer errors on exit when creating a persistence trace with <code>once = FALSE</code>
+</li>
+</ul>
+</div>
+</div>
+    <div id="ggtrace-031" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.1">
+<a href="#ggtrace-031" class="anchor"></a>ggtrace 0.3.1</h1>
+<div id="improvements-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#improvements-1" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>The unary functions <code><a href="../reference/ggedit.html">ggedit()</a></code> and <code><a href="../reference/gguntrace.html">gguntrace()</a></code> gain dynamic dots <code>...</code> as the second argument, which gets ignored. This now makes it easy to call these function by modifying the call to an earlier<a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> function from the console or in other interactive contexts.</p></li>
@@ -198,9 +221,9 @@ Because the <code>obj</code> argument was only designed for compatibility with t
 </li>
 </ul>
 </div>
-<div id="improvements-1" class="section level3">
+<div id="improvements-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-1" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-2" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>Accurate string conversion for ggproto objects (<a href='https://github.com/yjunechoe/ggtrace/issues/9'>#9</a>), made possible by the breaking change.</p></li>
@@ -209,9 +232,9 @@ Because the <code>obj</code> argument was only designed for compatibility with t
 <li><p>Added a Tips &amp; Tricks section to the documentation for <code><a href="../reference/ggtrace.html">ggtrace()</a></code>.</p></li>
 </ul>
 </div>
-<div id="bug-fixes" class="section level3">
+<div id="bug-fixes-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a><strong>Bug fixes</strong>
+<a href="#bug-fixes-1" class="anchor"></a><strong>Bug fixes</strong>
 </h3>
 <ul>
 <li>Internal variable <code>.store</code> renamed to <code>.ggtrace_storage</code> to prevent overriding <code>ggplot2::.store</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/18'>#18</a>)</li>
@@ -247,9 +270,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li><p>You can now tell <code><a href="../reference/ggbody.html">ggbody()</a></code> to (recursively) search for the method from its parents with <code>inherit = TRUE</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/12'>#12</a>)</p></li>
 </ul>
 </div>
-<div id="improvements-2" class="section level3">
+<div id="improvements-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-2" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-3" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li>Documentation for some of the functions now contain a <strong>Gotchas</strong> section for explanations of / solutions to common problems (<a href='https://github.com/yjunechoe/ggtrace/issues/10'>#10</a>)</li>
@@ -268,9 +291,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gains a <code>once = TRUE</code> argument, which can be set to <code>FALSE</code> for persistent tracing</p></li>
 </ul>
 </div>
-<div id="bug-fixes-1" class="section level3">
+<div id="bug-fixes-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a><strong>Bug fixes</strong>
+<a href="#bug-fixes-2" class="anchor"></a><strong>Bug fixes</strong>
 </h3>
 <ul>
 <li>Fix bug in <code><a href="../reference/ggtrace.html">ggtrace()</a></code> where <code>step_deparsed</code> was being returned as a multi-length vector</li>
@@ -288,9 +311,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li>New function <a href="https://yjunechoe.github.io/ggtrace/reference/ggedit.html"><code>ggedit()</code></a> for interactive debugging via directly editing the source code.</li>
 </ul>
 </div>
-<div id="improvements-3" class="section level3">
+<div id="improvements-4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-3" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-4" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>Refactored <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. The package now only depends on <a href="https://rlang.r-lib.org">rlang</a>.</p></li>

@@ -134,13 +134,13 @@ ggtrace(
 jitter_plot
 #> Triggering trace on PositionJitter$compute_layer 
 #> 
-#>  [Step 1]> "" 
+#>  [Step 1]> data 
 #> 
-#>  [Step 1]> "" 
+#>  [Step 1]> params 
 #> 
-#>  [Step 9]> "" 
+#>  [Step 9]> dummy_data 
 #> 
-#>  [Step 12]> "" 
+#>  [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
 #> 
 #> Call `last_ggtrace()` to get the trace dump.
 #> Untracing PositionJitter$compute_layer
@@ -162,29 +162,29 @@ jitter_tracedump[[2]]
 #> [1] 2021
 
 lapply(jitter_tracedump[-2], nrow)
-#> $`[Step 1]> ""`
+#> $`[Step 1]> data`
 #> [1] 1000
 #> 
-#> $`[Step 9]> ""`
+#> $`[Step 9]> dummy_data`
 #> [1] 1000
 #> 
-#> $`[Step 12]> ""`
+#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
 #> [1] 1000
 
 lapply(jitter_tracedump[-2], head, 3)
-#> $`[Step 1]> ""`
+#> $`[Step 1]> data`
 #>   x    y PANEL group
 #> 1 5 61.5     1     5
 #> 2 4 59.8     1     4
 #> 3 2 56.9     1     2
 #> 
-#> $`[Step 9]> ""`
+#> $`[Step 9]> dummy_data`
 #>   x    y
 #> 1 5 61.5
 #> 2 4 59.8
 #> 3 2 56.9
 #> 
-#> $`[Step 12]> ""`
+#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
 #>          x        y PANEL group
 #> 1 4.980507 61.50684     1     5
 #> 2 4.113512 59.77872     1     4
@@ -628,11 +628,11 @@ ggtrace(
 sina_plot
 #> Triggering trace on StatSina$compute_group 
 #> 
-#>  [Step 1]> "" 
+#>  [Step 1]> data 
 #> 
-#>  [Step 1]> "" 
+#>  [Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2) 
 #> 
-#>  [Step 8]> "" 
+#>  [Step 8]> data 
 #> 
 #> Call `last_ggtrace()` to get the trace dump.
 #> Untracing StatSina$compute_group
@@ -658,19 +658,19 @@ sina_tracedump <- last_ggtrace()
 
 # StatSina did calculations on the modified data in the last `ggtrace()`
 lapply(sina_tracedump, head, 3)
-#> $`[Step 1]> ""`
+#> $`[Step 1]> data`
 #>   x    y PANEL group
 #> 1 1 61.5     1     1
 #> 2 1 62.8     1     1
 #> 3 1 62.2     1     1
 #> 
-#> $`[Step 1]> ""`
+#> $`[Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2)`
 #>     x    y PANEL group
 #> 1 0.8 62.5     1     1
 #> 2 0.8 63.8     1     1
 #> 3 0.8 63.2     1     1
 #> 
-#> $`[Step 8]> ""`
+#> $`[Step 8]> data`
 #>     x    y PANEL group   density    scaled width  n
 #> 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50
 #> 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50

@@ -1,8 +1,10 @@
 # ggtrace (development version)
 
+# ggtrace 0.3.2
+
 ### **Improvements**
 
-- `ggtrace(trace_exprs = )` can now take a named list of expressions. It will use the names of the named elements for printint and storing. 
+- `trace_exprs` argument can now take a named list of expressions 
 
 - Improved documentation for `ggbody()`
 
@@ -10,7 +12,7 @@
 
 ### **Bug fixes**
 
-- Correctly renders message about creating a persistence trace when `once = FALSE`
+- No longer errors on exit when creating a persistence trace with `once = FALSE`
 
 # ggtrace 0.3.1
 

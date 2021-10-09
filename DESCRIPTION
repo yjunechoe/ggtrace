@@ -29,5 +29,6 @@ Imports:
 Suggests: 
     ggplot2 (>= 3.3.0),
     rmarkdown,
-    knitr
+    knitr,
+    pkgdown
 VignetteBuilder: knitr
