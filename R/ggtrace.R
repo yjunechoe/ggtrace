@@ -115,9 +115,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   obj_name <- method_split[["obj_name"]]
   formatted_call <- method_split[["formatted_call"]]
 
-  # Initialize trace dump for caching output
+  ## Number of steps
   n_steps <- length(trace_steps)
-  trace_dump <- vector("list", n_steps)
 
   ## Ensure `trace_exprs` is a list of expressions
   if (rlang::is_missing(trace_exprs)) {
@@ -131,17 +130,26 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   if (any(trace_steps <= 0 | trace_steps > length(method_body))) { rlang::abort("`trace_steps` out of range") }
 
   ## Substitute `~step` keyword
-  trace_exprs <- lapply(seq_len(n_steps), function(x) {
-    if (rlang::as_label(trace_exprs[[x]]) == "~step") {
-      method_body[[trace_steps[x]]]
-    } else {
-      trace_exprs[[x]]
+  lapply(seq_len(n_steps), function(i) {
+    if (rlang::as_label(trace_exprs[[i]]) == "~step") {
+      trace_exprs[[i]] <- method_body[[trace_steps[i]]]
     }
   })
 
-  # Setup printing to console
+  # Initialize trace dump for caching output
+  trace_dump <- vector("list", n_steps)
+  ## Make names from expressions
   names(trace_dump) <- lapply(seq_len(n_steps), function(i) {
-    paste0("[Step ", trace_steps[[i]], "]> ", paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n"))
+    paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n")
+  })
+  ## Use names from named elements
+  names(trace_dump) <- lapply(seq_len(n_steps), function(i) {
+    if (is.null(names(trace_exprs[i]))) {
+      trace_name <- names(trace_dump[i])
+    } else {
+      trace_name <- paste0('`', names(trace_exprs[i]), '`')
+    }
+    paste0("[Step ", trace_steps[i], "]> ", trace_name)
   })
 
   # For incrementally storing results to `trace_dump`
