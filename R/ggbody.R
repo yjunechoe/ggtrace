@@ -12,15 +12,15 @@
 #' @param inherit Whether the method should be returned from its closest parent.
 #'   Defaults to `FALSE`.
 #'
-#' @details For interactive uses, using the short form is recommended. For
-#'   programmatic uses, `as.list(body(get("method", ggproto)))` is recommended.
-#'
-#'   The `get("method", ggproto)` syntax is the long form of `ggproto$method` with
-#'   subtle but important differences;
+#' @details `ggbody()` calls `as.list(body(get("method", ggproto)))` under the hood.
+#'   The `get("method", ggproto)` syntax is the long form of `ggproto$method` which retrieves
+#'   the actual function body. This is a subtle but important difference for inspecting ggproto methods.
 #'
 #'   - For example, this works: `debugonce(get("compute_group", StatCount))`
 #'
 #'   - But this fails to insert a break point: `debugonce(StatCount$compute_group)`
+#'
+#'   `ggbody()` was designed so that you do not have to worry about this distinction.
 #'
 #' @export
 #' @examples

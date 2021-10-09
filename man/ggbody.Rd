@@ -22,15 +22,15 @@ Defaults to \code{FALSE}.}
 Retrieve the body of a ggproto method as a list
 }
 \details{
-For interactive uses, using the short form is recommended. For
-programmatic uses, \code{as.list(body(get("method", ggproto)))} is recommended.
-
-The \code{get("method", ggproto)} syntax is the long form of \code{ggproto$method} with
-subtle but important differences;
+\code{ggbody()} calls \code{as.list(body(get("method", ggproto)))} under the hood.
+The \code{get("method", ggproto)} syntax is the long form of \code{ggproto$method} which retrieves
+the actual function body. This is a subtle but important difference for inspecting ggproto methods.
 \itemize{
 \item For example, this works: \code{debugonce(get("compute_group", StatCount))}
 \item But this fails to insert a break point: \code{debugonce(StatCount$compute_group)}
 }
+
+\code{ggbody()} was designed so that you do not have to worry about this distinction.
 }
 \examples{
 \dontrun{

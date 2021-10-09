@@ -147,7 +147,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
     if (is.null(names(trace_exprs[i]))) {
       trace_name <- names(trace_dump[i])
     } else {
-      trace_name <- paste0('`', names(trace_exprs[i]), '`')
+      trace_name <- paste0('"', names(trace_exprs[i]), '"')
     }
     paste0("[Step ", trace_steps[i], "]> ", trace_name)
   })
