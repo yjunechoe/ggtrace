@@ -44,7 +44,7 @@ gguntrace <- function(method, ...) {
   tryCatch(
     expr = {
       suppressMessages(untrace(what = method_name, where = obj))
-      message(paste(formatted_call, " no longer being traced."))
+      message(formatted_call, " no longer being traced.")
     },
     error = function(e) {
       if (!grepl("^\\{ +.doTrace\\(", deparse1(method_body[[length(method_body)]]))) {

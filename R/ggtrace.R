@@ -16,36 +16,38 @@
 #'
 #' @details `ggtrace()` is a wrapper around `base::trace()` which is called on the ggproto method.
 #'  It calls `base::untrace()` on itself on exit by default, to make its effect ephemeral (like `base::debugonce()`).
-#'  A major feature is the ability to pass multiple positions and expressions to `trace_steps` and `trace_exprs`.
-#'  It is recommended to consult the output of `ggbody()` when deciding which expressions to evaluate at which steps.
+#'  A major feature is the ability to pass multiple positions and expressions to `trace_steps` and `trace_exprs` to
+#'  inspect, debug, and modify the run time environment of ggproto methods. It is recommended to consult the output
+#'  of `ggbody()` when deciding which expressions to evaluate at which steps.
 #'
 #'  The output of the expressions passed to `trace_exprs` is printed while tracing takes place. The
 #'  list of outputs from the last `ggtrace()` can be returned for further inspection with `last_ggtrace()`.
 #'
 #' @section Tips & Tricks:
-#'  - If the intent is to, run complex calculations, it is recommended to use `ggtrace()` to simply return the method's
-#'    environment by passing `quote(environment())` to `trace_exprs`. The returned environment is the method's execution
+#'  - If the intent is to run complex calculations, it is recommended to use `ggtrace()` to simply return the method's
+#'    run time environment with `trace_exprs = quote(environment())`. The returned environment is the method's execution
 #'    environment which also contextualizes the `self` object in addition to making all local variables available. This
-#'    allows more complex explorations outside of the debugger, and is recommended for safety reasons.
-#'  - To modify the behavior of a method as it runs, you can pass in expressions that make assignments inside the
-#'    method environment. for example, `trace_steps = c(1, 10)` with `rlang::exprs(a <- 5, a)` will first assign a new
-#'    variable `a` at step 1, and then return its value `5` at step 10. This can also be used to modify important
-#'    variables like `quote(data <- <...>)`. Note that this doesn't edit the source code (for that, see [ggedit()]).
+#'    allows for more complex explorations outside of the debugger, and is also recommended for safety reasons.
+#'  - To modify the behavior of a method as it runs, you can pass in an expression that make assignments. For example,
+#'    `trace_steps = c(1, 10)` with `rlang::exprs(a <- 5, a)` will first assign a new variable `a` at step 1, and then
+#'    return its value `5` at step 10. This can also be used to modify important variables like `quote(data <- <expr>)`.
+#'    Note that this only in effect while the method is being traced. For making any arbitrary modifications to the code,
+#'    see [ggedit()]).
 #'
 #' @section Gotchas:
 #'  - If you wrap a ggplot in `invisible()` to silence `ggtrace()`, the plot will not build, which also means that
-#'    the tracing is not triggered. The print/plot method of ggplot is what triggers the evaluation of the plot
-#'    code. It is recommended to allow `ggtrace()` to print messages, but if you'd really like to silence
+#'    the tracing is not triggered. This is because the print/plot method of ggplot is what triggers the evaluation
+#'    of the plot code. It is recommended to allow `ggtrace()` to print messages, but if you'd really like to silence
 #'    it, you can do so by wrapping the plot in `invisible(capture.output(<plot_object>))`.
 #'  - If for any reason `ggtrace(once = TRUE)` fails to untrace itself on exit, you may accidentally trigger
 #'    the tracing again. To check if a method is being traced, call `ggbody()` on it and inspect its body. If you
-#'    see `.doTrace()` scattered around the body, that's a sign the method is still being traced.
-#'  - Environments are mutable, which means that the returning `environment()` at different steps in the body
-#'    will still reference the same object. To get a snapshot of the method's environment at a particular step,
-#'    it is recommended to use `rlang::env_clone(environment())` instead.
+#'    see `.doTrace()` scattered around the body, that's a sign the method is still being traced. You can also always
+#'    `gguntrace()` any number of times without adverse consequences.
+#'  - Environments are mutable, which means that returning `environment()` at different steps in the body will still
+#'    reference the same run time environment. To get a snapshot of the method's environment at a particular step,
+#'    it is recommended to use `rlang::env_clone(environment())` instead, which makes a deep copy.
 #'      - Note that the execution environment is created anew each time the method is ran, so modifying the
-#'        environment from its previous execution will not affect future calls to the method as long as
-#'        the method is untraced (which happens by default).
+#'        environment from its previous execution will not affect future calls to the method.
 #'      - Because `trace()` wraps the method body in a special environment, it is not possible to inspect the
 #'        higher method which called it, even with something like `rlang::caller_env()`. You will traverse through
 #'        a few enclosing environments created by `trace()` which eventually ends up looping around.
@@ -188,15 +190,14 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
       },
       print = FALSE,
       exit = rlang::expr({
-        cat("\n")
+        cat("\nCall `last_ggtrace()` to get the trace dump.\n")
         if (!!once) {
           suppressMessages(untrace(!!method_name, where = !!obj))
           cat("Untracing", !!formatted_call, "\n")
         } else {
-          message(formatted_call, " has a persistent trace. Remember to ",
-            "`gguntrace(", !!formatted_call, ")`!")
+          message(!!formatted_call, " has a persistent trace.\n",
+                  "Remember to `gguntrace(", !!formatted_call, ")`!")
         }
-        cat("Call `last_ggtrace()` to get the trace dump.\n")
       })
     )
   )

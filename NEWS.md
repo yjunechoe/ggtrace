@@ -4,6 +4,10 @@
 
 - 
 
+### **Bug fixes**
+
+- Correctly renders message about creating a persistence trace when `once = FALSE`
+
 # ggtrace 0.3.1
 
 ### **Improvements**
