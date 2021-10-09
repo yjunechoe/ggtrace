@@ -11,35 +11,34 @@
 ## **Why {ggtrace}?**
 
 -   **Lightweight** ⚡
-    -   The only dependency is `{rlang}` (not even `{ggplot2}`!)
-    -   There isn’t a lot of code in the package - most of the heavy
-        lifting is done by `base::trace()`
+    -   The only dependency is `{rlang}` - not even `{ggplot2}`!
+    -   Not a lot of code - most of the heavy lifting is done by
+        `base::trace()`
 -   **User-friendly** ❤
     -   Everything happens in your local session - no need to fork a
         repo to inspect/edit the internals!
     -   Multiple expressions can be passed in for evaluation inside
         method body at specified steps
-    -   Output of evaluated expressions are available for inspection
-        outside of the debugging environment
-    -   Calls `untrace()`/`gguntrace()` on itself on exit by default,
-        for extra safety.
+    -   The output is available for inspection outside of the debugging
+        environment with `last_ggtrace()`
+    -   Calls `gguntrace()` on itself on exit by default (a wrapper
+        around `base::untrace()`)
 -   **Flexible** 🛠
     -   You can *programmatically* debug with `ggtrace()` or
         *interactively* debug with `ggedit()`
-    -   Plays nice with existing debugging tools (e.g., `browser()`).
-    -   Since `ggtrace()` doesn’t rely on interactivity or side effects,
-        it’s ideal for making targeted `{reprex}`-es
+    -   Since `ggtrace()` doesn’t rely on interactivity, it’s ideal for
+        making `{reprex}`-es
     -   Works with other object oriented systems in R (e.g., R6), not
         just ggproto!
 -   **Powerful** 💪
-    -   You can return the method’s whole environment with `ggtrace()`
-        for further inspection
+    -   You can return the method’s run time environment with
+        `ggtrace()` for further inspection
     -   You can test changes to the source code with `ggedit()`, which
         is restored upon `gguntrace()`
     -   You can insert `browser()` calls inside deep parts of the method
         body with `ggedit()`
 
-More on the 📦 pkgdown website: <https://yjunechoe.github.io/ggtrace>
+More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
 ## **Installation**
 
@@ -54,7 +53,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ``` r
-library(ggtrace) # v0.3.1
+library(ggtrace) # v0.3.2
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -135,16 +134,16 @@ ggtrace(
 jitter_plot
 #> Triggering trace on PositionJitter$compute_layer 
 #> 
-#>  [Step 1]> data 
+#>  [Step 1]> "" 
 #> 
-#>  [Step 1]> params 
+#>  [Step 1]> "" 
 #> 
-#>  [Step 9]> dummy_data 
+#>  [Step 9]> "" 
 #> 
-#>  [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
+#>  [Step 12]> "" 
 #> 
-#> Untracing PositionJitter$compute_layer 
 #> Call `last_ggtrace()` to get the trace dump.
+#> Untracing PositionJitter$compute_layer
 ```
 
 ### **Step 4. Inspect trace dump**
@@ -163,29 +162,29 @@ jitter_tracedump[[2]]
 #> [1] 2021
 
 lapply(jitter_tracedump[-2], nrow)
-#> $`[Step 1]> data`
+#> $`[Step 1]> ""`
 #> [1] 1000
 #> 
-#> $`[Step 9]> dummy_data`
+#> $`[Step 9]> ""`
 #> [1] 1000
 #> 
-#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
+#> $`[Step 12]> ""`
 #> [1] 1000
 
 lapply(jitter_tracedump[-2], head, 3)
-#> $`[Step 1]> data`
+#> $`[Step 1]> ""`
 #>   x    y PANEL group
 #> 1 5 61.5     1     5
 #> 2 4 59.8     1     4
 #> 3 2 56.9     1     2
 #> 
-#> $`[Step 9]> dummy_data`
+#> $`[Step 9]> ""`
 #>   x    y
 #> 1 5 61.5
 #> 2 4 59.8
 #> 3 2 56.9
 #> 
-#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
+#> $`[Step 12]> ""`
 #>          x        y PANEL group
 #> 1 4.980507 61.50684     1     5
 #> 2 4.113512 59.77872     1     4
@@ -199,9 +198,8 @@ lapply(jitter_tracedump[-2], head, 3)
 ``` r
 smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
   geom_point() +
-  stat_smooth()
+  stat_smooth(method = "loess", formula = y ~ x)
 smooth_plot
-#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
 <img src="man/figures/README-ex-2-setup-1.png" width="100%" />
@@ -247,14 +245,13 @@ ggtrace(
 
 # plot not printed to save space
 smooth_plot
-#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 #> Triggering trace on GeomSmooth$draw_group 
 #> 
 #>  [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
 #>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord)) 
 #> 
-#> Untracing GeomSmooth$draw_group 
 #> Call `last_ggtrace()` to get the trace dump.
+#> Untracing GeomSmooth$draw_group
 ```
 
 ### **Step 4. Inspect trace dump**
@@ -320,7 +317,6 @@ smooth_plot +
       theme(plot.background = element_rect(fill = NA, color = NA)),
     left = 0.5, bottom = 0.5, right = 0.8, top = 0.8
   )
-#> `geom_smooth()` using method = 'loess' and formula 'y ~ x'
 ```
 
 <img src="man/figures/README-ex-2-last-b-1.png" width="100%" />
@@ -421,8 +417,8 @@ boxplot_plot
 #> 
 #>  [Step 6]> environment() 
 #> 
-#> Untracing Stat$compute_panel 
 #> Call `last_ggtrace()` to get the trace dump.
+#> Untracing Stat$compute_panel
 ```
 
 ### **Step 4. Inspect trace dump**
@@ -630,20 +626,19 @@ ggtrace(
 #> StatSina$compute_group now being traced
 
 sina_plot
+#> Triggering trace on StatSina$compute_group 
+#> 
+#>  [Step 1]> "" 
+#> 
+#>  [Step 1]> "" 
+#> 
+#>  [Step 8]> "" 
+#> 
+#> Call `last_ggtrace()` to get the trace dump.
+#> Untracing StatSina$compute_group
 ```
 
 <img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />
-
-    #> Triggering trace on StatSina$compute_group 
-    #> 
-    #>  [Step 1]> data 
-    #> 
-    #>  [Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2) 
-    #> 
-    #>  [Step 8]> data 
-    #> 
-    #> Untracing StatSina$compute_group 
-    #> Call `last_ggtrace()` to get the trace dump.
 
 This effect is ephemeral with the `once = TRUE` default in `ggtrace()`,
 meaning that only this last plot is built with the modifications.
@@ -663,19 +658,19 @@ sina_tracedump <- last_ggtrace()
 
 # StatSina did calculations on the modified data in the last `ggtrace()`
 lapply(sina_tracedump, head, 3)
-#> $`[Step 1]> data`
+#> $`[Step 1]> ""`
 #>   x    y PANEL group
 #> 1 1 61.5     1     1
 #> 2 1 62.8     1     1
 #> 3 1 62.2     1     1
 #> 
-#> $`[Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2)`
+#> $`[Step 1]> ""`
 #>     x    y PANEL group
 #> 1 0.8 62.5     1     1
 #> 2 0.8 63.8     1     1
 #> 3 0.8 63.2     1     1
 #> 
-#> $`[Step 8]> data`
+#> $`[Step 8]> ""`
 #>     x    y PANEL group   density    scaled width  n
 #> 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50
 #> 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50

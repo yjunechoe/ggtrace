@@ -21,7 +21,7 @@ This may be specified using any of the following forms:\preformatted{- `ggproto$
 Interactively edit the source code of a ggproto method
 }
 \details{
-Like \code{base::trace()}, the edit is in place until \code{untrace()} is called.
+Like \code{base::trace()}, the edit is in effect until \code{untrace()} is called.
 To \code{untrace()} a ggproto method, the syntax is \code{untrace(what = "method", where = obj)}
 }
 \examples{

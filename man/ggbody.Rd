@@ -15,8 +15,11 @@ This may be specified using any of the following forms:\preformatted{- `ggproto$
 - `namespace:::ggproto$method`
 }}
 
-\item{inherit}{Whether the method should be returned from its closest parent.
-Defaults to \code{FALSE}.}
+\item{inherit}{Whether the method should be returned from its closest parent. Defaults to \code{FALSE}.
+If \code{TRUE}, returns the parent's method and the corresponding \code{ggbody()} code as a message.}
+}
+\value{
+A list
 }
 \description{
 Retrieve the body of a ggproto method as a list

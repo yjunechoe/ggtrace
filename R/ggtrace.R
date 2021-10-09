@@ -47,10 +47,10 @@
 #'    reference the same run time environment. To get a snapshot of the method's environment at a particular step,
 #'    it is recommended to use `rlang::env_clone(environment())` instead, which makes a deep copy.
 #'      - Note that the execution environment is created anew each time the method is ran, so modifying the
-#'        environment from its previous execution will not affect future calls to the method.
-#'      - Because `trace()` wraps the method body in a special environment, it is not possible to inspect the
+#'        environment from its previous execution will not affect future calls to the method, even with `once = FALSE`.
+#'      - Because `base::trace()` wraps the method body in a special environment, it is not possible to inspect the
 #'        higher method which called it, even with something like `rlang::caller_env()`. You will traverse through
-#'        a few enclosing environments created by `trace()` which eventually ends up looping around.
+#'        a few enclosing environments created by `base::trace()` which eventually ends up looping around.
 #'
 #' @seealso [last_ggtrace()], [gguntrace()]
 #'
@@ -132,11 +132,11 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   if (any(trace_steps <= 0 | trace_steps > length(method_body))) { rlang::abort("`trace_steps` out of range") }
 
   ## Substitute `~step` keyword
-  lapply(seq_len(n_steps), function(i) {
+  for (i in seq_len(n_steps)) {
     if (rlang::as_label(trace_exprs[[i]]) == "~step") {
       trace_exprs[[i]] <- method_body[[trace_steps[i]]]
     }
-  })
+  }
 
   # Initialize trace dump for caching output
   trace_dump <- vector("list", n_steps)
@@ -146,7 +146,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   })
   ## Use names from named elements
   names(trace_dump) <- lapply(seq_len(n_steps), function(i) {
-    if (is.null(names(trace_exprs[i]))) {
+    if (names(trace_exprs[i]) == "") {
       trace_name <- names(trace_dump[i])
     } else {
       trace_name <- paste0('"', names(trace_exprs[i]), '"')
@@ -193,7 +193,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
         cat("\nCall `last_ggtrace()` to get the trace dump.\n")
         if (!!once) {
           suppressMessages(untrace(!!method_name, where = !!obj))
-          cat("Untracing", !!formatted_call, "\n")
+          message("Untracing ", !!formatted_call)
         } else {
           message(!!formatted_call, " has a persistent trace.\n",
                   "Remember to `gguntrace(", !!formatted_call, ")`!")

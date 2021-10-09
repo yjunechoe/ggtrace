@@ -2,7 +2,11 @@
 
 ### **Improvements**
 
-- 
+- `ggtrace(trace_exprs = )` can now take a named list of expressions. It will use the names of the named elements for printint and storing. 
+
+- Improved documentation for `ggbody()`
+
+- More informative messages for `ggtrace()` and `gguntrace()`
 
 ### **Bug fixes**
 

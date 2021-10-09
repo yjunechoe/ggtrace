@@ -9,8 +9,8 @@
 #'
 #'     - `namespace:::ggproto$method`
 #'
-#' @param inherit Whether the method should be returned from its closest parent.
-#'   Defaults to `FALSE`.
+#' @param inherit Whether the method should be returned from its closest parent. Defaults to `FALSE`.
+#'   If `TRUE`, returns the parent's method and the corresponding `ggbody()` code as a message.
 #'
 #' @details `ggbody()` calls `as.list(body(get("method", ggproto)))` under the hood.
 #'   The `get("method", ggproto)` syntax is the long form of `ggproto$method` which retrieves
@@ -22,6 +22,7 @@
 #'
 #'   `ggbody()` was designed so that you do not have to worry about this distinction.
 #'
+#' @return A list
 #' @export
 #' @examples
 #' \dontrun{

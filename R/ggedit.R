@@ -3,7 +3,7 @@
 #' @inheritParams ggbody
 #' @inheritParams gguntrace
 #'
-#' @details Like `base::trace()`, the edit is in place until `untrace()` is called.
+#' @details Like `base::trace()`, the edit is in effect until `untrace()` is called.
 #'   To `untrace()` a ggproto method, the syntax is `untrace(what = "method", where = obj)`
 #'
 #' @seealso [gguntrace()]
