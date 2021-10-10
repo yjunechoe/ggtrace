@@ -75,6 +75,8 @@
 #'   }
 #' )
 #'
+#' as.list(body(get("compute_group", StatDensityCommon)))
+#'
 #' ggbody(StatDensityCommon$compute_group)
 #'
 #' }
