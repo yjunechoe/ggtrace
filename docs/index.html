@@ -121,9 +121,9 @@
 <li>
 <strong>User-friendly</strong> ❤
 <ul>
-<li>Everything happens in your local session - no need to fork a repo to inspect/edit the internals!</li>
+<li>Everything happens in your local session - no need to fork a repo to inspect the internals!</li>
 <li>Multiple expressions can be passed in for evaluation inside method body at specified steps</li>
-<li>The output is available for inspection outside of the debugging environment with <code><a href="reference/last_ggtrace.html">last_ggtrace()</a></code>
+<li>The output is available for inspection outside of the debugging context with <code><a href="reference/last_ggtrace.html">last_ggtrace()</a></code>
 </li>
 <li>Calls <code><a href="reference/gguntrace.html">gguntrace()</a></code> on itself on exit by default (a wrapper around <code><a href="https://rdrr.io/r/base/trace.html">base::untrace()</a></code>)</li>
 </ul>
@@ -133,17 +133,19 @@
 <ul>
 <li>You can <em>programmatically</em> debug with <code><a href="reference/ggtrace.html">ggtrace()</a></code> or <em>interactively</em> debug with <code><a href="reference/ggedit.html">ggedit()</a></code>
 </li>
-<li>Since <code><a href="reference/ggtrace.html">ggtrace()</a></code> doesn’t rely on interactivity, it’s ideal for making <a href="https://reprex.tidyverse.org">reprex</a>-es</li>
+<li>Since <code><a href="reference/ggtrace.html">ggtrace()</a></code> doesn’t rely on interactivity, it can be used in <a href="https://reprex.tidyverse.org">reprex</a>-es</li>
 <li>Works with other object oriented systems in R (e.g., R6), not just ggproto!</li>
 </ul>
 </li>
 <li>
 <strong>Powerful</strong> 💪
 <ul>
-<li>You can return the method’s run time environment with <code><a href="reference/ggtrace.html">ggtrace()</a></code> for further inspection</li>
-<li>You can test changes to the source code with <code><a href="reference/ggedit.html">ggedit()</a></code>, which is restored upon <code><a href="reference/gguntrace.html">gguntrace()</a></code>
+<li>Return the method’s runtime environment with <code><a href="reference/ggtrace.html">ggtrace()</a></code> for further inspection</li>
+<li>Modify the method’s runtime environment by passing assignment expressions to <code><a href="reference/ggtrace.html">ggtrace()</a></code>
 </li>
-<li>You can insert <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> calls inside deep parts of the method body with <code><a href="reference/ggedit.html">ggedit()</a></code>
+<li>Change the source code with <code><a href="reference/ggedit.html">ggedit()</a></code>, which is restored upon <code><a href="reference/gguntrace.html">gguntrace()</a></code>
+</li>
+<li>Insert <code><a href="https://rdrr.io/r/base/browser.html">browser()</a></code> and <code><a href="https://rdrr.io/r/base/debug.html">debug()</a></code> calls deep inside the method body with <code><a href="reference/ggedit.html">ggedit()</a></code>
 </li>
 </ul>
 </li>

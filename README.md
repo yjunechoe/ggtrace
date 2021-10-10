@@ -16,26 +16,28 @@
         `base::trace()`
 -   **User-friendly** ❤
     -   Everything happens in your local session - no need to fork a
-        repo to inspect/edit the internals!
+        repo to inspect the internals!
     -   Multiple expressions can be passed in for evaluation inside
         method body at specified steps
     -   The output is available for inspection outside of the debugging
-        environment with `last_ggtrace()`
+        context with `last_ggtrace()`
     -   Calls `gguntrace()` on itself on exit by default (a wrapper
         around `base::untrace()`)
 -   **Flexible** 🛠
     -   You can *programmatically* debug with `ggtrace()` or
         *interactively* debug with `ggedit()`
-    -   Since `ggtrace()` doesn’t rely on interactivity, it’s ideal for
-        making `{reprex}`-es
+    -   Since `ggtrace()` doesn’t rely on interactivity, it can be used
+        in `{reprex}`-es
     -   Works with other object oriented systems in R (e.g., R6), not
         just ggproto!
 -   **Powerful** 💪
-    -   You can return the method’s run time environment with
-        `ggtrace()` for further inspection
-    -   You can test changes to the source code with `ggedit()`, which
-        is restored upon `gguntrace()`
-    -   You can insert `browser()` calls inside deep parts of the method
+    -   Return the method’s runtime environment with `ggtrace()` for
+        further inspection
+    -   Modify the method’s runtime environment by passing assignment
+        expressions to `ggtrace()`
+    -   Change the source code with `ggedit()`, which is restored upon
+        `gguntrace()`
+    -   Insert `browser()` and `debug()` calls deep inside the method
         body with `ggedit()`
 
 More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
