@@ -4,7 +4,7 @@
 
 ### **Improvements**
 
-- `trace_exprs` argument can now take a named list of expressions 
+- `trace_exprs` argument can now take a named list of expressions (#21)
 
 - Improved documentation for `ggbody()`
 
