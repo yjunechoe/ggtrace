@@ -12,15 +12,15 @@ template:
 
 reference:
 - title: Trace and edit
-  desc: Programmatically debug ggproto methods with trace
+  desc: Programmatically inspect, debug, and manipulate ggproto methods
   contents:
   - ggtrace
   - ggedit
   - ggbody
   - gguntrace
 
-- title: Cache and inspect
-  desc: Track evaluated expressions and traced methods
+- title: Interact with trace dumps
+  desc: Retrieve the output of evaluated expressions from triggered traces
   contents:
   - last_ggtrace
 

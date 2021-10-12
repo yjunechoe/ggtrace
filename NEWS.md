@@ -1,5 +1,23 @@
 # ggtrace (development version)
 
+# ggtrace 0.3.3
+
+### **New features**
+
+- New function `global_ggtrace()` which returns accumulated tracedumps from `ggtrace()`. This is useful in conjunction with `ggtrace(once = FALSE)` for tracing a method that you expect will be called multiple times (ex: `Stat$compute_group` gets triggered the same number of times as the number of groups in a panel).
+
+- New function `clear_global_ggtrace()` which clears `global_ggtrace()` by setting it to `NULL`.
+
+### **Improvements**
+
+- Functions now pass around quosures instead of expressions (#29)
+
+- Testing setup (#28)
+
+### **Bug Fixes**
+
+- Fixed a bug where the number of expressions passed to `trace_exprs` were allowed to be different from the number of `trace_steps`, causing `ggtrace()` to silently fail. This now throws an error.
+
 # ggtrace 0.3.2
 
 ### **Improvements**
@@ -84,7 +102,6 @@
 - `trace_exprs` argument of `ggtrace()` is now optional. If not provided, defaults to `~step` (#13)
 
 - You can now tell `ggbody()` to (recursively) search for the method from its parents with `inherit = TRUE` (#12) 
-
 ### **Improvements**
 
 - Documentation for some of the functions now contain a **Gotchas** section for explanations of / solutions to common problems (#10)

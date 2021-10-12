@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Retrieve the trace dump created by the last ggtrace() — last_ggtrace • ggtrace</title>
+<title>Retrieve the trace dump created by ggtrace() — last_ggtrace • ggtrace</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Retrieve the trace dump created by the last ggtrace() — last_ggtrace" />
-<meta property="og:description" content="Retrieve the trace dump created by the last ggtrace()" />
+<meta property="og:title" content="Retrieve the trace dump created by ggtrace() — last_ggtrace" />
+<meta property="og:description" content="Retrieve the trace dump created by ggtrace()" />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.3</span>
       </span>
     </div>
 
@@ -136,28 +136,42 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Retrieve the trace dump created by the last <code>ggtrace()</code></h1>
+    <h1>Retrieve the trace dump created by <code>ggtrace()</code></h1>
     <small class="dont-index">Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/R/last_ggtrace.R'><code>R/last_ggtrace.R</code></a></small>
     <div class="hidden name"><code>last_ggtrace.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieve the trace dump created by the last <code><a href='ggtrace.html'>ggtrace()</a></code></p>
+    <p>Retrieve the trace dump created by <code><a href='ggtrace.html'>ggtrace()</a></code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span></pre>
 
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>last_ggtrace()</code> retrieves the last trace dump created by <code><a href='ggtrace.html'>ggtrace()</a></code> - i.e., from the last time
+the trace has been triggered. <code>global_ggtrace()</code> is a collection of trace dumps tracked across
+multiple traces, and is recommended for with <code><a href='ggtrace.html'>ggtrace(once = FALSE)</a></code> where you expect a trace to
+be separately triggered multiple times (for example, when you are tracing a compute or draw method
+for group and there are multiple groups). <code>clear_global_ggtrace()</code> sets the value of the global trace
+dump to <code>NULL</code>.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='ggtrace.html'>ggtrace()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='ggtrace.html'>ggtrace()</a></code>, <code><a href='gguntrace.html'>gguntrace()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
 <span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+
+<span class='co'># Inspect last trace dump</span>
 
 <span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>StatSmooth</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
@@ -351,7 +365,84 @@
 #&gt; 78 33.30506  30.00756  -8.732544  68.74767 18.969119
 #&gt; 79 33.60253  27.38100 -12.086265  66.84826 19.325171
 #&gt; 80 33.90000  24.75443 -15.442579  64.95145 19.682493
-#&gt; </div><div class='input'><span class='co'># }</span>
+#&gt; </div><div class='input'>
+
+<span class='co'># Inspect an accumulation of trace dumps</span>
+
+<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span>
+  <span class='va'>GeomBoxplot</span><span class='op'>$</span><span class='va'>draw_group</span>,
+  trace_steps <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
+  once <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  .print <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group now being traced</span></div><div class='input'>
+<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>class</span>, <span class='va'>hwy</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_boxplot.html'>geom_boxplot</a></span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; Triggering trace on GeomBoxplot$draw_group 
+#&gt; 
+#&gt;  [Step 10]&gt; ggname("geom_boxplot", grobTree(outliers_grob, GeomSegment$draw_panel(whiskers,
+#&gt;    panel_params, coord), GeomCrossbar$draw_panel(box, fatten = fatten,
+#&gt;    panel_params, coord, flipped_aes = flipped_aes))) 
+#&gt; 
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group has a persistent trace.</span>
+#&gt; <span class='message'>Remember to `gguntrace(GeomBoxplot$draw_group)`!</span></div><div class='output co'>#&gt; Triggering trace on GeomBoxplot$draw_group 
+#&gt; 
+#&gt;  [Step 10]&gt; ggname("geom_boxplot", grobTree(outliers_grob, GeomSegment$draw_panel(whiskers,
+#&gt;    panel_params, coord), GeomCrossbar$draw_panel(box, fatten = fatten,
+#&gt;    panel_params, coord, flipped_aes = flipped_aes))) 
+#&gt; 
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group has a persistent trace.</span>
+#&gt; <span class='message'>Remember to `gguntrace(GeomBoxplot$draw_group)`!</span></div><div class='output co'>#&gt; Triggering trace on GeomBoxplot$draw_group 
+#&gt; 
+#&gt;  [Step 10]&gt; ggname("geom_boxplot", grobTree(outliers_grob, GeomSegment$draw_panel(whiskers,
+#&gt;    panel_params, coord), GeomCrossbar$draw_panel(box, fatten = fatten,
+#&gt;    panel_params, coord, flipped_aes = flipped_aes))) 
+#&gt; 
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group has a persistent trace.</span>
+#&gt; <span class='message'>Remember to `gguntrace(GeomBoxplot$draw_group)`!</span></div><div class='output co'>#&gt; Triggering trace on GeomBoxplot$draw_group 
+#&gt; 
+#&gt;  [Step 10]&gt; ggname("geom_boxplot", grobTree(outliers_grob, GeomSegment$draw_panel(whiskers,
+#&gt;    panel_params, coord), GeomCrossbar$draw_panel(box, fatten = fatten,
+#&gt;    panel_params, coord, flipped_aes = flipped_aes))) 
+#&gt; 
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group has a persistent trace.</span>
+#&gt; <span class='message'>Remember to `gguntrace(GeomBoxplot$draw_group)`!</span></div><div class='output co'>#&gt; Triggering trace on GeomBoxplot$draw_group 
+#&gt; 
+#&gt;  [Step 10]&gt; ggname("geom_boxplot", grobTree(outliers_grob, GeomSegment$draw_panel(whiskers,
+#&gt;    panel_params, coord), GeomCrossbar$draw_panel(box, fatten = fatten,
+#&gt;    panel_params, coord, flipped_aes = flipped_aes))) 
+#&gt; 
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group has a persistent trace.</span>
+#&gt; <span class='message'>Remember to `gguntrace(GeomBoxplot$draw_group)`!</span></div><div class='output co'>#&gt; Triggering trace on GeomBoxplot$draw_group 
+#&gt; 
+#&gt;  [Step 10]&gt; ggname("geom_boxplot", grobTree(outliers_grob, GeomSegment$draw_panel(whiskers,
+#&gt;    panel_params, coord), GeomCrossbar$draw_panel(box, fatten = fatten,
+#&gt;    panel_params, coord, flipped_aes = flipped_aes))) 
+#&gt; 
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group has a persistent trace.</span>
+#&gt; <span class='message'>Remember to `gguntrace(GeomBoxplot$draw_group)`!</span></div><div class='output co'>#&gt; Triggering trace on GeomBoxplot$draw_group 
+#&gt; 
+#&gt;  [Step 10]&gt; ggname("geom_boxplot", grobTree(outliers_grob, GeomSegment$draw_panel(whiskers,
+#&gt;    panel_params, coord), GeomCrossbar$draw_panel(box, fatten = fatten,
+#&gt;    panel_params, coord, flipped_aes = flipped_aes))) 
+#&gt; 
+#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group has a persistent trace.</span>
+#&gt; <span class='message'>Remember to `gguntrace(GeomBoxplot$draw_group)`!</span></div><div class='img'><img src='last_ggtrace-3.png' alt='' width='1094' height='676' /></div><div class='input'>
+<span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>GeomBoxplot</span><span class='op'>$</span><span class='va'>draw_group</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group no longer being traced.</span></div><div class='input'>
+<span class='va'>boxplot_group_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'>
+<span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>boxplot_group_tracedump</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] 7</div><div class='input'><span class='va'>boxplot_group_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span>
+  <span class='va'>boxplot_group_tracedump</span>,
+  recursive <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  use.names <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span>
+
+<span class='fu'>patchwork</span><span class='fu'>::</span><span class='fu'><a href='https://patchwork.data-imaginist.com/reference/wrap_plots.html'>wrap_plots</a></span><span class='op'>(</span><span class='va'>boxplot_group_tracedump</span>, nrow <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='img'><img src='last_ggtrace-4.png' alt='' width='1094' height='676' /></div><div class='input'>
+<span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
