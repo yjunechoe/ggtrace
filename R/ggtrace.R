@@ -128,7 +128,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   }
 
   ## Ensure `trace_exprs` is the same length as `trace_steps`
-  if (length(trace_steps) != n_steps) { rlang::abort("Length mismatch between `trace_steps` and `trace_exprs`") }
+  if (length(trace_exprs) != n_steps) { rlang::abort("Length mismatch between `trace_steps` and `trace_exprs`") }
 
   ## Ensure trace_steps is within bounds
   trace_steps[trace_steps < 0] <- 1 + length(method_body) + trace_steps[trace_steps < 0]
