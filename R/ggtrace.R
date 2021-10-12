@@ -127,6 +127,9 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
     trace_exprs <- rep(list(trace_exprs), n_steps)
   }
 
+  ## Ensure `trace_exprs` is the same length as `trace_steps`
+  if (length(trace_steps) != n_steps) { rlang::abort("Length mismatch between `trace_steps` and `trace_exprs`") }
+
   ## Ensure trace_steps is within bounds
   trace_steps[trace_steps < 0] <- 1 + length(method_body) + trace_steps[trace_steps < 0]
   if (any(trace_steps <= 0 | trace_steps > length(method_body))) { rlang::abort("`trace_steps` out of range") }
@@ -145,7 +148,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
     paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n")
   })
   ## Use names from named elements
-  names(trace_dump) <- lapply(seq_len(n_steps), function(i) {
+  trace_msgs <- lapply(seq_len(n_steps), function(i) {
     if (is.null(names(trace_exprs[i])) || names(trace_exprs[i]) == "") {
       trace_name <- names(trace_dump[i])
     } else {
@@ -154,8 +157,17 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
     paste0("[Step ", trace_steps[i], "]> ", trace_name)
   })
 
-  # For incrementally storing results to `trace_dump`
+  ## Ensure no duplicates
+  if (any(duplicated(trace_msgs))) {
+    rlang::abort(paste0(
+      "Duplicate names or expression evaluated at the same step.\n",
+      "Please make all names and/or step-expression pairs are unique."
+    ))
+  }
+
+  # Setup for the trace dump
   trace_idx <- 1
+  names(trace_dump) <- trace_msgs
 
   suppressMessages(
     trace(

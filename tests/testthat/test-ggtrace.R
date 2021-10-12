@@ -2,7 +2,7 @@ library(ggplot2)
 
 test_that("inspection workflow works #1 (Position)", {
 
-  ggtrace::set_last_ggtrace(NULL)
+  ggtrace:::set_last_ggtrace(NULL)
   expect_null(last_ggtrace())
 
   jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -43,7 +43,7 @@ test_that("inspection workflow works #1 (Position)", {
 
 test_that("inspection workflow works #2 (Geom)", {
 
-  ggtrace::set_last_ggtrace(NULL)
+  ggtrace:::set_last_ggtrace(NULL)
   expect_null(last_ggtrace())
 
   smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
@@ -76,7 +76,7 @@ test_that("inspection workflow works #2 (Geom)", {
 
 test_that("environment properties are as expected", {
 
-  ggtrace::set_last_ggtrace(NULL)
+  ggtrace:::set_last_ggtrace(NULL)
   expect_null(last_ggtrace())
 
   boxplot_plot <- ggplot(diamonds[1:500,], aes(cut, depth)) +
