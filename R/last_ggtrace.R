@@ -53,7 +53,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
 #'
-#' last_ggtrace()
+#' head(last_ggtrace()[[1]])
 #'
 #'
 #' # Inspect an accumulation of trace dumps
@@ -63,7 +63,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'   GeomBoxplot$draw_group,
 #'   trace_steps = -1,
 #'   once = FALSE,
-#'   print_output = FALSE
+#'   verbose = FALSE
 #' )
 #'
 #' ggplot(mpg, aes(class, hwy)) + geom_boxplot()

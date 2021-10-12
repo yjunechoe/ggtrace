@@ -103,7 +103,7 @@
 #'   PositionJitter$compute_layer,
 #'   trace_steps = c(1, 12),
 #'   trace_exprs = rlang::exprs(data, ~step),
-#'   print_output = FALSE
+#'   verbose = FALSE
 #' )
 #' p
 #'
