@@ -55,7 +55,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ``` r
-library(ggtrace) # v0.3.2
+library(ggtrace) # v0.3.4
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -128,24 +128,24 @@ ggtrace(
     ~step            # What does the last line evaluate to?
                      # - i.e., what is returned by the method?
   ),
-  .print = FALSE     # Don't print evaluated expressions to console
+  print_output = FALSE   # Don't print evaluated expressions to console
 )
 #> PositionJitter$compute_layer now being traced
 
 # plot not printed to save space
 jitter_plot
-#> Triggering trace on PositionJitter$compute_layer 
+#> Triggering trace on PositionJitter$compute_layer
 #> 
-#>  [Step 1]> data 
+#> [Step 1]> data
 #> 
-#>  [Step 1]> params 
+#> [Step 1]> params
 #> 
-#>  [Step 9]> dummy_data 
+#> [Step 9]> dummy_data
 #> 
-#>  [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit) 
+#> [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)
 #> 
 #> Call `last_ggtrace()` to get the trace dump.
-#> Untracing PositionJitter$compute_layer
+#> Untracing PositionJitter$compute_layer on exit.
 ```
 
 ### **Step 4. Inspect trace dump**
@@ -164,29 +164,29 @@ jitter_tracedump[[2]]
 #> [1] 2021
 
 lapply(jitter_tracedump[-2], nrow)
-#> $`[Step 1]> data`
+#> [[1]]
 #> [1] 1000
 #> 
-#> $`[Step 9]> dummy_data`
+#> [[2]]
 #> [1] 1000
 #> 
-#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
+#> [[3]]
 #> [1] 1000
 
 lapply(jitter_tracedump[-2], head, 3)
-#> $`[Step 1]> data`
+#> [[1]]
 #>   x    y PANEL group
 #> 1 5 61.5     1     5
 #> 2 4 59.8     1     4
 #> 3 2 56.9     1     2
 #> 
-#> $`[Step 9]> dummy_data`
+#> [[2]]
 #>   x    y
 #> 1 5 61.5
 #> 2 4 59.8
 #> 3 2 56.9
 #> 
-#> $`[Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)`
+#> [[3]]
 #>          x        y PANEL group
 #> 1 4.980507 61.50684     1     5
 #> 2 4.113512 59.77872     1     4
@@ -241,19 +241,19 @@ ggtrace(
   method = GeomSmooth$draw_group,
   trace_steps = -1,           # Trace the last line
   trace_exprs = quote(~step), # Grab the gList() object it returns
-  .print = FALSE
+  print_output = FALSE
 )
 #> GeomSmooth$draw_group now being traced
 
 # plot not printed to save space
 smooth_plot
-#> Triggering trace on GeomSmooth$draw_group 
+#> Triggering trace on GeomSmooth$draw_group
 #> 
-#>  [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
-#>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord)) 
+#> [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
+#>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord))
 #> 
 #> Call `last_ggtrace()` to get the trace dump.
-#> Untracing GeomSmooth$draw_group
+#> Untracing GeomSmooth$draw_group on exit.
 ```
 
 ### **Step 4. Inspect trace dump**
@@ -400,27 +400,21 @@ Let’s return the split and the combine:
 ggtrace(
   Stat$compute_panel,
   trace_steps = c(3, 6, 6),
-  trace_exprs = list(
-    quote(~step),         # What are the splits?
-    quote(~step),         # What does the combined result look like?
-    quote(environment())  # Grab the method environment
+  trace_exprs = rlang::exprs(
+    splits      = ~step,         # What are the splits?
+    combined    = ~step,         # What does the combined result look like?
+    runtime_env = environment()  # Grab the method environment
   ),
-  .print = FALSE
+  use_names = TRUE,       # Use names of `trace_exprs` for names of the tracedump (default)
+  verbose = FALSE         # Suppress all printing (except `message()`s)
+                          # This entails the effects of `print_output = FALSE`
 )
 #> Stat$compute_panel now being traced
 
 # plot not printed to save space
 boxplot_plot
-#> Triggering trace on Stat$compute_panel 
-#> 
-#>  [Step 3]> groups <- split(data, data$group) 
-#> 
-#>  [Step 6]> rbind_dfs(stats) 
-#> 
-#>  [Step 6]> environment() 
-#> 
-#> Call `last_ggtrace()` to get the trace dump.
-#> Untracing Stat$compute_panel
+#> Triggering trace on Stat$compute_panel
+#> Untracing Stat$compute_panel on exit.
 ```
 
 ### **Step 4. Inspect trace dump**
@@ -428,11 +422,14 @@ boxplot_plot
 ``` r
 boxplot_tracedump <- last_ggtrace()
 
-# The splits
+# Names are clean
+names(boxplot_tracedump)
+#> [1] "splits"      "combined"    "runtime_env"
+
+# Inspect the splits
 sapply(boxplot_tracedump[[1]], nrow)
 #>   1   2   3   4   5 
 #>  26  51 127 144 152
-
 lapply(boxplot_tracedump[[1]], head, 3)
 #> $`1`
 #>    x    y PANEL group
@@ -613,31 +610,22 @@ ggtrace(
   method = StatSina$compute_group,
   trace_steps = c(1, 1, 8),
   trace_exprs = rlang::exprs(
-    data, # 1. What does the data passed in look like at the start?
-    # 2. Modify data in-place in the method environment
-    data <- dplyr::mutate(
+    data,                      # 1. What does the data passed in look like at the start?
+    data <- dplyr::mutate(     # 2. Modify data in-place in the method environment
       data,         
-      y = y + 1,    # Shift the points up
-      x = x - .2    # Shift the points left
+      y = y + 1,                 # Shift the points up
+      x = x - .2                 # Shift the points left
     ),
-    data # 3. What do the stat transformations on the
-         #    _manipulated_ data look like at the end?
+    data                       # 3. What do the stat transformations on the
+                               #    manipulated data look like at the end?
   ),
-  .print = FALSE
+  verbose = FALSE
 )
 #> StatSina$compute_group now being traced
 
 sina_plot
-#> Triggering trace on StatSina$compute_group 
-#> 
-#>  [Step 1]> data 
-#> 
-#>  [Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2) 
-#> 
-#>  [Step 8]> data 
-#> 
-#> Call `last_ggtrace()` to get the trace dump.
-#> Untracing StatSina$compute_group
+#> Triggering trace on StatSina$compute_group
+#> Untracing StatSina$compute_group on exit.
 ```
 
 <img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />
@@ -660,19 +648,19 @@ sina_tracedump <- last_ggtrace()
 
 # StatSina did calculations on the modified data in the last `ggtrace()`
 lapply(sina_tracedump, head, 3)
-#> $`[Step 1]> data`
+#> [[1]]
 #>   x    y PANEL group
 #> 1 1 61.5     1     1
 #> 2 1 62.8     1     1
 #> 3 1 62.2     1     1
 #> 
-#> $`[Step 1]> data <- dplyr::mutate(data, y = y + 1, x = x - 0.2)`
+#> [[2]]
 #>     x    y PANEL group
 #> 1 0.8 62.5     1     1
 #> 2 0.8 63.8     1     1
 #> 3 0.8 63.2     1     1
 #> 
-#> $`[Step 8]> data`
+#> [[3]]
 #>     x    y PANEL group   density    scaled width  n
 #> 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50
 #> 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50

@@ -8,29 +8,31 @@ test_that("environment properties are as expected", {
   boxplot_plot <- ggplot(diamonds[1:500,], aes(cut, depth)) +
     geom_boxplot()
 
+  boxplot_trace_exprs <- rlang::exprs(
+    beginning = mget(ls()),
+    env_start = environment(),
+    env_deep_start = rlang::env_clone(environment()),
+    env_end = environment(),
+    env_deep_end = rlang::env_clone(environment())
+  )
+
   ggtrace(
     Stat$compute_panel,
     trace_steps = c(1, 1, 1, -1, -1),
-    trace_exprs = rlang::exprs(
-      beginning = mget(ls()),
-      env_start = environment(),
-      env_deep_start = rlang::env_clone(environment()),
-      env_end = environment(),
-      env_deep_end = rlang::env_clone(environment())
-    ),
-    .print = FALSE
+    trace_exprs = boxplot_trace_exprs,
+    print_output = FALSE
   )
 
   print(boxplot_plot)
   boxplot_tracedump <- last_ggtrace()
 
   # named tracedump
-  step_names <- c("beginning", "env_start", "env_deep_start", "env_end", "env_deep_end")
-  expect_true(
-    all(mapply(function(el, nm) {grepl(nm, el)}, names(boxplot_tracedump), step_names, USE.NAMES = FALSE))
+  expect_equal(
+    names(boxplot_tracedump),
+    names(boxplot_trace_exprs)
   )
-  names(boxplot_tracedump) <- step_names
-  # last 4 are environments
+
+    # last 4 are environments
   expect_true(
     all(vapply(boxplot_tracedump[-1], rlang::is_environment, logical(1)))
   )
@@ -71,7 +73,7 @@ test_that("environment properties are as expected", {
       quote(environment()),
       quote(stats)
     ),
-    .print = FALSE
+    print_output = FALSE
   )
 
   print(boxplot_plot)

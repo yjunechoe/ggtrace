@@ -62,7 +62,7 @@ devtools::install_github("yjunechoe/ggtrace")
 ## **Usage**
 
 ```{r setup}
-library(ggtrace) # v0.3.2
+library(ggtrace) # v0.3.4
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -96,7 +96,7 @@ ggtrace(
     ~step            # What does the last line evaluate to?
                      # - i.e., what is returned by the method?
   ),
-  .print = FALSE     # Don't print evaluated expressions to console
+  print_output = FALSE   # Don't print evaluated expressions to console
 )
 
 # plot not printed to save space
@@ -139,7 +139,7 @@ ggtrace(
   method = GeomSmooth$draw_group,
   trace_steps = -1,           # Trace the last line
   trace_exprs = quote(~step), # Grab the gList() object it returns
-  .print = FALSE
+  print_output = FALSE
 )
 
 # plot not printed to save space
@@ -238,12 +238,14 @@ Let's return the split and the combine:
 ggtrace(
   Stat$compute_panel,
   trace_steps = c(3, 6, 6),
-  trace_exprs = list(
-    quote(~step),         # What are the splits?
-    quote(~step),         # What does the combined result look like?
-    quote(environment())  # Grab the method environment
+  trace_exprs = rlang::exprs(
+    splits      = ~step,         # What are the splits?
+    combined    = ~step,         # What does the combined result look like?
+    runtime_env = environment()  # Grab the method environment
   ),
-  .print = FALSE
+  use_names = TRUE,       # Use names of `trace_exprs` for names of the tracedump (default)
+  verbose = FALSE         # Suppress all printing (except `message()`s)
+                          # This entails the effects of `print_output = FALSE`
 )
 
 # plot not printed to save space
@@ -255,9 +257,11 @@ boxplot_plot
 ```{r ex-3-last}
 boxplot_tracedump <- last_ggtrace()
 
-# The splits
-sapply(boxplot_tracedump[[1]], nrow)
+# Names are clean
+names(boxplot_tracedump)
 
+# Inspect the splits
+sapply(boxplot_tracedump[[1]], nrow)
 lapply(boxplot_tracedump[[1]], head, 3)
 
 # Manually calculating some boxplot parameters
@@ -316,17 +320,16 @@ ggtrace(
   method = StatSina$compute_group,
   trace_steps = c(1, 1, 8),
   trace_exprs = rlang::exprs(
-    data, # 1. What does the data passed in look like at the start?
-    # 2. Modify data in-place in the method environment
-    data <- dplyr::mutate(
+    data,                      # 1. What does the data passed in look like at the start?
+    data <- dplyr::mutate(     # 2. Modify data in-place in the method environment
       data,         
-      y = y + 1,    # Shift the points up
-      x = x - .2    # Shift the points left
+      y = y + 1,                 # Shift the points up
+      x = x - .2                 # Shift the points left
     ),
-    data # 3. What do the stat transformations on the
-         #    _manipulated_ data look like at the end?
+    data                       # 3. What do the stat transformations on the
+                               #    manipulated data look like at the end?
   ),
-  .print = FALSE
+  verbose = FALSE
 )
 
 sina_plot

@@ -48,7 +48,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'   StatSmooth$compute_group,
 #'   trace_steps = 12,
 #'   trace_exprs = quote(prediction),
-#'   .print = FALSE
+#'   print_output = FALSE
 #' )
 #'
 #' ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
@@ -63,7 +63,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'   GeomBoxplot$draw_group,
 #'   trace_steps = -1,
 #'   once = FALSE,
-#'   .print = FALSE
+#'   print_output = FALSE
 #' )
 #'
 #' ggplot(mpg, aes(class, hwy)) + geom_boxplot()

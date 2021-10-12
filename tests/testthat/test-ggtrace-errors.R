@@ -13,7 +13,7 @@ test_that("step and exprs mismatch", {
         env_end = environment(),
         env_deep_end = rlang::env_clone(environment())
       ),
-      .print = FALSE
+      print_output = FALSE
     )
   )
 

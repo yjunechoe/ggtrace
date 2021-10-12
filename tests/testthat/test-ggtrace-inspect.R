@@ -18,7 +18,7 @@ test_that("inspection workflow works #1 (Position)", {
       ~step            # What does the last line evaluate to?
       # - i.e., what is returned by the method?
     ),
-    .print = FALSE     # Don't print evaluated expressions to console
+    print_output = FALSE     # Don't print evaluated expressions to console
   )
 
   expect_equal(
@@ -54,7 +54,7 @@ test_that("inspection workflow works #2 (Geom)", {
     method = GeomSmooth$draw_group,
     trace_steps = -1,           # Trace the last line
     trace_exprs = quote(~step), # Grab the gList() object it returns
-    .print = FALSE
+    print_output = FALSE
   )
 
   print(smooth_plot)

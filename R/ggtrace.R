@@ -12,7 +12,10 @@
 #'   If `trace_exprs` is not provided, `ggtrace()` is called with `~step` by default.
 #'
 #' @param once Whether to `untrace()` itself on exit. Defaults to `TRUE`.
-#' @param .print Whether to print the output of each expression to the console. Defaults to `TRUE`.
+#' @param use_names Whether the trace dump should use the names from `trace_exprs`. Defaults to `TRUE`.
+#' @param print_output Whether to print the output of each expression to the console. Defaults to `TRUE`.
+#' @param verbose Whether logs (non-messages) should be printed. Encompasses `print_output`, meaning that `verbose = FALSE`
+#'   also triggers the effect of `print_output = FALSE` by consequence.
 #'
 #' @details `ggtrace()` is a wrapper around `base::trace()` which is called on the ggproto method.
 #'  It calls `base::untrace()` on itself on exit by default, to make its effect ephemeral (like `base::debugonce()`).
@@ -22,6 +25,14 @@
 #'
 #'  The output of the expressions passed to `trace_exprs` is printed while tracing takes place. The
 #'  list of outputs from the last `ggtrace()` can be returned for further inspection with `last_ggtrace()`.
+#'
+#' @section Messages:
+#'  Various information is displayed on the console whenever a trace is triggered. You can control what gets displayed with `print_output` and
+#'  `verbose`, which are both `TRUE` by default. `print_output` simply calls `print()` on the evaluated expressions, and turning this
+#'  off may be desirable if expressions in `trace_exprs` evaluates to a long dataframe or vector. `verbose` controls all
+#'  information printed to the console including those by `print()`, and setting `verbose = FALSE` will mean that only
+#'  `message()`s will be displayed. Lastly, you can suppress `message()` with `options(ggtrace.suppressMessages = TRUE)`,
+#'  though suppressing messages is not recommended for interactive workflows.
 #'
 #' @section Tips & Tricks:
 #'  - If the intent is to run complex calculations, it is recommended to use `ggtrace()` to simply return the method's
@@ -76,12 +87,12 @@
 #' ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
 #' ## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To
 #' ## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.
-#' ## We also set `.print = FALSE` to disable printing of the output
+#' ## We also set `print_output = FALSE` to disable printing of the output
 #' ggtrace(
 #'   PositionJitter$compute_layer,
 #'   trace_steps = 12,
 #'   trace_exprs = quote(~step), # This the default if `trace_exprs` is not provided
-#'   .print = FALSE
+#'   print_output = FALSE
 #' )
 #' p
 #'
@@ -92,7 +103,7 @@
 #'   PositionJitter$compute_layer,
 #'   trace_steps = c(1, 12),
 #'   trace_exprs = rlang::exprs(data, ~step),
-#'   .print = FALSE
+#'   print_output = FALSE
 #' )
 #' p
 #'
@@ -102,7 +113,7 @@
 #' lapply(jitter_tracedump, head)
 #' hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
 #' }
-ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE) {
+ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = TRUE, print_output = TRUE, verbose = TRUE) {
 
   # Capture method expression
   method_expr <- rlang::enquo(method)
@@ -134,6 +145,9 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   trace_steps[trace_steps < 0] <- 1 + length(method_body) + trace_steps[trace_steps < 0]
   if (any(trace_steps <= 0 | trace_steps > length(method_body))) { rlang::abort("`trace_steps` out of range") }
 
+  ## Ensure `trace_steps` is sorted
+  if (!identical(trace_steps, sort.int(trace_steps))) { rlang::abort("`trace_steps` must be a sorted numeric vector") }
+
   ## Substitute `~step` keyword
   for (i in seq_len(n_steps)) {
     if (rlang::as_label(trace_exprs[[i]]) == "~step") {
@@ -144,18 +158,11 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
   # Initialize trace dump for caching output
   trace_dump <- vector("list", n_steps)
   ## Make names from expressions
-  names(trace_dump) <- lapply(seq_len(n_steps), function(i) {
+  trace_exprs_labels <- lapply(seq_len(n_steps), function(i) {
     paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n")
   })
   ## Use names from named elements
-  trace_msgs <- lapply(seq_len(n_steps), function(i) {
-    if (is.null(names(trace_exprs[i])) || names(trace_exprs[i]) == "") {
-      trace_name <- names(trace_dump[i])
-    } else {
-      trace_name <- paste0('"', names(trace_exprs[i]), '"')
-    }
-    paste0("[Step ", trace_steps[i], "]> ", trace_name)
-  })
+  trace_msgs <- paste0("[Step ", trace_steps, "]> ", trace_exprs_labels)
 
   ## Ensure no duplicates
   if (any(duplicated(trace_msgs))) {
@@ -165,9 +172,22 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
     ))
   }
 
-  # Setup for the trace dump
+
+  ## Setup trace dump
   trace_idx <- 1
-  names(trace_dump) <- trace_msgs
+  if (use_names) {
+    if (is.null(names(trace_exprs))) {
+      trace_dump <- unname(trace_dump)
+    } else {
+      names(trace_dump) <- names(trace_exprs)
+    }
+  } else {
+    names(trace_dump) <- trace_msgs
+  }
+
+  ## Setup info display options
+  silent <- getOption("ggtrace.suppressMessages")
+  tibble_print <- rlang::is_installed("tibble") && getOption("ggtrace.as_tibble")
 
   suppressMessages(
     trace(
@@ -176,23 +196,35 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
       at = trace_steps,
       tracer = function() {
 
-        if (trace_idx == 1) {
-          cat("Triggering trace on", formatted_call, "\n")
+        if (trace_idx == 1 && !silent) {
+          message("Triggering trace on ", formatted_call)
         }
 
-        trace_print <- gsub("\\n", "\n ", names(trace_dump)[trace_idx])
+        trace_print <- gsub("\\n", "\n ", trace_msgs[trace_idx])
 
         # Evaluate and store output to trace dump
         trace_expr <- trace_exprs[[trace_idx]]
-        trace_dump[[trace_idx]] <- eval(rlang::expr({
-          cat("\n", !!trace_print, "\n")
-          if (!!.print) { print(!!trace_expr) }
+        trace_result <- eval(rlang::expr({
+          if (!!verbose) {
+            cat("\n", !!trace_print, "\n", sep = "")
+            if (!!print_output) { print(!!trace_expr) }
+          }
           return(!!trace_expr)
         }), envir = parent.frame()) # This is needed to escape the debugging environment
 
+        # Resolve tibble format
+        if (tibble_print && is.data.frame(trace_result)) {
+          trace_result <- asNamespace("tibble")$as_tibble(trace_result)
+        }
+
+        # Accumulate and continue
+        trace_dump[[trace_idx]] <- trace_result
         if (trace_idx == length(trace_exprs)) {
           set_last_ggtrace(trace_dump)
-          add_global_ggtrace(list(trace_dump))
+          trace_identifier <- paste(formatted_call, rlang::env_label(environment()), sep = "-")
+          trace_dump_list <- list(trace_dump)
+          names(trace_dump_list) <- trace_identifier
+          add_global_ggtrace(trace_dump_list)
         } else {
           trace_idx <<- trace_idx + 1
         }
@@ -203,19 +235,18 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
       },
       print = FALSE,
       exit = rlang::expr({
-        cat("\nCall `last_ggtrace()` to get the trace dump.\n")
+        if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
         if (!!once) {
-          suppressMessages(untrace(!!method_name, where = !!obj))
-          message("Untracing ", !!formatted_call)
+          suppressMessages(gguntrace(!!method_expr))
+          if (!isTRUE(!!silent)) { message("Untracing ", !!formatted_call, " on exit.") }
         } else {
-          message(!!formatted_call, " has a persistent trace.\n",
-                  "Remember to `gguntrace(", !!formatted_call, ")`!")
+          if (!isTRUE(!!silent)) { message(!!formatted_call, " has a persistent trace. Remember to `gguntrace(", !!formatted_call, ")`!") }
         }
       })
     )
   )
 
-  message(formatted_call, " now being traced")
+  if (!silent) { message(formatted_call, " now being traced") }
   invisible(NULL)
 
 }

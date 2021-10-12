@@ -1,5 +1,33 @@
 # ggtrace (development version)
 
+# ggtrace 0.3.4
+
+### **Breaking changes**
+
+- The `.print` argument to `ggtrace()` is renamed to `print_output` to make its functionality more transparent.
+
+### **New features**
+
+Several options for finer control over printing and formatting of output from `ggtrace()`, in addition to the existing `.print` argument:
+
+- `ggtrace()` gets a `use_names` argument. When `TRUE`, it uses the names of the list of expressions passed to `trace_exprs` as the names for the tracedump set to `last_ggtrace()` and added to `global_ggtrace()`.
+
+- `ggtrace()` gets a `verbose` argument. When `FALSE`, it suppresses the display of all non-`message()` information, including information about which expression is evaluated where, as well as the output of those expressions when evaluated (which can be selectively suppressed with `.print` for finer control). `verbose` is `TRUE` by default.
+
+- Setting `options(ggtrace.suppressMessages = TRUE)` will also suppress `messages()`s about what method is being traced, whether a trace has been triggered on a method, whether there exists a persistent trace, etc. This information is very important so using this option is not recommended, but it has been made available. This option is set to `FALSE` on package load.
+
+- Setting `options(ggtrace.as_tibble = TRUE)` will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see [related {ggplot2} Github issue #3018](https://github.com/tidyverse/ggplot2/issues/3018)). This option is set to `FALSE` on package load.
+
+### **Improvements**
+
+- Tracedumps accumulated in `global_ggtrace()` are named after the method (+ hexadecimal ID) for ease of searching.
+
+- Triggering of a trace is now informed via `message()` instead of `cat()`
+
+### **Bug Fixes**
+
+- `ggtrace()` correctly throws an error when `trace_steps` is not ordered. This is checked after the negative index conversion, so something like `trace_steps = c(1, -1)` still works fine).
+
 # ggtrace 0.3.3
 
 ### **New features**

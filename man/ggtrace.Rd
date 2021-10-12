@@ -4,7 +4,15 @@
 \alias{ggtrace}
 \title{Programmatically debug ggproto methods with trace}
 \usage{
-ggtrace(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE)
+ggtrace(
+  method,
+  trace_steps,
+  trace_exprs,
+  once = TRUE,
+  use_names = TRUE,
+  print_output = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{method}{An expression that evaluates to the ggproto method.
@@ -28,7 +36,12 @@ If \code{trace_exprs} is not provided, \code{ggtrace()} is called with \code{~st
 
 \item{once}{Whether to \code{untrace()} itself on exit. Defaults to \code{TRUE}.}
 
-\item{.print}{Whether to print the output of each expression to the console. Defaults to \code{TRUE}.}
+\item{use_names}{Whether the trace dump should use the names from \code{trace_exprs}. Defaults to \code{TRUE}.}
+
+\item{print_output}{Whether to print the output of each expression to the console. Defaults to \code{TRUE}.}
+
+\item{verbose}{Whether logs (non-messages) should be printed. Encompasses \code{print_output}, meaning that \code{verbose = FALSE}
+also triggers the effect of \code{print_output = FALSE} by consequence.}
 }
 \description{
 Programmatically debug ggproto methods with trace
@@ -43,6 +56,16 @@ of \code{ggbody()} when deciding which expressions to evaluate at which steps.
 The output of the expressions passed to \code{trace_exprs} is printed while tracing takes place. The
 list of outputs from the last \code{ggtrace()} can be returned for further inspection with \code{last_ggtrace()}.
 }
+\section{Messages}{
+
+Various information is displayed on the console whenever a trace is triggered. You can control what gets displayed with \code{print_output} and
+\code{verbose}, which are both \code{TRUE} by default. \code{print_output} simply calls \code{print()} on the evaluated expressions, and turning this
+off may be desirable if expressions in \code{trace_exprs} evaluates to a long dataframe or vector. \code{verbose} controls all
+information printed to the console including those by \code{print()}, and setting \code{verbose = FALSE} will mean that only
+\code{message()}s will be displayed. Lastly, you can suppress \code{message()} with \code{options(ggtrace.suppressMessages = TRUE)},
+though suppressing messages is not recommended for interactive workflows.
+}
+
 \section{Tips & Tricks}{
 
 \itemize{
@@ -101,12 +124,12 @@ p
 ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
 ## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To
 ## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.
-## We also set `.print = FALSE` to disable printing of the output
+## We also set `print_output = FALSE` to disable printing of the output
 ggtrace(
   PositionJitter$compute_layer,
   trace_steps = 12,
   trace_exprs = quote(~step), # This the default if `trace_exprs` is not provided
-  .print = FALSE
+  print_output = FALSE
 )
 p
 
@@ -117,7 +140,7 @@ ggtrace(
   PositionJitter$compute_layer,
   trace_steps = c(1, 12),
   trace_exprs = rlang::exprs(data, ~step),
-  .print = FALSE
+  print_output = FALSE
 )
 p
 
