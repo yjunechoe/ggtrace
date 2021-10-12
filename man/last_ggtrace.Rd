@@ -2,19 +2,35 @@
 % Please edit documentation in R/last_ggtrace.R
 \name{last_ggtrace}
 \alias{last_ggtrace}
-\title{Retrieve the trace dump created by the last \code{ggtrace()}}
+\alias{global_ggtrace}
+\alias{clear_global_ggtrace}
+\title{Retrieve the trace dump created by \code{ggtrace()}}
 \usage{
 last_ggtrace()
+
+global_ggtrace()
+
+clear_global_ggtrace()
 }
 \value{
 A list
 }
 \description{
-Retrieve the trace dump created by the last \code{ggtrace()}
+Retrieve the trace dump created by \code{ggtrace()}
+}
+\details{
+\code{last_ggtrace()} retrieves the last trace dump created by \code{ggtrace()} - i.e., from the last time
+the trace has been triggered. \code{global_ggtrace()} is a collection of trace dumps tracked across
+multiple traces, and is recommended for with \code{ggtrace(once = FALSE)} where you expect a trace to
+be separately triggered multiple times (for example, when you are tracing a compute or draw method
+for group and there are multiple groups). \code{clear_global_ggtrace()} sets the value of the global trace
+dump to \code{NULL}.
 }
 \examples{
 \dontrun{
 library(ggplot2)
+
+# Inspect last trace dump
 
 ggbody(StatSmooth$compute_group)
 
@@ -34,9 +50,37 @@ ggtrace(
 ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
 
 last_ggtrace()
+
+
+# Inspect an accumulation of trace dumps
+
+clear_global_ggtrace()
+ggtrace(
+  GeomBoxplot$draw_group,
+  trace_steps = -1,
+  once = FALSE,
+  .print = FALSE
+)
+
+ggplot(mpg, aes(class, hwy)) + geom_boxplot()
+
+gguntrace(GeomBoxplot$draw_group)
+
+boxplot_group_tracedump <- global_ggtrace()
+clear_global_ggtrace()
+
+length(boxplot_group_tracedump)
+boxplot_group_tracedump <- unlist(
+  boxplot_group_tracedump,
+  recursive = FALSE,
+  use.names = FALSE
+)
+
+patchwork::wrap_plots(boxplot_group_tracedump, nrow = 1)
+
 }
 }
 \seealso{
-\code{\link[=ggtrace]{ggtrace()}}
+\code{\link[=ggtrace]{ggtrace()}}, \code{\link[=gguntrace]{gguntrace()}}
 }
 \keyword{internal}

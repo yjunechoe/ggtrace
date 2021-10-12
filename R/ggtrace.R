@@ -192,6 +192,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE
 
         if (trace_idx == length(trace_exprs)) {
           set_last_ggtrace(trace_dump)
+          add_global_ggtrace(list(trace_dump))
         } else {
           trace_idx <<- trace_idx + 1
         }
