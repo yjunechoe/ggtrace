@@ -22,10 +22,6 @@ test_that("namespace is captured correctly", {
     split_ggproto_method(ggplot2:::Layer$compute_statistic)$ns,
     "ggplot2"
   )
-  expect_equal(
-    split_ggproto_method(ggforce::StatSina$compute_group)$ns,
-    "ggforce"
-  )
 })
 
 test_that("handle private variables differently from methods", {

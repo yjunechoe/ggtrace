@@ -105,13 +105,13 @@
 ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, .print = TRUE) {
 
   # Capture method expression
-  method_expr <- rlang::enexpr(method)
+  method_expr <- rlang::enquo(method)
 
   # Validate method
-  method_body <- eval(rlang::expr(ggbody(!!method_expr)))
+  method_body <- ggbody(method_expr)
 
   # Parse/deparse method and obj
-  method_split <- eval(rlang::expr(split_ggproto_method(!!method_expr)))
+  method_split <- split_ggproto_method(method_expr)
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]

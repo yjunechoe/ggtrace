@@ -1,5 +1,4 @@
 library(ggplot2)
-library(ggforce)
 
 StatDensityCommon <- ggproto("StatDensityCommon", Stat,
                              required_aes = "x",
@@ -25,8 +24,8 @@ StatDensityCommon <- ggproto("StatDensityCommon", Stat,
 
 test_that("ggbody gets body as list", {
   expect_equal(
-    ggbody(StatBezier$compute_panel),
-    as.list(body(get("compute_panel", StatBezier)))
+    ggbody(GeomRect$draw_panel),
+    as.list(body(get("draw_panel", GeomRect)))
   )
   expect_equal(
     ggbody(StatDensityCommon$compute_group),
@@ -40,18 +39,10 @@ test_that("ggbody gets body as list", {
   )
 })
 
-test_that("Works with :: and :::", {
+test_that("Works with unimported :::", {
   expect_equal(
     ggbody(ggplot2:::Layer$compute_position),
     as.list(body(get("compute_position", ggplot2:::Layer)))
-  )
-  expect_equal(
-    ggbody(ggforce::StatBezier$compute_panel),
-    as.list(body(get("compute_panel", StatBezier)))
-  )
-  expect_equal(
-    ggbody(ggrepel::GeomTextRepel$draw_panel),
-    as.list(body(get("draw_panel", ggrepel::GeomTextRepel)))
   )
 })
 
@@ -62,10 +53,6 @@ test_that("errors if method missing or not defined for ggproto object", {
   )
   expect_error(
     ggbody(StatBoxplot$not_a_method),
-    "Method .* not defined for .*"
-  )
-  expect_error(
-    ggbody(ggrepel::GeomTextRepel$compute_panel),
     "Method .* not defined for .*"
   )
   expect_error(
@@ -93,21 +80,25 @@ test_that("errors if object not defined", {
 })
 
 test_that("returns method from closest parent in a message", {
+  expect_equal(
+    class(GeomAnnotationMap),
+    c("GeomAnnotationMap", "GeomMap", "GeomPolygon", "Geom", "ggproto", "gg")
+  )
   expect_message(
-    ggbody(GeomArcBar$default_aes, inherit = TRUE),
+    ggbody(GeomAnnotationMap$draw_panel, inherit = TRUE),
     "not inherited"
   )
   expect_message(
-    ggbody(GeomArcBar$draw_panel, inherit = TRUE),
-    "GeomShape\\$draw_panel"
+    ggbody(GeomAnnotationMap$required_aes, inherit = TRUE),
+    "GeomMap\\$required_aes"
   )
   expect_message(
-    ggbody(GeomArcBar$draw_key, inherit = TRUE),
+    ggbody(GeomAnnotationMap$draw_key, inherit = TRUE),
     "GeomPolygon\\$draw_key"
   )
   expect_message(
-    ggbody(GeomArcBar$draw_group, inherit = TRUE),
-    "Geom\\$draw_group"
+    ggbody(GeomAnnotationMap$draw_layer, inherit = TRUE),
+    "Geom\\$draw_layer"
   )
   expect_message(
     ggbody(StatDensityCommon$compute_panel, inherit = TRUE),
@@ -123,10 +114,6 @@ test_that("returns same with or without :: and :::", {
   expect_equal(
     ggbody(StatBin$compute_group),
     ggbody(ggplot2:::StatBin$compute_group)
-  )
-  expect_equal(
-    ggbody(FacetCol$draw_panels),
-    ggbody(ggforce::FacetCol$draw_panels)
   )
 })
 

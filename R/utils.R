@@ -1,5 +1,11 @@
-split_ggproto_method <- function(method_expr) {
-  method_deparsed <- rlang::as_label(rlang::enexpr(method_expr))
+split_ggproto_method <- function(method) {
+  method_expr <- rlang::enexpr(method)
+  eval_env <- parent.frame()
+  if (rlang::is_quosure(method)) {
+    method_expr <- rlang::quo_get_expr(method)
+    eval_env <- rlang::quo_get_env(method)
+  }
+  method_deparsed <- rlang::as_label(method_expr)
   if (!grepl("\\$", method_deparsed)) {
     rlang::abort("Invalid method expression. See `?ggbody` for valid forms.")
   }
@@ -7,7 +13,7 @@ split_ggproto_method <- function(method_expr) {
   obj_expr <- rlang::parse_expr(both[[1]])
   split_list <- list(
     method_name = both[[2]],
-    obj = eval(obj_expr),
+    obj = eval(obj_expr, envir = eval_env),
     obj_name = both[[1]],
     ns = gsub("(^|:::?)[^:]*?$", "", method_deparsed)
   )
