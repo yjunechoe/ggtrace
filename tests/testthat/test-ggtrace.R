@@ -231,7 +231,3 @@ test_that("clean_names = TRUE preserves names", {
   expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
 
 })
-
-
-# TODO test creation of trace and appropriate untracing
-# TODO behavior of persistence trace
