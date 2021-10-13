@@ -1,5 +1,9 @@
 ---
-output: github_document
+title: "ggtrace"
+output:
+  md_document:
+    toc: true
+    toc_depth: 2
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -58,8 +62,6 @@ You can install the development version from [GitHub](https://github.com/) with:
 # install.packages("devtools")
 devtools::install_github("yjunechoe/ggtrace")
 ```
-
-## **Usage**
 
 ```{r setup}
 library(ggtrace) # v0.3.4

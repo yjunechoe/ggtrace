@@ -157,16 +157,10 @@
 <a href="#installation" class="anchor"></a><strong>Installation</strong>
 </h2>
 <p>You can install the development version from <a href="https://github.com/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"yjunechoe/ggtrace"</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a><strong>Usage</strong>
-</h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span> <span class="co"># v0.3.4</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("devtools")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"yjunechoe/ggtrace"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.3.4</span></span></code></pre></div>
 </div>
 <div id="example-1---compute_layer-method-from-positionjitter" class="section level2">
 <h2 class="hasAnchor">
@@ -176,137 +170,133 @@
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot" class="anchor"></a><strong>Step 1. Make plot</strong>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span> <span class="co"># v3.3.5</span>
-
-<span class="va">jitter_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html">position_jitter</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.2</span>, seed <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span><span class="op">)</span>
-<span class="va">jitter_plot</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># v3.3.5</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>jitter_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diamonds[<span class="dv">1</span><span class="sc">:</span><span class="dv">1000</span>,], <span class="fu">aes</span>(cut, depth)) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">seed =</span> <span class="dv">2021</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>jitter_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-1-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-body-of-the-ggproto-method" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-2-inspect-body-of-the-ggproto-method" class="anchor"></a><strong>Step 2. Inspect body of the ggproto method</strong>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span><span class="op">)</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; `{`</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; trans_x &lt;- if (params$width &gt; 0) function(x) jitter(x, amount = params$width)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; trans_y &lt;- if (params$height &gt; 0) function(x) jitter(x, amount = params$height)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt; x_aes &lt;- intersect(ggplot_global$x_aes, names(data))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[5]]</span>
-<span class="co">#&gt; x &lt;- if (length(x_aes) == 0) 0 else data[[x_aes[1]]]</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[6]]</span>
-<span class="co">#&gt; y_aes &lt;- intersect(ggplot_global$y_aes, names(data))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[7]]</span>
-<span class="co">#&gt; y &lt;- if (length(y_aes) == 0) 0 else data[[y_aes[1]]]</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[8]]</span>
-<span class="co">#&gt; dummy_data &lt;- new_data_frame(list(x = x, y = y), nrow(data))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[9]]</span>
-<span class="co">#&gt; fixed_jitter &lt;- with_seed_null(params$seed, transform_position(dummy_data, </span>
-<span class="co">#&gt;     trans_x, trans_y))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[10]]</span>
-<span class="co">#&gt; x_jit &lt;- fixed_jitter$x - x</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[11]]</span>
-<span class="co">#&gt; y_jit &lt;- fixed_jitter$y - y</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[12]]</span>
-<span class="co">#&gt; transform_position(data, function(x) x + x_jit, function(x) x + </span>
-<span class="co">#&gt;     y_jit)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbody</span>(PositionJitter<span class="sc">$</span>compute_layer)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `{`</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; trans_x &lt;- if (params$width &gt; 0) function(x) jitter(x, amount = params$width)</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; trans_y &lt;- if (params$height &gt; 0) function(x) jitter(x, amount = params$height)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; x_aes &lt;- intersect(ggplot_global$x_aes, names(data))</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[5]]</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; x &lt;- if (length(x_aes) == 0) 0 else data[[x_aes[1]]]</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[6]]</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; y_aes &lt;- intersect(ggplot_global$y_aes, names(data))</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[7]]</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; y &lt;- if (length(y_aes) == 0) 0 else data[[y_aes[1]]]</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[8]]</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; dummy_data &lt;- new_data_frame(list(x = x, y = y), nrow(data))</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[9]]</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; fixed_jitter &lt;- with_seed_null(params$seed, transform_position(dummy_data, </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     trans_x, trans_y))</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[10]]</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; x_jit &lt;- fixed_jitter$x - x</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[11]]</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; y_jit &lt;- fixed_jitter$y - y</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[12]]</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; transform_position(data, function(x) x + x_jit, function(x) x + </span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     y_jit)</span></span></code></pre></div>
 </div>
 <div id="step-3-ggtrace---including-the-last-line-with-keyword-step" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-3-ggtrace---including-the-last-line-with-keyword-step" class="anchor"></a><strong>Step 3. <code>ggtrace()</code> - including the last line with keyword <code>~step</code></strong>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
-  method <span class="op">=</span> <span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span>,
-  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">9</span>, <span class="fl">12</span><span class="op">)</span>,
-  trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span>
-    <span class="va">data</span>,            <span class="co"># What does the data passed in look like?</span>
-    <span class="va">params</span>,          <span class="co"># What do the initial parameters look like?</span>
-    <span class="va">dummy_data</span>,      <span class="co"># What is `dummy_data` defined at Step 8?</span>
-    <span class="op">~</span><span class="va">step</span>            <span class="co"># What does the last line evaluate to?</span>
-                     <span class="co"># - i.e., what is returned by the method?</span>
-  <span class="op">)</span>,
-  print_output <span class="op">=</span> <span class="cn">FALSE</span>   <span class="co"># Don't print evaluated expressions to console</span>
-<span class="op">)</span>
-<span class="co">#&gt; PositionJitter$compute_layer now being traced</span>
-
-<span class="co"># plot not printed to save space</span>
-<span class="va">jitter_plot</span>
-<span class="co">#&gt; Triggering trace on PositionJitter$compute_layer</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [Step 1]&gt; data</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [Step 1]&gt; params</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [Step 9]&gt; dummy_data</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span>
-<span class="co">#&gt; Untracing PositionJitter$compute_layer on exit.</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> PositionJitter<span class="sc">$</span>compute_layer,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">9</span>, <span class="dv">12</span>),</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> rlang<span class="sc">::</span><span class="fu">exprs</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    data,            <span class="co"># What does the data passed in look like?</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    params,          <span class="co"># What do the initial parameters look like?</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    dummy_data,      <span class="co"># What is `dummy_data` defined at Step 8?</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>step            <span class="co"># What does the last line evaluate to?</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                     <span class="co"># - i.e., what is returned by the method?</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">print_output =</span> <span class="cn">FALSE</span>   <span class="co"># Don't print evaluated expressions to console</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PositionJitter$compute_layer now being traced</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>jitter_plot</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on PositionJitter$compute_layer</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 1]&gt; data</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 1]&gt; params</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 9]&gt; dummy_data</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing PositionJitter$compute_layer on exit.</span></span></code></pre></div>
 </div>
 <div id="step-4-inspect-trace-dump" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-4-inspect-trace-dump" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">jitter_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">jitter_tracedump</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>
-<span class="co">#&gt; $width</span>
-<span class="co">#&gt; [1] 0.2</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $height</span>
-<span class="co">#&gt; [1] 0.04</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $seed</span>
-<span class="co">#&gt; [1] 2021</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">jitter_tracedump</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">]</span>, <span class="va">nrow</span><span class="op">)</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; [1] 1000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; [1] 1000</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; [1] 1000</span>
-
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">jitter_tracedump</span><span class="op">[</span><span class="op">-</span><span class="fl">2</span><span class="op">]</span>, <span class="va">head</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;   x    y PANEL group</span>
-<span class="co">#&gt; 1 5 61.5     1     5</span>
-<span class="co">#&gt; 2 4 59.8     1     4</span>
-<span class="co">#&gt; 3 2 56.9     1     2</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;   x    y</span>
-<span class="co">#&gt; 1 5 61.5</span>
-<span class="co">#&gt; 2 4 59.8</span>
-<span class="co">#&gt; 3 2 56.9</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;          x        y PANEL group</span>
-<span class="co">#&gt; 1 4.980507 61.50684     1     5</span>
-<span class="co">#&gt; 2 4.113512 59.77872     1     4</span>
-<span class="co">#&gt; 3 2.083873 56.86655     1     2</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>jitter_tracedump <span class="ot">&lt;-</span> <span class="fu">last_ggtrace</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>jitter_tracedump[[<span class="dv">2</span>]]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $width</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.2</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $height</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.04</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $seed</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2021</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(jitter_tracedump[<span class="sc">-</span><span class="dv">2</span>], nrow)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1000</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1000</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 1000</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(jitter_tracedump[<span class="sc">-</span><span class="dv">2</span>], head, <span class="dv">3</span>)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x    y PANEL group</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 5 61.5     1     5</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 4 59.8     1     4</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2 56.9     1     2</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x    y</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 5 61.5</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 4 59.8</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2 56.9</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          x        y PANEL group</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 4.980507 61.50684     1     5</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 4.113512 59.77872     1     4</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 2.083873 56.86655     1     2</span></span></code></pre></div>
 </div>
 </div>
 <div id="example-2---draw_group-method-from-geomsmooth" class="section level2">
@@ -317,64 +307,61 @@
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot-1" class="anchor"></a><strong>Step 1. Make plot</strong>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">smooth_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">stat_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"loess"</span>, formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="va">x</span><span class="op">)</span>
-<span class="va">smooth_plot</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>smooth_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(mpg, hp)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>smooth_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-2-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-body-of-the-ggproto-method-1" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-2-inspect-body-of-the-ggproto-method-1" class="anchor"></a><strong>Step 2. Inspect body of the ggproto method</strong>
 </h3>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">GeomSmooth</span><span class="op">$</span><span class="va">draw_group</span><span class="op">)</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; `{`</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; ribbon &lt;- transform(data, colour = NA)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; path &lt;- transform(data, alpha = NA)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt; ymin = flipped_names(flipped_aes)$ymin</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[5]]</span>
-<span class="co">#&gt; ymax = flipped_names(flipped_aes)$ymax</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[6]]</span>
-<span class="co">#&gt; has_ribbon &lt;- se &amp;&amp; !is.null(data[[ymax]]) &amp;&amp; !is.null(data[[ymin]])</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[7]]</span>
-<span class="co">#&gt; gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, </span>
-<span class="co">#&gt;     coord, flipped_aes = flipped_aes), GeomLine$draw_panel(path, </span>
-<span class="co">#&gt;     panel_params, coord))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbody</span>(GeomSmooth<span class="sc">$</span>draw_group)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `{`</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ribbon &lt;- transform(data, colour = NA)</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; path &lt;- transform(data, alpha = NA)</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ymin = flipped_names(flipped_aes)$ymin</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[5]]</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ymax = flipped_names(flipped_aes)$ymax</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[6]]</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; has_ribbon &lt;- se &amp;&amp; !is.null(data[[ymax]]) &amp;&amp; !is.null(data[[ymin]])</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[7]]</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, </span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     coord, flipped_aes = flipped_aes), GeomLine$draw_panel(path, </span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     panel_params, coord))</span></span></code></pre></div>
 </div>
 <div id="step-3-ggtrace---get-the-glist" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-3-ggtrace---get-the-glist" class="anchor"></a><strong>Step 3. <code>ggtrace()</code> - get the <code>gList()</code></strong>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
-  method <span class="op">=</span> <span class="va">GeomSmooth</span><span class="op">$</span><span class="va">draw_group</span>,
-  trace_steps <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>,           <span class="co"># Trace the last line</span>
-  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">step</span><span class="op">)</span>, <span class="co"># Grab the gList() object it returns</span>
-  print_output <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-<span class="co">#&gt; GeomSmooth$draw_group now being traced</span>
-
-<span class="co"># plot not printed to save space</span>
-<span class="va">smooth_plot</span>
-<span class="co">#&gt; Triggering trace on GeomSmooth$draw_group</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [Step 7]&gt; gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,</span>
-<span class="co">#&gt;    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span>
-<span class="co">#&gt; Untracing GeomSmooth$draw_group on exit.</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> GeomSmooth<span class="sc">$</span>draw_group,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="sc">-</span><span class="dv">1</span>,           <span class="co"># Trace the last line</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>(<span class="sc">~</span>step), <span class="co"># Grab the gList() object it returns</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">print_output =</span> <span class="cn">FALSE</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GeomSmooth$draw_group now being traced</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>smooth_plot</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on GeomSmooth$draw_group</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 7]&gt; gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord))</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing GeomSmooth$draw_group on exit.</span></span></code></pre></div>
 </div>
 <div id="step-4-inspect-trace-dump-1" class="section level3">
 <h3 class="hasAnchor">
@@ -382,54 +369,51 @@
 </h3>
 <p>Get grobs in the gList and do some weird stuff with it.</p>
 <p>This is nice because you don’t have to navigate the whole list of <code>ggplotGrob(smooth_plot)[["grobs"]]</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">smooth_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">smooth_gList</span> <span class="op">&lt;-</span> <span class="va">smooth_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
-
-<span class="va">smooth_gList</span>
-<span class="co">#&gt; (gTree[geom_ribbon.gTree.132], polyline[GRID.polyline.133])</span>
-
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/grid/grid.ls.html">grid.ls</a></span><span class="op">(</span><span class="va">smooth_gList</span><span class="op">)</span>
-<span class="co">#&gt; geom_ribbon.gTree.132</span>
-<span class="co">#&gt;   GRID.polygon.129</span>
-<span class="co">#&gt;   GRID.polyline.130</span>
-<span class="co">#&gt; GRID.polyline.133</span>
-
-<span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html">grid.newpage</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html">grid.draw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html">gTree</a></span><span class="op">(</span>children <span class="op">=</span> <span class="va">smooth_gList</span>, vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html">viewport</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>smooth_tracedump <span class="ot">&lt;-</span> <span class="fu">last_ggtrace</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>smooth_gList <span class="ot">&lt;-</span> smooth_tracedump[[<span class="dv">1</span>]]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>smooth_gList</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; (gTree[geom_ribbon.gTree.132], polyline[GRID.polyline.133])</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.ls</span>(smooth_gList)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; geom_ribbon.gTree.132</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   GRID.polygon.129</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   GRID.polyline.130</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GRID.polyline.133</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.newpage</span>()</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.draw</span>(<span class="fu">gTree</span>(<span class="at">children =</span> smooth_gList, <span class="at">vp =</span> <span class="fu">viewport</span>()))</span></code></pre></div>
 <p><img src="reference/figures/README-ex-2-last-a-1.png" width="20%"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># The weird stuff</span>
-
-<span class="va">smooth_ribbon_polygon</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html">editGrob</a></span><span class="op">(</span>
-  <span class="va">smooth_gList</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,
-  <span class="st">"polygon"</span>,
-  grep <span class="op">=</span> <span class="cn">TRUE</span>,
-  gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html">gpar</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"#b742ce"</span>, alpha <span class="op">=</span> <span class="fl">0.7</span>, lwd <span class="op">=</span> <span class="fl">3</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span>
-<span class="op">)</span>
-<span class="va">smooth_ribbon_gTree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html">gTree</a></span><span class="op">(</span>
-  children <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html">gList</a></span><span class="op">(</span>
-    <span class="va">smooth_ribbon_polygon</span>,
-    <span class="fu"><a href="https://rdrr.io/r/grid/grid.text.html">textGrob</a></span><span class="op">(</span><span class="st">"Weee"</span>, x <span class="op">=</span> <span class="fl">.7</span>, gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html">gpar</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, fontsize <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html">unit</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"pt"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-  <span class="op">)</span>,
-  vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>, default.units <span class="op">=</span> <span class="st">"in"</span>, angle <span class="op">=</span> <span class="fl">30</span><span class="op">)</span>
-<span class="op">)</span>
-
-<span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html">grid.newpage</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html">grid.draw</a></span><span class="op">(</span><span class="va">smooth_ribbon_gTree</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The weird stuff</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>smooth_ribbon_polygon <span class="ot">&lt;-</span> <span class="fu">editGrob</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  smooth_gList[<span class="dv">1</span>][[<span class="dv">1</span>]],</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"polygon"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">grep =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="st">"#b742ce"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">lwd =</span> <span class="dv">3</span>, <span class="at">col =</span> <span class="st">"black"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>smooth_ribbon_gTree <span class="ot">&lt;-</span> <span class="fu">gTree</span>(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">children =</span> <span class="fu">gList</span>(</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    smooth_ribbon_polygon,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">textGrob</span>(<span class="st">"Weee"</span>, <span class="at">x =</span> .<span class="dv">7</span>, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="st">"red"</span>, <span class="at">fontsize =</span> <span class="fu">unit</span>(<span class="dv">10</span>, <span class="st">"pt"</span>)))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="dv">1</span>, <span class="at">default.units =</span> <span class="st">"in"</span>, <span class="at">angle =</span> <span class="dv">30</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.newpage</span>()</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.draw</span>(smooth_ribbon_gTree)</span></code></pre></div>
 <p><img src="reference/figures/README-ex-2-last-a-2.png" width="20%"></p>
 <p>You might use this for some fancy <em>data-driven legends</em> or something, though it’s meant to be exploratory not practical.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span>
-<span class="va">smooth_plot</span> <span class="op">+</span>
-  <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/inset_element.html">inset_element</a></span><span class="op">(</span>
-    <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_elements.html">wrap_elements</a></span><span class="op">(</span>full <span class="op">=</span> <span class="va">smooth_ribbon_gTree</span><span class="op">)</span> <span class="op">+</span>
-      <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span>plot.background <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html">element_rect</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="cn">NA</span>, color <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span><span class="op">)</span>,
-    left <span class="op">=</span> <span class="fl">0.5</span>, bottom <span class="op">=</span> <span class="fl">0.5</span>, right <span class="op">=</span> <span class="fl">0.8</span>, top <span class="op">=</span> <span class="fl">0.8</span>
-  <span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>smooth_plot <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">wrap_elements</span>(<span class="at">full =</span> smooth_ribbon_gTree) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> <span class="cn">NA</span>)),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">left =</span> <span class="fl">0.5</span>, <span class="at">bottom =</span> <span class="fl">0.5</span>, <span class="at">right =</span> <span class="fl">0.8</span>, <span class="at">top =</span> <span class="fl">0.8</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="reference/figures/README-ex-2-last-b-1.png" width="100%"></p>
 </div>
 </div>
@@ -441,10 +425,9 @@
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot-2" class="anchor"></a><strong>Step 1. Make plot</strong>
 </h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">boxplot_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">500</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span>
-<span class="va">boxplot_plot</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>boxplot_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diamonds[<span class="dv">1</span><span class="sc">:</span><span class="dv">500</span>,], <span class="fu">aes</span>(cut, depth)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>boxplot_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-3-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-body-of-the-ggproto-method-2" class="section level3">
@@ -452,43 +435,40 @@
 <a href="#step-2-inspect-body-of-the-ggproto-method-2" class="anchor"></a><strong>Step 2. Inspect body of the ggproto method</strong>
 </h3>
 <p>Actually, <code>"compute_panel"</code> method is not defined for <code>StatBoxplot</code>. <code><a href="reference/ggbody.html">ggbody()</a></code> gives you a hint that it may be inherited.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span>
-<span class="co">#&gt; Error: Method compute_panel is not defined for StatBoxplot</span>
-<span class="co">#&gt; Check inheritance with `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbody</span>(StatBoxplot<span class="sc">$</span>compute_panel)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error: Method compute_panel is not defined for StatBoxplot</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Check inheritance with `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`</span></span></code></pre></div>
 <p><code>StatBoxplot</code> is a child of the parent ggproto <code>Stat</code>, and the <code>"compute_panel"</code> method is inherited from <code>Stat</code> as well, so that’s what we want to trace instead:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">)</span>
-<span class="co">#&gt; [1] "StatBoxplot" "Stat"        "ggproto"     "gg"</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(StatBoxplot)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "StatBoxplot" "Stat"        "ggproto"     "gg"</span></span></code></pre></div>
 <p>With <code>inherit = TRUE</code>, <code><a href="reference/ggbody.html">ggbody()</a></code> returns the method as defined in the closest parent, and the corresponding code to get it. We confirm that we should be passing <code>Stat$compute_panel</code> to the <code>method</code> argument for <code><a href="reference/ggtrace.html">ggtrace()</a></code>.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_panel</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Returning `ggbody(Stat$compute_panel)`</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; `{`</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; if (empty(data)) return(new_data_frame())</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; groups &lt;- split(data, data$group)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt; stats &lt;- lapply(groups, function(group) {</span>
-<span class="co">#&gt;     self$compute_group(data = group, scales = scales, ...)</span>
-<span class="co">#&gt; })</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[5]]</span>
-<span class="co">#&gt; stats &lt;- mapply(function(new, old) {</span>
-<span class="co">#&gt;     if (empty(new)) </span>
-<span class="co">#&gt;         return(new_data_frame())</span>
-<span class="co">#&gt;     unique &lt;- uniquecols(old)</span>
-<span class="co">#&gt;     missing &lt;- !(names(unique) %in% names(new))</span>
-<span class="co">#&gt;     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])</span>
-<span class="co">#&gt; }, stats, groups, SIMPLIFY = FALSE)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[6]]</span>
-<span class="co">#&gt; rbind_dfs(stats)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbody</span>(StatBoxplot<span class="sc">$</span>compute_panel, <span class="at">inherit =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Returning `ggbody(Stat$compute_panel)`</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `{`</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if (empty(data)) return(new_data_frame())</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; groups &lt;- split(data, data$group)</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; stats &lt;- lapply(groups, function(group) {</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     self$compute_group(data = group, scales = scales, ...)</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; })</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[5]]</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; stats &lt;- mapply(function(new, old) {</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     if (empty(new)) </span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         return(new_data_frame())</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     unique &lt;- uniquecols(old)</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     missing &lt;- !(names(unique) %in% names(new))</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }, stats, groups, SIMPLIFY = FALSE)</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[6]]</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; rbind_dfs(stats)</span></span></code></pre></div>
 </div>
 <div id="step-3-ggtrace---retrieve-the-parent-environment" class="section level3">
 <h3 class="hasAnchor">
@@ -496,144 +476,141 @@
 </h3>
 <p><code>Stat$compute_panel</code> does split-apply-combine (Steps 3, 4-5, 6).</p>
 <p>Let’s return the split and the combine:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
-  <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span>,
-  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">6</span>, <span class="fl">6</span><span class="op">)</span>,
-  trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span>
-    splits      <span class="op">=</span> <span class="op">~</span><span class="va">step</span>,         <span class="co"># What are the splits?</span>
-    combined    <span class="op">=</span> <span class="op">~</span><span class="va">step</span>,         <span class="co"># What does the combined result look like?</span>
-    runtime_env <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html">environment</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Grab the method environment</span>
-  <span class="op">)</span>,
-  use_names <span class="op">=</span> <span class="cn">TRUE</span>,       <span class="co"># Use names of `trace_exprs` for names of the tracedump (default)</span>
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>         <span class="co"># Suppress all printing (except `message()`s)</span>
-                          <span class="co"># This entails the effects of `print_output = FALSE`</span>
-<span class="op">)</span>
-<span class="co">#&gt; Stat$compute_panel now being traced</span>
-
-<span class="co"># plot not printed to save space</span>
-<span class="va">boxplot_plot</span>
-<span class="co">#&gt; Triggering trace on Stat$compute_panel</span>
-<span class="co">#&gt; Untracing Stat$compute_panel on exit.</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  Stat<span class="sc">$</span>compute_panel,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">6</span>, <span class="dv">6</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> rlang<span class="sc">::</span><span class="fu">exprs</span>(</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">splits      =</span> <span class="sc">~</span>step,         <span class="co"># What are the splits?</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">combined    =</span> <span class="sc">~</span>step,         <span class="co"># What does the combined result look like?</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">runtime_env =</span> <span class="fu">environment</span>()  <span class="co"># Grab the method environment</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">use_names =</span> <span class="cn">TRUE</span>,       <span class="co"># Use names of `trace_exprs` for names of the tracedump (default)</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>         <span class="co"># Suppress all printing (except `message()`s)</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                          <span class="co"># This entails the effects of `print_output = FALSE`</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Stat$compute_panel now being traced</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>boxplot_plot</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on Stat$compute_panel</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing Stat$compute_panel on exit.</span></span></code></pre></div>
 </div>
 <div id="step-4-inspect-trace-dump-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-4-inspect-trace-dump-2" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">boxplot_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Names are clean</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">)</span>
-<span class="co">#&gt; [1] "splits"      "combined"    "runtime_env"</span>
-
-<span class="co"># Inspect the splits</span>
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">nrow</span><span class="op">)</span>
-<span class="co">#&gt;   1   2   3   4   5 </span>
-<span class="co">#&gt;  26  51 127 144 152</span>
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">head</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="co">#&gt; $`1`</span>
-<span class="co">#&gt;    x    y PANEL group</span>
-<span class="co">#&gt; 9  1 65.1     1     1</span>
-<span class="co">#&gt; 92 1 55.1     1     1</span>
-<span class="co">#&gt; 98 1 66.3     1     1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`2`</span>
-<span class="co">#&gt;    x    y PANEL group</span>
-<span class="co">#&gt; 3  2 56.9     1     2</span>
-<span class="co">#&gt; 5  2 63.3     1     2</span>
-<span class="co">#&gt; 11 2 64.0     1     2</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`3`</span>
-<span class="co">#&gt;   x    y PANEL group</span>
-<span class="co">#&gt; 6 3 62.8     1     3</span>
-<span class="co">#&gt; 7 3 62.3     1     3</span>
-<span class="co">#&gt; 8 3 61.9     1     3</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`4`</span>
-<span class="co">#&gt;    x    y PANEL group</span>
-<span class="co">#&gt; 2  4 59.8     1     4</span>
-<span class="co">#&gt; 4  4 62.4     1     4</span>
-<span class="co">#&gt; 13 4 60.4     1     4</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`5`</span>
-<span class="co">#&gt;    x    y PANEL group</span>
-<span class="co">#&gt; 1  5 61.5     1     5</span>
-<span class="co">#&gt; 12 5 62.8     1     5</span>
-<span class="co">#&gt; 14 5 62.2     1     5</span>
-
-<span class="co"># Manually calculating some boxplot parameters</span>
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">group</span><span class="op">$</span><span class="va">y</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span>
-<span class="co">#&gt; $`1`</span>
-<span class="co">#&gt;     0%    25%    50%    75%   100% </span>
-<span class="co">#&gt; 53.100 58.850 64.800 65.775 68.100 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`2`</span>
-<span class="co">#&gt;    0%   25%   50%   75%  100% </span>
-<span class="co">#&gt; 56.90 60.20 63.30 63.95 65.20 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`3`</span>
-<span class="co">#&gt;   0%  25%  50%  75% 100% </span>
-<span class="co">#&gt; 57.5 60.7 62.0 63.1 64.0 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`4`</span>
-<span class="co">#&gt;     0%    25%    50%    75%   100% </span>
-<span class="co">#&gt; 58.000 60.700 61.500 62.325 63.000 </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; $`5`</span>
-<span class="co">#&gt;    0%   25%   50%   75%  100% </span>
-<span class="co">#&gt; 58.80 61.30 61.75 62.20 62.90</span>
-
-<span class="co"># The combined result</span>
-<span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>
-<span class="co">#&gt;   ymin lower middle  upper ymax               outliers notchupper notchlower x</span>
-<span class="co">#&gt; 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1</span>
-<span class="co">#&gt; 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2</span>
-<span class="co">#&gt; 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3</span>
-<span class="co">#&gt; 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4</span>
-<span class="co">#&gt; 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5</span>
-<span class="co">#&gt;   width relvarwidth flipped_aes PANEL group</span>
-<span class="co">#&gt; 1  0.75    5.099020       FALSE     1     1</span>
-<span class="co">#&gt; 2  0.75    7.141428       FALSE     1     2</span>
-<span class="co">#&gt; 3  0.75   11.269428       FALSE     1     3</span>
-<span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span>
-<span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>boxplot_tracedump <span class="ot">&lt;-</span> <span class="fu">last_ggtrace</span>()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Names are clean</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(boxplot_tracedump)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "splits"      "combined"    "runtime_env"</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the splits</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(boxplot_tracedump[[<span class="dv">1</span>]], nrow)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1   2   3   4   5 </span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  26  51 127 144 152</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(boxplot_tracedump[[<span class="dv">1</span>]], head, <span class="dv">3</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`1`</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    x    y PANEL group</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  1 65.1     1     1</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 92 1 55.1     1     1</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 98 1 66.3     1     1</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`2`</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    x    y PANEL group</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  2 56.9     1     2</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  2 63.3     1     2</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 2 64.0     1     2</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`3`</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x    y PANEL group</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 3 62.8     1     3</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7 3 62.3     1     3</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 8 3 61.9     1     3</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`4`</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    x    y PANEL group</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  4 59.8     1     4</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  4 62.4     1     4</span></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 4 60.4     1     4</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`5`</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    x    y PANEL group</span></span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  5 61.5     1     5</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 5 62.8     1     5</span></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 5 62.2     1     5</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually calculating some boxplot parameters</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(boxplot_tracedump[[<span class="dv">1</span>]], <span class="cf">function</span>(group) {</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">quantile</span>(group<span class="sc">$</span>y, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>))</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`1`</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0%    25%    50%    75%   100% </span></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 53.100 58.850 64.800 65.775 68.100 </span></span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`2`</span></span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0%   25%   50%   75%  100% </span></span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 56.90 60.20 63.30 63.95 65.20 </span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`3`</span></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   0%  25%  50%  75% 100% </span></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 57.5 60.7 62.0 63.1 64.0 </span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`4`</span></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     0%    25%    50%    75%   100% </span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 58.000 60.700 61.500 62.325 63.000 </span></span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`5`</span></span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0%   25%   50%   75%  100% </span></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 58.80 61.30 61.75 62.20 62.90</span></span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a><span class="co"># The combined result</span></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>boxplot_tracedump[[<span class="dv">2</span>]]</span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ymin lower middle  upper ymax               outliers notchupper notchlower x</span></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1</span></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2</span></span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4</span></span>
+<span id="cb17-73"><a href="#cb17-73" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5</span></span>
+<span id="cb17-74"><a href="#cb17-74" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   width relvarwidth flipped_aes PANEL group</span></span>
+<span id="cb17-75"><a href="#cb17-75" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0.75    5.099020       FALSE     1     1</span></span>
+<span id="cb17-76"><a href="#cb17-76" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.75    7.141428       FALSE     1     2</span></span>
+<span id="cb17-77"><a href="#cb17-77" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.75   11.269428       FALSE     1     3</span></span>
+<span id="cb17-78"><a href="#cb17-78" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span></span>
+<span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span></span></code></pre></div>
 <p>Using the returned environment opens up more powerful manipulations:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># What was inside the method environment?</span>
-<span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span>envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; [1] "data"   "groups" "scales" "self"   "stats"</span>
-
-<span class="co"># Evaluate the expression in Step 6 with the method's runtime environment</span>
-<span class="fu"><a href="https://rdrr.io/r/base/eval.html">eval</a></span><span class="op">(</span>
-  <span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span><span class="op">[[</span><span class="fl">6</span><span class="op">]</span><span class="op">]</span>,
-  envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
-<span class="op">)</span>
-<span class="co">#&gt;   ymin lower middle  upper ymax               outliers notchupper notchlower x</span>
-<span class="co">#&gt; 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1</span>
-<span class="co">#&gt; 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2</span>
-<span class="co">#&gt; 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3</span>
-<span class="co">#&gt; 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4</span>
-<span class="co">#&gt; 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5</span>
-<span class="co">#&gt;   width relvarwidth flipped_aes PANEL group</span>
-<span class="co">#&gt; 1  0.75    5.099020       FALSE     1     1</span>
-<span class="co">#&gt; 2  0.75    7.141428       FALSE     1     2</span>
-<span class="co">#&gt; 3  0.75   11.269428       FALSE     1     3</span>
-<span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span>
-<span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span>
-
-<span class="co"># Manually call the compute_group method from StatBoxplot to apply</span>
-<span class="co"># transformation to the first group using the method environment</span>
-<span class="fu"><a href="https://rdrr.io/r/base/eval.html">eval</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="fu">compute_group</span><span class="op">(</span><span class="va">groups</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="va">scales</span>, <span class="va">...</span><span class="op">)</span><span class="op">)</span>,
-  envir <span class="op">=</span> <span class="va">boxplot_tracedump</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span>
-<span class="op">)</span>
-<span class="co">#&gt;   ymin lower middle  upper ymax outliers notchupper notchlower x width</span>
-<span class="co">#&gt; 1 53.1 58.85   64.8 65.775 68.1             66.9458    62.6542 1  0.75</span>
-<span class="co">#&gt;   relvarwidth flipped_aes</span>
-<span class="co">#&gt; 1     5.09902       FALSE</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What was inside the method environment?</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>(<span class="at">envir =</span> boxplot_tracedump[[<span class="dv">3</span>]])</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "data"   "groups" "scales" "self"   "stats"</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the expression in Step 6 with the method's runtime environment</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggbody</span>(Stat<span class="sc">$</span>compute_panel)[[<span class="dv">6</span>]],</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">envir =</span> boxplot_tracedump[[<span class="dv">3</span>]]</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ymin lower middle  upper ymax               outliers notchupper notchlower x</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   width relvarwidth flipped_aes PANEL group</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1  0.75    5.099020       FALSE     1     1</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2  0.75    7.141428       FALSE     1     2</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3  0.75   11.269428       FALSE     1     3</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4  0.75   12.000000       FALSE     1     4</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually call the compute_group method from StatBoxplot to apply</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation to the first group using the method environment</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">quote</span>(StatBoxplot<span class="sc">$</span><span class="fu">compute_group</span>(groups[[<span class="dv">1</span>]], scales, ...)),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">envir =</span> boxplot_tracedump[[<span class="dv">3</span>]]</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ymin lower middle  upper ymax outliers notchupper notchlower x width</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 53.1 58.85   64.8 65.775 68.1             66.9458    62.6542 1  0.75</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   relvarwidth flipped_aes</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     5.09902       FALSE</span></span></code></pre></div>
 </div>
 </div>
 <div id="example-4---compute_group-method-from-statsina-ggforce" class="section level2">
@@ -644,124 +621,119 @@
 <h3 class="hasAnchor">
 <a href="#step-1-make-plot-3" class="anchor"></a><strong>Step 1. Make plot</strong>
 </h3>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggforce.data-imaginist.com">ggforce</a></span><span class="op">)</span> <span class="co"># v.0.3.3</span>
-
-<span class="va">sina_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span><span class="op">[</span><span class="va">diamonds</span><span class="op">$</span><span class="va">cut</span> <span class="op">==</span> <span class="st">"Ideal"</span>,<span class="op">]</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">cut</span>, <span class="va">depth</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html">geom_violin</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggforce.data-imaginist.com/reference/geom_sina.html">geom_sina</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">2021</span><span class="op">)</span>
-<span class="va">sina_plot</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggforce) <span class="co"># v.0.3.3</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>sina_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diamonds[diamonds<span class="sc">$</span>cut <span class="sc">==</span> <span class="st">"Ideal"</span>,][<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>,], <span class="fu">aes</span>(cut, depth)) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sina</span>(<span class="at">seed =</span> <span class="dv">2021</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>sina_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-body-of-the-ggproto-method-3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-2-inspect-body-of-the-ggproto-method-3" class="anchor"></a><strong>Step 2. Inspect body of the ggproto method</strong>
 </h3>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">StatSina</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; `{`</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; if (nrow(data) == 0) return(NULL)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; if (nrow(data) &lt; 3) {</span>
-<span class="co">#&gt;     data$density &lt;- 0</span>
-<span class="co">#&gt;     data$scaled &lt;- 1</span>
-<span class="co">#&gt; } else if (method == "density") {</span>
-<span class="co">#&gt;     range &lt;- range(data$y, na.rm = TRUE)</span>
-<span class="co">#&gt;     bw &lt;- calc_bw(data$y, bw)</span>
-<span class="co">#&gt;     dens &lt;- compute_density(data$y, data$w, from = range[1], </span>
-<span class="co">#&gt;         to = range[2], bw = bw, adjust = adjust, kernel = kernel)</span>
-<span class="co">#&gt;     densf &lt;- stats::approxfun(dens$x, dens$density, rule = 2)</span>
-<span class="co">#&gt;     data$density &lt;- densf(data$y)</span>
-<span class="co">#&gt;     data$scaled &lt;- data$density/max(dens$density)</span>
-<span class="co">#&gt;     data</span>
-<span class="co">#&gt; } else {</span>
-<span class="co">#&gt;     bin_index &lt;- cut(data$y, bins, include.lowest = TRUE, labels = FALSE)</span>
-<span class="co">#&gt;     data$density &lt;- tapply(bin_index, bin_index, length)[as.character(bin_index)]</span>
-<span class="co">#&gt;     data$density[data$density &lt;= bin_limit] &lt;- 0</span>
-<span class="co">#&gt;     data$scaled &lt;- data$density/max(data$density)</span>
-<span class="co">#&gt; }</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt; if (length(unique(data$x)) &gt; 1) {</span>
-<span class="co">#&gt;     width &lt;- diff(range(data$x)) * maxwidth</span>
-<span class="co">#&gt; } else {</span>
-<span class="co">#&gt;     width &lt;- maxwidth</span>
-<span class="co">#&gt; }</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[5]]</span>
-<span class="co">#&gt; data$width &lt;- width</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[6]]</span>
-<span class="co">#&gt; data$n &lt;- nrow(data)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[7]]</span>
-<span class="co">#&gt; data$x &lt;- mean(range(data$x))</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[8]]</span>
-<span class="co">#&gt; data</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbody</span>(StatSina<span class="sc">$</span>compute_group)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `{`</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if (nrow(data) == 0) return(NULL)</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if (nrow(data) &lt; 3) {</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data$density &lt;- 0</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data$scaled &lt;- 1</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; } else if (method == "density") {</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     range &lt;- range(data$y, na.rm = TRUE)</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     bw &lt;- calc_bw(data$y, bw)</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     dens &lt;- compute_density(data$y, data$w, from = range[1], </span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         to = range[2], bw = bw, adjust = adjust, kernel = kernel)</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     densf &lt;- stats::approxfun(dens$x, dens$density, rule = 2)</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data$density &lt;- densf(data$y)</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data$scaled &lt;- data$density/max(dens$density)</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; } else {</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     bin_index &lt;- cut(data$y, bins, include.lowest = TRUE, labels = FALSE)</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data$density &lt;- tapply(bin_index, bin_index, length)[as.character(bin_index)]</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data$density[data$density &lt;= bin_limit] &lt;- 0</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     data$scaled &lt;- data$density/max(data$density)</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[4]]</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; if (length(unique(data$x)) &gt; 1) {</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     width &lt;- diff(range(data$x)) * maxwidth</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; } else {</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     width &lt;- maxwidth</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[5]]</span></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data$width &lt;- width</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[6]]</span></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data$n &lt;- nrow(data)</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[7]]</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data$x &lt;- mean(range(data$x))</span></span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[8]]</span></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; data</span></span></code></pre></div>
 </div>
 <div id="step-3-ggtrace---inject-code-that-modifies-method-env" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-3-ggtrace---inject-code-that-modifies-method-env" class="anchor"></a><strong>Step 3. <code>ggtrace()</code> - inject code that modifies method env</strong>
 </h3>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
-  method <span class="op">=</span> <span class="va">StatSina</span><span class="op">$</span><span class="va">compute_group</span>,
-  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>,
-  trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html">exprs</a></span><span class="op">(</span>
-    <span class="va">data</span>,                      <span class="co"># 1. What does the data passed in look like at the start?</span>
-    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>     <span class="co"># 2. Modify data in-place in the method environment</span>
-      <span class="va">data</span>,         
-      y <span class="op">=</span> <span class="va">y</span> <span class="op">+</span> <span class="fl">1</span>,                 <span class="co"># Shift the points up</span>
-      x <span class="op">=</span> <span class="va">x</span> <span class="op">-</span> <span class="fl">.2</span>                 <span class="co"># Shift the points left</span>
-    <span class="op">)</span>,
-    <span class="va">data</span>                       <span class="co"># 3. What do the stat transformations on the</span>
-                               <span class="co">#    manipulated data look like at the end?</span>
-  <span class="op">)</span>,
-  verbose <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-<span class="co">#&gt; StatSina$compute_group now being traced</span>
-
-<span class="va">sina_plot</span>
-<span class="co">#&gt; Triggering trace on StatSina$compute_group</span>
-<span class="co">#&gt; Untracing StatSina$compute_group on exit.</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSina<span class="sc">$</span>compute_group,</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">8</span>),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> rlang<span class="sc">::</span><span class="fu">exprs</span>(</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    data,                      <span class="co"># 1. What does the data passed in look like at the start?</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(     <span class="co"># 2. Modify data in-place in the method environment</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>      data,         </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> y <span class="sc">+</span> <span class="dv">1</span>,                 <span class="co"># Shift the points up</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> x <span class="sc">-</span> .<span class="dv">2</span>                 <span class="co"># Shift the points left</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    data                       <span class="co"># 3. What do the stat transformations on the</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                               <span class="co">#    manipulated data look like at the end?</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; StatSina$compute_group now being traced</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>sina_plot</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on StatSina$compute_group</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing StatSina$compute_group on exit.</span></span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-ggtrace-1.png" width="100%"></p>
 <p>This effect is ephemeral with the <code>once = TRUE</code> default in <code><a href="reference/ggtrace.html">ggtrace()</a></code>, meaning that only this last plot is built with the modifications.</p>
 <p>Here we confirm that the method is restored on exit:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sina_plot</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sina_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-ggtrace-restored-1.png" width="100%"></p>
 </div>
 <div id="step-4-inspect-trace-dump-3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-4-inspect-trace-dump-3" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">sina_tracedump</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># StatSina did calculations on the modified data in the last `ggtrace()`</span>
-<span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">sina_tracedump</span>, <span class="va">head</span>, <span class="fl">3</span><span class="op">)</span>
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt;   x    y PANEL group</span>
-<span class="co">#&gt; 1 1 61.5     1     1</span>
-<span class="co">#&gt; 2 1 62.8     1     1</span>
-<span class="co">#&gt; 3 1 62.2     1     1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt;     x    y PANEL group</span>
-<span class="co">#&gt; 1 0.8 62.5     1     1</span>
-<span class="co">#&gt; 2 0.8 63.8     1     1</span>
-<span class="co">#&gt; 3 0.8 63.2     1     1</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt;     x    y PANEL group   density    scaled width  n</span>
-<span class="co">#&gt; 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50</span>
-<span class="co">#&gt; 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50</span>
-<span class="co">#&gt; 3 0.8 63.2     1     1 0.4973098 0.9076543   0.9 50</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sina_tracedump <span class="ot">&lt;-</span> <span class="fu">last_ggtrace</span>()</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># StatSina did calculations on the modified data in the last `ggtrace()`</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(sina_tracedump, head, <span class="dv">3</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x    y PANEL group</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1 61.5     1     1</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1 62.8     1     1</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1 62.2     1     1</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    y PANEL group</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.8 62.5     1     1</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 0.8 63.8     1     1</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.8 63.2     1     1</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    y PANEL group   density    scaled width  n</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.8 63.2     1     1 0.4973098 0.9076543   0.9 50</span></span></code></pre></div>
 </div>
 </div>
 </div>
