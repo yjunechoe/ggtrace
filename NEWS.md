@@ -16,13 +16,13 @@ Several options for finer control over printing and formatting of output from `g
 
 - Setting `options(ggtrace.suppressMessages = TRUE)` will also suppress `messages()`s about what method is being traced, whether a trace has been triggered on a method, whether there exists a persistent trace, etc. This information is very important so using this option is not recommended, but it has been made available. This option is set to `FALSE` on package load.
 
-- Setting `options(ggtrace.as_tibble = TRUE)` will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see [related {ggplot2} Github issue #3018](https://github.com/tidyverse/ggplot2/issues/3018)). This option is set to `FALSE` on package load.
+- Setting `options(ggtrace.as_tibble = TRUE)` will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see [related {ggplot2} Github issue](https://github.com/tidyverse/ggplot2/issues/3018)). This option is set to `FALSE` on package load.
 
 ### **Improvements**
 
-- Tracedumps accumulated in `global_ggtrace()` are named after the method (+ hexadecimal ID) for ease of searching.
+- Tracedumps accumulated in `global_ggtrace()` are named after the method (+ hexadecimal ID) for ease of searching. (#31)
 
-- Triggering of a trace is now informed via `message()` instead of `cat()`
+- Triggering of a trace is now informed via `message()` instead of `cat()` (#29)
 
 ### **Bug Fixes**
 
@@ -130,6 +130,7 @@ Several options for finer control over printing and formatting of output from `g
 - `trace_exprs` argument of `ggtrace()` is now optional. If not provided, defaults to `~step` (#13)
 
 - You can now tell `ggbody()` to (recursively) search for the method from its parents with `inherit = TRUE` (#12) 
+
 ### **Improvements**
 
 - Documentation for some of the functions now contain a **Gotchas** section for explanations of / solutions to common problems (#10)

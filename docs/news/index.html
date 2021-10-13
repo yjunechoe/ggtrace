@@ -163,7 +163,7 @@
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gets a <code>use_names</code> argument. When <code>TRUE</code>, it uses the names of the list of expressions passed to <code>trace_exprs</code> as the names for the tracedump set to <code><a href="../reference/last_ggtrace.html">last_ggtrace()</a></code> and added to <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code>.</p></li>
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gets a <code>verbose</code> argument. When <code>FALSE</code>, it suppresses the display of all non-<code><a href="https://rdrr.io/r/base/message.html">message()</a></code> information, including information about which expression is evaluated where, as well as the output of those expressions when evaluated (which can be selectively suppressed with <code>.print</code> for finer control). <code>verbose</code> is <code>TRUE</code> by default.</p></li>
 <li><p>Setting <code><a href="https://rdrr.io/r/base/options.html">options(ggtrace.suppressMessages = TRUE)</a></code> will also suppress <code>messages()</code>s about what method is being traced, whether a trace has been triggered on a method, whether there exists a persistent trace, etc. This information is very important so using this option is not recommended, but it has been made available. This option is set to <code>FALSE</code> on package load.</p></li>
-<li><p>Setting <code><a href="https://rdrr.io/r/base/options.html">options(ggtrace.as_tibble = TRUE)</a></code> will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see <a href="https://github.com/tidyverse/ggplot2/issues/3018">related {ggplot2} Github issue <a href='https://github.com/yjunechoe/ggtrace/issues/3018'>#3018</a></a>). This option is set to <code>FALSE</code> on package load.</p></li>
+<li><p>Setting <code><a href="https://rdrr.io/r/base/options.html">options(ggtrace.as_tibble = TRUE)</a></code> will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see <a href="https://github.com/tidyverse/ggplot2/issues/3018">related {ggplot2} Github issue</a>). This option is set to <code>FALSE</code> on package load.</p></li>
 </ul>
 </div>
 <div id="improvements" class="section level3">
@@ -171,8 +171,8 @@
 <a href="#improvements" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
-<li><p>Tracedumps accumulated in <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> are named after the method (+ hexadecimal ID) for ease of searching.</p></li>
-<li><p>Triggering of a trace is now informed via <code><a href="https://rdrr.io/r/base/message.html">message()</a></code> instead of <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code></p></li>
+<li><p>Tracedumps accumulated in <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> are named after the method (+ hexadecimal ID) for ease of searching. (<a href='https://github.com/yjunechoe/ggtrace/issues/31'>#31</a>)</p></li>
+<li><p>Triggering of a trace is now informed via <code><a href="https://rdrr.io/r/base/message.html">message()</a></code> instead of <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code> (<a href='https://github.com/yjunechoe/ggtrace/issues/29'>#29</a>)</p></li>
 </ul>
 </div>
 <div id="bug-fixes" class="section level3">
@@ -339,11 +339,15 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 </h3>
 <ul>
 <li><p><code>trace_exprs</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is now optional. If not provided, defaults to <code>~step</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/13'>#13</a>)</p></li>
-<li>
-<p>You can now tell <code><a href="../reference/ggbody.html">ggbody()</a></code> to (recursively) search for the method from its parents with <code>inherit = TRUE</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/12'>#12</a>)</p>
-<h3 id="improvements-5"><strong>Improvements</strong></h3>
-</li>
-<li><p>Documentation for some of the functions now contain a <strong>Gotchas</strong> section for explanations of / solutions to common problems (<a href='https://github.com/yjunechoe/ggtrace/issues/10'>#10</a>)</p></li>
+<li><p>You can now tell <code><a href="../reference/ggbody.html">ggbody()</a></code> to (recursively) search for the method from its parents with <code>inherit = TRUE</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/12'>#12</a>)</p></li>
+</ul>
+</div>
+<div id="improvements-5" class="section level3">
+<h3 class="hasAnchor">
+<a href="#improvements-5" class="anchor"></a><strong>Improvements</strong>
+</h3>
+<ul>
+<li>Documentation for some of the functions now contain a <strong>Gotchas</strong> section for explanations of / solutions to common problems (<a href='https://github.com/yjunechoe/ggtrace/issues/10'>#10</a>)</li>
 </ul>
 </div>
 </div>
