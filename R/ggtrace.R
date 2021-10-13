@@ -220,11 +220,16 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
         # Accumulate and continue
         trace_dump[[trace_idx]] <- trace_result
         if (trace_idx == length(trace_exprs)) {
+          # Set `last_ggtrace()`
           set_last_ggtrace(trace_dump)
+          # Update `global_ggtrace()`
           trace_identifier <- paste(formatted_call, rlang::env_label(environment()), sep = "-")
           trace_dump_list <- list(trace_dump)
           names(trace_dump_list) <- trace_identifier
           add_global_ggtrace(trace_dump_list)
+          # Reset idx in case of persistent trace
+          # (tracer fun encloses the `ggtrace()` env where `trace_idx` is defined)
+          trace_idx <<- 1
         } else {
           trace_idx <<- trace_idx + 1
         }
