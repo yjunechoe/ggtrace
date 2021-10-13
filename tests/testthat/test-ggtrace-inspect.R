@@ -21,12 +21,9 @@ test_that("inspection workflow works #1 (Position)", {
     print_output = FALSE     # Don't print evaluated expressions to console
   )
 
-  expect_equal(
-    last_ggtrace(),
-    NULL
-  )
+  expect_null(last_ggtrace())
 
-  print(jitter_plot)
+  invisible(ggplotGrob(jitter_plot))
 
   jitter_tracedump <- last_ggtrace()
   expect_equal(
@@ -57,7 +54,7 @@ test_that("inspection workflow works #2 (Geom)", {
     print_output = FALSE
   )
 
-  print(smooth_plot)
+  invisible(ggplotGrob(smooth_plot))
 
   smooth_tracedump <- last_ggtrace()
   smooth_gList <- smooth_tracedump[[1]]

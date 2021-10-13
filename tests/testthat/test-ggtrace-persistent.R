@@ -22,10 +22,11 @@ test_that("loops through `trace_exprs` correctly with persistent trace", {
     verbose = FALSE
   )
 
-  boxplot <- ggplot(mpg, aes(class, hwy)) + geom_boxplot()
-  print(boxplot)
+  boxplot_plot <- ggplot(mpg, aes(class, hwy)) + geom_boxplot()
+  invisible(ggplotGrob(boxplot_plot))
 
   boxplot_tracedump <- global_ggtrace()
+  clear_global_ggtrace()
 
   # Condition met at expected places
   expect_equal(

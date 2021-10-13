@@ -49,7 +49,8 @@
 #'  - If you wrap a ggplot in `invisible()` to silence `ggtrace()`, the plot will not build, which also means that
 #'    the tracing is not triggered. This is because the print/plot method of ggplot is what triggers the evaluation
 #'    of the plot code. It is recommended to allow `ggtrace()` to print messages, but if you'd really like to silence
-#'    it, you can do so by wrapping the plot in `invisible(capture.output(<plot_object>))`.
+#'    it, you can do so by wrapping the plot in a function that forces its evaluation first, like `ggplotGrob`,
+#'    as in `invisible(ggplotGrob(<plot_object>))`.
 #'  - If for any reason `ggtrace(once = TRUE)` fails to untrace itself on exit, you may accidentally trigger
 #'    the tracing again. To check if a method is being traced, call `ggbody()` on it and inspect its body. If you
 #'    see `.doTrace()` scattered around the body, that's a sign the method is still being traced. You can also always

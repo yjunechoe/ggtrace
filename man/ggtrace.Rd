@@ -87,7 +87,8 @@ see \code{\link[=ggedit]{ggedit()}}).
 \item If you wrap a ggplot in \code{invisible()} to silence \code{ggtrace()}, the plot will not build, which also means that
 the tracing is not triggered. This is because the print/plot method of ggplot is what triggers the evaluation
 of the plot code. It is recommended to allow \code{ggtrace()} to print messages, but if you'd really like to silence
-it, you can do so by wrapping the plot in \verb{invisible(capture.output(<plot_object>))}.
+it, you can do so by wrapping the plot in a function that forces its evaluation first, like \code{ggplotGrob},
+as in \verb{invisible(ggplotGrob(<plot_object>))}.
 \item If for any reason \code{ggtrace(once = TRUE)} fails to untrace itself on exit, you may accidentally trigger
 the tracing again. To check if a method is being traced, call \code{ggbody()} on it and inspect its body. If you
 see \code{.doTrace()} scattered around the body, that's a sign the method is still being traced. You can also always

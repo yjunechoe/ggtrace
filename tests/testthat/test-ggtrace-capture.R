@@ -23,7 +23,7 @@ test_that("environment properties are as expected", {
     print_output = FALSE
   )
 
-  print(boxplot_plot)
+  invisible(ggplotGrob(boxplot_plot))
   boxplot_tracedump <- last_ggtrace()
 
   # named tracedump
@@ -76,7 +76,7 @@ test_that("environment properties are as expected", {
     print_output = FALSE
   )
 
-  print(boxplot_plot)
+  invisible(ggplotGrob(boxplot_plot))
   boxplot_tracedump2 <- last_ggtrace()
 
   # new environment created at runtime; not affected by modification to previously retrieved runtime env
