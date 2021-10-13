@@ -2,6 +2,11 @@ library(ggplot2)
 
 test_that("step and exprs mismatch", {
 
+  expect_message(
+    gguntrace(Stat$compute_panel),
+    "not currently being traced"
+  )
+
   expect_error(
     ggtrace(
       Stat$compute_panel,
@@ -14,7 +19,8 @@ test_that("step and exprs mismatch", {
         env_deep_end = rlang::env_clone(environment())
       ),
       print_output = FALSE
-    )
+    ),
+    "Length mismatch"
   )
 
   expect_message(

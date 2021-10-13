@@ -132,11 +132,13 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   ## Number of steps
   n_steps <- length(trace_steps)
 
-  ## Ensure `trace_exprs` is a list of expressions
+  ## Ensure `trace_exprs` is a list of expressions (recycle)
   if (rlang::is_missing(trace_exprs)) {
     trace_exprs <- rep(list(rlang::expr(~step)), n_steps)
   } else if (!is.list(trace_exprs)) {
     trace_exprs <- rep(list(trace_exprs), n_steps)
+  } else if (is.list(trace_exprs) && length(trace_exprs) == 1) {
+    trace_exprs <- rep(trace_exprs, n_steps)
   }
 
   ## Ensure `trace_exprs` is the same length as `trace_steps`
