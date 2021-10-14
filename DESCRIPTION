@@ -20,6 +20,7 @@ RoxygenNote: 7.1.2
 Collate:
   'utils.R'
   'ggbody.R'
+  'is_traced.R'
   'last_ggtrace.R'
   'ggedit.R'
   'gguntrace.R'
