@@ -19,22 +19,22 @@ A list
 Retrieve the trace dump created by \code{ggtrace()}
 }
 \details{
-\code{last_ggtrace()} retrieves the last trace dump created by \code{ggtrace()} - i.e., from the last time
-the trace has been triggered. \code{global_ggtrace()} is a collection of trace dumps tracked across
-multiple traces, and is recommended for with \code{ggtrace(once = FALSE)} where you expect a trace to
-be separately triggered multiple times (for example, when you are tracing a compute or draw method
-for group and there are multiple groups). \code{clear_global_ggtrace()} sets the value of the global trace
-dump to \code{NULL}.
+\itemize{
+\item \code{last_ggtrace()} retrieves the last trace dump created by \code{ggtrace()} - i.e., from the last time
+the trace has been triggered.
+\item \code{global_ggtrace()} is a collection of trace dumps tracked across multiple traces, and is recommended
+for use with \code{ggtrace(once = FALSE)} when you expect a trace to be independently triggered multiple
+times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
+when the plot has multiple layers which all call the method being traced).
+\item \code{clear_global_ggtrace()} sets the value of the \code{global_ggtrace()} to \code{NULL} and returns it.
+}
 }
 \examples{
-\dontrun{
 library(ggplot2)
 
-# Inspect last trace dump
+# Inspect last tracedump
 
-ggbody(StatSmooth$compute_group)
-
-ggtrace(StatSmooth$compute_group, trace_steps = 12, trace_exprs = quote(head(prediction)))
+ggtrace(StatSmooth$compute_group, trace_steps = -1, trace_exprs = quote(head(prediction)))
 
 ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
 
@@ -42,9 +42,9 @@ last_ggtrace()
 
 ggtrace(
   StatSmooth$compute_group,
-  trace_steps = 12,
+  trace_steps = -1,
   trace_exprs = quote(prediction),
-  print_output = FALSE
+  verbose = FALSE
 )
 
 ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
@@ -67,9 +67,9 @@ ggplot(mpg, aes(class, hwy)) + geom_boxplot()
 gguntrace(GeomBoxplot$draw_group)
 
 boxplot_group_tracedump <- global_ggtrace()
-clear_global_ggtrace()
 
 length(boxplot_group_tracedump)
+
 boxplot_group_tracedump <- unlist(
   boxplot_group_tracedump,
   recursive = FALSE,
@@ -78,7 +78,8 @@ boxplot_group_tracedump <- unlist(
 
 patchwork::wrap_plots(boxplot_group_tracedump, nrow = 1)
 
-}
+clear_global_ggtrace()
+
 }
 \seealso{
 \code{\link[=ggtrace]{ggtrace()}}, \code{\link[=gguntrace]{gguntrace()}}

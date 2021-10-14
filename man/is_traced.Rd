@@ -7,12 +7,12 @@
 is_traced(method)
 }
 \arguments{
-\item{method}{An expression that evaluates to the ggproto method.
-This may be specified using any of the following forms:\preformatted{- `ggproto$method`
-
-- `namespace::ggproto$method`
-
-- `namespace:::ggproto$method`
+\item{method}{An expression that evaluates to a ggproto method.
+This may be specified using any of the following forms:
+\itemize{
+\item \code{ggproto$method}
+\item \code{namespace::ggproto$method}
+\item \code{namespace:::ggproto$method}
 }}
 }
 \value{
@@ -22,10 +22,18 @@ logical
 Check if a method is being traced
 }
 \examples{
-\dontrun{
-ggtrace(Stat$compute_layer, 1)
-is_traced(Stat$compute_layer)
+library(ggplot2)
+
 gguntrace(Stat$compute_layer)
+
+ggtrace(Stat$compute_layer, 1)
+
 is_traced(Stat$compute_layer)
-}
+
+gguntrace(Stat$compute_layer)
+
+is_traced(Stat$compute_layer)
+
+gguntrace(Stat$compute_layer)
+
 }

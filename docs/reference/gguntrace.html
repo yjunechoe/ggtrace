@@ -152,30 +152,27 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>method</th>
-      <td><p>An expression that evaluates to the ggproto method.
-This may be specified using any of the following forms:</p><pre><span class='op'>-</span> <span class='va'>`ggproto$method`</span>
-
-<span class='op'>-</span> <span class='va'>`namespace::ggproto$method`</span>
-
-<span class='op'>-</span> <span class='va'>`namespace:::ggproto$method`</span>
-</pre></td>
+      <td><p>An expression that evaluates to a ggproto method.
+This may be specified using any of the following forms:</p><ul>
+<li><p><code>ggproto$method</code></p></li>
+<li><p><code>namespace::ggproto$method</code></p></li>
+<li><p><code>namespace:::ggproto$method</code></p></li>
+</ul></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Ignored. Designed for the ease of calling this function by modifying the call to an earlier <code>{ggtrace}</code> function in interactive contexts.</p></td>
+      <td><p>Ignored. Designed for the ease of calling this function by modifying the call to
+an earlier <code>{ggtrace}</code> function in interactive contexts.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="gotchas"><a class="anchor" href="#gotchas"></a>Gotchas</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-
-<ul>
-<li><p>If you try to untrace a method that is not currently being traced,
-you will get a <code>could not find function "&lt;method&gt;"</code> error. This is
-in contrast to if you tried to untrace simple functions like in
-<code><a href='https://rdrr.io/r/base/trace.html'>untrace(mean)</a></code>. Future updates to <code>gguntrace()</code> will improve
-handling of this default behavior from <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code>.</p></li>
+    <p>There is no adverse side effect to repeatedly calling <code>gguntrace()</code> on a ggproto method.
+Unlike <code><a href='https://rdrr.io/r/base/trace.html'>base::untrace()</a></code>, it will only throw an error if the method cannot be found.
+If the method is valid, <code>gguntrace()</code> will only do one of two things:</p><ul>
+<li><p>Inform that it has successfully removed the trace (after untracing)</p></li>
+<li><p>Inform that the there isn't an existing trace (after doing nothing)</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -183,14 +180,20 @@ handling of this default behavior from <code><a href='https://rdrr.io/r/base/tra
     <div class='dont-index'><p><code><a href='ggtrace.html'>ggtrace()</a></code>, <code><a href='ggedit.html'>ggedit()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='co'># jitter_plot &lt;- ggplot(diamonds[1:1000,], aes(cut, depth)) +</span>
-<span class='co'>#   geom_point(position = position_jitter(width = 0.2, seed = 2021))</span>
-<span class='co'># ggedit(PositionJitter$compute_layer)</span>
-<span class='co'># jitter_plot</span>
-<span class='co'># gguntrace(PositionJitter$compute_layer)</span>
-<span class='co'># jitter_plot</span>
-<span class='co'># }</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+
+<span class='fu'>gguntrace</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer not currently being traced.</span></div><div class='input'>
+<span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span>, <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer now being traced</span></div><div class='input'>
+<span class='fu'><a href='is_traced.html'>is_traced</a></span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
+<span class='fu'>gguntrace</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer no longer being traced.</span></div><div class='input'>
+<span class='fu'><a href='is_traced.html'>is_traced</a></span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
+<span class='fu'>gguntrace</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer not currently being traced.</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

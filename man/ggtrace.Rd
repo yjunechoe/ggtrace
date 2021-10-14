@@ -15,69 +15,73 @@ ggtrace(
 )
 }
 \arguments{
-\item{method}{An expression that evaluates to the ggproto method.
-This may be specified using any of the following forms:\preformatted{- `ggproto$method`
-
-- `namespace::ggproto$method`
-
-- `namespace:::ggproto$method`
+\item{method}{An expression that evaluates to a ggproto method.
+This may be specified using any of the following forms:
+\itemize{
+\item \code{ggproto$method}
+\item \code{namespace::ggproto$method}
+\item \code{namespace:::ggproto$method}
 }}
 
 \item{trace_steps}{A list of positions in the method's body to trace. Negative indices
 reference steps from the last, where \code{-1} references the last step in the body.}
 
 \item{trace_exprs}{A list of expressions to evaluate at each position specified
-in \code{trace_steps}. If a single expression is provided, it is recycled.
+in \code{trace_steps}. If a single expression is provided, it is recycled to match the length of \code{trace_steps}.
 
 To simply run a step and return its output, you can use the \code{~step} keyword. If the step
 assigns a value to a local variable, the value of that local variable is returned.
-
 If \code{trace_exprs} is not provided, \code{ggtrace()} is called with \code{~step} by default.}
 
-\item{once}{Whether to \code{untrace()} itself on exit. Defaults to \code{TRUE}.}
+\item{once}{Whether to \code{untrace()} itself on exit. If \code{FALSE}, creates a persistent trace which is
+active until \code{gguntrace()} is called on the method. Defaults to \code{TRUE}.}
 
 \item{use_names}{Whether the trace dump should use the names from \code{trace_exprs}. Defaults to \code{TRUE}.}
 
 \item{print_output}{Whether to print the output of each expression to the console. Defaults to \code{TRUE}.}
 
-\item{verbose}{Whether logs (non-messages) should be printed. Encompasses \code{print_output}, meaning that \code{verbose = FALSE}
-also triggers the effect of \code{print_output = FALSE} by consequence.}
+\item{verbose}{Whether logs should be printed when trace is triggered. Encompasses \code{print_output},
+meaning that \code{verbose = FALSE} also triggers the effect of \code{print_output = FALSE} by consequence.}
 }
 \description{
 Programmatically debug ggproto methods with trace
 }
 \details{
 \code{ggtrace()} is a wrapper around \code{base::trace()} which is called on the ggproto method.
-It calls \code{base::untrace()} on itself on exit by default, to make its effect ephemeral (like \code{base::debugonce()}).
+It calls \code{base::untrace()} on itself on exit by default, to make its effect ephemeral like \code{base::debugonce()}.
 A major feature is the ability to pass multiple positions and expressions to \code{trace_steps} and \code{trace_exprs} to
-inspect, debug, and modify the run time environment of ggproto methods. It is recommended to consult the output
+inspect, capture, and modify the run time environment of ggproto methods. It is recommended to consult the output
 of \code{ggbody()} when deciding which expressions to evaluate at which steps.
 
 The output of the expressions passed to \code{trace_exprs} is printed while tracing takes place. The
-list of outputs from the last \code{ggtrace()} can be returned for further inspection with \code{last_ggtrace()}.
+list of outputs from \code{ggtrace()} ("trace dumps") can be returned for further inspection with
+\code{last_ggtrace()} or \code{global_ggtrace()}.
 }
-\section{Messages}{
+\section{Workflows}{
 
-Various information is displayed on the console whenever a trace is triggered. You can control what gets displayed with \code{print_output} and
-\code{verbose}, which are both \code{TRUE} by default. \code{print_output} simply calls \code{print()} on the evaluated expressions, and turning this
-off may be desirable if expressions in \code{trace_exprs} evaluates to a long dataframe or vector. \code{verbose} controls all
-information printed to the console including those by \code{print()}, and setting \code{verbose = FALSE} will mean that only
-\code{message()}s will be displayed. Lastly, you can suppress \code{message()} with \code{options(ggtrace.suppressMessages = TRUE)},
-though suppressing messages is not recommended for interactive workflows.
-}
-
-\section{Tips & Tricks}{
-
+Broadly, there are four flavors of working with the \code{{ggtrace}} package, listed in the order of increasing complexity:
 \itemize{
-\item If the intent is to run complex calculations, it is recommended to use \code{ggtrace()} to simply return the method's
-run time environment with \code{trace_exprs = quote(environment())}. The returned environment is the method's execution
-environment which also contextualizes the \code{self} object in addition to making all local variables available. This
-allows for more complex explorations outside of the debugger, and is also recommended for safety reasons.
-\item To modify the behavior of a method as it runs, you can pass in an expression that make assignments. For example,
-\code{trace_steps = c(1, 10)} with \code{rlang::exprs(a <- 5, a)} will first assign a new variable \code{a} at step 1, and then
-return its value \code{5} at step 10. This can also be used to modify important variables like \verb{quote(data <- <expr>)}.
-Note that this only in effect while the method is being traced. For making any arbitrary modifications to the code,
-see \code{\link[=ggedit]{ggedit()}}).
+\item \strong{Inspect}: The canonical use of \code{ggtrace()} to make queries, where expressions are passed in and
+their evaluated output are returned, potentially for further inspection.
+\item \strong{Capture}: The strategy of returning the method's runtime environment for more complex explorations outside of the debugging context.
+A method's environment contextualizes the \code{self} object in addition to making all local variables available.
+
+A reference to the method's runtime environment can be returned with \code{environment()}, as in \code{trace_exprs = quote(environment)}.
+Note that environments are mutable, meaning that \code{environment()} returned from the first and last steps will reference
+the same environment. To get a snapshot of the environment at a particular step, you can make a deep copy with
+\code{rlang::env_clone(environment())}.
+\item \strong{Inject}: The strategy of modifying the behavior of a method as it runs by passing in expressions that make assignments.
+
+For example, \code{trace_steps = c(1, 10)} with \code{rlang::exprs(a <- 5, a)} will first assign a new variable \code{a} at step 1, and then
+return its value \code{5} at step 10. This can also be used to modify important variables like \code{quote(data$x <- data$x * 10)}.
+If you would like to inject an object from the global environment, you can make use of the \verb{!!} (bang-bang) operator,
+like so: \code{quote(data <- !!modified_data)}. This can be extremely powerful when combined with \strong{Capture}.
+
+Note that the execution environment is created anew each time the method is ran, so modifying the
+environment from its previous execution will not affect future calls to the method.
+\item \strong{Edit}: It is also possible to make any arbitrary modifications to the method's source code, which stays in effect
+until the method is untraced. While this is also handled with \code{base::trace()}, this workflow is so different that
+it has been refactored into its own function \code{ggedit()}. See \code{?ggedit} for more details.
 }
 }
 
@@ -86,40 +90,44 @@ see \code{\link[=ggedit]{ggedit()}}).
 \itemize{
 \item If you wrap a ggplot in \code{invisible()} to silence \code{ggtrace()}, the plot will not build, which also means that
 the tracing is not triggered. This is because the print/plot method of ggplot is what triggers the evaluation
-of the plot code. It is recommended to allow \code{ggtrace()} to print messages, but if you'd really like to silence
+of the plot code. It is recommended to allow \code{ggtrace()} to print information, but if you'd really like to silence
 it, you can do so by wrapping the plot in a function that forces its evaluation first, like \code{ggplotGrob},
 as in \verb{invisible(ggplotGrob(<plot_object>))}.
 \item If for any reason \code{ggtrace(once = TRUE)} fails to untrace itself on exit, you may accidentally trigger
-the tracing again. To check if a method is being traced, call \code{ggbody()} on it and inspect its body. If you
-see \code{.doTrace()} scattered around the body, that's a sign the method is still being traced. You can also always
-\code{gguntrace()} any number of times without adverse consequences.
-\item Environments are mutable, which means that returning \code{environment()} at different steps in the body will still
-reference the same run time environment. To get a snapshot of the method's environment at a particular step,
-it is recommended to use \code{rlang::env_clone(environment())} instead, which makes a deep copy.
-\itemize{
-\item Note that the execution environment is created anew each time the method is ran, so modifying the
-environment from its previous execution will not affect future calls to the method, even with \code{once = FALSE}.
+the trace again. To check if a method is being traced, call \code{is_traced()}. You can also always call
+\code{gguntrace()} since unlike \code{base::untrace()}, it will not error if a trace doesn't exist on the method.
+Instead, it \code{gguntrace()} do nothing in that case and simply inform you that there is no trace to remove.
 \item Because \code{base::trace()} wraps the method body in a special environment, it is not possible to inspect the
-higher method which called it, even with something like \code{rlang::caller_env()}. You will traverse through
-a few enclosing environments created by \code{base::trace()} which eventually ends up looping around.
+method/function which called it, even with something like \code{rlang::caller_env()}. You will traverse through
+a few wrapping environments created by \code{base::trace()} which eventually ends up looping around.
 }
 }
+
+\section{Messages}{
+
+Various information is sent to the console whenever a trace is triggered. You can control what gets displayed with \code{print_output} and
+\code{verbose}, which are both \code{TRUE} by default. \code{print_output} simply calls \code{print()} on the evaluated expressions, and turning this
+off may be desirable if expressions in \code{trace_exprs} evaluates to a long dataframe or vector. \code{verbose} controls all
+information printed to the console including those by \code{print()}, and setting \code{verbose = FALSE} will mean that only
+\code{message()}s will be displayed. Lastly, you can suppress \code{message()} from \code{ggtrace()} with \code{options(ggtrace.suppressMessages = TRUE)},
+though suppressing messages is not recommended for interactive workflows.
 }
 
 \examples{
-\dontrun{
 library(ggplot2)
 
-p <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
+jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
   geom_point(position = position_jitter(width = 0.2, seed = 2021))
-p
+
+jitter_plot
 
 ggbody(PositionJitter$compute_layer)
 
 ## Example 1 ====
 ## Inspect what `data` look like at the start of the function
 ggtrace(PositionJitter$compute_layer, trace_steps = 1, trace_exprs = quote(head(data)))
-p
+
+jitter_plot
 
 ## Example 2 ====
 ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
@@ -132,7 +140,8 @@ ggtrace(
   trace_exprs = quote(~step), # This the default if `trace_exprs` is not provided
   print_output = FALSE
 )
-p
+
+jitter_plot
 
 ## Example 3 ====
 ## If we want both to be returned at the same time for an easier comparison, we can pass in a list
@@ -143,15 +152,16 @@ ggtrace(
   trace_exprs = rlang::exprs(data, ~step),
   verbose = FALSE
 )
-p
+
+jitter_plot
 
 ## Example 4 ====
 ## The output of the evaluated expressions can be inspected with `last_ggtrace()`
 jitter_tracedump <- last_ggtrace()
 lapply(jitter_tracedump, head)
 hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
-}
+
 }
 \seealso{
-\code{\link[=last_ggtrace]{last_ggtrace()}}, \code{\link[=gguntrace]{gguntrace()}}
+\code{\link[=last_ggtrace]{last_ggtrace()}}, \code{\link[=gguntrace]{gguntrace()}}, \code{\link[=is_traced]{is_traced()}}
 }

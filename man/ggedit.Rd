@@ -7,23 +7,36 @@
 ggedit(method, ...)
 }
 \arguments{
-\item{method}{An expression that evaluates to the ggproto method.
-This may be specified using any of the following forms:\preformatted{- `ggproto$method`
-
-- `namespace::ggproto$method`
-
-- `namespace:::ggproto$method`
+\item{method}{An expression that evaluates to a ggproto method.
+This may be specified using any of the following forms:
+\itemize{
+\item \code{ggproto$method}
+\item \code{namespace::ggproto$method}
+\item \code{namespace:::ggproto$method}
 }}
 
-\item{...}{Ignored. Designed for the ease of calling this function by modifying the call to an earlier \code{{ggtrace}} function in interactive contexts.}
+\item{...}{Ignored. Designed for the ease of calling this function by modifying the call to
+an earlier \code{{ggtrace}} function in interactive contexts.}
 }
 \description{
 Interactively edit the source code of a ggproto method
 }
 \details{
-Like \code{base::trace()}, the edit is in effect until \code{untrace()} is called.
-To \code{untrace()} a ggproto method, the syntax is \code{untrace(what = "method", where = obj)}
+Like \code{base::trace()}, the edit is in effect until \code{gguntrace()} is called.
+Changes with \code{ggedit()} are cumulative, so \code{ggedit()} will inform you via a warning
+if you're making an edit on top of an existing edit. Call \code{gguntrace()} on the object
+first if you'd like to edit the method's original unaltered source code.
 }
+\section{Gotchas}{
+
+\itemize{
+\item Calling \code{ggtrace()} on an method that that has changes from \code{ggedit()} will remove the
+changes from \code{ggedit()}. It \emph{is} possible to combine both features, but disabled in
+the package to keep the API consistent. It is against the philosophy of \code{{ggtrace}} to
+mix programmatic and interactive workflows.
+}
+}
+
 \examples{
 \dontrun{
 # jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -37,5 +50,5 @@ To \code{untrace()} a ggproto method, the syntax is \code{untrace(what = "method
 }
 }
 \seealso{
-\code{\link[=gguntrace]{gguntrace()}}
+\code{\link[=gguntrace]{gguntrace()}}, \code{\link[=is_traced]{is_traced()}}
 }

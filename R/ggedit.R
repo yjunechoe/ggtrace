@@ -3,10 +3,19 @@
 #' @inheritParams ggbody
 #' @inheritParams gguntrace
 #'
-#' @details Like `base::trace()`, the edit is in effect until `untrace()` is called.
-#'   To `untrace()` a ggproto method, the syntax is `untrace(what = "method", where = obj)`
+#' @details Like `base::trace()`, the edit is in effect until `gguntrace()` is called.
+#'   Changes with `ggedit()` are cumulative, so `ggedit()` will inform you via a warning
+#'   if you're making an edit on top of an existing edit. Call `gguntrace()` on the object
+#'   first if you'd like to edit the method's original unaltered source code.
 #'
-#' @seealso [gguntrace()]
+#' @section Gotchas:
+#'
+#'   - Calling `ggtrace()` on an method that that has changes from `ggedit()` will remove the
+#'     changes from `ggedit()`. It _is_ possible to combine both features, but disabled in
+#'     the package to keep the API consistent. It is against the philosophy of `{ggtrace}` to
+#'     mix programmatic and interactive workflows.
+#'
+#' @seealso [gguntrace()], [is_traced()]
 #'
 #' @return NULL
 #' @export

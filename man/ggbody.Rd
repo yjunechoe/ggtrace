@@ -7,15 +7,15 @@
 ggbody(method, inherit = FALSE)
 }
 \arguments{
-\item{method}{An expression that evaluates to the ggproto method.
-This may be specified using any of the following forms:\preformatted{- `ggproto$method`
-
-- `namespace::ggproto$method`
-
-- `namespace:::ggproto$method`
+\item{method}{An expression that evaluates to a ggproto method.
+This may be specified using any of the following forms:
+\itemize{
+\item \code{ggproto$method}
+\item \code{namespace::ggproto$method}
+\item \code{namespace:::ggproto$method}
 }}
 
-\item{inherit}{Whether the method should be returned from its closest parent. Defaults to \code{FALSE}.
+\item{inherit}{Whether the method should be searched from its closest parent. Defaults to \code{FALSE}.
 If \code{TRUE}, returns the parent's method and the corresponding \code{ggbody()} code as a message.}
 }
 \value{
@@ -35,8 +35,19 @@ the actual function body. This is a subtle but important difference for inspecti
 
 \code{ggbody()} was designed so that you do not have to worry about this distinction.
 }
+\section{Gotchas}{
+
+\itemize{
+\item If a method is being traced via \code{ggtrace()} or \code{ggedit()}, \code{ggbody()} will return the current \emph{modified state}
+of the method. As of v0.3.5, calling \code{ggbody()} on a method that has a trace on it will return a warning
+to emphasize this fact.
+\item When using \code{inherit = TRUE}, make sure that all ggproto objects from \code{class(ggproto)} are available (by loading
+the packages where they are defined, for example). Under the hood, \code{ggbody()} loops through the parents
+to search for the method, so it needs to be able to evaluate each element of \code{class(ggproto)} as an object.
+}
+}
+
 \examples{
-\dontrun{
 library(ggplot2)
 
 ggbody(StatCount$compute_group)
@@ -90,5 +101,4 @@ as.list(body(get("compute_group", StatDensityCommon)))
 
 ggbody(StatDensityCommon$compute_group)
 
-}
 }

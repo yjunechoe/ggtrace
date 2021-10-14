@@ -152,30 +152,43 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>method</th>
-      <td><p>An expression that evaluates to the ggproto method.
-This may be specified using any of the following forms:</p><pre><span class='op'>-</span> <span class='va'>`ggproto$method`</span>
-
-<span class='op'>-</span> <span class='va'>`namespace::ggproto$method`</span>
-
-<span class='op'>-</span> <span class='va'>`namespace:::ggproto$method`</span>
-</pre></td>
+      <td><p>An expression that evaluates to a ggproto method.
+This may be specified using any of the following forms:</p><ul>
+<li><p><code>ggproto$method</code></p></li>
+<li><p><code>namespace::ggproto$method</code></p></li>
+<li><p><code>namespace:::ggproto$method</code></p></li>
+</ul></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Ignored. Designed for the ease of calling this function by modifying the call to an earlier <code>{ggtrace}</code> function in interactive contexts.</p></td>
+      <td><p>Ignored. Designed for the ease of calling this function by modifying the call to
+an earlier <code>{ggtrace}</code> function in interactive contexts.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Like <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code>, the edit is in effect until <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> is called.
-To <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> a ggproto method, the syntax is <code><a href='https://rdrr.io/r/base/trace.html'>untrace(what = "method", where = obj)</a></code></p>
+    <p>Like <code><a href='https://rdrr.io/r/base/trace.html'>base::trace()</a></code>, the edit is in effect until <code><a href='gguntrace.html'>gguntrace()</a></code> is called.
+Changes with <code>ggedit()</code> are cumulative, so <code>ggedit()</code> will inform you via a warning
+if you're making an edit on top of an existing edit. Call <code><a href='gguntrace.html'>gguntrace()</a></code> on the object
+first if you'd like to edit the method's original unaltered source code.</p>
+    <h2 class="hasAnchor" id="gotchas"><a class="anchor" href="#gotchas"></a>Gotchas</h2>
+
+    
+
+<ul>
+<li><p>Calling <code><a href='ggtrace.html'>ggtrace()</a></code> on an method that that has changes from <code>ggedit()</code> will remove the
+changes from <code>ggedit()</code>. It <em>is</em> possible to combine both features, but disabled in
+the package to keep the API consistent. It is against the philosophy of <code>{ggtrace}</code> to
+mix programmatic and interactive workflows.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='gguntrace.html'>gguntrace()</a></code></p></div>
+    <div class='dont-index'><p><code><a href='gguntrace.html'>gguntrace()</a></code>, <code><a href='is_traced.html'>is_traced()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='co'># jitter_plot &lt;- ggplot(diamonds[1:1000,], aes(cut, depth)) +</span>
 <span class='co'>#   geom_point(position = position_jitter(width = 0.2, seed = 2021))</span>
 <span class='co'># ggedit(PositionJitter$compute_layer)</span>
@@ -184,7 +197,7 @@ To <code><a href='https://rdrr.io/r/base/trace.html'>untrace()</a></code> a ggpr
 <span class='co'># gguntrace(PositionJitter$compute_layer)</span>
 <span class='co'># # Or untrace(what = "compute_layer", where = PositionJitter)</span>
 <span class='co'># jitter_plot # Edit is removed</span>
-<span class='co'># }</span>
+<span class='op'>}</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

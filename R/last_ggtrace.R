@@ -17,12 +17,17 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 
 #' Retrieve the trace dump created by `ggtrace()`
 #'
-#' @details `last_ggtrace()` retrieves the last trace dump created by `ggtrace()` - i.e., from the last time
-#'   the trace has been triggered. `global_ggtrace()` is a collection of trace dumps tracked across
-#'   multiple traces, and is recommended for with `ggtrace(once = FALSE)` where you expect a trace to
-#'   be separately triggered multiple times (for example, when you are tracing a compute or draw method
-#'   for group and there are multiple groups). `clear_global_ggtrace()` sets the value of the global trace
-#'   dump to `NULL`.
+#' @details
+#'
+#'   - `last_ggtrace()` retrieves the last trace dump created by `ggtrace()` - i.e., from the last time
+#'   the trace has been triggered.
+#'
+#'   - `global_ggtrace()` is a collection of trace dumps tracked across multiple traces, and is recommended
+#'   for use with `ggtrace(once = FALSE)` when you expect a trace to be independently triggered multiple
+#'   times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
+#'   when the plot has multiple layers which all call the method being traced).
+#'
+#'   - `clear_global_ggtrace()` sets the value of the `global_ggtrace()` to `NULL` and returns it.
 #'
 #' @seealso [ggtrace()], [gguntrace()]
 #'
@@ -31,14 +36,11 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' @keywords internal
 #' @examples
-#' \dontrun{
 #' library(ggplot2)
 #'
-#' # Inspect last trace dump
+#' # Inspect last tracedump
 #'
-#' ggbody(StatSmooth$compute_group)
-#'
-#' ggtrace(StatSmooth$compute_group, trace_steps = 12, trace_exprs = quote(head(prediction)))
+#' ggtrace(StatSmooth$compute_group, trace_steps = -1, trace_exprs = quote(head(prediction)))
 #'
 #' ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
 #'
@@ -46,9 +48,9 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' ggtrace(
 #'   StatSmooth$compute_group,
-#'   trace_steps = 12,
+#'   trace_steps = -1,
 #'   trace_exprs = quote(prediction),
-#'   print_output = FALSE
+#'   verbose = FALSE
 #' )
 #'
 #' ggplot(mtcars, aes(mpg, hp)) + geom_point() + geom_smooth(method = 'lm')
@@ -71,9 +73,9 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #' gguntrace(GeomBoxplot$draw_group)
 #'
 #' boxplot_group_tracedump <- global_ggtrace()
-#' clear_global_ggtrace()
 #'
 #' length(boxplot_group_tracedump)
+#'
 #' boxplot_group_tracedump <- unlist(
 #'   boxplot_group_tracedump,
 #'   recursive = FALSE,
@@ -82,7 +84,8 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' patchwork::wrap_plots(boxplot_group_tracedump, nrow = 1)
 #'
-#' }
+#' clear_global_ggtrace()
+#'
 last_ggtrace <- function() .ggtrace_storage$get_last()
 
 #' @export

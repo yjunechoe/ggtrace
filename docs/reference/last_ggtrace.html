@@ -157,137 +157,67 @@
     <p>A list</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>last_ggtrace()</code> retrieves the last trace dump created by <code><a href='ggtrace.html'>ggtrace()</a></code> - i.e., from the last time
-the trace has been triggered. <code>global_ggtrace()</code> is a collection of trace dumps tracked across
-multiple traces, and is recommended for with <code><a href='ggtrace.html'>ggtrace(once = FALSE)</a></code> where you expect a trace to
-be separately triggered multiple times (for example, when you are tracing a compute or draw method
-for group and there are multiple groups). <code>clear_global_ggtrace()</code> sets the value of the global trace
-dump to <code>NULL</code>.</p>
+    
+<ul>
+<li><p><code>last_ggtrace()</code> retrieves the last trace dump created by <code><a href='ggtrace.html'>ggtrace()</a></code> - i.e., from the last time
+the trace has been triggered.</p></li>
+<li><p><code>global_ggtrace()</code> is a collection of trace dumps tracked across multiple traces, and is recommended
+for use with <code><a href='ggtrace.html'>ggtrace(once = FALSE)</a></code> when you expect a trace to be independently triggered multiple
+times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
+when the plot has multiple layers which all call the method being traced).</p></li>
+<li><p><code>clear_global_ggtrace()</code> sets the value of the <code>global_ggtrace()</code> to <code>NULL</code> and returns it.</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='ggtrace.html'>ggtrace()</a></code>, <code><a href='gguntrace.html'>gguntrace()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
 
-<span class='co'># Inspect last trace dump</span>
+<span class='co'># Inspect last tracedump</span>
 
-<span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>StatSmooth</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; data &lt;- flip_data(data, flipped_aes)
-#&gt; 
-#&gt; [[3]]
-#&gt; if (length(unique(data$x)) &lt; 2) {
-#&gt;     return(new_data_frame())
-#&gt; }
-#&gt; 
-#&gt; [[4]]
-#&gt; if (is.null(data$weight)) data$weight &lt;- 1
-#&gt; 
-#&gt; [[5]]
-#&gt; if (is.null(xseq)) {
-#&gt;     if (is.integer(data$x)) {
-#&gt;         if (fullrange) {
-#&gt;             xseq &lt;- scales$x$dimension()
-#&gt;         }
-#&gt;         else {
-#&gt;             xseq &lt;- sort(unique(data$x))
-#&gt;         }
-#&gt;     }
-#&gt;     else {
-#&gt;         if (fullrange) {
-#&gt;             range &lt;- scales$x$dimension()
-#&gt;         }
-#&gt;         else {
-#&gt;             range &lt;- range(data$x, na.rm = TRUE)
-#&gt;         }
-#&gt;         xseq &lt;- seq(range[1], range[2], length.out = n)
-#&gt;     }
-#&gt; }
-#&gt; 
-#&gt; [[6]]
-#&gt; if (identical(method, "loess")) {
-#&gt;     method.args$span &lt;- span
-#&gt; }
-#&gt; 
-#&gt; [[7]]
-#&gt; if (is.character(method)) {
-#&gt;     if (identical(method, "gam")) {
-#&gt;         method &lt;- mgcv::gam
-#&gt;     }
-#&gt;     else {
-#&gt;         method &lt;- match.fun(method)
-#&gt;     }
-#&gt; }
-#&gt; 
-#&gt; [[8]]
-#&gt; if (identical(method, mgcv::gam) &amp;&amp; is.null(method.args$method)) {
-#&gt;     method.args$method &lt;- "REML"
-#&gt; }
-#&gt; 
-#&gt; [[9]]
-#&gt; base.args &lt;- list(quote(formula), data = quote(data), weights = quote(weight))
-#&gt; 
-#&gt; [[10]]
-#&gt; model &lt;- do.call(method, c(base.args, method.args))
-#&gt; 
-#&gt; [[11]]
-#&gt; prediction &lt;- predictdf(model, xseq, se, level)
-#&gt; 
-#&gt; [[12]]
-#&gt; prediction$flipped_aes &lt;- flipped_aes
-#&gt; 
-#&gt; [[13]]
-#&gt; flip_data(prediction, flipped_aes)
-#&gt; </div><div class='input'>
-<span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>StatSmooth</span><span class='op'>$</span><span class='va'>compute_group</span>, trace_steps <span class='op'>=</span> <span class='fl'>12</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>prediction</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+<span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>StatSmooth</span><span class='op'>$</span><span class='va'>compute_group</span>, trace_steps <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>prediction</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>StatSmooth$compute_group now being traced</span></div><div class='input'>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>'lm'</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='output co'>#&gt; <span class='message'>Triggering trace on StatSmooth$compute_group</span></div><div class='output co'>#&gt; 
-#&gt; [Step 12]&gt; head(prediction)
-#&gt;          x        y     ymin     ymax       se
-#&gt; 1 10.40000 232.2531 201.8649 262.6414 14.87963
-#&gt; 2 10.69747 229.6265 199.9139 259.3392 14.54880
-#&gt; 3 10.99494 227.0000 197.9569 256.0430 14.22094
-#&gt; 4 11.29241 224.3734 195.9934 252.7534 13.89627
-#&gt; 5 11.58987 221.7468 194.0230 249.4707 13.57502
-#&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743
+#&gt; [Step 13]&gt; head(prediction)
+#&gt;          x        y     ymin     ymax       se flipped_aes
+#&gt; 1 10.40000 232.2531 201.8649 262.6414 14.87963       FALSE
+#&gt; 2 10.69747 229.6265 199.9139 259.3392 14.54880       FALSE
+#&gt; 3 10.99494 227.0000 197.9569 256.0430 14.22094       FALSE
+#&gt; 4 11.29241 224.3734 195.9934 252.7534 13.89627       FALSE
+#&gt; 5 11.58987 221.7468 194.0230 249.4707 13.57502       FALSE
+#&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743       FALSE
 #&gt; 
 #&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>Untracing StatSmooth$compute_group on exit.</span></div><div class='img'><img src='last_ggtrace-1.png' alt='' width='1094' height='676' /></div><div class='input'>
 <span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [[1]]
-#&gt;          x        y     ymin     ymax       se
-#&gt; 1 10.40000 232.2531 201.8649 262.6414 14.87963
-#&gt; 2 10.69747 229.6265 199.9139 259.3392 14.54880
-#&gt; 3 10.99494 227.0000 197.9569 256.0430 14.22094
-#&gt; 4 11.29241 224.3734 195.9934 252.7534 13.89627
-#&gt; 5 11.58987 221.7468 194.0230 249.4707 13.57502
-#&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743
+#&gt;          x        y     ymin     ymax       se flipped_aes
+#&gt; 1 10.40000 232.2531 201.8649 262.6414 14.87963       FALSE
+#&gt; 2 10.69747 229.6265 199.9139 259.3392 14.54880       FALSE
+#&gt; 3 10.99494 227.0000 197.9569 256.0430 14.22094       FALSE
+#&gt; 4 11.29241 224.3734 195.9934 252.7534 13.89627       FALSE
+#&gt; 5 11.58987 221.7468 194.0230 249.4707 13.57502       FALSE
+#&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743       FALSE
 #&gt; </div><div class='input'>
 <span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span>
   <span class='va'>StatSmooth</span><span class='op'>$</span><span class='va'>compute_group</span>,
-  trace_steps <span class='op'>=</span> <span class='fl'>12</span>,
+  trace_steps <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
   trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='va'>prediction</span><span class='op'>)</span>,
-  print_output <span class='op'>=</span> <span class='cn'>FALSE</span>
+  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>StatSmooth$compute_group now being traced</span></div><div class='input'>
 <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>mtcars</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>mpg</span>, <span class='va'>hp</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_smooth.html'>geom_smooth</a></span><span class='op'>(</span>method <span class='op'>=</span> <span class='st'>'lm'</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='output co'>#&gt; <span class='message'>Triggering trace on StatSmooth$compute_group</span></div><div class='output co'>#&gt; 
-#&gt; [Step 12]&gt; prediction
-#&gt; 
-#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>Untracing StatSmooth$compute_group on exit.</span></div><div class='img'><img src='last_ggtrace-2.png' alt='' width='1094' height='676' /></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>`geom_smooth()` using formula 'y ~ x'</span></div><div class='output co'>#&gt; <span class='message'>Triggering trace on StatSmooth$compute_group</span></div><div class='output co'>#&gt; <span class='message'>Untracing StatSmooth$compute_group on exit.</span></div><div class='img'><img src='last_ggtrace-2.png' alt='' width='1094' height='676' /></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'>last_ggtrace</span><span class='op'>(</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;          x        y     ymin     ymax       se
-#&gt; 1 10.40000 232.2531 201.8649 262.6414 14.87963
-#&gt; 2 10.69747 229.6265 199.9139 259.3392 14.54880
-#&gt; 3 10.99494 227.0000 197.9569 256.0430 14.22094
-#&gt; 4 11.29241 224.3734 195.9934 252.7534 13.89627
-#&gt; 5 11.58987 221.7468 194.0230 249.4707 13.57502
-#&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743</div><div class='input'>
+</div><div class='output co'>#&gt;          x        y     ymin     ymax       se flipped_aes
+#&gt; 1 10.40000 232.2531 201.8649 262.6414 14.87963       FALSE
+#&gt; 2 10.69747 229.6265 199.9139 259.3392 14.54880       FALSE
+#&gt; 3 10.99494 227.0000 197.9569 256.0430 14.22094       FALSE
+#&gt; 4 11.29241 224.3734 195.9934 252.7534 13.89627       FALSE
+#&gt; 5 11.58987 221.7468 194.0230 249.4707 13.57502       FALSE
+#&gt; 6 11.88734 219.1203 192.0450 246.1956 13.25743       FALSE</div><div class='input'>
 
 <span class='co'># Inspect an accumulation of trace dumps</span>
 
@@ -304,10 +234,10 @@ dump to <code>NULL</code>.</p>
 <span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>GeomBoxplot</span><span class='op'>$</span><span class='va'>draw_group</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>GeomBoxplot$draw_group no longer being traced.</span></div><div class='input'>
 <span class='va'>boxplot_group_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
-<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'>
+
 <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>boxplot_group_tracedump</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 7</div><div class='input'><span class='va'>boxplot_group_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span>
+</div><div class='output co'>#&gt; [1] 7</div><div class='input'>
+<span class='va'>boxplot_group_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/unlist.html'>unlist</a></span><span class='op'>(</span>
   <span class='va'>boxplot_group_tracedump</span>,
   recursive <span class='op'>=</span> <span class='cn'>FALSE</span>,
   use.names <span class='op'>=</span> <span class='cn'>FALSE</span>
@@ -315,7 +245,8 @@ dump to <code>NULL</code>.</p>
 
 <span class='fu'>patchwork</span><span class='fu'>::</span><span class='fu'><a href='https://patchwork.data-imaginist.com/reference/wrap_plots.html'>wrap_plots</a></span><span class='op'>(</span><span class='va'>boxplot_group_tracedump</span>, nrow <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 </div><div class='img'><img src='last_ggtrace-4.png' alt='' width='1094' height='676' /></div><div class='input'>
-<span class='co'># }</span>
+<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

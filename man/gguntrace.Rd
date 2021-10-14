@@ -7,39 +7,44 @@
 gguntrace(method, ...)
 }
 \arguments{
-\item{method}{An expression that evaluates to the ggproto method.
-This may be specified using any of the following forms:\preformatted{- `ggproto$method`
-
-- `namespace::ggproto$method`
-
-- `namespace:::ggproto$method`
+\item{method}{An expression that evaluates to a ggproto method.
+This may be specified using any of the following forms:
+\itemize{
+\item \code{ggproto$method}
+\item \code{namespace::ggproto$method}
+\item \code{namespace:::ggproto$method}
 }}
 
-\item{...}{Ignored. Designed for the ease of calling this function by modifying the call to an earlier \code{{ggtrace}} function in interactive contexts.}
+\item{...}{Ignored. Designed for the ease of calling this function by modifying the call to
+an earlier \code{{ggtrace}} function in interactive contexts.}
 }
 \description{
 For explicitly calling \code{untrace()} on a ggproto object.
 }
-\section{Gotchas}{
-
+\details{
+There is no adverse side effect to repeatedly calling \code{gguntrace()} on a ggproto method.
+Unlike \code{base::untrace()}, it will only throw an error if the method cannot be found.
+If the method is valid, \code{gguntrace()} will only do one of two things:
 \itemize{
-\item If you try to untrace a method that is not currently being traced,
-you will get a \verb{could not find function "<method>"} error. This is
-in contrast to if you tried to untrace simple functions like in
-\code{untrace(mean)}. Future updates to \code{gguntrace()} will improve
-handling of this default behavior from \code{base::trace()}.
+\item Inform that it has successfully removed the trace (after untracing)
+\item Inform that the there isn't an existing trace (after doing nothing)
 }
 }
-
 \examples{
-\dontrun{
-# jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
-#   geom_point(position = position_jitter(width = 0.2, seed = 2021))
-# ggedit(PositionJitter$compute_layer)
-# jitter_plot
-# gguntrace(PositionJitter$compute_layer)
-# jitter_plot
-}
+library(ggplot2)
+
+gguntrace(Stat$compute_layer)
+
+ggtrace(Stat$compute_layer, 1)
+
+is_traced(Stat$compute_layer)
+
+gguntrace(Stat$compute_layer)
+
+is_traced(Stat$compute_layer)
+
+gguntrace(Stat$compute_layer)
+
 }
 \seealso{
 \code{\link[=ggtrace]{ggtrace()}}, \code{\link[=ggedit]{ggedit()}}

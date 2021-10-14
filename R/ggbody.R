@@ -1,15 +1,12 @@
 #' Retrieve the body of a ggproto method as a list
 #'
-#' @param method An expression that evaluates to the ggproto method.
+#' @param method An expression that evaluates to a ggproto method.
 #'   This may be specified using any of the following forms:
+#'   - `ggproto$method`
+#'   - `namespace::ggproto$method`
+#'   - `namespace:::ggproto$method`
 #'
-#'     - `ggproto$method`
-#'
-#'     - `namespace::ggproto$method`
-#'
-#'     - `namespace:::ggproto$method`
-#'
-#' @param inherit Whether the method should be returned from its closest parent. Defaults to `FALSE`.
+#' @param inherit Whether the method should be searched from its closest parent. Defaults to `FALSE`.
 #'   If `TRUE`, returns the parent's method and the corresponding `ggbody()` code as a message.
 #'
 #' @details `ggbody()` calls `as.list(body(get("method", ggproto)))` under the hood.
@@ -22,10 +19,17 @@
 #'
 #'   `ggbody()` was designed so that you do not have to worry about this distinction.
 #'
+#' @section Gotchas:
+#'  - If a method is being traced via `ggtrace()` or `ggedit()`, `ggbody()` will return the current _modified state_
+#'    of the method. As of v0.3.5, calling `ggbody()` on a method that has a trace on it will return a warning
+#'    to emphasize this fact.
+#'  - When using `inherit = TRUE`, make sure that all ggproto objects from `class(ggproto)` are available (by loading
+#'    the packages where they are defined, for example). Under the hood, `ggbody()` loops through the parents
+#'    to search for the method, so it needs to be able to evaluate each element of `class(ggproto)` as an object.
+#'
 #' @return A list
 #' @export
 #' @examples
-#' \dontrun{
 #' library(ggplot2)
 #'
 #' ggbody(StatCount$compute_group)
@@ -79,7 +83,6 @@
 #'
 #' ggbody(StatDensityCommon$compute_group)
 #'
-#' }
 ggbody <- function(method, inherit = FALSE) {
 
   # Capture method expression

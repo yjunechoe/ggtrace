@@ -30,6 +30,8 @@ Imports:
     rlang (>= 0.4.10)
 Suggests: 
     ggplot2 (>= 3.3.0),
+    ggforce,
+    patchwork,
     rmarkdown,
     knitr,
     pkgdown,

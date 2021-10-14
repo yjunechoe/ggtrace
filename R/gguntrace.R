@@ -3,14 +3,14 @@
 #' For explicitly calling `untrace()` on a ggproto object.
 #'
 #' @inheritParams ggbody
-#' @param ... Ignored. Designed for the ease of calling this function by modifying the call to an earlier `{ggtrace}` function in interactive contexts.
+#' @param ... Ignored. Designed for the ease of calling this function by modifying the call to
+#'   an earlier `{ggtrace}` function in interactive contexts.
 #'
-#' @section Gotchas:
-#'  - If you try to untrace a method that is not currently being traced,
-#'    you will get a `could not find function "<method>"` error. This is
-#'    in contrast to if you tried to untrace simple functions like in
-#'    `untrace(mean)`. Future updates to `gguntrace()` will improve
-#'    handling of this default behavior from `base::trace()`.
+#' @details There is no adverse side effect to repeatedly calling `gguntrace()` on a ggproto method.
+#'   Unlike `base::untrace()`, it will only throw an error if the method cannot be found.
+#'   If the method is valid, `gguntrace()` will only do one of two things:
+#'   - Inform that it has successfully removed the trace (after untracing)
+#'   - Inform that the there isn't an existing trace (after doing nothing)
 #'
 #' @seealso [ggtrace()], [ggedit()]
 #'
@@ -18,14 +18,20 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' # jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
-#' #   geom_point(position = position_jitter(width = 0.2, seed = 2021))
-#' # ggedit(PositionJitter$compute_layer)
-#' # jitter_plot
-#' # gguntrace(PositionJitter$compute_layer)
-#' # jitter_plot
-#' }
+#' library(ggplot2)
+#'
+#' gguntrace(Stat$compute_layer)
+#'
+#' ggtrace(Stat$compute_layer, 1)
+#'
+#' is_traced(Stat$compute_layer)
+#'
+#' gguntrace(Stat$compute_layer)
+#'
+#' is_traced(Stat$compute_layer)
+#'
+#' gguntrace(Stat$compute_layer)
+#'
 gguntrace <- function(method, ...) {
 
   # Capture method expression
