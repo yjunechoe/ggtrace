@@ -49,7 +49,7 @@ You can install the development version from
     # install.packages("devtools")
     devtools::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.3.4
+    library(ggtrace) # v0.3.5
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 

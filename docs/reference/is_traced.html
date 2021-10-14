@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • ggtrace</title>
+<title>Check if a method is being traced — is_traced • ggtrace</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Check if a method is being traced — is_traced" />
+<meta property="og:description" content="Check if a method is being traced" />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -133,85 +134,47 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Check if a method is being traced</h1>
+    <small class="dont-index">Source: <a href='https://github.com/yjunechoe/ggtrace/blob/master/R/is_traced.R'><code>R/is_traced.R</code></a></small>
+    <div class="hidden name"><code>is_traced.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Check if a method is being traced</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>is_traced</span><span class='op'>(</span><span class='va'>method</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-trace-and-edit" class="hasAnchor"><a href="#section-trace-and-edit" class="anchor"></a>Trace and edit</h2>
-          <p class="section-desc"><p>Programmatically inspect, debug, and manipulate ggproto methods</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="ggtrace.html">ggtrace()</a></code> </p>
-        </td>
-        <td><p>Programmatically debug ggproto methods with trace</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ggedit.html">ggedit()</a></code> </p>
-        </td>
-        <td><p>Interactively edit the source code of a ggproto method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="ggbody.html">ggbody()</a></code> </p>
-        </td>
-        <td><p>Retrieve the body of a ggproto method as a list</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="gguntrace.html">gguntrace()</a></code> </p>
-        </td>
-        <td><p>Untrace a ggproto method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="is_traced.html">is_traced()</a></code> </p>
-        </td>
-        <td><p>Check if a method is being traced</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-interact-with-trace-dumps" class="hasAnchor"><a href="#section-interact-with-trace-dumps" class="anchor"></a>Interact with trace dumps</h2>
-          <p class="section-desc"><p>Retrieve the output of evaluated expressions from triggered traces</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="last_ggtrace.html">last_ggtrace()</a></code> <code><a href="last_ggtrace.html">global_ggtrace()</a></code> <code><a href="last_ggtrace.html">clear_global_ggtrace()</a></code> </p>
-        </td>
-        <td><p>Retrieve the trace dump created by <code>ggtrace()</code></p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>method</th>
+      <td><p>An expression that evaluates to the ggproto method.
+This may be specified using any of the following forms:</p><pre><span class='op'>-</span> <span class='va'>`ggproto$method`</span>
+
+<span class='op'>-</span> <span class='va'>`namespace::ggproto$method`</span>
+
+<span class='op'>-</span> <span class='va'>`namespace:::ggproto$method`</span>
+</pre></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>logical</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \dontrun{</span>
+<span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span>, <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer now being traced</span></div><div class='input'><span class='fu'>is_traced</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer no longer being traced.</span></div><div class='input'><span class='fu'>is_traced</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='co'># }</span>
+</div></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

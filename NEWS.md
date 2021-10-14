@@ -1,5 +1,25 @@
 # ggtrace (development version)
 
+# ggtrace 0.3.5
+
+### **New features**
+
+- New function `is_traced()` checks whether a method is currently being traced
+
+### **Improvements**
+
+- `ggtrace()` now breaks early with a more informative message if the method is not a function (ex: `Stat$extra_params`, which is a 1-length character vector `"na.rm"`)
+
+- `ggbody()` now warns if it's returning the body of a method that's currently being traced (#35)
+
+- `ggedit()` now informs you if you're editing on top of an existing trace/edit. 
+
+### **Bug Fixes**
+
+- Fixed bug where `trace_exprs` would fail to be recycled if it is a list of length-1. Now a 1-length list of an expression as well as an expression by itself will get recycled to match the number of steps passed to `trace_steps`.
+
+- Fixed bug where `ggtrace()` wouldn't loop over `trace_exprs` after the first time it's triggered with persistent tracing on (`once = TRUE`). Issue was due to failing to reset the internal counter after each time the trace is triggered.
+
 # ggtrace 0.3.4
 
 ### **Breaking changes**
