@@ -124,10 +124,6 @@ test_that("injection doesn't persist across diff calls to the same method", {
 
 })
 
-test_that("injection doesn't persist with once = FALSE", {
-
-})
-
 test_that("injections can clean up locally defined variables", {
 
   ggtrace(

@@ -47,7 +47,7 @@ gguntrace <- function(method, ...) {
       message(formatted_call, " no longer being traced.")
     },
     error = function(e) {
-      if (!grepl("^\\{ +.doTrace\\(", deparse1(method_body[[length(method_body)]]))) {
+      if (!.is_traced(method_name, obj)) {
         message(formatted_call, " not currently being traced.")
       }
     }

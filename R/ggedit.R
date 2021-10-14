@@ -37,6 +37,9 @@ ggedit <- function(method, ...) {
   obj_name <- method_split[["obj_name"]]
   formatted_call <- method_split[["formatted_call"]]
 
+  # Inform if editing on top of existing trace
+  if (.is_traced(method_name, obj)) { message("Editing on top of existing trace") }
+
   suppressMessages(trace(what = method_name, where = obj, edit = TRUE))
   message("Creating a persistent trace on ", method_name, " from ", obj_name,
           "\nCall `gguntrace(", formatted_call,  ")` to untrace")

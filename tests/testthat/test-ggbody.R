@@ -39,7 +39,15 @@ test_that("ggbody gets body as list", {
   )
 })
 
-test_that("Works with unimported :::", {
+test_that("warns if already being traced", {
+  ggtrace(StatBoxplot$compute_group, 1)
+  expect_true(is_traced(StatBoxplot$compute_group))
+  expect_warning(ggbody(StatBoxplot$compute_group), "Method is currently being traced")
+  expect_message(gguntrace(StatBoxplot$compute_group), "no longer being traced")
+  expect_true(!is_traced(StatBoxplot$compute_group))
+})
+
+test_that("works with unimported :::", {
   expect_equal(
     ggbody(ggplot2:::Layer$compute_position),
     as.list(body(get("compute_position", ggplot2:::Layer)))

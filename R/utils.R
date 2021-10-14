@@ -21,6 +21,16 @@ split_ggproto_method <- function(method) {
   split_list
 }
 
+.is_traced <- function(method_name, obj) {
+  "functionWithTrace" %in% class(get(method_name, obj))
+}
+
+is_traced <- function(method) {
+  method <- rlang::enquo(method)
+  info <- split_ggproto_method(method)
+  "functionWithTrace" %in% class(get(info$method_name, info$obj))
+}
+
 resolve_method <- function(got) {
   if (is.function(got)) {
     as.list(body(got))

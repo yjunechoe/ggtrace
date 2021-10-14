@@ -84,8 +84,10 @@ ggbody <- function(method, inherit = FALSE) {
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
+  arg_provided <- TRUE
   if (rlang::is_quosure(method)) {
     method_quo <- method
+    arg_provided <- FALSE
   }
   method_expr <- rlang::quo_get_expr(method_quo)
 
@@ -120,17 +122,25 @@ ggbody <- function(method, inherit = FALSE) {
         } else {
           message("Returning `ggbody(", parent, "$", method_name, ")`")
         }
+        # Inform if already being traced
+        if (arg_provided && "functionWithTrace" %in% class(parent_method)) {
+          rlang::warn("Method is currently being traced")
+        }
         # Break loop and return when found
         return(resolve_method(parent_method))
       }
     }
   } else {
-    tryCatch(
+    result <- tryCatch(
       expr = resolve_method(get(method_name, obj)),
       error = function(e) {
         sanitize_get_error(e, method_name, obj_name)
       }
     )
-
+    # Inform if already being traced
+    if (arg_provided && "functionWithTrace" %in% class(get(method_name, obj))) {
+      rlang::warn("Method is currently being traced")
+    }
+    return(result)
   }
 }
