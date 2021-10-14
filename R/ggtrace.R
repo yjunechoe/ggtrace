@@ -123,7 +123,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   method_body <- ggbody(method_expr)
 
   # Error if not a method
-  if (class(method_body) != "list" || all(sapply(method_body, rlang::is_expression))) {
+  if (class(method_body) != "list" || !all(sapply(method_body, rlang::is_expression))) {
     rlang::abort("Cannot trace a non-function method.")
   }
 
