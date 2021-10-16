@@ -9,7 +9,7 @@ test_that("injections modify runtime env (expr in place)", {
     Stat$compute_panel,
     trace_steps = 4,
     trace_exprs = quote(groups),
-    print_output = FALSE
+    verbose = FALSE
   )
   invisible(ggplotGrob(boxplot_plot))
   as_is <- last_ggtrace()[[1]]
@@ -25,7 +25,7 @@ test_that("injections modify runtime env (expr in place)", {
         group_copy
       })
     }),
-    print_output = FALSE
+    verbose = FALSE
   )
   modified_boxplot_data <- layer_data(boxplot_plot)
   expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
@@ -42,7 +42,7 @@ test_that("injections modify runtime env (bang-bang substitution)", {
     Stat$compute_panel,
     trace_steps = 4,
     trace_exprs = quote(groups),
-    print_output = FALSE
+    verbose = FALSE
   )
   invisible(ggplotGrob(boxplot_plot))
   as_is <- last_ggtrace()[[1]]
@@ -57,7 +57,7 @@ test_that("injections modify runtime env (bang-bang substitution)", {
     Stat$compute_panel,
     trace_steps = 4,
     trace_exprs = rlang::expr(groups <- !!modify),
-    print_output = FALSE
+    verbose = FALSE
   )
   modified_boxplot_data <- layer_data(boxplot_plot)
   expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
@@ -77,7 +77,7 @@ test_that("injected var available in later step of same runtime env", {
       injected_var,
       environment()
     ),
-    print_output = FALSE
+    verbose = FALSE
   )
   invisible(ggplotGrob(boxplot_plot))
   boxplot_tracedump <- last_ggtrace()
@@ -114,7 +114,7 @@ test_that("injection doesn't persist across diff calls to the same method", {
       ls(),
       environment()
     ),
-    print_output = FALSE
+    verbose = FALSE
   )
   invisible(ggplotGrob(boxplot_plot))
   boxplot_tracedump <- last_ggtrace()
@@ -145,7 +145,7 @@ test_that("injections can clean up locally defined variables", {
       },
       check = ls()
     ),
-    print_output = FALSE
+    verbose = FALSE
   )
   modified_boxplot_data <- layer_data(boxplot_plot)
   expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
@@ -160,3 +160,59 @@ test_that("injections can clean up locally defined variables", {
   )
 
 })
+
+test_that("injections can modify conditionally", {
+
+  expect_null(clear_global_ggtrace())
+
+  ggtrace(
+    StatBoxplot$compute_group,
+    trace_steps = 6,
+    trace_exprs = list(result = quote(stats)),
+    once = FALSE,
+    verbose = FALSE
+  )
+  print(boxplot_plot)
+  gguntrace(StatBoxplot$compute_group)
+
+  boxplot_tracedump_inspect_result <- unname(lapply(global_ggtrace(), `[[`, "result"))
+  expect_null(clear_global_ggtrace())
+
+  ggtrace(
+    StatBoxplot$compute_group,
+    trace_steps = c(4, 4, 6),
+    trace_exprs = list(
+      cond = quote(data$group[1] == 2),
+      inject = quote({
+        if (data$group[1] == 2) {
+          qs <- c(0, 0.05, 0.5, 0.95, 1)
+        } else {
+          qs
+        }
+      }),
+      result = quote(stats)
+    ),
+    once = FALSE,
+    verbose = FALSE
+  )
+  print(boxplot_plot)
+  gguntrace(StatBoxplot$compute_group)
+
+  boxplot_tracedump_inject <- global_ggtrace()
+  boxplot_tracedump_inject_result <- lapply(boxplot_tracedump_inject, `[[`, "result")
+  expect_null(clear_global_ggtrace())
+
+  # condition triggered only for group 2
+  expect_equal(
+    vapply(boxplot_tracedump_inject, `[[`, logical(1), "cond", USE.NAMES = FALSE),
+    c(FALSE, TRUE, FALSE)
+  )
+
+  # only different at group 2
+  expect_equal(boxplot_tracedump_inspect_result[[1]], boxplot_tracedump_inject_result[[1]])
+  expect_equal(boxplot_tracedump_inspect_result[[3]], boxplot_tracedump_inject_result[[3]])
+  expect_false(identical(boxplot_tracedump_inspect_result[[2]], boxplot_tracedump_inject_result[[2]]))
+
+})
+
+

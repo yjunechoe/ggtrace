@@ -7,6 +7,7 @@ test_that("~step evaluates step", {
   ggtrace:::set_last_ggtrace(NULL)
   expect_null(last_ggtrace())
 
+  gguntrace(ggplot2:::Layer$compute_statistic)
   ggtrace(
     ggplot2:::Layer$compute_statistic,
     trace_steps = c(4, 4),
@@ -30,6 +31,7 @@ test_that("~step evaluates step", {
 
 test_that("exprs evaluated at different steps return different values", {
 
+  gguntrace(StatYdensity$compute_group)
   ggtrace(
     StatYdensity$compute_group,
     trace_steps = c(7, -1),
