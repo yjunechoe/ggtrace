@@ -168,9 +168,9 @@ an earlier <code>{ggtrace}</code> function in interactive contexts.</p></td>
 
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>There is no adverse side effect to repeatedly calling <code>gguntrace()</code> on a ggproto method.
-Unlike <code><a href='https://rdrr.io/r/base/trace.html'>base::untrace()</a></code>, it will only throw an error if the method cannot be found.
-If the method is valid, <code>gguntrace()</code> will only do one of two things:</p><ul>
+    <p>Unlike <code><a href='https://rdrr.io/r/base/trace.html'>base::untrace()</a></code>, there is no adverse side effect to repeatedly calling <code>gguntrace()</code>
+on a ggproto method. <code>gguntrace()</code> will only throw an error if the method cannot be found.</p>
+<p>If the method is valid, <code>gguntrace()</code> will do one of two things:</p><ul>
 <li><p>Inform that it has successfully removed the trace (after untracing)</p></li>
 <li><p>Inform that the there isn't an existing trace (after doing nothing)</p></li>
 </ul>
