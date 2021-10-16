@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically debug ggproto methods with trace
-Version: 0.3.5
+Version: 0.3.6
 Authors@R: c(
       person(given = "June",
            family = "Choe",

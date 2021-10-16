@@ -228,7 +228,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
       tracer = function() {
 
         if (trace_idx == 1 && !silent) {
-          message("Triggering trace on ", formatted_call)
+          message("Triggering ", if (!once) "persistent ", "trace on ", formatted_call)
         }
 
         trace_print <- gsub("\\n", "\n ", trace_msgs[trace_idx])
@@ -282,8 +282,6 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
         if (!!once) {
           suppressMessages(untrace(!!method_name, where = !!obj))
           if (!isTRUE(!!silent)) { message("Untracing ", !!formatted_call, " on exit.") }
-        } else {
-          if (!isTRUE(!!silent)) { message(!!formatted_call, " has a persistent trace. Remember to `gguntrace(", !!formatted_call, ")`!") }
         }
       })
     )

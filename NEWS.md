@@ -1,5 +1,15 @@
 # ggtrace (development version)
 
+# ggtrace 0.3.6
+
+### **Improvements**
+
+- `ggtrace(..., once = TRUE)` is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created, but not when it's triggered.
+
+### **Bux Fixes**
+
+- Fixed bug where `trace_exprs` evaluating to `NULL` would be removed from the tracedump (#38)
+
 # ggtrace 0.3.5
 
 ### **New features**
