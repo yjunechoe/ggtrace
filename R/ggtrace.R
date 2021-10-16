@@ -1,7 +1,7 @@
 #' Programmatically debug ggproto methods with trace
 #'
 #' @inheritParams ggbody
-#' @param trace_steps A list of positions in the method's body to trace. Negative indices
+#' @param trace_steps A sorted numeric vector of positions in the method's body to trace. Negative indices
 #'   reference steps from the last, where `-1` references the last step in the body.
 #' @param trace_exprs A list of expressions to evaluate at each position specified
 #'   in `trace_steps`. If a single expression is provided, it is recycled to match the length of `trace_steps`.
@@ -203,8 +203,15 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
 
   ## Substitute `~step` keyword
   for (i in seq_len(n_steps)) {
-    if (rlang::as_label(trace_exprs[[i]]) == "~step") {
-      trace_exprs[[i]] <- method_body[[trace_steps[i]]]
+    trace_expr_deparsed <- paste0(rlang::expr_deparse(trace_exprs[[i]], width = Inf), collapse = "\n")
+    if (grepl("~step", trace_expr_deparsed)) {
+      if (trace_expr_deparsed == "~step") {
+        trace_exprs[[i]] <- method_body[[trace_steps[i]]]
+      } else {
+        step_expr_deparsed <- paste(rlang::expr_deparse(method_body[[trace_steps[i]]], width = Inf), collapse = "\n")
+        step_expr_substituted <- gsub("~step", step_expr_deparsed, trace_expr_deparsed)
+        trace_exprs[[i]] <- rlang::parse_expr(step_expr_substituted)
+      }
     }
   }
 
@@ -309,7 +316,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
     )
   )
 
-  if (!silent) { message(formatted_call, " now being traced") }
+  if (!silent) { message(formatted_call, " now being traced.") }
   if (!silent && !once) { message("Creating a persistent trace. Remember to `gguntrace(", formatted_call, ")`!") }
   invisible(NULL)
 

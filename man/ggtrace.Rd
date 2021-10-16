@@ -23,7 +23,7 @@ This may be specified using any of the following forms:
 \item \code{namespace:::ggproto$method}
 }}
 
-\item{trace_steps}{A list of positions in the method's body to trace. Negative indices
+\item{trace_steps}{A sorted numeric vector of positions in the method's body to trace. Negative indices
 reference steps from the last, where \code{-1} references the last step in the body.}
 
 \item{trace_exprs}{A list of expressions to evaluate at each position specified
