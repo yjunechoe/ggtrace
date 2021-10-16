@@ -151,7 +151,8 @@
 <a href="#improvements" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
-<li>When creating a persistent trace with <code><a href="../reference/ggtrace.html">ggtrace(..., once = TRUE)</a></code>, sends a message saying so</li>
+<li>
+<code><a href="../reference/ggtrace.html">ggtrace(..., once = TRUE)</a></code> is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created. When it’s triggered, it’ll tell you that there is a persistent trace on the methodbut will not remind you to untrace it later nor print the corresponding <code><a href="../reference/gguntrace.html">gguntrace()</a></code> code to do so.</li>
 </ul>
 </div>
 <div id="bux-fixes" class="section level3">

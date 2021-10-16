@@ -4,7 +4,7 @@
 
 ### **Improvements**
 
-- `ggtrace(..., once = TRUE)` is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created, but not when it's triggered.
+- `ggtrace(..., once = TRUE)` is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created. When it's triggered, it'll tell you that there is a persistent trace on the methodbut will not remind you to untrace it later nor print the corresponding `gguntrace()` code to do so.
 
 ### **Bux Fixes**
 
