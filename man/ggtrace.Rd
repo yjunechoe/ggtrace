@@ -30,10 +30,10 @@ reference steps from the last, where \code{-1} references the last step in the b
 in \code{trace_steps}. If a single expression is provided, it is recycled to match the length of \code{trace_steps}.
 
 To simply run a step and return its output, you can use the \code{~step} keyword. If the step
-assigns a value to a local variable, the value of that local variable is returned.
+is an assign expression, the value of the assigned variable is returned.
 If \code{trace_exprs} is not provided, \code{ggtrace()} is called with \code{~step} by default.}
 
-\item{once}{Whether to \code{untrace()} itself on exit. If \code{FALSE}, creates a persistent trace which is
+\item{once}{Whether to \code{untrace()} the method on exit. If \code{FALSE}, creates a persistent trace which is
 active until \code{gguntrace()} is called on the method. Defaults to \code{TRUE}.}
 
 \item{use_names}{Whether the trace dump should use the names from \code{trace_exprs}. Defaults to \code{TRUE}.}
@@ -79,6 +79,9 @@ like so: \code{quote(data <- !!modified_data)}. This can be extremely powerful w
 
 Note that the execution environment is created anew each time the method is ran, so modifying the
 environment from its previous execution will not affect future calls to the method.
+
+If you would like to capture the modified plot output and assign it to a variable, you can do so with
+\code{ggplotGrob()}. You can then render the modified plot again if you call it with \code{print()}.
 \item \strong{Edit}: It is also possible to make any arbitrary modifications to the method's source code, which stays in effect
 until the method is untraced. While this is also handled with \code{base::trace()}, this workflow is so different that
 it has been refactored into its own function \code{ggedit()}. See \code{?ggedit} for more details.
@@ -92,11 +95,11 @@ it has been refactored into its own function \code{ggedit()}. See \code{?ggedit}
 the tracing is not triggered. This is because the print/plot method of ggplot is what triggers the evaluation
 of the plot code. It is recommended to allow \code{ggtrace()} to print information, but if you'd really like to silence
 it, you can do so by wrapping the plot in a function that forces its evaluation first, like \code{ggplotGrob},
-as in \verb{invisible(ggplotGrob(<plot_object>))}.
+as in \verb{invisible(ggplotGrob(<plot>))}.
 \item If for any reason \code{ggtrace(once = TRUE)} fails to untrace itself on exit, you may accidentally trigger
 the trace again. To check if a method is being traced, call \code{is_traced()}. You can also always call
 \code{gguntrace()} since unlike \code{base::untrace()}, it will not error if a trace doesn't exist on the method.
-Instead, it \code{gguntrace()} do nothing in that case and simply inform you that there is no trace to remove.
+Instead, \code{gguntrace()} will do nothing in that case and simply inform you that there is no trace to remove.
 \item Because \code{base::trace()} wraps the method body in a special environment, it is not possible to inspect the
 method/function which called it, even with something like \code{rlang::caller_env()}. You will traverse through
 a few wrapping environments created by \code{base::trace()} which eventually ends up looping around.
@@ -110,10 +113,12 @@ Various information is sent to the console whenever a trace is triggered. You ca
 off may be desirable if expressions in \code{trace_exprs} evaluates to a long dataframe or vector. \code{verbose} controls all
 information printed to the console including those by \code{print()}, and setting \code{verbose = FALSE} will mean that only
 \code{message()}s will be displayed. Lastly, you can suppress \code{message()} from \code{ggtrace()} with \code{options(ggtrace.suppressMessages = TRUE)},
-though suppressing messages is not recommended for interactive workflows.
+though suppressing messages is generally not recommended.
 }
 
 \examples{
+# One example of an Inspect workflow ----
+
 library(ggplot2)
 
 jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -123,13 +128,13 @@ jitter_plot
 
 ggbody(PositionJitter$compute_layer)
 
-## Example 1 ====
+## Step 1 ====
 ## Inspect what `data` look like at the start of the function
 ggtrace(PositionJitter$compute_layer, trace_steps = 1, trace_exprs = quote(head(data)))
 
 jitter_plot
 
-## Example 2 ====
+## Step 2 ====
 ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
 ## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To
 ## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.
@@ -137,31 +142,45 @@ jitter_plot
 ggtrace(
   PositionJitter$compute_layer,
   trace_steps = 12,
-  trace_exprs = quote(~step), # This the default if `trace_exprs` is not provided
+  trace_exprs = quote(~step), # This is the default if `trace_exprs` is not provided
   print_output = FALSE
 )
 
-jitter_plot
+# We wrap the plot in `ggplotGrob()` and `invisible()` to force
+# its evaluation while suppressing its rendering
+invisible(ggplotGrob(jitter_plot))
 
-## Example 3 ====
-## If we want both to be returned at the same time for an easier comparison, we can pass in a list
-## of expressions. We use `rlang::exprs()` here to conveniently construct a list of expressions.
+# The output of the evaluated expressions can be inspected with `last_ggtrace()`
+head(last_ggtrace()[[1]])
+
+## Step 3 ====
+## If we want both to be returned at the same time for an easier comparison, we can pass in a
+## (named) list of expressions.
 ggtrace(
   PositionJitter$compute_layer,
   trace_steps = c(1, 12),
-  trace_exprs = rlang::exprs(data, ~step),
+  trace_exprs = rlang::exprs(
+    before_jitter = data,
+    after_jitter = ~step
+  ),
   verbose = FALSE
 )
 
-jitter_plot
+invisible(ggplotGrob(jitter_plot))
 
-## Example 4 ====
+## Step 4 ====
 ## The output of the evaluated expressions can be inspected with `last_ggtrace()`
 jitter_tracedump <- last_ggtrace()
-lapply(jitter_tracedump, head)
-hist(jitter_tracedump[[1]]$x - jitter_tracedump[[2]]$x)
+
+lapply(jitter_tracedump, head, 3)
+
+jitter_distances <- jitter_tracedump[["before_jitter"]]$x -
+  jitter_tracedump[["after_jitter"]]$x
+
+range(jitter_distances)
+jitter_plot$layers[[1]]$position$width
 
 }
 \seealso{
-\code{\link[=last_ggtrace]{last_ggtrace()}}, \code{\link[=gguntrace]{gguntrace()}}, \code{\link[=is_traced]{is_traced()}}
+\code{\link[=gguntrace]{gguntrace()}}, \code{\link[=is_traced]{is_traced()}}, \code{\link[=last_ggtrace]{last_ggtrace()}}, \code{\link[=global_ggtrace]{global_ggtrace()}}
 }

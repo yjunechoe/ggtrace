@@ -22,9 +22,10 @@ an earlier \code{{ggtrace}} function in interactive contexts.}
 For explicitly calling \code{untrace()} on a ggproto object.
 }
 \details{
-There is no adverse side effect to repeatedly calling \code{gguntrace()} on a ggproto method.
-Unlike \code{base::untrace()}, it will only throw an error if the method cannot be found.
-If the method is valid, \code{gguntrace()} will only do one of two things:
+Unlike \code{base::untrace()}, there is no adverse side effect to repeatedly calling \code{gguntrace()}
+on a ggproto method. \code{gguntrace()} will only throw an error if the method cannot be found.
+
+If the method is valid, \code{gguntrace()} will do one of two things:
 \itemize{
 \item Inform that it has successfully removed the trace (after untracing)
 \item Inform that the there isn't an existing trace (after doing nothing)
