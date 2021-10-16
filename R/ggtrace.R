@@ -157,8 +157,11 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   obj_name <- method_split[["obj_name"]]
   formatted_call <- method_split[["formatted_call"]]
 
-  # Ensure method is untraced
-  if (.is_traced(method_name, obj)) { suppressMessages(untrace(method_name, where = obj)) }
+  # Ensure method is untraced and body is extracted from untraced method
+  if (.is_traced(method_name, obj)) {
+    suppressMessages(untrace(method_name, where = obj))
+    method_body <- ggbody(method_expr)
+  }
 
   ## Number of steps
   n_steps <- length(trace_steps)
