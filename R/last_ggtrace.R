@@ -22,12 +22,15 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'   - `last_ggtrace()` retrieves the last trace dump created by `ggtrace()` - i.e., from the last time
 #'   the trace has been triggered.
 #'
-#'   - `global_ggtrace()` is a collection of trace dumps tracked across multiple traces, and is recommended
+#'   - `global_ggtrace()` is a list of trace dumps collected across multiple traces, and is recommended
 #'   for use with `ggtrace(once = FALSE)` when you expect a trace to be independently triggered multiple
 #'   times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
 #'   when the plot has multiple layers which all call the method being traced).
 #'
-#'   - `clear_global_ggtrace()` sets the value of the `global_ggtrace()` to `NULL` and returns it.
+#'   When a trace dump is pushed to `global_ggtrace()` upon exiting a trace, it gets named after the ggproto method
+#'   and a hex code identifying the method's runtime environment, e.g. `"Stat$compute_layer-00000267437FD3D8"`.
+#'
+#'   - `clear_global_ggtrace()` sets the value of `global_ggtrace()` to `NULL` and returns it.
 #'
 #' @seealso [ggtrace()], [gguntrace()]
 #'

@@ -254,9 +254,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
           # Set `last_ggtrace()`
           set_last_ggtrace(trace_dump)
           # Update `global_ggtrace()`
-          trace_identifier <- paste(formatted_call, rlang::env_label(environment()), sep = "-")
           trace_dump_list <- list(trace_dump)
-          names(trace_dump_list) <- trace_identifier
+          names(trace_dump_list) <- paste(formatted_call, rlang::env_label(environment()), sep = "-")
           add_global_ggtrace(trace_dump_list)
           # Reset idx in case of persistent trace
           # (tracer fun encloses the `ggtrace()` env where `trace_idx` is defined)
@@ -283,6 +282,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   )
 
   if (!silent) { message(formatted_call, " now being traced") }
+  if (!silent && !once) { message("Creating a persistent trace. Remember to `gguntrace(", formatted_call, ")`!") }
   invisible(NULL)
 
 }

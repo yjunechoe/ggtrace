@@ -22,11 +22,16 @@ Retrieve the trace dump created by \code{ggtrace()}
 \itemize{
 \item \code{last_ggtrace()} retrieves the last trace dump created by \code{ggtrace()} - i.e., from the last time
 the trace has been triggered.
-\item \code{global_ggtrace()} is a collection of trace dumps tracked across multiple traces, and is recommended
+\item \code{global_ggtrace()} is a list of trace dumps collected across multiple traces, and is recommended
 for use with \code{ggtrace(once = FALSE)} when you expect a trace to be independently triggered multiple
 times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
 when the plot has multiple layers which all call the method being traced).
-\item \code{clear_global_ggtrace()} sets the value of the \code{global_ggtrace()} to \code{NULL} and returns it.
+}
+
+When a trace dump is pushed to \code{global_ggtrace()} upon exiting a trace, it gets named after the ggproto method
+and a hex code identifying the method's runtime environment, e.g. \code{"Stat$compute_layer-00000267437FD3D8"}.
+\itemize{
+\item \code{clear_global_ggtrace()} sets the value of \code{global_ggtrace()} to \code{NULL} and returns it.
 }
 }
 \examples{
