@@ -64,27 +64,27 @@ Broadly, there are four flavors of working with the \code{{ggtrace}} package, li
 \item \strong{Inspect}: The canonical use of \code{ggtrace()} to make queries, where expressions are passed in and
 their evaluated output are returned, potentially for further inspection.
 \item \strong{Capture}: The strategy of returning the method's runtime environment for more complex explorations outside of the debugging context.
-A method's environment contextualizes the \code{self} object in addition to making all local variables available.
+A method's environment contextualizes the \code{self} object in addition to making all inherited params and local variables available.
 
-A reference to the method's runtime environment can be returned with \code{environment()}, as in \code{trace_exprs = quote(environment)}.
+A reference to the method's runtime environment can be returned with \code{environment()}, as in \code{trace_exprs = quote(environment())}.
 Note that environments are mutable, meaning that \code{environment()} returned from the first and last steps will reference
-the same environment. To get a snapshot of the environment at a particular step, you can make a deep copy with
+the same environment. To get a snapshot of the environment at a particular step, you can return a deep copy with
 \code{rlang::env_clone(environment())}.
 \item \strong{Inject}: The strategy of modifying the behavior of a method as it runs by passing in expressions that make assignments.
 
-For example, \code{trace_steps = c(1, 10)} with \code{rlang::exprs(a <- 5, a)} will first assign a new variable \code{a} at step 1, and then
-return its value \code{5} at step 10. This can also be used to modify important variables like \code{quote(data$x <- data$x * 10)}.
-If you would like to inject an object from the global environment, you can make use of the \verb{!!} (bang-bang) operator,
-like so: \code{quote(data <- !!modified_data)}. This can be extremely powerful when combined with \strong{Capture}.
+For example, \code{trace_steps = c(1, 10)} with \code{trace_exprs = rlang::exprs(a <- 5, a)} will first assign a new variable \code{a}
+at step 1, and return its value \code{5} at step 10. This can also be used to modify important variables like
+\code{quote(data$x <- data$x * 10)}. If you would like to inject an object from the global environment, you can make use of the
+\verb{!!} (bang-bang) operator from \code{{rlang}}, like so: \code{rlang::expr(data <- !!modified_data)}.
 
 Note that the execution environment is created anew each time the method is ran, so modifying the
 environment from its previous execution will not affect future calls to the method.
 
 If you would like to capture the modified plot output and assign it to a variable, you can do so with
-\code{ggplotGrob()}. You can then render the modified plot again if you call it with \code{print()}.
+\code{ggplotGrob()}. You can then render the modified plot with \code{print()}.
 \item \strong{Edit}: It is also possible to make any arbitrary modifications to the method's source code, which stays in effect
-until the method is untraced. While this is also handled with \code{base::trace()}, this workflow is so different that
-it has been refactored into its own function \code{ggedit()}. See \code{?ggedit} for more details.
+until the method is untraced. While this is also handled with \code{base::trace()}, this workflow is fundamentally
+interactive. Therefore, it has been refactored as its own function \code{ggedit()}. See \code{?ggedit} for more details.
 }
 }
 

@@ -34,29 +34,29 @@
 #'    their evaluated output are returned, potentially for further inspection.
 #'
 #'  - **Capture**: The strategy of returning the method's runtime environment for more complex explorations outside of the debugging context.
-#'    A method's environment contextualizes the `self` object in addition to making all local variables available.
+#'    A method's environment contextualizes the `self` object in addition to making all inherited params and local variables available.
 #'
-#'    A reference to the method's runtime environment can be returned with `environment()`, as in `trace_exprs = quote(environment)`.
+#'    A reference to the method's runtime environment can be returned with `environment()`, as in `trace_exprs = quote(environment())`.
 #'    Note that environments are mutable, meaning that `environment()` returned from the first and last steps will reference
-#'    the same environment. To get a snapshot of the environment at a particular step, you can make a deep copy with
+#'    the same environment. To get a snapshot of the environment at a particular step, you can return a deep copy with
 #'    `rlang::env_clone(environment())`.
 #'
 #'  - **Inject**: The strategy of modifying the behavior of a method as it runs by passing in expressions that make assignments.
 #'
-#'    For example, `trace_steps = c(1, 10)` with `rlang::exprs(a <- 5, a)` will first assign a new variable `a` at step 1, and then
-#'    return its value `5` at step 10. This can also be used to modify important variables like `quote(data$x <- data$x * 10)`.
-#'    If you would like to inject an object from the global environment, you can make use of the `!!` (bang-bang) operator,
-#'    like so: `quote(data <- !!modified_data)`. This can be extremely powerful when combined with **Capture**.
+#'    For example, `trace_steps = c(1, 10)` with `trace_exprs = rlang::exprs(a <- 5, a)` will first assign a new variable `a`
+#'    at step 1, and return its value `5` at step 10. This can also be used to modify important variables like
+#'    `quote(data$x <- data$x * 10)`. If you would like to inject an object from the global environment, you can make use of the
+#'    `!!` (bang-bang) operator from `{rlang}`, like so: `rlang::expr(data <- !!modified_data)`.
 #'
 #'    Note that the execution environment is created anew each time the method is ran, so modifying the
 #'    environment from its previous execution will not affect future calls to the method.
 #'
 #'    If you would like to capture the modified plot output and assign it to a variable, you can do so with
-#'    `ggplotGrob()`. You can then render the modified plot again if you call it with `print()`.
+#'    `ggplotGrob()`. You can then render the modified plot with `print()`.
 #'
 #'  - **Edit**: It is also possible to make any arbitrary modifications to the method's source code, which stays in effect
-#'    until the method is untraced. While this is also handled with `base::trace()`, this workflow is so different that
-#'    it has been refactored into its own function `ggedit()`. See `?ggedit` for more details.
+#'    until the method is untraced. While this is also handled with `base::trace()`, this workflow is fundamentally
+#'    interactive. Therefore, it has been refactored as its own function `ggedit()`. See `?ggedit` for more details.
 #'
 #' @section Gotchas:
 #'
