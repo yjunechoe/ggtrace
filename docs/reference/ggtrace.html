@@ -169,7 +169,7 @@ This may be specified using any of the following forms:</p><ul>
     </tr>
     <tr>
       <th>trace_steps</th>
-      <td><p>A list of positions in the method's body to trace. Negative indices
+      <td><p>A sorted numeric vector of positions in the method's body to trace. Negative indices
 reference steps from the last, where <code>-1</code> references the last step in the body.</p></td>
     </tr>
     <tr>
@@ -322,7 +322,7 @@ though suppressing messages is generally not recommended.</p>
 <span class='co'>## Step 1 ====</span>
 <span class='co'>## Inspect what `data` look like at the start of the function</span>
 <span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>, trace_steps <span class='op'>=</span> <span class='fl'>1</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>PositionJitter$compute_layer now being traced</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>PositionJitter$compute_layer now being traced.</span></div><div class='input'>
 <span class='va'>jitter_plot</span>
 </div><div class='output co'>#&gt; <span class='message'>Triggering trace on PositionJitter$compute_layer</span></div><div class='output co'>#&gt; 
 #&gt; [Step 1]&gt; head(data)
@@ -346,7 +346,7 @@ though suppressing messages is generally not recommended.</p>
   trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>step</span><span class='op'>)</span>, <span class='co'># This is the default if `trace_exprs` is not provided</span>
   print_output <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>PositionJitter$compute_layer now being traced</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>PositionJitter$compute_layer now being traced.</span></div><div class='input'>
 <span class='co'># We wrap the plot in `ggplotGrob()` and `invisible()` to force</span>
 <span class='co'># its evaluation while suppressing its rendering</span>
 <span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplotGrob.html'>ggplotGrob</a></span><span class='op'>(</span><span class='va'>jitter_plot</span><span class='op'>)</span><span class='op'>)</span>
@@ -375,7 +375,7 @@ though suppressing messages is generally not recommended.</p>
   <span class='op'>)</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>PositionJitter$compute_layer now being traced</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>PositionJitter$compute_layer now being traced.</span></div><div class='input'>
 <span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplotGrob.html'>ggplotGrob</a></span><span class='op'>(</span><span class='va'>jitter_plot</span><span class='op'>)</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Triggering trace on PositionJitter$compute_layer</span></div><div class='output co'>#&gt; <span class='message'>Untracing PositionJitter$compute_layer on exit.</span></div><div class='input'>
 <span class='co'>## Step 4 ====</span>
