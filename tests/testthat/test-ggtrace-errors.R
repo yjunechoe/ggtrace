@@ -53,7 +53,10 @@ test_that("errors on duplicates", {
   expect_error(ggtrace(Stat$compute_layer, c(1, 1), quote(data)), "Duplicate")
   expect_error(ggtrace(Stat$compute_layer, c(1, 1), list(quote(data))), "Duplicate")
   expect_error(ggtrace(Stat$compute_layer, c(-1, -1), list(quote(data))), "Duplicate")
-  expect_error(ggtrace(Stat$compute_layer, c(5, -3), list(quote(data))), "Duplicate")
   expect_message(gguntrace(Stat$compute_panel), "not currently being traced")
 
+  expect_message(ggtrace(Stat$compute_layer, c(5, -1)), "now being traced")
+  expect_message(ggtrace(Stat$compute_layer, c(5, -2)), "now being traced")
+  expect_error(ggtrace(Stat$compute_layer, c(5, -3), list(quote(data))), "Duplicate")
+  expect_message(gguntrace(Stat$compute_panel), "not currently being traced")
 })

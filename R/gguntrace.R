@@ -6,9 +6,10 @@
 #' @param ... Ignored. Designed for the ease of calling this function by modifying the call to
 #'   an earlier `{ggtrace}` function in interactive contexts.
 #'
-#' @details There is no adverse side effect to repeatedly calling `gguntrace()` on a ggproto method.
-#'   Unlike `base::untrace()`, it will only throw an error if the method cannot be found.
-#'   If the method is valid, `gguntrace()` will only do one of two things:
+#' @details Unlike `base::untrace()`, there is no adverse side effect to repeatedly calling `gguntrace()`
+#'   on a ggproto method. `gguntrace()` will only throw an error if the method cannot be found.
+#'
+#'   If the method is valid, `gguntrace()` will do one of two things:
 #'   - Inform that it has successfully removed the trace (after untracing)
 #'   - Inform that the there isn't an existing trace (after doing nothing)
 #'
