@@ -2,7 +2,6 @@ library(ggplot2)
 
 boxplot_plot <- ggplot(iris, aes(Species, Sepal.Length)) + geom_boxplot()
 
-
 test_that("trace is created (messages)", {
 
   expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
@@ -229,5 +228,53 @@ test_that("clean_names = TRUE preserves names", {
   invisible(ggplotGrob(boxplot_plot))
   expect_equal(names(last_ggtrace()), names(exprs_list2))
   expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
+
+})
+
+test_that("NULL handled like any other value", {
+
+  # Alone unnamed
+  ggtrace(Stat$compute_layer, c(1), list(quote(NULL)))
+  invisible(ggplotGrob(boxplot_plot))
+  null_alone_unnamed <- last_ggtrace()
+
+  expect_true(is.list(null_alone_unnamed))
+  expect_equal(length(null_alone_unnamed), 1)
+  expect_null(names(null_alone_unnamed))
+  expect_null(null_alone_unnamed[[1]])
+
+  # Alone named
+  ggtrace(Stat$compute_layer, c(1), list(null = quote(NULL)))
+  invisible(ggplotGrob(boxplot_plot))
+  null_alone_named <- last_ggtrace()
+
+  expect_true(is.list(null_alone_named))
+  expect_equal(length(null_alone_named), 1)
+  expect_equal(names(null_alone_named), "null")
+  expect_null(null_alone_named[[1]])
+
+  # Last
+  ggtrace(Stat$compute_layer, c(1, 1), list(hi = quote(1), bye = quote(NULL)))
+  invisible(ggplotGrob(boxplot_plot))
+  null_last <- last_ggtrace()
+
+  expect_true(is.list(null_last))
+  expect_equal(length(null_last), 2)
+  expect_equal(names(null_last), c("hi", "bye"))
+  expect_equal(vapply(null_last, is.null, logical(1), USE.NAMES = FALSE), c(FALSE, TRUE))
+
+  # Middle
+  ggtrace(
+    Stat$compute_layer, c(1, 2, 3),
+    list(hi = quote(1), bye = quote(NULL), byebye = quote(2)),
+    verbose = FALSE
+  )
+  invisible(ggplotGrob(boxplot_plot))
+  null_middle <- last_ggtrace()
+
+  expect_true(is.list(null_middle))
+  expect_equal(length(null_middle), 3)
+  expect_equal(names(null_middle), c("hi", "bye", "byebye"))
+  expect_equal(vapply(null_middle, is.null, logical(1), USE.NAMES = FALSE), c(FALSE, TRUE, FALSE))
 
 })
