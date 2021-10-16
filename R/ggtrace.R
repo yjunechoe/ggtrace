@@ -7,10 +7,10 @@
 #'   in `trace_steps`. If a single expression is provided, it is recycled to match the length of `trace_steps`.
 #'
 #'   To simply run a step and return its output, you can use the `~step` keyword. If the step
-#'   assigns a value to a local variable, the value of that local variable is returned.
+#'   is an assign expression, the value of the assigned variable is returned.
 #'   If `trace_exprs` is not provided, `ggtrace()` is called with `~step` by default.
 #'
-#' @param once Whether to `untrace()` itself on exit. If `FALSE`, creates a persistent trace which is
+#' @param once Whether to `untrace()` the method on exit. If `FALSE`, creates a persistent trace which is
 #'   active until `gguntrace()` is called on the method. Defaults to `TRUE`.
 #' @param use_names Whether the trace dump should use the names from `trace_exprs`. Defaults to `TRUE`.
 #' @param print_output Whether to print the output of each expression to the console. Defaults to `TRUE`.
@@ -51,6 +51,9 @@
 #'    Note that the execution environment is created anew each time the method is ran, so modifying the
 #'    environment from its previous execution will not affect future calls to the method.
 #'
+#'    If you would like to capture the modified plot output and assign it to a variable, you can do so with
+#'    `ggplotGrob()`. You can then render the modified plot again if you call it with `print()`.
+#'
 #'  - **Edit**: It is also possible to make any arbitrary modifications to the method's source code, which stays in effect
 #'    until the method is untraced. While this is also handled with `base::trace()`, this workflow is so different that
 #'    it has been refactored into its own function `ggedit()`. See `?ggedit` for more details.
@@ -61,12 +64,12 @@
 #'    the tracing is not triggered. This is because the print/plot method of ggplot is what triggers the evaluation
 #'    of the plot code. It is recommended to allow `ggtrace()` to print information, but if you'd really like to silence
 #'    it, you can do so by wrapping the plot in a function that forces its evaluation first, like `ggplotGrob`,
-#'    as in `invisible(ggplotGrob(<plot_object>))`.
+#'    as in `invisible(ggplotGrob(<plot>))`.
 #'
 #'  - If for any reason `ggtrace(once = TRUE)` fails to untrace itself on exit, you may accidentally trigger
 #'    the trace again. To check if a method is being traced, call `is_traced()`. You can also always call
 #'    `gguntrace()` since unlike `base::untrace()`, it will not error if a trace doesn't exist on the method.
-#'    Instead, it `gguntrace()` do nothing in that case and simply inform you that there is no trace to remove.
+#'    Instead, `gguntrace()` will do nothing in that case and simply inform you that there is no trace to remove.
 #'
 #'  - Because `base::trace()` wraps the method body in a special environment, it is not possible to inspect the
 #'    method/function which called it, even with something like `rlang::caller_env()`. You will traverse through
@@ -78,10 +81,10 @@
 #'  off may be desirable if expressions in `trace_exprs` evaluates to a long dataframe or vector. `verbose` controls all
 #'  information printed to the console including those by `print()`, and setting `verbose = FALSE` will mean that only
 #'  `message()`s will be displayed. Lastly, you can suppress `message()` from `ggtrace()` with `options(ggtrace.suppressMessages = TRUE)`,
-#'  though suppressing messages is not recommended for interactive workflows.
+#'  though suppressing messages is generally not recommended.
 #'
 #'
-#' @seealso [last_ggtrace()], [gguntrace()], [is_traced()]
+#' @seealso [gguntrace()], [is_traced()], [last_ggtrace()], [global_ggtrace()]
 #'
 #' @return NULL
 #' @export
@@ -110,7 +113,7 @@
 #' ggtrace(
 #'   PositionJitter$compute_layer,
 #'   trace_steps = 12,
-#'   trace_exprs = quote(~step), # This the default if `trace_exprs` is not provided
+#'   trace_exprs = quote(~step), # This is the default if `trace_exprs` is not provided
 #'   print_output = FALSE
 #' )
 #'
