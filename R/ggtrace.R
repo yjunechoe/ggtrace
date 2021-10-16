@@ -248,8 +248,16 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
           trace_result <- asNamespace("tibble")$as_tibble(trace_result)
         }
 
-        # Accumulate and continue
-        trace_dump[[trace_idx]] <- trace_result
+        # Accumulate (and handle NULL)
+        if (is.null(trace_result)) {
+          trace_result <- list(trace_result)
+          names(trace_result) <- names(trace_dump)[trace_idx]
+          trace_dump[trace_idx] <- trace_result
+        } else {
+          trace_dump[[trace_idx]] <- trace_result
+        }
+
+        # Continue
         if (trace_idx == length(trace_exprs)) {
           # Set `last_ggtrace()`
           set_last_ggtrace(trace_dump)
