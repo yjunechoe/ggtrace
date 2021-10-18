@@ -149,6 +149,7 @@ test_that("returns same with or without :: and :::", {
     ggbody(StatBin$compute_group),
     ggbody(ggplot2:::StatBin$compute_group)
   )
+  library(ggforce)
   expect_equal(
     ggbody(FacetCol$draw_panels),
     ggbody(ggforce::FacetCol$draw_panels)

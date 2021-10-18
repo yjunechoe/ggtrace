@@ -22,14 +22,25 @@
 #'
 #' @examples
 #' \dontrun{
-#' # jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
-#' #   geom_point(position = position_jitter(width = 0.2, seed = 2021))
-#' # ggedit(PositionJitter$compute_layer)
-#' # # < interactively modify the method's source code in text editor >
-#' # jitter_plot # Edit is in place
-#' # gguntrace(PositionJitter$compute_layer)
-#' # # Or untrace(what = "compute_layer", where = PositionJitter)
-#' # jitter_plot # Edit is removed
+#'
+#' jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
+#'   geom_point(position = position_jitter(width = 0.2, seed = 2021))
+#'
+#' # Interactively modify the method's source code in text editor
+#' ggedit(PositionJitter$compute_layer)
+#'
+#' # Check the edited code
+#' ggbody(PositionJitter$compute_layer)
+#'
+#' # Execute method with edit
+#' jitter_plot
+#'
+#' # Untrace
+#' gguntrace(PositionJitter$compute_layer)
+#'
+#' # Edit is removed in the next call
+#' jitter_plot
+#'
 #' }
 ggedit <- function(method, ...) {
 
