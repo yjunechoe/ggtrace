@@ -147,17 +147,41 @@ test_that("injections can clean up locally defined variables", {
     ),
     verbose = FALSE
   )
-  modified_boxplot_data <- layer_data(boxplot_plot)
+  modified_boxplot_data1 <- layer_data(boxplot_plot)
   expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
   boxplot_data2 <- layer_data(ggplot(iris, aes(Species, Sepal.Length * 10)) + geom_boxplot())
-
-  expect_equal(modified_boxplot_data, boxplot_data2)
+  expect_equal(modified_boxplot_data1, boxplot_data2)
 
   statuses <- last_ggtrace()
   expect_equal(
     vapply(statuses, function(x) "modified" %in% x, logical(1)),
     c(create = TRUE, assign_remove = FALSE, check = FALSE)
   )
+
+  ggtrace(
+    Stat$compute_panel,
+    trace_steps = c(4, 4),
+    trace_exprs = rlang::exprs(
+      ls = ls(),
+      create_assign = {
+        groups <- local({
+          modified <- lapply(groups, function(group) {
+            group_copy <- group
+            group_copy$y <- group_copy$y * 10
+            group_copy
+          })
+          modified
+        })
+        ls()
+      }),
+    verbose = FALSE
+  )
+  modified_boxplot_data2 <- layer_data(boxplot_plot)
+  expect_message(gguntrace(Stat$compute_layer), "not currently being traced")
+  expect_equal(modified_boxplot_data1, modified_boxplot_data2)
+
+  statuses <- last_ggtrace()
+  expect_equal(statuses[[1]], statuses[[2]])
 
 })
 
