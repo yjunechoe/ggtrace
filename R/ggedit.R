@@ -34,13 +34,13 @@
 ggedit <- function(method, ...) {
 
   # Capture method expression
-  method_expr <- rlang::enquo(method)
+  method_quo <- rlang::enquo(method)
 
   # Validate method
-  method_body <- ggbody(method_expr)
+  method_body <- ggbody(method_quo)
 
   # Parse/deparse method and obj
-  method_split <- split_ggproto_method(method_expr)
+  method_split <- split_ggproto_method(method_quo)
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]

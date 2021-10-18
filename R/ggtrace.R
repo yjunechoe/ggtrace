@@ -156,10 +156,10 @@
 ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = TRUE, print_output = TRUE, verbose = TRUE) {
 
   # Capture method expression
-  method_expr <- rlang::enquo(method)
+  method_quo <- rlang::enquo(method)
 
   # Validate method
-  method_body <- ggbody(method_expr)
+  method_body <- ggbody(method_quo)
 
   # Error if not a method
   if (class(method_body) != "list" || !all(sapply(method_body, rlang::is_expression))) {
@@ -167,7 +167,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   }
 
   # Parse/deparse method and obj
-  method_split <- split_ggproto_method(method_expr)
+  method_split <- split_ggproto_method(method_quo)
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]
@@ -176,7 +176,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   # Ensure method is untraced and body is extracted from untraced method
   if (.is_traced(method_name, obj)) {
     suppressMessages(untrace(method_name, where = obj))
-    method_body <- ggbody(method_expr)
+    method_body <- ggbody(method_quo)
   }
 
   ## Number of steps
@@ -232,7 +232,6 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
     ))
   }
 
-
   ## Setup trace dump
   trace_idx <- 1
   if (use_names) {
@@ -245,7 +244,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
     names(trace_dump) <- trace_msgs
   }
 
-  ## Setup info display options
+  ## Resolve info display options
   silent <- getOption("ggtrace.suppressMessages")
   tibble_print <- rlang::is_installed("tibble") && getOption("ggtrace.as_tibble")
 
@@ -294,8 +293,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
           trace_dump_list <- list(trace_dump)
           names(trace_dump_list) <- paste(formatted_call, rlang::env_label(environment()), sep = "-")
           add_global_ggtrace(trace_dump_list)
-          # Reset idx in case of persistent trace
-          # (tracer fun encloses the `ggtrace()` env where `trace_idx` is defined)
+          # Reset idx in case of persistent trace (tracer fun encloses the `ggtrace()` env where `trace_idx` is defined)
           trace_idx <<- 1
         } else {
           trace_idx <<- trace_idx + 1
@@ -310,7 +308,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
         if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
         if (!!once) {
           suppressMessages(untrace(!!method_name, where = !!obj))
-          if (!isTRUE(!!silent)) { message("Untracing ", !!formatted_call, " on exit.") }
+          if (isFALSE(!!silent)) { message("Untracing ", !!formatted_call, " on exit.") }
         }
       })
     )
