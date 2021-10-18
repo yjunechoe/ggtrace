@@ -54,6 +54,13 @@ test_that("works with unimported :::", {
   )
 })
 
+test_that("works with unloaded ::",{
+  expect_equal(
+    ggbody(ggforce::StatBezier$compute_panel),
+    as.list(body(get("compute_panel", StatBezier)))
+  )
+})
+
 test_that("errors if method missing or not defined for ggproto object", {
   expect_error(
     ggbody(StatBoxplot$compute_panel),
@@ -114,6 +121,25 @@ test_that("returns method from closest parent in a message", {
   )
 })
 
+test_that("returns method from closest parent in a message 2", {
+  expect_message(
+    ggbody(GeomArcBar$default_aes, inherit = TRUE),
+    "not inherited"
+  )
+  expect_message(
+    ggbody(GeomArcBar$draw_panel, inherit = TRUE),
+    "GeomShape\\$draw_panel"
+  )
+  expect_message(
+    ggbody(GeomArcBar$draw_key, inherit = TRUE),
+    "GeomPolygon\\$draw_key"
+  )
+  expect_message(
+    ggbody(GeomArcBar$draw_group, inherit = TRUE),
+    "Geom\\$draw_group"
+  )
+})
+
 test_that("returns same with or without :: and :::", {
   expect_equal(
     ggbody(StatBin$compute_group),
@@ -122,6 +148,10 @@ test_that("returns same with or without :: and :::", {
   expect_equal(
     ggbody(StatBin$compute_group),
     ggbody(ggplot2:::StatBin$compute_group)
+  )
+  expect_equal(
+    ggbody(FacetCol$draw_panels),
+    ggbody(ggforce::FacetCol$draw_panels)
   )
 })
 
