@@ -243,7 +243,7 @@ ggtrace(
   trace_exprs = rlang::exprs(
     splits      = ~step,         # What are the splits?
     combined    = ~step,         # What does the combined result look like?
-    runtime_env = environment()  # Grab the method environment
+    runtime_env = environment()  # Grab the method's execution environment
   ),
   use_names = TRUE,       # Use names of `trace_exprs` for names of the tracedump (default)
   verbose = FALSE         # Suppress all printing (except `message()`s)
@@ -259,39 +259,39 @@ boxplot_plot
 ```{r ex-3-last}
 boxplot_tracedump <- last_ggtrace()
 
-# Names are clean
+# Trace dump is named after `trace_exprs`
 names(boxplot_tracedump)
 
 # Inspect the splits
-sapply(boxplot_tracedump[[1]], nrow)
-lapply(boxplot_tracedump[[1]], head, 3)
+sapply(boxplot_tracedump[["splits"]], nrow)
+lapply(boxplot_tracedump$splits, head, 3)
 
 # Manually calculating some boxplot parameters
-lapply(boxplot_tracedump[[1]], function(group) {
+lapply(boxplot_tracedump[["splits"]], function(group) {
   quantile(group$y, c(0, 0.25, 0.5, 0.75, 1))
 })
 
 # The combined result
-boxplot_tracedump[[2]]
+boxplot_tracedump[["combined"]]
 ```
 
 Using the returned environment opens up more powerful manipulations:
 
 ```{r ex-3-last-2}
 # What was inside the method environment?
-ls(envir = boxplot_tracedump[[3]])
+ls(envir = boxplot_tracedump[["runtime_env"]])
 
 # Evaluate the expression in Step 6 with the method's runtime environment
 eval(
   ggbody(Stat$compute_panel)[[6]],
-  envir = boxplot_tracedump[[3]]
+  envir = boxplot_tracedump[["runtime_env"]]
 )
 
 # Manually call the compute_group method from StatBoxplot to apply
-# transformation to the first group using the method environment
+# transformation to the third group using the method environment
 eval(
-  quote(StatBoxplot$compute_group(groups[[1]], scales, ...)),
-  envir = boxplot_tracedump[[3]]
+  quote(StatBoxplot$compute_group(groups[[3]], scales, ...)),
+  envir = boxplot_tracedump[["runtime_env"]]
 )
 ```
 
@@ -305,7 +305,8 @@ library(ggforce) # v.0.3.3
 
 sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) +
   geom_violin() +
-  geom_sina(seed = 2021)
+  geom_sina(seed = 2021) +
+  ggtitle("Original")
 sina_plot
 ```
 
@@ -334,15 +335,18 @@ ggtrace(
   verbose = FALSE
 )
 
-sina_plot
+sina_plot_modified <- ggplotGrob(sina_plot + ggtitle("Modified"))
+grid.draw(sina_plot_modified)
 ```
 
-This effect is ephemeral with the `once = TRUE` default in `ggtrace()`, meaning that only this last plot is built with the modifications.
+This effect is ephemeral with the `once = TRUE` default in `ggtrace()`, meaning that only this last plot saved to `sina_plot_modified` is rendered with the modifications.
 
 Here we confirm that the method is restored on exit:
 
 ```{r ex-4-ggtrace-restored}
 sina_plot
+
+sina_plot + wrap_elements(full = sina_plot_modified)
 ```
 
 

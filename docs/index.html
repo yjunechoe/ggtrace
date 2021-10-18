@@ -236,7 +236,7 @@
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  ),</span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">print_output =</span> <span class="cn">FALSE</span>   <span class="co"># Don't print evaluated expressions to console</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PositionJitter$compute_layer now being traced</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; PositionJitter$compute_layer now being traced.</span></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>jitter_plot</span>
@@ -351,7 +351,7 @@
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>(<span class="sc">~</span>step), <span class="co"># Grab the gList() object it returns</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">print_output =</span> <span class="cn">FALSE</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GeomSmooth$draw_group now being traced</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; GeomSmooth$draw_group now being traced.</span></span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>smooth_plot</span>
@@ -482,13 +482,13 @@
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> rlang<span class="sc">::</span><span class="fu">exprs</span>(</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">splits      =</span> <span class="sc">~</span>step,         <span class="co"># What are the splits?</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">combined    =</span> <span class="sc">~</span>step,         <span class="co"># What does the combined result look like?</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">runtime_env =</span> <span class="fu">environment</span>()  <span class="co"># Grab the method environment</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">runtime_env =</span> <span class="fu">environment</span>()  <span class="co"># Grab the method's execution environment</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  ),</span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">use_names =</span> <span class="cn">TRUE</span>,       <span class="co"># Use names of `trace_exprs` for names of the tracedump (default)</span></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span>         <span class="co"># Suppress all printing (except `message()`s)</span></span>
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                          <span class="co"># This entails the effects of `print_output = FALSE`</span></span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Stat$compute_panel now being traced</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Stat$compute_panel now being traced.</span></span>
 <span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>boxplot_plot</span>
@@ -501,15 +501,15 @@
 </h3>
 <div class="sourceCode" id="cb17"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>boxplot_tracedump <span class="ot">&lt;-</span> <span class="fu">last_ggtrace</span>()</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Names are clean</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Trace dump is named after `trace_exprs`</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(boxplot_tracedump)</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "splits"      "combined"    "runtime_env"</span></span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect the splits</span></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(boxplot_tracedump[[<span class="dv">1</span>]], nrow)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(boxplot_tracedump[[<span class="st">"splits"</span>]], nrow)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   1   2   3   4   5 </span></span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  26  51 127 144 152</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(boxplot_tracedump[[<span class="dv">1</span>]], head, <span class="dv">3</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(boxplot_tracedump<span class="sc">$</span>splits, head, <span class="dv">3</span>)</span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`1`</span></span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    x    y PANEL group</span></span>
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 9  1 65.1     1     1</span></span>
@@ -541,7 +541,7 @@
 <span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 5 62.2     1     5</span></span>
 <span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually calculating some boxplot parameters</span></span>
-<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(boxplot_tracedump[[<span class="dv">1</span>]], <span class="cf">function</span>(group) {</span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(boxplot_tracedump[[<span class="st">"splits"</span>]], <span class="cf">function</span>(group) {</span>
 <span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">quantile</span>(group<span class="sc">$</span>y, <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>, <span class="dv">1</span>))</span>
 <span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $`1`</span></span>
@@ -565,7 +565,7 @@
 <span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 58.80 61.30 61.75 62.20 62.90</span></span>
 <span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a><span class="co"># The combined result</span></span>
-<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>boxplot_tracedump[[<span class="dv">2</span>]]</span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>boxplot_tracedump[[<span class="st">"combined"</span>]]</span>
 <span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ymin lower middle  upper ymax               outliers notchupper notchlower x</span></span>
 <span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1</span></span>
 <span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2</span></span>
@@ -580,13 +580,13 @@
 <span id="cb17-79"><a href="#cb17-79" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span></span></code></pre></div>
 <p>Using the returned environment opens up more powerful manipulations:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># What was inside the method environment?</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>(<span class="at">envir =</span> boxplot_tracedump[[<span class="dv">3</span>]])</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>(<span class="at">envir =</span> boxplot_tracedump[[<span class="st">"runtime_env"</span>]])</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "data"   "groups" "scales" "self"   "stats"</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the expression in Step 6 with the method's runtime environment</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(</span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggbody</span>(Stat<span class="sc">$</span>compute_panel)[[<span class="dv">6</span>]],</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">envir =</span> boxplot_tracedump[[<span class="dv">3</span>]]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">envir =</span> boxplot_tracedump[[<span class="st">"runtime_env"</span>]]</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ymin lower middle  upper ymax               outliers notchupper notchlower x</span></span>
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1</span></span>
@@ -602,15 +602,15 @@
 <span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5  0.75   12.328828       FALSE     1     5</span></span>
 <span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Manually call the compute_group method from StatBoxplot to apply</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation to the first group using the method environment</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># transformation to the third group using the method environment</span></span>
 <span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="fu">eval</span>(</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">quote</span>(StatBoxplot<span class="sc">$</span><span class="fu">compute_group</span>(groups[[<span class="dv">1</span>]], scales, ...)),</span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">envir =</span> boxplot_tracedump[[<span class="dv">3</span>]]</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">quote</span>(StatBoxplot<span class="sc">$</span><span class="fu">compute_group</span>(groups[[<span class="dv">3</span>]], scales, ...)),</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">envir =</span> boxplot_tracedump[[<span class="st">"runtime_env"</span>]]</span>
 <span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ymin lower middle  upper ymax outliers notchupper notchlower x width</span></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 53.1 58.85   64.8 65.775 68.1             66.9458    62.6542 1  0.75</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 57.5  60.7     62  63.1   64            62.33649   61.66351 3  0.75</span></span>
 <span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   relvarwidth flipped_aes</span></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     5.09902       FALSE</span></span></code></pre></div>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1    11.26943       FALSE</span></span></code></pre></div>
 </div>
 </div>
 <div id="example-4---compute_group-method-from-statsina-ggforce" class="section level2">
@@ -625,8 +625,9 @@
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>sina_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(diamonds[diamonds<span class="sc">$</span>cut <span class="sc">==</span> <span class="st">"Ideal"</span>,][<span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>,], <span class="fu">aes</span>(cut, depth)) <span class="sc">+</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>() <span class="sc">+</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sina</span>(<span class="at">seed =</span> <span class="dv">2021</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>sina_plot</span></code></pre></div>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sina</span>(<span class="at">seed =</span> <span class="dv">2021</span>) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Original"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>sina_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-setup-1.png" width="100%"></p>
 </div>
 <div id="step-2-inspect-body-of-the-ggproto-method-3" class="section level3">
@@ -698,42 +699,45 @@
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose =</span> <span class="cn">FALSE</span></span>
 <span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; StatSina$compute_group now being traced</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; StatSina$compute_group now being traced.</span></span>
 <span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>sina_plot</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>sina_plot_modified <span class="ot">&lt;-</span> <span class="fu">ggplotGrob</span>(sina_plot <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Modified"</span>))</span>
 <span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on StatSina$compute_group</span></span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing StatSina$compute_group on exit.</span></span></code></pre></div>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing StatSina$compute_group on exit.</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.draw</span>(sina_plot_modified)</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-ggtrace-1.png" width="100%"></p>
-<p>This effect is ephemeral with the <code>once = TRUE</code> default in <code><a href="reference/ggtrace.html">ggtrace()</a></code>, meaning that only this last plot is built with the modifications.</p>
+<p>This effect is ephemeral with the <code>once = TRUE</code> default in <code><a href="reference/ggtrace.html">ggtrace()</a></code>, meaning that only this last plot saved to <code>sina_plot_modified</code> is rendered with the modifications.</p>
 <p>Here we confirm that the method is restored on exit:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sina_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-ggtrace-restored-1.png" width="100%"></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sina_plot <span class="sc">+</span> <span class="fu">wrap_elements</span>(<span class="at">full =</span> sina_plot_modified)</span></code></pre></div>
+<p><img src="reference/figures/README-ex-4-ggtrace-restored-2.png" width="100%"></p>
 </div>
 <div id="step-4-inspect-trace-dump-3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-4-inspect-trace-dump-3" class="anchor"></a><strong>Step 4. Inspect trace dump</strong>
 </h3>
-<div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sina_tracedump <span class="ot">&lt;-</span> <span class="fu">last_ggtrace</span>()</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># StatSina did calculations on the modified data in the last `ggtrace()`</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(sina_tracedump, head, <span class="dv">3</span>)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x    y PANEL group</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1 61.5     1     1</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1 62.8     1     1</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1 62.2     1     1</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    y PANEL group</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.8 62.5     1     1</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 0.8 63.8     1     1</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.8 63.2     1     1</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    y PANEL group   density    scaled width  n</span></span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50</span></span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50</span></span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.8 63.2     1     1 0.4973098 0.9076543   0.9 50</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sina_tracedump <span class="ot">&lt;-</span> <span class="fu">last_ggtrace</span>()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># StatSina did calculations on the modified data in the last `ggtrace()`</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(sina_tracedump, head, <span class="dv">3</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   x    y PANEL group</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 1 61.5     1     1</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 1 62.8     1     1</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 1 62.2     1     1</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    y PANEL group</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.8 62.5     1     1</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 0.8 63.8     1     1</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.8 63.2     1     1</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[3]]</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     x    y PANEL group   density    scaled width  n</span></span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50</span></span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 0.8 63.2     1     1 0.4973098 0.9076543   0.9 50</span></span></code></pre></div>
 </div>
 </div>
 </div>

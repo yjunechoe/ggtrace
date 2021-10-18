@@ -118,7 +118,7 @@ You can install the development version from
       ),
       print_output = FALSE   # Don't print evaluated expressions to console
     )
-    #> PositionJitter$compute_layer now being traced
+    #> PositionJitter$compute_layer now being traced.
 
     # plot not printed to save space
     jitter_plot
@@ -223,7 +223,7 @@ You can install the development version from
       trace_exprs = quote(~step), # Grab the gList() object it returns
       print_output = FALSE
     )
-    #> GeomSmooth$draw_group now being traced
+    #> GeomSmooth$draw_group now being traced.
 
     # plot not printed to save space
     smooth_plot
@@ -368,13 +368,13 @@ Let’s return the split and the combine:
       trace_exprs = rlang::exprs(
         splits      = ~step,         # What are the splits?
         combined    = ~step,         # What does the combined result look like?
-        runtime_env = environment()  # Grab the method environment
+        runtime_env = environment()  # Grab the method's execution environment
       ),
       use_names = TRUE,       # Use names of `trace_exprs` for names of the tracedump (default)
       verbose = FALSE         # Suppress all printing (except `message()`s)
                               # This entails the effects of `print_output = FALSE`
     )
-    #> Stat$compute_panel now being traced
+    #> Stat$compute_panel now being traced.
 
     # plot not printed to save space
     boxplot_plot
@@ -385,15 +385,15 @@ Let’s return the split and the combine:
 
     boxplot_tracedump <- last_ggtrace()
 
-    # Names are clean
+    # Trace dump is named after `trace_exprs`
     names(boxplot_tracedump)
     #> [1] "splits"      "combined"    "runtime_env"
 
     # Inspect the splits
-    sapply(boxplot_tracedump[[1]], nrow)
+    sapply(boxplot_tracedump[["splits"]], nrow)
     #>   1   2   3   4   5 
     #>  26  51 127 144 152
-    lapply(boxplot_tracedump[[1]], head, 3)
+    lapply(boxplot_tracedump$splits, head, 3)
     #> $`1`
     #>    x    y PANEL group
     #> 9  1 65.1     1     1
@@ -425,7 +425,7 @@ Let’s return the split and the combine:
     #> 14 5 62.2     1     5
 
     # Manually calculating some boxplot parameters
-    lapply(boxplot_tracedump[[1]], function(group) {
+    lapply(boxplot_tracedump[["splits"]], function(group) {
       quantile(group$y, c(0, 0.25, 0.5, 0.75, 1))
     })
     #> $`1`
@@ -449,7 +449,7 @@ Let’s return the split and the combine:
     #> 58.80 61.30 61.75 62.20 62.90
 
     # The combined result
-    boxplot_tracedump[[2]]
+    boxplot_tracedump[["combined"]]
     #>   ymin lower middle  upper ymax               outliers notchupper notchlower x
     #> 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1
     #> 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2
@@ -466,13 +466,13 @@ Let’s return the split and the combine:
 Using the returned environment opens up more powerful manipulations:
 
     # What was inside the method environment?
-    ls(envir = boxplot_tracedump[[3]])
+    ls(envir = boxplot_tracedump[["runtime_env"]])
     #> [1] "data"   "groups" "scales" "self"   "stats"
 
     # Evaluate the expression in Step 6 with the method's runtime environment
     eval(
       ggbody(Stat$compute_panel)[[6]],
-      envir = boxplot_tracedump[[3]]
+      envir = boxplot_tracedump[["runtime_env"]]
     )
     #>   ymin lower middle  upper ymax               outliers notchupper notchlower x
     #> 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1
@@ -488,15 +488,15 @@ Using the returned environment opens up more powerful manipulations:
     #> 5  0.75   12.328828       FALSE     1     5
 
     # Manually call the compute_group method from StatBoxplot to apply
-    # transformation to the first group using the method environment
+    # transformation to the third group using the method environment
     eval(
-      quote(StatBoxplot$compute_group(groups[[1]], scales, ...)),
-      envir = boxplot_tracedump[[3]]
+      quote(StatBoxplot$compute_group(groups[[3]], scales, ...)),
+      envir = boxplot_tracedump[["runtime_env"]]
     )
-    #>   ymin lower middle  upper ymax outliers notchupper notchlower x width
-    #> 1 53.1 58.85   64.8 65.775 68.1             66.9458    62.6542 1  0.75
+    #>   ymin lower middle upper ymax outliers notchupper notchlower x width
+    #> 1 57.5  60.7     62  63.1   64            62.33649   61.66351 3  0.75
     #>   relvarwidth flipped_aes
-    #> 1     5.09902       FALSE
+    #> 1    11.26943       FALSE
 
 ## **Example 4 - `compute_group` method from `StatSina` {ggforce}**
 
@@ -506,7 +506,8 @@ Using the returned environment opens up more powerful manipulations:
 
     sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) +
       geom_violin() +
-      geom_sina(seed = 2021)
+      geom_sina(seed = 2021) +
+      ggtitle("Original")
     sina_plot
 
 <img src="man/figures/README-ex-4-setup-1.png" width="100%" />
@@ -576,22 +577,29 @@ Using the returned environment opens up more powerful manipulations:
       ),
       verbose = FALSE
     )
-    #> StatSina$compute_group now being traced
+    #> StatSina$compute_group now being traced.
 
-    sina_plot
+    sina_plot_modified <- ggplotGrob(sina_plot + ggtitle("Modified"))
     #> Triggering trace on StatSina$compute_group
     #> Untracing StatSina$compute_group on exit.
+    grid.draw(sina_plot_modified)
 
 <img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />
 
 This effect is ephemeral with the `once = TRUE` default in `ggtrace()`,
-meaning that only this last plot is built with the modifications.
+meaning that only this last plot saved to `sina_plot_modified` is
+rendered with the modifications.
 
 Here we confirm that the method is restored on exit:
 
     sina_plot
 
 <img src="man/figures/README-ex-4-ggtrace-restored-1.png" width="100%" />
+
+
+    sina_plot + wrap_elements(full = sina_plot_modified)
+
+<img src="man/figures/README-ex-4-ggtrace-restored-2.png" width="100%" />
 
 ### **Step 4. Inspect trace dump**
 
