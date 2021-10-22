@@ -239,4 +239,20 @@ test_that("injections can modify conditionally", {
 
 })
 
+test_that("injections mutate method of self but safe if ggproto copy is replaced for self", {
 
+  expect_equal(StatBoxplot$required_aes, "x|y")
+  ggtrace::ggtrace(Stat$compute_panel, 4, quote(self$required_aes <- "x|y|shape"))
+  invisible(ggplotGrob(boxplot_plot))
+  expect_equal(StatBoxplot$required_aes, "x|y|shape")
+  StatBoxplot$required_aes <- "x|y"
+
+  expect_equal(StatBoxplot$required_aes, "x|y")
+  StatBoxplot_new <- rlang::env_clone(StatBoxplot)
+  class(StatBoxplot_new) <- class(StatBoxplot)
+  StatBoxplot_new$required_aes <- "x|y|shape"
+  ggtrace::ggtrace(Stat$compute_panel, 4, rlang::expr(self <- !!StatBoxplot_new))
+  invisible(ggplotGrob(boxplot_plot))
+  expect_equal(StatBoxplot$required_aes, "x|y")
+
+})

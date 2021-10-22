@@ -57,7 +57,7 @@ test_that("works with unimported :::", {
 test_that("works with unloaded ::",{
   expect_equal(
     ggbody(ggforce::StatBezier$compute_panel),
-    as.list(body(get("compute_panel", StatBezier)))
+    as.list(body(get("compute_panel", ggforce::StatBezier)))
   )
 })
 
@@ -122,6 +122,7 @@ test_that("returns method from closest parent in a message", {
 })
 
 test_that("returns method from closest parent in a message 2", {
+  library(ggforce)
   expect_message(
     ggbody(GeomArcBar$default_aes, inherit = TRUE),
     "not inherited"
