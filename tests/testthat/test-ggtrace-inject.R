@@ -302,3 +302,30 @@ test_that("injection modify property of self but safe if copy is replaced for se
 
 
 })
+
+test_that("injections can be conditional", {
+
+  clear_global_ggtrace()
+  ggtrace(
+    StatBoxplot$compute_group,
+    c(16, 16),
+    rlang::exprs(
+      condition = data$group[1] == 2,
+      injection = if (data$group[1] == 2) {
+        width <- width/2
+      }
+    ),
+    once = FALSE,
+    verbose = FALSE
+  )
+  boxplot_conditional <- layer_data(boxplot_plot)
+  gguntrace(StatBoxplot$compute_group)
+  expect_equal(vapply(global_ggtrace(), `[[`, logical(1), "condition", USE.NAMES = FALSE), c(FALSE, TRUE, FALSE))
+  expect_equal(boxplot_conditional$new_width[1], boxplot_conditional$new_width[3])
+  expect_equal(boxplot_conditional$new_width[1]/2, boxplot_conditional$new_width[2])
+
+  expect_message(gguntrace(StatBoxplot$compute_group), "not currently being traced")
+  boxplot_normal <- layer_data(boxplot_plot)
+  expect_true(length(unique(boxplot_normal$new_width)) == 1)
+
+})
