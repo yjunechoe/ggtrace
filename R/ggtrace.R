@@ -162,7 +162,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   method_body <- ggbody(method_quo)
 
   # Error if not a method
-  if (class(method_body) != "list" || !all(sapply(method_body, rlang::is_expression))) {
+  if (class(method_body) != "list" || !all(vapply(method_body, rlang::is_expression, logical(1)))) {
     rlang::abort("Cannot trace a non-function method.")
   }
 
@@ -218,9 +218,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   # Initialize trace dump for caching output
   trace_dump <- vector("list", n_steps)
   ## Make names from expressions
-  trace_exprs_labels <- lapply(seq_len(n_steps), function(i) {
-    paste(rlang::expr_deparse(trace_exprs[[i]]), collapse = "\n")
-  })
+  trace_exprs_labels <- vapply(trace_exprs, function(x) { paste(rlang::expr_deparse(x), collapse = "\n") }, character(1))
   ## Use names from named elements
   trace_msgs <- paste0("[Step ", trace_steps, "]> ", trace_exprs_labels)
 
