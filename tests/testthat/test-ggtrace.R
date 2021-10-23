@@ -278,3 +278,54 @@ test_that("NULL handled like any other value", {
   expect_equal(vapply(null_middle, is.null, logical(1), USE.NAMES = FALSE), c(FALSE, TRUE, FALSE))
 
 })
+
+test_that("incomplete traces are logged appropriately", {
+
+  gguntrace(ggplot2:::Layer$map_statistic)
+  clear_global_ggtrace()
+  ggtrace(
+    ggplot2:::Layer$map_statistic,
+    seq_len(length(ggbody(ggplot2:::Layer$map_statistic))),
+    quote(1 + 1),
+    verbose = FALSE
+  )
+  expect_warning(invisible(ggplotGrob(ggplot())), "incomplete")
+  expect_equal(length(last_ggtrace()), 2)
+  expect_equal(length(unique(last_ggtrace())), 1)
+  expect_true(grepl("INCOMPLETE", names(global_ggtrace())))
+
+  clear_global_ggtrace()
+  ggtrace(
+    ggplot2:::Layer$map_statistic,
+    seq_len(length(ggbody(ggplot2:::Layer$map_statistic))),
+    quote(1 + 1),
+    verbose = FALSE
+  )
+  expect_warning(invisible(ggplotGrob(ggplot(mtcars, aes(mpg, hp)) + geom_point())), "incomplete")
+  expect_equal(length(last_ggtrace()), 8)
+  expect_equal(length(unique(last_ggtrace())), 1)
+  expect_true(grepl("INCOMPLETE", names(global_ggtrace())))
+
+  clear_global_ggtrace()
+  ggtrace(
+    ggplot2:::Layer$map_statistic,
+    seq_len(length(ggbody(ggplot2:::Layer$map_statistic))),
+    quote(1 + 1),
+    once = FALSE,
+    verbose = FALSE
+  )
+  expect_warning({
+    invisible(ggplotGrob({
+      ggplot(mtcars) +
+        geom_point(aes(mpg, hp)) +
+        geom_point(aes(mpg, stage(hp, y)))
+    }))
+  }, "incomplete")
+  gguntrace(ggplot2:::Layer$map_statistic)
+  partial_incomplete <- global_ggtrace()
+  expect_true(grepl("INCOMPLETE", names(partial_incomplete[1])))
+  expect_equal(length(partial_incomplete[[1]]), 8)
+  expect_true(isFALSE(grepl("INCOMPLETE", names(partial_incomplete[2]))))
+  expect_equal(length(partial_incomplete[[2]]), 21)
+
+})

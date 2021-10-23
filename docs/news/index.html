@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.7</span>
       </span>
     </div>
 
@@ -143,6 +143,18 @@
 <h1 class="page-header" data-toc-text="development version">
 <a href="#ggtrace-development-version" class="anchor"></a>ggtrace (development version)</h1>
 </div>
+    <div id="ggtrace-037" class="section level1">
+<h1 class="page-header" data-toc-text="0.3.7">
+<a href="#ggtrace-037" class="anchor"></a>ggtrace 0.3.7</h1>
+<div id="bug-fixes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#bug-fixes" class="anchor"></a><strong>Bug Fixes</strong>
+</h3>
+<ul>
+<li>Fixed bug where incomplete traces due to early returns would not be logged without any special warning. <code><a href="../reference/ggtrace.html">ggtrace()</a></code> now throws a warning when the actual number of traced steps does not match the expected number of traced steps (i.e., length of <code>trace_steps</code>) and logs incomplete tracedumps (<a href='https://github.com/yjunechoe/ggtrace/issues/44'>#44</a>)</li>
+</ul>
+</div>
+</div>
     <div id="ggtrace-036" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.6">
 <a href="#ggtrace-036" class="anchor"></a>ggtrace 0.3.6</h1>
@@ -155,9 +167,9 @@
 <code><a href="../reference/ggtrace.html">ggtrace(..., once = TRUE)</a></code> is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created. When it’s triggered, it’ll tell you that there is a persistent trace on the methodbut will not remind you to untrace it later nor print the corresponding <code><a href="../reference/gguntrace.html">gguntrace()</a></code> code to do so.</li>
 </ul>
 </div>
-<div id="bux-fixes" class="section level3">
+<div id="bug-fixes-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bux-fixes" class="anchor"></a><strong>Bux Fixes</strong>
+<a href="#bug-fixes-1" class="anchor"></a><strong>Bug Fixes</strong>
 </h3>
 <ul>
 <li>Fixed bug where <code>trace_exprs</code> evaluating to <code>NULL</code> would be removed from the tracedump (<a href='https://github.com/yjunechoe/ggtrace/issues/38'>#38</a>)</li>
@@ -185,9 +197,9 @@
 <li><p><code><a href="../reference/ggedit.html">ggedit()</a></code> now informs you if you’re editing on top of an existing trace/edit.</p></li>
 </ul>
 </div>
-<div id="bug-fixes" class="section level3">
+<div id="bug-fixes-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes" class="anchor"></a><strong>Bug Fixes</strong>
+<a href="#bug-fixes-2" class="anchor"></a><strong>Bug Fixes</strong>
 </h3>
 <ul>
 <li><p>Fixed bug where <code>trace_exprs</code> would fail to be recycled if it is a list of length-1. Now a 1-length list of an expression as well as an expression by itself will get recycled to match the number of steps passed to <code>trace_steps</code>.</p></li>
@@ -227,9 +239,9 @@
 <li><p>Triggering of a trace is now informed via <code><a href="https://rdrr.io/r/base/message.html">message()</a></code> instead of <code><a href="https://rdrr.io/r/base/cat.html">cat()</a></code> (<a href='https://github.com/yjunechoe/ggtrace/issues/29'>#29</a>)</p></li>
 </ul>
 </div>
-<div id="bug-fixes-1" class="section level3">
+<div id="bug-fixes-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes-1" class="anchor"></a><strong>Bug Fixes</strong>
+<a href="#bug-fixes-3" class="anchor"></a><strong>Bug Fixes</strong>
 </h3>
 <ul>
 <li>
@@ -258,9 +270,9 @@
 <li><p>Testing setup (<a href='https://github.com/yjunechoe/ggtrace/issues/28'>#28</a>)</p></li>
 </ul>
 </div>
-<div id="bug-fixes-2" class="section level3">
+<div id="bug-fixes-4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes-2" class="anchor"></a><strong>Bug Fixes</strong>
+<a href="#bug-fixes-4" class="anchor"></a><strong>Bug Fixes</strong>
 </h3>
 <ul>
 <li>Fixed a bug where the number of expressions passed to <code>trace_exprs</code> were allowed to be different from the number of <code>trace_steps</code>, causing <code><a href="../reference/ggtrace.html">ggtrace()</a></code> to silently fail. This now throws an error.</li>
@@ -280,9 +292,9 @@
 <li><p>More informative messages for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and <code><a href="../reference/gguntrace.html">gguntrace()</a></code></p></li>
 </ul>
 </div>
-<div id="bug-fixes-3" class="section level3">
+<div id="bug-fixes-5" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes-3" class="anchor"></a><strong>Bug fixes</strong>
+<a href="#bug-fixes-5" class="anchor"></a><strong>Bug fixes</strong>
 </h3>
 <ul>
 <li>No longer errors on exit when creating a persistence trace with <code>once = FALSE</code>
@@ -356,9 +368,9 @@ Because the <code>obj</code> argument was only designed for compatibility with t
 <li><p>Added a Tips &amp; Tricks section to the documentation for <code><a href="../reference/ggtrace.html">ggtrace()</a></code>.</p></li>
 </ul>
 </div>
-<div id="bug-fixes-4" class="section level3">
+<div id="bug-fixes-6" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes-4" class="anchor"></a><strong>Bug fixes</strong>
+<a href="#bug-fixes-6" class="anchor"></a><strong>Bug fixes</strong>
 </h3>
 <ul>
 <li>Internal variable <code>.store</code> renamed to <code>.ggtrace_storage</code> to prevent overriding <code>ggplot2::.store</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/18'>#18</a>)</li>
@@ -415,9 +427,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gains a <code>once = TRUE</code> argument, which can be set to <code>FALSE</code> for persistent tracing</p></li>
 </ul>
 </div>
-<div id="bug-fixes-5" class="section level3">
+<div id="bug-fixes-7" class="section level3">
 <h3 class="hasAnchor">
-<a href="#bug-fixes-5" class="anchor"></a><strong>Bug fixes</strong>
+<a href="#bug-fixes-7" class="anchor"></a><strong>Bug fixes</strong>
 </h3>
 <ul>
 <li>Fix bug in <code><a href="../reference/ggtrace.html">ggtrace()</a></code> where <code>step_deparsed</code> was being returned as a multi-length vector</li>

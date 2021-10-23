@@ -1,12 +1,18 @@
 # ggtrace (development version)
 
+# ggtrace 0.3.7
+
+### **Bug Fixes**
+
+- Fixed bug where incomplete traces due to early returns would not be logged without any special warning. `ggtrace()` now throws a warning when the actual number of traced steps does not match the expected number of traced steps (i.e., length of `trace_steps`) and logs incomplete tracedumps (#44)
+
 # ggtrace 0.3.6
 
 ### **Improvements**
 
 - `ggtrace(..., once = TRUE)` is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created. When it's triggered, it'll tell you that there is a persistent trace on the methodbut will not remind you to untrace it later nor print the corresponding `gguntrace()` code to do so.
 
-### **Bux Fixes**
+### **Bug Fixes**
 
 - Fixed bug where `trace_exprs` evaluating to `NULL` would be removed from the tracedump (#38)
 
