@@ -304,11 +304,21 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
       },
       print = FALSE,
       exit = rlang::expr({
-        # Check if number of actual and expected traced steps match with delayed eval
+        ## Check if number of actual and expected traced steps match with delayed eval
         if (rlang::env_get(!!wrapper_env, "trace_idx") < !!n_steps) {
-          rlang::warn("Trace failed - fewer than expected steps. Did the method return or break early?")
+          rlang::warn(local({
+            actual_trace_n <- rlang::env_get(!!wrapper_env, "trace_idx") - 1
+            incomplete_trace_dump <- rlang::env_get(!!wrapper_env, "trace_dump")[seq_len(actual_trace_n)]
+            incomplete_trace_dump_lst <- list(incomplete_trace_dump)
+            names(incomplete_trace_dump_lst) <- paste(!!formatted_call, "INCOMPLETE", sep = "-")
+            rlang::exec(!!set_last_ggtrace, incomplete_trace_dump)
+            rlang::exec(!!add_global_ggtrace, incomplete_trace_dump_lst)
+            ## Return warning message
+            paste("Trace incomplete [", "Actual:", actual_trace_n, "| Expected:", !!n_steps, "]",
+                  "- Did the method return or break early?")
+          }))
         }
-        # Reset idx in the closure in case of persistent trace
+        ## Reset idx in the closure in case of persistent trace
         rlang::env_bind(!!wrapper_env, trace_idx = 1)
         ## Messages
         if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
