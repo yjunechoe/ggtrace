@@ -118,8 +118,8 @@ test_that("injection doesn't persist across diff calls to the same method", {
   )
   invisible(ggplotGrob(boxplot_plot))
   boxplot_tracedump <- last_ggtrace()
-  expect_true(!"injected_var" %in% boxplot_tracedump[[1]])
-  expect_true(!"injected_var" %in% ls(envir = boxplot_tracedump[[2]]))
+  expect_true(isFALSE("injected_var" %in% boxplot_tracedump[[1]]))
+  expect_true(isFALSE("injected_var" %in% ls(envir = boxplot_tracedump[[2]])))
   expect_null(boxplot_tracedump[[2]]$injected_var)
 
 })
@@ -271,7 +271,7 @@ test_that("injection modify property of self but safe if copy is replaced for se
   expect_true(StatIdentity$retransform)
 
   expect_true(StatIdentity$retransform)
-  ggtrace(ggplot2:::Layer$map_statistic, 20, quote(self$stat$retransform <- FALSE))
+  ggtrace(ggplot2:::Layer$map_statistic, 20, quote(self$stat$retransform <- FALSE), verbose = FALSE)
   p_no_retransform_data <- ggplot_build(p)$data
   expect_equal(p_no_retransform_data[[1]]$x, 4)
   expect_equal(p_no_retransform_data[[1]]$x, p_data[[2]]$x)
@@ -282,15 +282,22 @@ test_that("injection modify property of self but safe if copy is replaced for se
   StatIdentity_new <- rlang::env_clone(StatBoxplot)
   class(StatIdentity_new) <- class(StatIdentity)
   StatIdentity_new$retransform <- FALSE
-  ggtrace(ggplot2:::Layer$map_statistic, 20, rlang::expr(self$stat <- !!StatIdentity_new))
-  p_no_retransform_copy_data <- ggplot_build(p)$data
+  ggtrace(ggplot2:::Layer$map_statistic, 20, rlang::expr(self$stat <- !!StatIdentity_new), verbose = FALSE)
+  p_no_retransform_copy_data <- ggplot_build({
+    ggplot(data.frame(value = 16)) +
+      geom_point(aes(stage(value, after_stat = x), 0), colour = "black", size = 10) +
+      geom_point(aes(value, 0), colour = "red", size = 10) +
+      scale_x_sqrt(limits = c(0, 16), breaks = c(0, 4, 16))
+  })$data
   expect_equal(p_no_retransform_copy_data[[1]]$x, 4)
   expect_equal(p_no_retransform_copy_data[[1]]$x, p_data[[2]]$x)
   expect_true(StatIdentity$retransform)
-  # overriding `self()` is ok because layer environment is created anew each time it's called
+  # overriding `self()` is ok ...
   expect_true(geom_point()$stat$retransform)
   expect_true(geom_point(aes(stage(value, after_stat = x), 0), colour = "black", size = 10)$stat$retransform)
-  expect_true(!identical(geom_point(), geom_point()))
+  expect_true(p$layers[[1]]$stat$retransform)
+  # ... because layer environment is created anew each time it's called
+  expect_true(isFALSE(identical(geom_point(), geom_point())))
   expect_true(rlang::env_label(geom_point()) != rlang::env_label(geom_point()))
 
 
