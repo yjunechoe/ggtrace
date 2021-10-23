@@ -286,7 +286,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
           trace_dump[[trace_idx]] <- trace_result
         }
 
-        # Continue
+        # Log if complete
         if (trace_idx == length(trace_exprs)) {
           # Set `last_ggtrace()`
           set_last_ggtrace(trace_dump)
@@ -294,9 +294,10 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
           trace_dump_list <- list(trace_dump)
           names(trace_dump_list) <- paste(formatted_call, rlang::env_label(environment()), sep = "-")
           add_global_ggtrace(trace_dump_list)
-        } else {
-          trace_idx <<- trace_idx + 1
         }
+
+        # Increment
+        trace_idx <<- trace_idx + 1
 
         # Store output
         trace_dump <<- trace_dump
@@ -305,10 +306,11 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
       print = FALSE,
       exit = rlang::expr({
         ## Check if number of actual and expected traced steps match with delayed eval
-        if (rlang::env_get(!!wrapper_env, "trace_idx") < !!n_steps) {
+        if (rlang::env_get(!!wrapper_env, "trace_idx") - 1 < !!n_steps) {
           rlang::warn(local({
             actual_trace_n <- rlang::env_get(!!wrapper_env, "trace_idx") - 1
             incomplete_trace_dump <- rlang::env_get(!!wrapper_env, "trace_dump")[seq_len(actual_trace_n)]
+            if (length(seq_len(actual_trace_n)) == 0) { incomplete_trace_dump <- NULL }
             incomplete_trace_dump_lst <- list(incomplete_trace_dump)
             names(incomplete_trace_dump_lst) <- paste(!!formatted_call, "INCOMPLETE", sep = "-")
             rlang::exec(!!set_last_ggtrace, incomplete_trace_dump)

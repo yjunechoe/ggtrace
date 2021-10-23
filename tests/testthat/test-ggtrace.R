@@ -328,4 +328,20 @@ test_that("incomplete traces are logged appropriately", {
   expect_true(isFALSE(grepl("INCOMPLETE", names(partial_incomplete[2]))))
   expect_equal(length(partial_incomplete[[2]]), 21)
 
+  ggtrace(
+    ggplot2:::Layer$map_statistic,
+    10,
+    quote(1 + 1)
+  )
+  expect_warning(invisible(ggplotGrob(ggplot())), "incomplete")
+  expect_null(last_ggtrace())
+
+  ggtrace(
+    ggplot2:::Layer$map_statistic,
+    c(1, 2, 10),
+    quote(1 + 1)
+  )
+  expect_warning(invisible(ggplotGrob(ggplot())), "incomplete")
+  expect_true(length(last_ggtrace()) == 2)
+
 })
