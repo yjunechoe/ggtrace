@@ -246,6 +246,9 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   silent <- getOption("ggtrace.suppressMessages")
   tibble_print <- rlang::is_installed("tibble") && getOption("ggtrace.as_tibble")
 
+  ## ggtrace wrapper env
+  wrapper_env <- rlang::current_env()
+
   suppressMessages(
     trace(
       what = method_name,
@@ -291,8 +294,6 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
           trace_dump_list <- list(trace_dump)
           names(trace_dump_list) <- paste(formatted_call, rlang::env_label(environment()), sep = "-")
           add_global_ggtrace(trace_dump_list)
-          # Reset idx in case of persistent trace (tracer fun encloses the `ggtrace()` env where `trace_idx` is defined)
-          trace_idx <<- 1
         } else {
           trace_idx <<- trace_idx + 1
         }
@@ -303,6 +304,13 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
       },
       print = FALSE,
       exit = rlang::expr({
+        # Check if number of actual and expected traced steps match with delayed eval
+        if (rlang::env_get(!!wrapper_env, "trace_idx") < !!n_steps) {
+          rlang::warn("Trace failed - fewer than expected steps. Did the method return or break early?")
+        }
+        # Reset idx in the closure in case of persistent trace
+        rlang::env_bind(!!wrapper_env, trace_idx = 1)
+        ## Messages
         if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
         if (!!once) {
           suppressMessages(untrace(!!method_name, where = !!obj))
