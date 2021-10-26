@@ -183,7 +183,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
     fn_call <- rlang::eval_tidy(method_quo)
     what <- gsub("^.*:", "", deparsed)
     where <- rlang::get_env(fn_call)
-    formatted_call <- what
+    formatted_call <- deparsed
 
     # Error if not a function
     if (!rlang::is_function(fn_call)) { rlang::abort("Cannot trace a non-function.") }
@@ -191,7 +191,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
     # Ensure the function is not being traced and re-evaluate fn_call
     if ("functionWithTrace" %in% class(fn_call)) {
       suppressMessages(untrace(what = what, where = where))
-      fn_call <- rlang::eval_tidy(fn_quo)
+      fn_call <- rlang::eval_tidy(method_quo)
     }
 
     method_body <- as.list(body(fn_call))
