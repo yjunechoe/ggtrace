@@ -2,7 +2,7 @@
 
 # ggtrace 0.4.0
 
-### **New Features **
+### **New Features**
 
 - All functions in the package now support the tracing/untracing of **any arbitrary functions** (exported, unexported, user-defined, etc.). This also includes S3/S4 methods like `ggplo2:::ggplot_build.ggplot` and `ggplot2:::ggplot_add.Layer`. Some other examples of what's now possible.
 
