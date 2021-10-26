@@ -7,7 +7,7 @@
     set_last = function(value) .last_ggtrace <<- value,
     get_global = function() {
       if(!.global_ggtrace_state) {
-        message("Global collection of tracedumps is turned off. To activate, call `global_ggtrace_state(TRUE)`")
+        message("Global collection of tracedumps is currently turned off. To activate, call `global_ggtrace_state(TRUE)`")
       }
       .global_ggtrace
     },
@@ -135,7 +135,7 @@ clear_global_ggtrace <- function() {
 #' @rdname last_ggtrace
 global_ggtrace_state <- function(state) {
   if (!rlang::is_missing(state) && is.logical(state)) {
-    message("Global tracing turned ", if (state) "on" else "off", ".")
+    message("Global tracedump ", if (state) "activated" else "deactivated", ".")
     .ggtrace_storage$set_state(state)
     invisible(.ggtrace_storage$get_state())
   } else {

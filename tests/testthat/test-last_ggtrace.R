@@ -80,3 +80,35 @@ test_that("global tracedump collects until untrace", {
   clear_global_ggtrace()
 
 })
+
+test_that("global tracedump state works", {
+
+  clear_global_ggtrace()
+  expect_true(global_ggtrace_state())
+  expect_true(isFALSE(global_ggtrace_state(FALSE)))
+  expect_true(isFALSE(global_ggtrace_state()))
+  expect_message(global_ggtrace_state(FALSE), "deactivated")
+  expect_message(global_ggtrace_state(TRUE), "activated")
+  expect_true(global_ggtrace_state())
+
+  global_ggtrace_state(FALSE)
+  expect_message(global_ggtrace(), "currently turned off")
+  ggtrace(GeomViolin$draw_group, -1, verbose = FALSE)
+  invisible(ggplotGrob(violin_plot))
+  expect_message(global_ggtrace(), "currently turned off")
+  expect_null(global_ggtrace())
+
+  global_ggtrace_state(TRUE)
+  global_ggtrace_state()
+  ggtrace(GeomViolin$draw_group, -1, verbose = FALSE)
+  invisible(ggplotGrob(violin_plot))
+  expect_message(global_ggtrace(), NA)
+  expect_true(!is.null(global_ggtrace()))
+  expect_equal(global_ggtrace()[[1]], last_ggtrace())
+
+  clear_global_ggtrace()
+  expect_null(global_ggtrace())
+  clear_last_ggtrace()
+  expect_null(last_ggtrace())
+
+})
