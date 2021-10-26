@@ -76,7 +76,9 @@ head(last_ggtrace()[[1]])
 
 # Inspect an accumulation of trace dumps
 
+global_ggtrace_state()
 clear_global_ggtrace()
+
 ggtrace(
   GeomBoxplot$draw_group,
   trace_steps = -1,
@@ -101,6 +103,10 @@ boxplot_group_tracedump <- unlist(
 patchwork::wrap_plots(boxplot_group_tracedump, nrow = 1)
 
 clear_global_ggtrace()
+global_ggtrace()
+
+global_ggtrace_state(FALSE)
+global_ggtrace_state(TRUE)
 
 }
 \seealso{

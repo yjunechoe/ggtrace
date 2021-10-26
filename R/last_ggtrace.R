@@ -73,7 +73,9 @@ set_global_state <- function(value) .ggtrace_storage$set_state(value)
 #'
 #' # Inspect an accumulation of trace dumps
 #'
+#' global_ggtrace_state()
 #' clear_global_ggtrace()
+#'
 #' ggtrace(
 #'   GeomBoxplot$draw_group,
 #'   trace_steps = -1,
@@ -98,6 +100,10 @@ set_global_state <- function(value) .ggtrace_storage$set_state(value)
 #' patchwork::wrap_plots(boxplot_group_tracedump, nrow = 1)
 #'
 #' clear_global_ggtrace()
+#' global_ggtrace()
+#'
+#' global_ggtrace_state(FALSE)
+#' global_ggtrace_state(TRUE)
 #'
 last_ggtrace <- function() .ggtrace_storage$get_last()
 
