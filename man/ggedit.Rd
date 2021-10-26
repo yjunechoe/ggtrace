@@ -4,19 +4,20 @@
 \alias{ggedit}
 \title{Interactively edit the source code of a ggproto method}
 \usage{
-ggedit(method, ...)
+ggedit(method, remove_trace = FALSE, ...)
 }
 \arguments{
-\item{method}{An expression that evaluates to a ggproto method.
-This may be specified using any of the following forms:
+\item{method}{A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:
 \itemize{
 \item \code{ggproto$method}
 \item \code{namespace::ggproto$method}
 \item \code{namespace:::ggproto$method}
 }}
 
-\item{...}{Ignored. Designed for the ease of calling this function by modifying the call to
-an earlier \code{{ggtrace}} function in interactive contexts.}
+\item{remove_trace}{Whether to edit from a clean slate. Defaults to \code{FALSE}.}
+
+\item{...}{Unused, for extensibility.}
 }
 \description{
 Interactively edit the source code of a ggproto method

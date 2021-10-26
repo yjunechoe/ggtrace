@@ -116,12 +116,12 @@ test_that("Inspect returns same whether from ggplot_build method or Layer method
   library(ggplot2)
 
   # Bar plot using computed/"mapped" aesthetics with `after_stat()` and `after_scale()`
-  barplot_plot <- ggplot(data = palmerpenguins::penguins) +
+  barplot_plot <- ggplot(data = iris) +
     geom_bar(
       mapping = aes(
-        x = species,                           # Discrete x-axis representing species
+        x = Species,                           # Discrete x-axis representing species
         y = after_stat(count / sum(count)),    # Bars represent count of species as proportions
-        color = species,                       # The outline of the bars are colored by species
+        color = Species,                       # The outline of the bars are colored by species
         fill = after_scale(alpha(color, 0.5))  # The fill of the bars are lighter than the outline color
       ),
       size = 3

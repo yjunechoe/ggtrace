@@ -7,8 +7,8 @@
 ggbody(method, inherit = FALSE)
 }
 \arguments{
-\item{method}{An expression that evaluates to a ggproto method.
-This may be specified using any of the following forms:
+\item{method}{A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:
 \itemize{
 \item \code{ggproto$method}
 \item \code{namespace::ggproto$method}
@@ -100,5 +100,12 @@ StatDensityCommon <- ggproto("StatDensityCommon", Stat,
 as.list(body(get("compute_group", StatDensityCommon)))
 
 ggbody(StatDensityCommon$compute_group)
+
+# As of v.0.4.0, ggbody works for functions as well
+ggbody(sample)
+ggtrace(sample, 1)
+invisible(ggbody(sample))
+is_traced(sample)
+gguntrace(sample)
 
 }

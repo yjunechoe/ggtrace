@@ -7,8 +7,8 @@
 is_traced(method)
 }
 \arguments{
-\item{method}{An expression that evaluates to a ggproto method.
-This may be specified using any of the following forms:
+\item{method}{A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:
 \itemize{
 \item \code{ggproto$method}
 \item \code{namespace::ggproto$method}
@@ -25,6 +25,8 @@ Check if a method is being traced
 library(ggplot2)
 
 gguntrace(Stat$compute_layer)
+
+is_traced(Stat$compute_layer)
 
 ggtrace(Stat$compute_layer, 1)
 

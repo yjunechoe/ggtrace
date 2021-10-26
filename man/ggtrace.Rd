@@ -10,13 +10,14 @@ ggtrace(
   trace_exprs,
   once = TRUE,
   use_names = TRUE,
+  ...,
   print_output = TRUE,
   verbose = TRUE
 )
 }
 \arguments{
-\item{method}{An expression that evaluates to a ggproto method.
-This may be specified using any of the following forms:
+\item{method}{A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:
 \itemize{
 \item \code{ggproto$method}
 \item \code{namespace::ggproto$method}
@@ -37,6 +38,8 @@ If \code{trace_exprs} is not provided, \code{ggtrace()} is called with \code{~st
 active until \code{gguntrace()} is called on the method. Defaults to \code{TRUE}.}
 
 \item{use_names}{Whether the trace dump should use the names from \code{trace_exprs}. Defaults to \code{TRUE}.}
+
+\item{...}{Unused, for extensibility.}
 
 \item{print_output}{Whether to print the output of each expression to the console. Defaults to \code{TRUE}.}
 

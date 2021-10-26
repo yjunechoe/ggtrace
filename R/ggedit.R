@@ -1,6 +1,7 @@
 #' Interactively edit the source code of a ggproto method
 #'
 #' @inheritParams ggtrace
+#' @inheritParams ggtrace
 #' @param remove_trace Whether to edit from a clean slate. Defaults to `FALSE`.
 #'
 #' @details Like `base::trace()`, the edit is in effect until `gguntrace()` is called.

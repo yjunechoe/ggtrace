@@ -2,11 +2,14 @@
 % Please edit documentation in R/last_ggtrace.R
 \name{last_ggtrace}
 \alias{last_ggtrace}
+\alias{clear_last_ggtrace}
 \alias{global_ggtrace}
 \alias{clear_global_ggtrace}
 \title{Retrieve the trace dump created by \code{ggtrace()}}
 \usage{
 last_ggtrace()
+
+clear_last_ggtrace()
 
 global_ggtrace()
 
