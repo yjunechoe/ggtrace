@@ -23,6 +23,8 @@
 #'
 #' gguntrace(Stat$compute_layer)
 #'
+#' is_traced(Stat$compute_layer)
+#'
 #' ggtrace(Stat$compute_layer, 1)
 #'
 #' is_traced(Stat$compute_layer)

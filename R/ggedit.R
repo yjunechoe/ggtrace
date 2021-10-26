@@ -47,9 +47,6 @@ ggedit <- function(method, remove_trace = FALSE, ...) {
   # Capture method expression
   method_quo <- rlang::enquo(method)
 
-  # Validate method
-  method_body <- ggbody(method_quo)
-
   # Resolve formatting and dump vars
   method_info <- resolve_formatting(method_quo, remove_trace = FALSE)
   what <- method_info$what
