@@ -1,7 +1,7 @@
 #' Retrieve the body of a ggproto method as a list
 #'
-#' @param method An expression that evaluates to a ggproto method.
-#'   This may be specified using any of the following forms:
+#' @param method A function or an expression that evaluates to a ggproto method.
+#'   The expression may be specified using any of the following forms:
 #'   - `ggproto$method`
 #'   - `namespace::ggproto$method`
 #'   - `namespace:::ggproto$method`
@@ -83,11 +83,30 @@
 #'
 #' ggbody(StatDensityCommon$compute_group)
 #'
+#' # As of v.0.4.0, ggbody works for functions as well
+#' ggbody(sample)
+#' ggtrace(sample, 1)
+#' invisible(ggbody(sample))
+#' is_traced(sample)
+#' gguntrace(sample)
+#'
 ggbody <- function(method, inherit = FALSE) {
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
   arg_provided <- TRUE
+
+  # Special handling for functions
+  if (class(method)[1] == "function" || class(attr(method, "original"))[1] == "function") {
+    fn_call_deparsed <- gsub("^.*:", "", rlang::expr_deparse(rlang::quo_get_expr(method_quo)))
+    fn_got <- get(fn_call_deparsed, envir = rlang::get_env(method))
+    if ("functionWithTrace" %in% class(fn_got)) {
+      rlang::warn("Method is currently being traced")
+    }
+    result <- as.list(body(fn_got))
+    return(result)
+  }
+
   if (rlang::is_quosure(method)) {
     method_quo <- method
     arg_provided <- FALSE
