@@ -157,25 +157,44 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
+  deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo))
 
-  # Validate method
-  method_body <- ggbody(method_quo)
-
-  # Error if not a method
-  if (class(method_body) != "list" || !all(vapply(method_body, rlang::is_expression, logical(1)))) {
-    rlang::abort("Cannot trace a non-function method.")
-  }
-
-  # Parse/deparse method and obj
-  method_split <- split_ggproto_method(method_quo)
-  method_name <- method_split[["method_name"]]
-  obj <- method_split[["obj"]]
-  formatted_call <- method_split[["formatted_call"]]
-
-  # Ensure method is untraced and body is extracted from untraced method
-  if (.is_traced(method_name, obj)) {
-    suppressMessages(untrace(method_name, where = obj))
+  # Resolve formatting
+  if (grepl("\\$", deparsed)) {
     method_body <- ggbody(method_quo)
+
+    # Error if not a method
+    if (class(method_body) != "list" || !all(vapply(method_body, rlang::is_expression, logical(1)))) {
+      rlang::abort("Cannot trace a non-function.")
+    }
+
+    # Parse/deparse method and obj
+    method_split <- split_ggproto_method(method_quo)
+    what <- method_split[["method_name"]]
+    where <- method_split[["obj"]]
+    formatted_call <- method_split[["formatted_call"]]
+
+    # Ensure method is untraced and body is extracted from untraced method
+    if (.is_traced(what, where)) {
+      suppressMessages(untrace(what = what, where = where))
+      method_body <- ggbody(method_quo)
+    }
+  } else {
+    fn_call <- rlang::eval_tidy(method_quo)
+    what <- gsub("^.*:", "", deparsed)
+    where <- rlang::get_env(fn_call)
+    formatted_call <- what
+
+    # Error if not a function
+    if (!rlang::is_function(fn_call)) { rlang::abort("Cannot trace a non-function.") }
+
+    # Ensure the function is not being traced and re-evaluate fn_call
+    if ("functionWithTrace" %in% class(fn_call)) {
+      suppressMessages(untrace(what = what, where = where))
+      fn_call <- rlang::eval_tidy(fn_quo)
+    }
+
+    method_body <- as.list(body(fn_call))
   }
 
   ## Number of steps
@@ -250,8 +269,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
 
   suppressMessages(
     trace(
-      what = method_name,
-      where = obj,
+      what = what,
+      where = where,
       at = trace_steps,
       tracer = function() {
 
@@ -324,7 +343,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
         ## Messages
         if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
         if (!!once) {
-          suppressMessages(untrace(!!method_name, where = !!obj))
+          suppressMessages(untrace(what = !!what, where = !!where))
           if (isFALSE(!!silent)) { message("Untracing ", !!formatted_call, " on exit.") }
         }
       })
