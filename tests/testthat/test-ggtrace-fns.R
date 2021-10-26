@@ -123,5 +123,7 @@ test_that("Inspect returns same whether from build or Layer", {
   expect_equal(inside, outside[[1]])
   expect_true(grepl("^ggplot2:::Layer\\$map_statistic", names(combined)[1]))
   expect_true(grepl("^ggplot2:::ggplot_build\\.ggplot", names(combined)[2]))
+
+  clear_global_ggtrace()
 })
 

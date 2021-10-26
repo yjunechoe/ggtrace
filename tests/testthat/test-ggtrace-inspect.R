@@ -70,3 +70,78 @@ test_that("inspection workflow works #2 (Geom)", {
 
   gguntrace(GeomSmooth$draw_group)
 })
+
+test_that("aes_eval vignette", {
+
+  # Bar plot using computed/"mapped" aesthetics with `after_stat()` and `after_scale()`
+  barplot_plot <- ggplot(data = palmerpenguins::penguins) +
+    geom_bar(
+      mapping = aes(
+        x = species,                           # Discrete x-axis representing species
+        y = after_stat(count / sum(count)),    # Bars represent count of species as proportions
+        color = species,                       # The outline of the bars are colored by species
+        fill = after_scale(alpha(color, 0.5))  # The fill of the bars are lighter than the outline color
+      ),
+      size = 3
+    )
+
+  ggtrace(
+    method = ggplot2:::Layer$map_statistic, # Layer is not exported so need the `:::`
+    trace_steps = c(1, -1),
+    trace_exprs = rlang::exprs(
+      before = data,            # What does the data look like BEFORE resolving `after_stat()`?
+      after = ~step             # What does the data look like AFTER resolving `after_stat()`?
+      # - The `~step` keyword runs the step and returns its output
+    ),
+    verbose = FALSE
+  )
+
+  ggtrace(
+    method = Geom$use_defaults,
+    trace_steps = c(6, 7),
+    trace_exprs = rlang::exprs(
+      before = data,            # What does the data look like BEFORE resolving `after_scale()`
+      after = data              # What does the data look like AFTER resolving `after_scale()`
+    ),
+    verbose = FALSE
+  )
+
+  clear_global_ggtrace()
+  invisible(ggplot_build(barplot_plot))
+
+  tracedump <- global_ggtrace()
+  expect_true(grepl("ggplot2:::Layer\\$map_statistic", names(tracedump)[1]))
+  expect_true(grepl("Geom\\$use_defaults", names(tracedump)[2]))
+
+  names(tracedump) <- c("after_stat", "after_scale")
+  expect_equal(names(tracedump[[1]]), c("before", "after"))
+  expect_equal(names(tracedump[[1]]), names(tracedump[[2]]))
+
+  expect_equal(
+    tracedump$after_stat$before$count / sum(tracedump$after_stat$before$count),
+    tracedump$after_stat$after$y
+  )
+  expect_equal(
+    paste0(tracedump$after_scale$before$colour, "80"),
+    tracedump$after_scale$after$fill
+  )
+
+  # Return `self` inside the method
+  # `self` should be contextualized to the Layer and the Geom
+  clear_global_ggtrace()
+  ggtrace(ggplot2:::Layer$compute_geom_2, 1, quote(self), verbose = FALSE)
+  ggtrace(Geom$use_defaults, 1, quote(self), verbose = FALSE)
+
+  # Force evaluation of plot code without printing it
+  invisible(ggplot_build(barplot_plot))
+
+  traced_self <- unlist(global_ggtrace(), recursive = FALSE)
+  names(traced_self) <- c("layer", "geom")
+
+  expect_equal(traced_self$geom, GeomBar)
+  expect_equal(traced_self$geom, geom_bar()$geom)
+  expect_equal(traced_self$geom, traced_self$layer$geom)
+  expect_equal(traced_self$layer$stat, StatCount)
+  expect_equal(traced_self$layer$stat, geom_bar()$stat)
+
+})
