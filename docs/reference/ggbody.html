@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -152,8 +152,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>method</th>
-      <td><p>An expression that evaluates to a ggproto method.
-This may be specified using any of the following forms:</p><ul>
+      <td><p>A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:</p><ul>
 <li><p><code>ggproto$method</code></p></li>
 <li><p><code>namespace::ggproto$method</code></p></li>
 <li><p><code>namespace:::ggproto$method</code></p></li>
@@ -430,6 +430,27 @@ to search for the method, so it needs to be able to evaluate each element of <co
 #&gt; [[3]]
 #&gt; data.frame(x = d$x, y = d$y)
 #&gt; </div><div class='input'>
+<span class='co'># As of v.0.4.0, ggbody works for functions as well</span>
+<span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [[1]]
+#&gt; `{`
+#&gt; 
+#&gt; [[2]]
+#&gt; if (length(x) == 1L &amp;&amp; is.numeric(x) &amp;&amp; is.finite(x) &amp;&amp; x &gt;= 
+#&gt;     1) {
+#&gt;     if (missing(size)) 
+#&gt;         size &lt;- x
+#&gt;     sample.int(x, size, replace, prob)
+#&gt; } else {
+#&gt;     if (missing(size)) 
+#&gt;         size &lt;- length(x)
+#&gt;     x[sample.int(length(x), size, replace, prob)]
+#&gt; }
+#&gt; </div><div class='input'><span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>sample</span>, <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>sample now being traced.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: Method is currently being traced</span></div><div class='input'><span class='fu'><a href='is_traced.html'>is_traced</a></span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>sample no longer being traced.</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

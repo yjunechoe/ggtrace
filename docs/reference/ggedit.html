@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -145,24 +145,27 @@
     <p>Interactively edit the source code of a ggproto method</p>
     </div>
 
-    <pre class="usage"><span class='fu'>ggedit</span><span class='op'>(</span><span class='va'>method</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>ggedit</span><span class='op'>(</span><span class='va'>method</span>, remove_trace <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>method</th>
-      <td><p>An expression that evaluates to a ggproto method.
-This may be specified using any of the following forms:</p><ul>
+      <td><p>A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:</p><ul>
 <li><p><code>ggproto$method</code></p></li>
 <li><p><code>namespace::ggproto$method</code></p></li>
 <li><p><code>namespace:::ggproto$method</code></p></li>
 </ul></td>
     </tr>
     <tr>
+      <th>remove_trace</th>
+      <td><p>Whether to edit from a clean slate. Defaults to <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
-      <td><p>Ignored. Designed for the ease of calling this function by modifying the call to
-an earlier <code>{ggtrace}</code> function in interactive contexts.</p></td>
+      <td><p>Unused, for extensibility.</p></td>
     </tr>
     </table>
 

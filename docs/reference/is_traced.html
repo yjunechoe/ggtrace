@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -152,8 +152,8 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>method</th>
-      <td><p>An expression that evaluates to a ggproto method.
-This may be specified using any of the following forms:</p><ul>
+      <td><p>A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:</p><ul>
 <li><p><code>ggproto$method</code></p></li>
 <li><p><code>namespace::ggproto$method</code></p></li>
 <li><p><code>namespace:::ggproto$method</code></p></li>
@@ -170,6 +170,8 @@ This may be specified using any of the following forms:</p><ul>
 
 <span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer not currently being traced.</span></div><div class='input'>
+<span class='fu'>is_traced</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'>
 <span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span>, <span class='fl'>1</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Stat$compute_layer now being traced.</span></div><div class='input'>
 <span class='fu'>is_traced</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
