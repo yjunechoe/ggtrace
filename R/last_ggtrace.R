@@ -1,12 +1,19 @@
 .ggtrace_store <- function() {
   .last_ggtrace <- NULL
   .global_ggtrace <- NULL
+  .global_ggtrace_state <- TRUE
   list(
     get_last = function() .last_ggtrace,
     set_last = function(value) .last_ggtrace <<- value,
     get_global = function() .global_ggtrace,
     set_global = function(value) .global_ggtrace <<- value,
-    add_global = function(value) .global_ggtrace <<- c(.global_ggtrace, value)
+    add_global = function(value) {
+      if(.global_ggtrace_state) {
+        .global_ggtrace <<- c(.global_ggtrace, value)
+      }
+    },
+    get_state = function() .global_ggtrace_state,
+    set_state = function(value) .global_ggtrace_state <<- value
   )
 }
 .ggtrace_storage <- .ggtrace_store()
@@ -14,6 +21,8 @@
 set_last_ggtrace <- function(value) .ggtrace_storage$set_last(value)
 set_global_ggtrace <- function(value) .ggtrace_storage$set_global(value)
 add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
+get_global_state <- function() .ggtrace_storage$get_state()
+set_global_state <- function(value) .ggtrace_storage$set_state(value)
 
 #' Retrieve the trace dump created by `ggtrace()`
 #'
@@ -107,4 +116,18 @@ global_ggtrace <- function() .ggtrace_storage$get_global()
 clear_global_ggtrace <- function() {
   set_global_ggtrace(NULL)
   global_ggtrace()
+}
+
+global_ggtrace_state <- function() {
+  get_global_state()
+}
+
+global_ggtrace_on <- function() {
+  set_global_state(TRUE)
+  get_global_state()
+}
+
+global_ggtrace_off <- function() {
+  set_global_state(FALSE)
+  get_global_state()
 }
