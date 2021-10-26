@@ -72,6 +72,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
     }
   } else {
     fn_call <- rlang::eval_tidy(method_quo)
+    fn_env <- rlang::get_env(fn_call)
     what <- gsub("^.*:", "", deparsed)
     where <- rlang::get_env(fn_call)
     formatted_call <- deparsed
@@ -80,7 +81,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
     if (!rlang::is_function(fn_call)) { rlang::abort("Cannot trace a non-function.") }
 
     # Ensure the function is not being traced and re-evaluate fn_call
-    traced <- "functionWithTrace" %in% class(fn_call)
+    traced <- "functionWithTrace" %in% class(get(what, envir = fn_env))
     if (remove_trace && traced) {
       suppressMessages(untrace(what = what, where = where))
       fn_call <- rlang::eval_tidy(method_quo)
