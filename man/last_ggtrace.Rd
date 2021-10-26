@@ -5,6 +5,7 @@
 \alias{clear_last_ggtrace}
 \alias{global_ggtrace}
 \alias{clear_global_ggtrace}
+\alias{global_ggtrace_state}
 \title{Retrieve the trace dump created by \code{ggtrace()}}
 \usage{
 last_ggtrace()
@@ -14,9 +15,22 @@ clear_last_ggtrace()
 global_ggtrace()
 
 clear_global_ggtrace()
+
+global_ggtrace_state(state)
+}
+\arguments{
+\item{state}{If missing, returns whether the global tracedump is currently active.
+The global tracedump is active by default (\code{state} is \code{TRUE}), meaning that
+every time a trace created by \code{ggtrace()} is triggered, its tracedump is added
+to the global tracedump storage, which can be inspected with \code{global_ggtrace()}.
+
+The global tracedump can be turned on/off by setting \code{state} to \code{TRUE}/\code{FALSE}.}
 }
 \value{
 A list
+
+A logical indicating the current state of the global trace dump.
+If \code{state} is provided, changes the state first, then returns the state invisibly.
 }
 \description{
 Retrieve the trace dump created by \code{ggtrace()}

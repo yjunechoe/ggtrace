@@ -7,8 +7,7 @@
     set_last = function(value) .last_ggtrace <<- value,
     get_global = function() {
       if(!.global_ggtrace_state) {
-        message("Global collection of tracedumps are turned off.\n",
-                "To turn it back on, call `global_ggtrace_on()`")
+        message("Global collection of tracedumps is turned off. To activate, call `global_ggtrace_state(TRUE)`")
       }
       .global_ggtrace
     },
@@ -120,17 +119,22 @@ clear_global_ggtrace <- function() {
   global_ggtrace()
 }
 
-#' @param state If missing, returns the current state of global tracing.
-#'   Global tracing is `TRUE` by default, meaning that all tracedumps are
-#'   stored and available for inspection with `global_ggtrace()`.
+#' @param state If missing, returns whether the global tracedump is currently active.
+#'   The global tracedump is active by default (`state` is `TRUE`), meaning that
+#'   every time a trace created by `ggtrace()` is triggered, its tracedump is added
+#'   to the global tracedump storage, which can be inspected with `global_ggtrace()`.
 #'
-#'   You can disable this by setting this argument to `TRUE`
+#'   The global tracedump can be turned on/off by setting `state` to `TRUE`/`FALSE`.
+#' @return A logical indicating the current state of the global trace dump.
+#'   If `state` is provided, changes the state first, then returns the state invisibly.
 #' @export
 #' @rdname last_ggtrace
 global_ggtrace_state <- function(state) {
   if (!rlang::is_missing(state) && is.logical(state)) {
     message("Global tracing turned ", if (state) "on" else "off", ".")
     set_global_state(state)
+    invisible(get_global_state())
+  } else {
+    get_global_state()
   }
-  get_global_state()
 }
