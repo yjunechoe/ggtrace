@@ -21,39 +21,6 @@ split_ggproto_method <- function(method) {
   split_list
 }
 
-split_generic_method <- function(method) {
-  method_expr <- rlang::enexpr(method)
-  eval_env <- parent.frame()
-  if (rlang::is_quosure(method)) {
-    method_expr <- rlang::quo_get_expr(method)
-    eval_env <- rlang::quo_get_env(method)
-  }
-  method_deparsed <- rlang::as_label(method_expr)
-  if (!grepl("\\.", method_deparsed)) {
-    rlang::abort("Invalid method expression for a S3/S4 generic.")
-  }
-  split_loc <- regexpr("\\.[^\\.]*$", method_deparsed)[1]
-  method_generic <- substr(method_deparsed, 0, split_loc - 1)
-  method_class <- substr(method_deparsed, split_loc + 1, nchar(method_deparsed))
-  ns <- gsub("(^|:::?)[^:]*?$", "", method_deparsed)
-  fn <- gsub("^.+:", "", method_generic)
-  if (!ns %in% loadedNamespaces()) {
-    rlang::abort(paste0("Package {", ns, "} must be loaded"))
-  }
-  defined <- rownames(attr(utils::methods(fn), "info"))
-  method_full <- gsub("^.+:", "", method_deparsed)
-  if (!method_full %in% defined) {
-    rlang::abort(paste0("Method '", fn,"' not defined for class \"", method_class, "\""))
-  }
-  list(
-    method_generic = method_generic,
-    method_class = method_class,
-    method_ns = ns,
-    method_full = method_full,
-    formatted_call = method_deparsed
-  )
-}
-
 .is_traced <- function(method_name, obj) {
   "functionWithTrace" %in% class(get(method_name, obj))
 }
@@ -73,4 +40,57 @@ sanitize_get_error <- function(e, method_name, obj_name) {
       "\nCheck inheritance with `ggbody(", obj_name, "$", method_name, ", inherit = TRUE)`"
     ))
   }
+}
+
+resolve_formatting <- function(method) {
+  method_quo <- rlang::enquo(method)
+  if (rlang::is_quosure(method)) {
+    method_quo <- method
+  }
+  deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo))
+
+  # Resolve formatting
+  if (grepl("\\$", deparsed)) {
+    method_body <- ggbody(method_quo)
+
+    # Error if not a method
+    if (class(method_body) != "list" || !all(vapply(method_body, rlang::is_expression, logical(1)))) {
+      rlang::abort("Cannot trace a non-function.")
+    }
+
+    # Parse/deparse method and obj
+    method_split <- split_ggproto_method(method_quo)
+    what <- method_split[["method_name"]]
+    where <- method_split[["obj"]]
+    formatted_call <- method_split[["formatted_call"]]
+
+    # Ensure method is untraced and body is extracted from untraced method
+    if (.is_traced(what, where)) {
+      suppressMessages(untrace(what = what, where = where))
+      method_body <- ggbody(method_quo)
+    }
+  } else {
+    fn_call <- rlang::eval_tidy(method_quo)
+    what <- gsub("^.*:", "", deparsed)
+    where <- rlang::get_env(fn_call)
+    formatted_call <- deparsed
+
+    # Error if not a function
+    if (!rlang::is_function(fn_call)) { rlang::abort("Cannot trace a non-function.") }
+
+    # Ensure the function is not being traced and re-evaluate fn_call
+    if ("functionWithTrace" %in% class(fn_call)) {
+      suppressMessages(untrace(what = what, where = where))
+      fn_call <- rlang::eval_tidy(method_quo)
+    }
+
+    method_body <- as.list(body(fn_call))
+  }
+
+  list(
+    what = what,
+    where = where,
+    method_body = method_body,
+    formatted_call = formatted_call
+  )
 }
