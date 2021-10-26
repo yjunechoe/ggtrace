@@ -107,13 +107,13 @@ test_that("Inspect returns same whether from build or Layer", {
   clear_global_ggtrace()
 
   ggtrace(method = ggplot2:::Layer$map_statistic, trace_steps = -1, verbose = FALSE)
-  barplot_plot
+  invisible(ggplot_build(barplot_plot))
   inside <- last_ggtrace()[[1]]
 
   expect_equal(length(as.list(body(ggplot2:::ggplot_build.ggplot))), 33)
   ggtrace(ggplot2:::ggplot_build.ggplot, 19, verbose = FALSE)
   expect_equal(length(as.list(body(ggplot2:::ggplot_build.ggplot))), 3)
-  barplot_plot
+  invisible(ggplot_build(barplot_plot))
   outside <- last_ggtrace()[[1]]
 
   combined <- global_ggtrace()
