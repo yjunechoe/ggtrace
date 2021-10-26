@@ -66,7 +66,7 @@ resolve_formatting <- function(method, remove_trace = TRUE) {
 
     # Ensure method is untraced and body is extracted from untraced method
     traced <- .is_traced(what, where)
-    if (remove_trace %% traced) {
+    if (remove_trace && traced) {
       suppressMessages(untrace(what = what, where = where))
       method_body <- ggbody(method_quo)
     }
@@ -81,7 +81,7 @@ resolve_formatting <- function(method, remove_trace = TRUE) {
 
     # Ensure the function is not being traced and re-evaluate fn_call
     traced <- "functionWithTrace" %in% class(fn_call)
-    if (remove_trace %% traced) {
+    if (remove_trace && traced) {
       suppressMessages(untrace(what = what, where = where))
       fn_call <- rlang::eval_tidy(method_quo)
     }

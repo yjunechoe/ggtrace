@@ -1,7 +1,7 @@
 #' Interactively edit the source code of a ggproto method
 #'
-#' @inheritParams ggbody
-#' @inheritParams gguntrace
+#' @inheritParams ggtrace
+#' @param remove_trace Whether to edit from a clean slate. Defaults to `FALSE`.
 #'
 #' @details Like `base::trace()`, the edit is in effect until `gguntrace()` is called.
 #'   Changes with `ggedit()` are cumulative, so `ggedit()` will inform you via a warning
@@ -59,9 +59,9 @@ ggedit <- function(method, remove_trace = FALSE, ...) {
   traced <- method_info$traced
 
   # Inform if editing on top of existing trace
-  if (.is_traced(method_name, obj)) { message("Editing on top of existing trace") }
+  if (traced && !remove_trace) { message("Editing on top of existing trace") }
 
-  suppressMessages(trace(what = method_name, where = obj, edit = TRUE))
+  suppressMessages(trace(what = what, where = where, edit = TRUE))
   message("Creating a persistent trace on ", formatted_call,
           "\nCall `gguntrace(", formatted_call,  ")` to untrace")
   invisible(NULL)
