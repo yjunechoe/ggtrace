@@ -1,6 +1,8 @@
 # ggtrace (development version)
 
-## **New Features**
+# ggtrace 0.4.1
+
+### **New Features**
 
 - Global collection of tracedumps can be turned on/off with `global_ggtrace_state()`. It is still active by default but should memory become a concern, it can be turned off with `global_ggtrace_state(state = FALSE)`.
 

@@ -20,7 +20,7 @@ reference:
   - gguntrace
   - is_traced
 
-- title: Interact with trace dumps
+- title: Interact with tracedumps
   desc: Retrieve the output of evaluated expressions from triggered traces
   contents:
   - last_ggtrace
