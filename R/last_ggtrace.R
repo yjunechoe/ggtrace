@@ -19,11 +19,7 @@
 }
 .ggtrace_storage <- .ggtrace_store()
 
-set_last_ggtrace <- function(value) .ggtrace_storage$set_last(value)
-set_global_ggtrace <- function(value) .ggtrace_storage$set_global(value)
 add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
-get_global_state <- function() .ggtrace_storage$get_state()
-set_global_state <- function(value) .ggtrace_storage$set_state(value)
 
 #' Retrieve the trace dump created by `ggtrace()`
 #'
@@ -110,7 +106,7 @@ last_ggtrace <- function() .ggtrace_storage$get_last()
 #' @export
 #' @rdname last_ggtrace
 clear_last_ggtrace <- function() {
-  set_last_ggtrace(NULL)
+  .ggtrace_storage$set_last(NULL)
   last_ggtrace()
 }
 
@@ -121,7 +117,7 @@ global_ggtrace <- function() .ggtrace_storage$get_global()
 #' @export
 #' @rdname last_ggtrace
 clear_global_ggtrace <- function() {
-  set_global_ggtrace(NULL)
+  .ggtrace_storage$set_global(NULL)
   global_ggtrace()
 }
 
@@ -138,9 +134,9 @@ clear_global_ggtrace <- function() {
 global_ggtrace_state <- function(state) {
   if (!rlang::is_missing(state) && is.logical(state)) {
     message("Global tracing turned ", if (state) "on" else "off", ".")
-    set_global_state(state)
-    invisible(get_global_state())
+    .ggtrace_storage$set_state(state)
+    invisible(.ggtrace_storage$get_state())
   } else {
-    get_global_state()
+    .ggtrace_storage$get_state()
   }
 }
