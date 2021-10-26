@@ -94,6 +94,13 @@ test_that("ggbody supports functions", {
   expect_equal(ggbody(ggforce:::add_y_pos), as.list(body(ggforce:::add_y_pos)))
   expect_equal(ggbody(ggplot2:::ggplot_build.ggplot), as.list(body(ggplot2:::ggplot_build.ggplot)))
 
+  expect_equal(length(ggbody(ggplot2::mean_se)), 5)
+  ggtrace(ggplot2::mean_se, 2)
+  expect_warning(ggbody(ggplot2::mean_se), "currently being traced")
+  expect_warning(len_after2 <- length(ggbody(ggplot2::mean_se)), "currently being traced")
+  expect_equal(len_after2, 3)
+  gguntrace(ggplot2::mean_se)
+
   library(ggplot2)
 
   expect_equal(length(ggbody(mean_se)), 5)
@@ -103,12 +110,21 @@ test_that("ggbody supports functions", {
   expect_equal(len_after1, 3)
   gguntrace(mean_se)
 
-  expect_equal(length(ggbody(ggplot2::mean_se)), 5)
-  ggtrace(ggplot2::mean_se, 2)
-  expect_warning(ggbody(ggplot2::mean_se), "currently being traced")
-  expect_warning(len_after2 <- length(ggbody(ggplot2::mean_se)), "currently being traced")
-  expect_equal(len_after2, 3)
-  gguntrace(ggplot2::mean_se)
+  expect_message(ggtrace(mean_se, 2, once = FALSE), "persistent trace")
+  expect_warning(ggbody(mean_se), "currently being traced")
+  expect_true(is_traced(mean_se))
+
+  # Odd behavior I might want to account for later (pt.1)
+  expect_true(!"functionWithTrace" %in% class(get("mean_se")))
+  expect_true("functionWithTrace" %in% class(get("mean_se", envir = asNamespace("ggplot2"))))
+
+  expect_message(gguntrace(mean_se), "no longer being traced")
+  expect_message(gguntrace(mean_se), "not currently being traced")
+  expect_equal(ggbody(mean_se), as.list(body(mean_se)))
+
+  # Odd behavior I might want to account for later (pt.2)
+  identical(get("mean_se"), get("mean_se", envir = asNamespace("ggplot2")))
+
 })
 
 test_that("Inspect returns same whether from ggplot_build method or Layer method", {
