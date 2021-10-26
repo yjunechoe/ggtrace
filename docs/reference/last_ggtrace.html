@@ -243,8 +243,10 @@ and a hex code identifying the method's runtime environment, e.g. <code>"Stat$co
 
 <span class='co'># Inspect an accumulation of trace dumps</span>
 
-<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span>
+<span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'>
+<span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span>
   <span class='va'>GeomBoxplot</span><span class='op'>$</span><span class='va'>draw_group</span>,
   trace_steps <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
   once <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -268,7 +270,11 @@ and a hex code identifying the method's runtime environment, e.g. <code>"Stat$co
 <span class='fu'>patchwork</span><span class='fu'>::</span><span class='fu'><a href='https://patchwork.data-imaginist.com/reference/wrap_plots.html'>wrap_plots</a></span><span class='op'>(</span><span class='va'>boxplot_group_tracedump</span>, nrow <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 </div><div class='img'><img src='last_ggtrace-4.png' alt='' width='1094' height='676' /></div><div class='input'>
 <span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
+<span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Global tracing turned off.</span></div><div class='input'><span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Global tracing turned on.</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
