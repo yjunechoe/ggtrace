@@ -19,6 +19,8 @@
 }
 .ggtrace_storage <- .ggtrace_store()
 
+# Moved out as functions because they're used internally in ggtrace()
+set_last_ggtrace <- function(value) .ggtrace_storage$set_last(value)
 add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 
 #' Retrieve the trace dump created by `ggtrace()`
@@ -106,7 +108,7 @@ last_ggtrace <- function() .ggtrace_storage$get_last()
 #' @export
 #' @rdname last_ggtrace
 clear_last_ggtrace <- function() {
-  .ggtrace_storage$set_last(NULL)
+  set_last_ggtrace(NULL)
   last_ggtrace()
 }
 
