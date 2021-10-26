@@ -170,7 +170,6 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   method_split <- split_ggproto_method(method_quo)
   method_name <- method_split[["method_name"]]
   obj <- method_split[["obj"]]
-  obj_name <- method_split[["obj_name"]]
   formatted_call <- method_split[["formatted_call"]]
 
   # Ensure method is untraced and body is extracted from untraced method

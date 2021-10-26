@@ -45,19 +45,13 @@ split_generic_method <- function(method) {
   if (!method_full %in% defined) {
     rlang::abort(paste0("Method '", fn,"' not defined for class \"", method_class, "\""))
   }
-  method_body <- get(method_full, envir = asNamespace(ns))
   list(
     method_generic = method_generic,
     method_class = method_class,
     method_ns = ns,
     method_full = method_full,
-    method_body = method_body,
     formatted_call = method_deparsed
   )
-}
-
-split_function <- function(fun) {
-
 }
 
 .is_traced <- function(method_name, obj) {
