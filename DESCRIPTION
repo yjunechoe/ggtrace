@@ -25,7 +25,6 @@ Collate:
   'ggedit.R'
   'gguntrace.R'
   'ggtrace.R'
-  'ggtrace_fn.R'
   'zzz.R'
 Imports: 
     rlang (>= 0.4.10)
