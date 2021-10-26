@@ -2,7 +2,7 @@ library(ggplot2)
 
 test_that("inspection workflow works #1 (Position)", {
 
-  ggtrace:::set_last_ggtrace(NULL)
+  clear_last_ggtrace()
   expect_null(last_ggtrace())
 
   jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -40,7 +40,7 @@ test_that("inspection workflow works #1 (Position)", {
 
 test_that("inspection workflow works #2 (Geom)", {
 
-  ggtrace:::set_last_ggtrace(NULL)
+  clear_last_ggtrace()
   expect_null(last_ggtrace())
 
   smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +

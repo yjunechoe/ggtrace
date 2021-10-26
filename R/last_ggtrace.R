@@ -93,6 +93,13 @@ last_ggtrace <- function() .ggtrace_storage$get_last()
 
 #' @export
 #' @rdname last_ggtrace
+clear_last_ggtrace <- function() {
+  set_last_ggtrace(NULL)
+  last_ggtrace()
+}
+
+#' @export
+#' @rdname last_ggtrace
 global_ggtrace <- function() .ggtrace_storage$get_global()
 
 #' @export

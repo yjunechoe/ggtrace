@@ -1,5 +1,13 @@
 # ggtrace (development version)
 
+# ggtrace 0.4.0
+
+### **New Features **
+
+### **Improvements**
+
+### **Bug Fixes**
+
 # ggtrace 0.3.7
 
 ### **Bug Fixes**

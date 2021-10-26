@@ -4,7 +4,7 @@ violin_plot <- ggplot(iris, aes(Species, Petal.Width)) + geom_violin()
 
 test_that("~step evaluates step", {
 
-  ggtrace:::set_last_ggtrace(NULL)
+  clear_last_ggtrace()
   expect_null(last_ggtrace())
 
   gguntrace(ggplot2:::Layer$compute_statistic)

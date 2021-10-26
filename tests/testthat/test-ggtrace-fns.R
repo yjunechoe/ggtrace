@@ -21,7 +21,18 @@ test_that("tracing correctly identified for functions with ::", {
   expect_message(gguntrace(ggplot2::ggplot), "not currently being traced")
 })
 
+test_that("tracing correctly identified for ::: generics", {
+  expect_message(gguntrace(ggplot2:::ggplot_build.ggplot), "not currently being traced")
+  expect_true(isFALSE(is_traced(ggplot2:::ggplot_build.ggplot)))
+  expect_message(ggtrace(ggplot2:::ggplot_build.ggplot, 1), "now being traced")
+  expect_true(is_traced(ggplot2:::ggplot_build.ggplot))
+  expect_message(gguntrace(ggplot2:::ggplot_build.ggplot), "no longer being traced")
+  expect_true(isFALSE(is_traced(ggplot2:::ggplot_build.ggplot)))
+  expect_message(gguntrace(ggplot2:::ggplot_build.ggplot), "not currently being traced")
+})
+
 test_that("basic tracing tests for for custom functions", {
+
   test_fn <- function() {
     a <- 1
     b <- 2
@@ -34,7 +45,7 @@ test_that("basic tracing tests for for custom functions", {
   expect_equal(length(as.list(body(test_fn))), 6)
   expect_equal(test_fn(), 6)
 
-  ggtrace:::set_last_ggtrace(NULL)
+  clear_last_ggtrace()
   expect_null(last_ggtrace())
   expect_message(ggtrace(test_fn, 2:4, verbose = FALSE), "now being traced")
   invisible(test_fn())
@@ -71,7 +82,27 @@ test_that("basic tracing tests for for custom functions", {
   expect_true(rlang::is_environment(env_persistent2))
   expect_true(isFALSE(identical(env_persistent1, env_persistent2)))
   expect_equal(result_persistent1, result_persistent2)
+  expect_equal(mget(ls(env_persistent1), env_persistent1), mget(ls(env_persistent2), env_persistent2))
   expect_message(gguntrace(test_fn), "no longer being traced")
   expect_true(isFALSE(is_traced(test_fn)))
 
 })
+
+# Real world examples
+library(ggplot2)
+
+# Bar plot using computed/"mapped" aesthetics with `after_stat()` and `after_scale()`
+barplot_plot <- ggplot(data = palmerpenguins::penguins) +
+  geom_bar(
+    mapping = aes(
+      x = species,                           # Discrete x-axis representing species
+      y = after_stat(count / sum(count)),    # Bars represent count of species as proportions
+      color = species,                       # The outline of the bars are colored by species
+      fill = after_scale(alpha(color, 0.5))  # The fill of the bars are lighter than the outline color
+    ),
+    size = 3
+  )
+
+expect_equal(length(as.list(body(ggplot2:::ggplot_build.ggplot))), 33)
+ggtrace(ggplot2:::ggplot_build.ggplot, 19)
+

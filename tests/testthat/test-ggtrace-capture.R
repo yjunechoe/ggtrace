@@ -2,7 +2,7 @@ library(ggplot2)
 
 test_that("environment properties are as expected", {
 
-  ggtrace:::set_last_ggtrace(NULL)
+  clear_last_ggtrace()
   expect_null(last_ggtrace())
   expect_null(clear_global_ggtrace())
 
