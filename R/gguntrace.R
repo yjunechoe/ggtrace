@@ -40,23 +40,21 @@ gguntrace <- function(method, ...) {
   # Capture method expression
   method_quo <- rlang::enquo(method)
 
-  # Validate method
-  method_body <- ggbody(method_quo)
-
-  # Parse/deparse method and obj
-  method_split <- split_ggproto_method(method_quo)
-  method_name <- method_split[["method_name"]]
-  obj <- method_split[["obj"]]
-  obj_name <- method_split[["obj_name"]]
-  formatted_call <- method_split[["formatted_call"]]
+  # Resolve formatting and dump vars
+  method_info <- resolve_formatting(method_quo, remove_trace = FALSE)
+  what <- method_info$what
+  where <- method_info$where
+  method_body <- method_info$method_body
+  formatted_call <- method_info$formatted_call
+  traced <- method_info$traced
 
   tryCatch(
     expr = {
-      suppressMessages(untrace(what = method_name, where = obj))
+      suppressMessages(untrace(what = what, where = where))
       message(formatted_call, " no longer being traced.")
     },
     error = function(e) {
-      if (!.is_traced(method_name, obj)) {
+      if (!traced) {
         message(formatted_call, " not currently being traced.")
       }
     }
