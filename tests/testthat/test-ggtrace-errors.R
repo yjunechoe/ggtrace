@@ -24,7 +24,7 @@ test_that("errors on steps and exprs mismatch", {
 
 test_that("errors on tracing a property", {
   expect_message(gguntrace(Stat$compute_panel), "not currently being traced")
-  expect_error(ggtrace(Stat$retransform, 1), "Cannot trace a non-function method")
+  expect_error(ggtrace(Stat$retransform, 1), "Cannot trace a non-function")
   expect_message(gguntrace(Stat$compute_panel), "not currently being traced")
 })
 
