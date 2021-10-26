@@ -4,9 +4,17 @@
 
 ### **New Features **
 
+- All functions in the package now support the tracing/untracing of **any arbitrary functions** (exported, unexported, user-defined, etc.). This also includes S3/S4 methods like `ggplo2:::ggplot_build.ggplot` and `ggplot2:::ggplot_add.Layer`. Some other examples of what's now possible.
+
 ### **Improvements**
 
+- `ggtrace()` gains a `...` for extensibility in future updates.
+- `ggedit()` gains a `remove_trace` argument. When `TRUE`, it untraces first before editing.
+- Improved error messages for invalid expressions passed to `method` argument of `ggbody()`
+
 ### **Bug Fixes**
+
+- Fix bug where `ggtrace()` fails to evaluate the first line when it's the only reachable line (#44)
 
 # ggtrace 0.3.7
 
