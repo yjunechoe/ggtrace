@@ -5,7 +5,13 @@
   list(
     get_last = function() .last_ggtrace,
     set_last = function(value) .last_ggtrace <<- value,
-    get_global = function() .global_ggtrace,
+    get_global = function() {
+      if(!.global_ggtrace_state) {
+        message("Global collection of tracedumps are turned off.\n",
+                "To turn it back on, call `global_ggtrace_on()`")
+      }
+      .global_ggtrace
+    },
     set_global = function(value) .global_ggtrace <<- value,
     add_global = function(value) {
       if(.global_ggtrace_state) {
