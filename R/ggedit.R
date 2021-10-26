@@ -42,7 +42,7 @@
 #' jitter_plot
 #'
 #' }
-ggedit <- function(method, ...) {
+ggedit <- function(method, remove_trace = FALSE, ...) {
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
@@ -50,18 +50,19 @@ ggedit <- function(method, ...) {
   # Validate method
   method_body <- ggbody(method_quo)
 
-  # Parse/deparse method and obj
-  method_split <- split_ggproto_method(method_quo)
-  method_name <- method_split[["method_name"]]
-  obj <- method_split[["obj"]]
-  obj_name <- method_split[["obj_name"]]
-  formatted_call <- method_split[["formatted_call"]]
+  # Resolve formatting and dump vars
+  method_info <- resolve_formatting(method_quo, remove_trace = FALSE)
+  what <- method_info$what
+  where <- method_info$where
+  method_body <- method_info$method_body
+  formatted_call <- method_info$formatted_call
+  traced <- method_info$traced
 
   # Inform if editing on top of existing trace
   if (.is_traced(method_name, obj)) { message("Editing on top of existing trace") }
 
   suppressMessages(trace(what = method_name, where = obj, edit = TRUE))
-  message("Creating a persistent trace on ", method_name, " from ", obj_name,
+  message("Creating a persistent trace on ", formatted_call,
           "\nCall `gguntrace(", formatted_call,  ")` to untrace")
   invisible(NULL)
 }

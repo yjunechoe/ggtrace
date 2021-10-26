@@ -42,7 +42,7 @@ sanitize_get_error <- function(e, method_name, obj_name) {
   }
 }
 
-resolve_formatting <- function(method) {
+resolve_formatting <- function(method, remove_trace = TRUE) {
   method_quo <- rlang::enquo(method)
   if (rlang::is_quosure(method)) {
     method_quo <- method
@@ -65,7 +65,8 @@ resolve_formatting <- function(method) {
     formatted_call <- method_split[["formatted_call"]]
 
     # Ensure method is untraced and body is extracted from untraced method
-    if (.is_traced(what, where)) {
+    traced <- .is_traced(what, where)
+    if (remove_trace %% traced) {
       suppressMessages(untrace(what = what, where = where))
       method_body <- ggbody(method_quo)
     }
@@ -79,7 +80,8 @@ resolve_formatting <- function(method) {
     if (!rlang::is_function(fn_call)) { rlang::abort("Cannot trace a non-function.") }
 
     # Ensure the function is not being traced and re-evaluate fn_call
-    if ("functionWithTrace" %in% class(fn_call)) {
+    traced <- "functionWithTrace" %in% class(fn_call)
+    if (remove_trace %% traced) {
       suppressMessages(untrace(what = what, where = where))
       fn_call <- rlang::eval_tidy(method_quo)
     }
@@ -91,6 +93,7 @@ resolve_formatting <- function(method) {
     what = what,
     where = where,
     method_body = method_body,
-    formatted_call = formatted_call
+    formatted_call = formatted_call,
+    traced = traced
   )
 }
