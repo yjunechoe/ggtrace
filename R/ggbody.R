@@ -1,7 +1,7 @@
 #' Retrieve the body of a ggproto method as a list
 #'
-#' @param method A function or an expression that evaluates to a ggproto method.
-#'   The expression may be specified using any of the following forms:
+#' @param method A function or a ggproto method.
+#'   The ggproto method may be specified using any of the following forms:
 #'   - `ggproto$method`
 #'   - `namespace::ggproto$method`
 #'   - `namespace:::ggproto$method`
@@ -98,8 +98,13 @@ ggbody <- function(method, inherit = FALSE) {
 
   # Special handling for functions
   if (class(method)[1] == "function" || class(attr(method, "original"))[1] == "function") {
-    fn_call_deparsed <- gsub("^.*:", "", rlang::expr_deparse(rlang::quo_get_expr(method_quo)))
-    fn_got <- get(fn_call_deparsed, envir = rlang::get_env(method))
+    fn_expr <- rlang::quo_get_expr(method_quo)
+    # Error if it's a call that evalutes to a function that's not `::` or `:::`
+    if (rlang::is_call(fn_expr) && !rlang::call_name(fn_expr) %in% c("::", ":::")) {
+      rlang::abort("Invalid expression. If you mean to pass in a function, it must be a variable not a call.")
+    }
+    fn_deparsed <- gsub("^.*:", "", rlang::expr_deparse(fn_expr))
+    fn_got <- get(fn_deparsed, envir = rlang::get_env(method))
     if ("functionWithTrace" %in% class(fn_got)) {
       rlang::warn("Method is currently being traced")
     }
@@ -115,7 +120,7 @@ ggbody <- function(method, inherit = FALSE) {
 
   # Check if method is a call
   if (!rlang::is_call(method_expr)) {
-    rlang::abort("`method` must be a call. See `?ggbody` for valid forms.")
+    rlang::abort("If you mean to pass in a ggproto method, `method` must be a call. See `?ggbody` for valid forms.")
   }
 
   # Parse/deparse method and obj

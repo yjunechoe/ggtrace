@@ -88,7 +88,30 @@ test_that("basic tracing tests for for custom functions", {
 
 })
 
-test_that("Inspect returns same whether from build or Layer", {
+test_that("ggbody supports functions", {
+  expect_equal(ggbody(sample), as.list(body(sample)))
+  expect_equal(ggbody(ggplot2::mean_se), as.list(body(ggplot2::mean_se)))
+  expect_equal(ggbody(ggforce:::add_y_pos), as.list(body(ggforce:::add_y_pos)))
+  expect_equal(ggbody(ggplot2:::ggplot_build.ggplot), as.list(body(ggplot2:::ggplot_build.ggplot)))
+
+  library(ggplot2)
+
+  expect_equal(length(ggbody(mean_se)), 5)
+  ggtrace(mean_se, 2)
+  expect_warning(ggbody(mean_se), "currently being traced")
+  expect_warning(len_after1 <- length(ggbody(mean_se)), "currently being traced")
+  expect_equal(len_after1, 3)
+  gguntrace(mean_se)
+
+  expect_equal(length(ggbody(ggplot2::mean_se)), 5)
+  ggtrace(ggplot2::mean_se, 2)
+  expect_warning(ggbody(ggplot2::mean_se), "currently being traced")
+  expect_warning(len_after2 <- length(ggbody(ggplot2::mean_se)), "currently being traced")
+  expect_equal(len_after2, 3)
+  gguntrace(ggplot2::mean_se)
+})
+
+test_that("Inspect returns same whether from ggplot_build method or Layer method", {
   # Real world examples
   library(ggplot2)
 

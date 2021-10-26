@@ -178,5 +178,5 @@ test_that("method expr must be a call", {
 
 test_that("method expression validation", {
   expect_error(ggbody(ggplot2:::Layer), "Invalid method expression")
-  expect_error(ggbody(get("compute_statistic", ggplot2:::Layer)), "Invalid method expression")
+  expect_error(ggbody(get("compute_statistic", ggplot2:::Layer)), "must be a variable not a call")
 })
