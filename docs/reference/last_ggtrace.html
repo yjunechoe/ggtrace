@@ -151,12 +151,28 @@
 
 <span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 
-<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span></pre>
+<span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 
+<span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='va'>state</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>state</th>
+      <td><p>If missing, returns whether the global tracedump is currently active.
+The global tracedump is active by default (<code>state</code> is <code>TRUE</code>), meaning that
+every time a trace created by <code><a href='ggtrace.html'>ggtrace()</a></code> is triggered, its tracedump is added
+to the global tracedump storage, which can be inspected with <code>global_ggtrace()</code>.</p>
+<p>The global tracedump can be turned on/off by setting <code>state</code> to <code>TRUE</code>/<code>FALSE</code>.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A list</p>
+<p>A logical indicating the current state of the global trace dump.
+If <code>state</code> is provided, changes the state first, then returns the state invisibly.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     
