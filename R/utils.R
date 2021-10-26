@@ -42,7 +42,7 @@ sanitize_get_error <- function(e, method_name, obj_name) {
   }
 }
 
-resolve_formatting <- function(method, remove_trace = TRUE) {
+resolve_formatting <- function(method, remove_trace = FALSE) {
   method_quo <- rlang::enquo(method)
   if (rlang::is_quosure(method)) {
     method_quo <- method
