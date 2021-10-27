@@ -135,7 +135,9 @@ clear_global_ggtrace <- function() {
 #' @rdname last_ggtrace
 global_ggtrace_state <- function(state) {
   if (!rlang::is_missing(state) && is.logical(state)) {
-    message("Global tracedump ", if (state) "activated" else "deactivated", ".")
+    message("Global tracedump ",
+            if (state == .ggtrace_storage$get_state()) "already ",
+            if (state) "activated" else "deactivated", ".")
     .ggtrace_storage$set_state(state)
     invisible(.ggtrace_storage$get_state())
   } else {
