@@ -45,7 +45,7 @@ You can install the development version from
     # install.packages("devtools")
     devtools::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.1
+    library(ggtrace) # v0.4.2
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 
@@ -120,11 +120,11 @@ You can install the development version from
     jitter_plot
     #> Triggering trace on PositionJitter$compute_layer
     #> 
-    #> [Step 1]> data
+    #> [Step 01]> data
     #> 
-    #> [Step 1]> params
+    #> [Step 01]> params
     #> 
-    #> [Step 9]> dummy_data
+    #> [Step 09]> dummy_data
     #> 
     #> [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)
     #> 

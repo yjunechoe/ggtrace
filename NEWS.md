@@ -1,5 +1,11 @@
 # ggtrace (development version)
 
+# ggtrace 0.4.2
+
+### **Bug Fixes**
+
+- Fixed bug where `print_output = TRUE` would evaluate the expression twice (problematic for Inject workflows and causing general slowdowns)
+
 # ggtrace 0.4.1
 
 ### **New Features**
