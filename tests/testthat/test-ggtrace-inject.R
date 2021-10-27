@@ -329,3 +329,22 @@ test_that("injections can be conditional", {
   expect_true(length(unique(boxplot_normal$new_width)) == 1)
 
 })
+
+test_that("printing output does not evaluate exprs twice", {
+  aaa <- function() {
+    a <- 1
+    b <- 1
+    c <- 1
+    a + b + c
+  }
+  original <- aaa()
+
+  ggtrace(aaa, -1, quote(a <- a + 10), verbose = FALSE)
+  no_print <- aaa()
+  expect_equal(no_print, 13)
+  expect_equal(no_print, original + 10)
+
+  ggtrace(aaa, -1, quote(a <- a + 10))
+  yes_print <- aaa()
+  expect_equal(yes_print, no_print)
+})

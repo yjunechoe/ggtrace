@@ -36,6 +36,7 @@ test_that("exprs evaluated at different steps return different values", {
     StatYdensity$compute_group,
     trace_steps = c(7, -1),
     trace_exprs = quote(dens),
+    print_output = FALSE,
     verbose = FALSE
   )
   invisible(ggplotGrob(violin_plot))

@@ -164,6 +164,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   what <- method_info$what
   where <- method_info$where
   method_body <- method_info$method_body
+  method_body_len <- length(method_body)
   formatted_call <- method_info$formatted_call
 
   ## Number of steps
@@ -182,8 +183,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   if (length(trace_exprs) != n_steps) { rlang::abort("Length mismatch between `trace_steps` and `trace_exprs`") }
 
   ## Ensure trace_steps is within bounds
-  trace_steps[trace_steps < 0] <- 1 + length(method_body) + trace_steps[trace_steps < 0]
-  if (any(trace_steps <= 0 | trace_steps > length(method_body))) { rlang::abort("`trace_steps` out of range") }
+  trace_steps[trace_steps < 0] <- 1 + method_body_len + trace_steps[trace_steps < 0]
+  if (any(trace_steps <= 0 | trace_steps > method_body_len)) { rlang::abort("`trace_steps` out of range") }
 
   ## Ensure `trace_steps` is sorted
   if (!identical(trace_steps, sort.int(trace_steps))) { rlang::abort("`trace_steps` must be a sorted numeric vector") }
@@ -207,7 +208,8 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
   ## Make names from expressions
   trace_exprs_labels <- vapply(trace_exprs, function(x) { paste(rlang::expr_deparse(x), collapse = "\n") }, character(1))
   ## Use names from named elements
-  trace_msgs <- paste0("[Step ", trace_steps, "]> ", trace_exprs_labels)
+  step_format <- paste0("%0", ceiling(log10(method_body_len)), "d")
+  trace_msgs <- paste0("[Step ", sprintf(step_format, trace_steps), "]> ", trace_exprs_labels)
 
   ## Ensure no duplicates
   if (any(duplicated(trace_msgs))) {
@@ -249,15 +251,14 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
 
         trace_print <- gsub("\\n", "\n ", trace_msgs[trace_idx])
 
-        # Evaluate and store output to trace dump
-        trace_expr <- trace_exprs[[trace_idx]]
-        trace_result <- eval(rlang::expr({
-          if (!!verbose) {
-            cat("\n", !!trace_print, "\n", sep = "")
-            if (!!print_output) { print(!!trace_expr) }
-          }
-          return(!!trace_expr)
-        }), envir = parent.frame()) # This is needed to escape the debugging environment
+        # Evaluate trace expression
+        trace_result <- eval(trace_exprs[[trace_idx]], envir = parent.frame())
+
+        # Resolve printing
+        if (verbose) {
+          cat("\n", trace_print, "\n", sep = "")
+          if (print_output) { print(trace_result) }
+        }
 
         # Resolve tibble format
         if (tibble_print && is.data.frame(trace_result)) {
