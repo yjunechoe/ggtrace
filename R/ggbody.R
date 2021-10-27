@@ -94,6 +94,7 @@ ggbody <- function(method, inherit = FALSE) {
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
+  method_deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo))
   arg_provided <- TRUE
 
   # Special handling for functions
@@ -103,10 +104,10 @@ ggbody <- function(method, inherit = FALSE) {
     if (rlang::is_call(fn_expr) && !rlang::call_name(fn_expr) %in% c("::", ":::")) {
       rlang::abort("Invalid expression. If you mean to pass in a function, it must be a variable not a call.")
     }
-    fn_deparsed <- gsub("^.*:", "", rlang::expr_deparse(fn_expr))
+    fn_deparsed <- gsub("^.*:", "", method_deparsed)
     fn_got <- get(fn_deparsed, envir = rlang::get_env(method))
     if ("functionWithTrace" %in% class(fn_got)) {
-      rlang::warn("Method is currently being traced")
+      rlang::warn(paste(method_deparsed, "is currently being traced"))
     }
     result <- as.list(body(fn_got))
     return(result)
@@ -151,7 +152,7 @@ ggbody <- function(method, inherit = FALSE) {
         }
         # Inform if already being traced
         if (arg_provided && "functionWithTrace" %in% class(parent_method)) {
-          rlang::warn("Method is currently being traced")
+          rlang::warn(paste0(parent, "$", method_name, " is currently being traced"))
         }
         # Break loop and return when found
         return(resolve_method(parent_method))
@@ -166,7 +167,7 @@ ggbody <- function(method, inherit = FALSE) {
     )
     # Inform if already being traced
     if (arg_provided && "functionWithTrace" %in% class(get(method_name, obj))) {
-      rlang::warn("Method is currently being traced")
+      rlang::warn(paste(method_deparsed, "is currently being traced"))
     }
     return(result)
   }

@@ -42,9 +42,17 @@ test_that("ggbody gets body as list", {
 test_that("warns if already being traced", {
   ggtrace(StatBoxplot$compute_group, 1)
   expect_true(is_traced(StatBoxplot$compute_group))
-  expect_warning(ggbody(StatBoxplot$compute_group), "Method is currently being traced")
+  expect_warning(ggbody(StatBoxplot$compute_group), "currently being traced")
   expect_message(gguntrace(StatBoxplot$compute_group), "no longer being traced")
   expect_true(!is_traced(StatBoxplot$compute_group))
+})
+
+test_that("warns if parent already being traced", {
+  ggtrace(Stat$compute_layer, 1)
+  expect_warning(ggbody(StatBoxplot$compute_layer, inherit = TRUE), "currently being traced")
+  expect_message(ggbody(StatBoxplot$compute_layer, inherit = TRUE), "Returning")
+  expect_message(gguntrace(Stat$compute_layer), "no longer being traced")
+  expect_true(!is_traced(Stat$compute_layer))
 })
 
 test_that("works with unimported :::", {
