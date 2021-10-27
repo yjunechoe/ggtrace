@@ -1,5 +1,7 @@
 library(ggplot2)
 
+global_ggtrace_state(TRUE)
+
 test_that("environment properties are as expected", {
 
   clear_last_ggtrace()
@@ -93,3 +95,5 @@ test_that("environment properties are as expected", {
   expect_null(clear_global_ggtrace())
 
 })
+
+global_ggtrace_state(FALSE)

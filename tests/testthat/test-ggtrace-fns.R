@@ -1,3 +1,4 @@
+global_ggtrace_state(TRUE)
 clear_global_ggtrace()
 
 test_that("tracing correctly identified for functions", {
@@ -166,3 +167,4 @@ test_that("Inspect returns same whether from ggplot_build method or Layer method
   clear_global_ggtrace()
 })
 
+global_ggtrace_state(FALSE)

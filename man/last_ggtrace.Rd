@@ -20,14 +20,14 @@ global_ggtrace_state(state)
 }
 \arguments{
 \item{state}{If missing, returns whether the global tracedump is currently active.
-The global tracedump is active by default (\code{state} is \code{TRUE}), meaning that
-every time a trace created by \code{ggtrace()} is triggered, its tracedump is added
+The global tracedump is inactive by default (\code{state} is \code{FALSE}). If activated,
+every time a trace created by \code{ggtrace()} is triggered its tracedump is added
 to the global tracedump storage, which can be inspected with \code{global_ggtrace()}.
 
 The global tracedump can be turned on/off by setting \code{state} to \code{TRUE}/\code{FALSE}.}
 }
 \value{
-A list
+list
 
 A logical indicating the current state of the global trace dump.
 If \code{state} is provided, changes the state first, then returns the state invisibly.
@@ -76,7 +76,8 @@ head(last_ggtrace()[[1]])
 
 # Inspect an accumulation of trace dumps
 
-global_ggtrace_state()
+global_ggtrace_state() # global tracedump is inactive by default since v0.4.3
+global_ggtrace_state(TRUE)
 clear_global_ggtrace()
 
 ggtrace(
@@ -106,7 +107,6 @@ clear_global_ggtrace()
 global_ggtrace()
 
 global_ggtrace_state(FALSE)
-global_ggtrace_state(TRUE)
 
 }
 \seealso{

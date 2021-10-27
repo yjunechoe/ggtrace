@@ -1,5 +1,7 @@
 library(ggplot2)
 
+global_ggtrace_state(TRUE)
+
 gguntrace(Stat$compute_panel)
 boxplot_plot <- ggplot(iris, aes(Species, Sepal.Length)) + geom_boxplot()
 
@@ -344,7 +346,9 @@ test_that("printing output does not evaluate exprs twice", {
   expect_equal(no_print, 13)
   expect_equal(no_print, original + 10)
 
-  ggtrace(aaa, -1, quote(a <- a + 10))
+  ggtrace(aaa, -1, quote(a <- a + 10), verbose = FALSE)
   yes_print <- aaa()
   expect_equal(yes_print, no_print)
 })
+
+global_ggtrace_state(FALSE)

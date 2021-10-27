@@ -43,9 +43,9 @@ You can install the development version from
 [GitHub](https://github.com/) with:
 
     # install.packages("devtools")
-    devtools::install_github("yjunechoe/ggtrace")
+    remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.2
+    library(ggtrace) # v0.4.3
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 

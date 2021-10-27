@@ -1,5 +1,7 @@
 library(ggplot2)
 
+global_ggtrace_state(TRUE)
+
 violin_plot <- ggplot(iris, aes(Species, Petal.Width)) + geom_violin()
 
 test_that("~step evaluates step", {
@@ -84,6 +86,7 @@ test_that("global tracedump collects until untrace", {
 
 test_that("global tracedump state works", {
 
+  global_ggtrace_state(TRUE)
   clear_global_ggtrace()
   expect_true(global_ggtrace_state())
   expect_true(isFALSE(global_ggtrace_state(FALSE)))
@@ -111,5 +114,8 @@ test_that("global tracedump state works", {
   expect_null(global_ggtrace())
   clear_last_ggtrace()
   expect_null(last_ggtrace())
+  global_ggtrace_state(FALSE)
 
 })
+
+global_ggtrace_state(FALSE)

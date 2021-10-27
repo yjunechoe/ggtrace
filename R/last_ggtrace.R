@@ -1,7 +1,7 @@
 .ggtrace_store <- function() {
   .last_ggtrace <- NULL
   .global_ggtrace <- NULL
-  .global_ggtrace_state <- TRUE
+  .global_ggtrace_state <- FALSE
   list(
     get_last = function() .last_ggtrace,
     set_last = function(value) .last_ggtrace <<- value,
@@ -42,7 +42,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' @seealso [ggtrace()], [gguntrace()]
 #'
-#' @return A list
+#' @return list
 #' @export
 #'
 #' @keywords internal
@@ -71,7 +71,8 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' # Inspect an accumulation of trace dumps
 #'
-#' global_ggtrace_state()
+#' global_ggtrace_state() # global tracedump is inactive by default since v0.4.3
+#' global_ggtrace_state(TRUE)
 #' clear_global_ggtrace()
 #'
 #' ggtrace(
@@ -101,7 +102,6 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #' global_ggtrace()
 #'
 #' global_ggtrace_state(FALSE)
-#' global_ggtrace_state(TRUE)
 #'
 last_ggtrace <- function() .ggtrace_storage$get_last()
 
@@ -124,8 +124,8 @@ clear_global_ggtrace <- function() {
 }
 
 #' @param state If missing, returns whether the global tracedump is currently active.
-#'   The global tracedump is active by default (`state` is `TRUE`), meaning that
-#'   every time a trace created by `ggtrace()` is triggered, its tracedump is added
+#'   The global tracedump is inactive by default (`state` is `FALSE`). If activated,
+#'   every time a trace created by `ggtrace()` is triggered its tracedump is added
 #'   to the global tracedump storage, which can be inspected with `global_ggtrace()`.
 #'
 #'   The global tracedump can be turned on/off by setting `state` to `TRUE`/`FALSE`.

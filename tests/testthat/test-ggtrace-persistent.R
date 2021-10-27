@@ -1,5 +1,7 @@
 library(ggplot2)
 
+global_ggtrace_state(TRUE)
+
 test_that("loops through `trace_exprs` correctly with persistent trace", {
 
   clear_global_ggtrace()
@@ -49,3 +51,4 @@ test_that("loops through `trace_exprs` correctly with persistent trace", {
 
 })
 
+global_ggtrace_state(FALSE)

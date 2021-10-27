@@ -1,5 +1,15 @@
 # ggtrace (development version)
 
+# ggtrace 0.4.3
+
+### **Breaking changes**
+
+- Global tracedump is turned off by default (`global_ggtrace_state()` is `FALSE` on load) and must be explicitly activated with `global_ggtrace_state(TRUE)`.
+
+### **Improvements**
+
+- Improved messages for `global_ggtrace_state()`
+
 # ggtrace 0.4.2
 
 ### **Bug Fixes**

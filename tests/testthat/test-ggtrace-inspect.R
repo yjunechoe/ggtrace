@@ -1,5 +1,7 @@
 library(ggplot2)
 
+global_ggtrace_state(TRUE)
+
 test_that("inspection workflow works #1 (Position)", {
 
   clear_last_ggtrace()
@@ -51,7 +53,8 @@ test_that("inspection workflow works #2 (Geom)", {
     method = GeomSmooth$draw_group,
     trace_steps = -1,           # Trace the last line
     trace_exprs = quote(~step), # Grab the gList() object it returns
-    print_output = FALSE
+    print_output = FALSE,
+    verbose = FALSE
   )
 
   invisible(ggplotGrob(smooth_plot))
@@ -145,3 +148,5 @@ test_that("aes_eval vignette", {
   expect_equal(traced_self$layer$stat, geom_bar()$stat)
 
 })
+
+global_ggtrace_state(FALSE)

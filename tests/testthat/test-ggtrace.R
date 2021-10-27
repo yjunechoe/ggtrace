@@ -1,5 +1,7 @@
 library(ggplot2)
 
+global_ggtrace_state(TRUE)
+
 boxplot_plot <- ggplot(iris, aes(Species, Sepal.Length)) + geom_boxplot()
 
 test_that("trace is created (messages)", {
@@ -10,7 +12,8 @@ test_that("trace is created (messages)", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = rlang::exprs(head(data), head(data))
+      trace_exprs = rlang::exprs(head(data), head(data)),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -26,7 +29,8 @@ test_that("trace is created, triggered, then removed", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = rlang::exprs(head(data), head(data))
+      trace_exprs = rlang::exprs(head(data), head(data)),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -41,7 +45,8 @@ test_that("trace will get overriden", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = rlang::exprs(head(data), head(data))
+      trace_exprs = rlang::exprs(head(data), head(data)),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -53,7 +58,8 @@ test_that("trace will get overriden", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = rlang::exprs(head(data), head(data))
+      trace_exprs = rlang::exprs(head(data), head(data)),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -61,7 +67,8 @@ test_that("trace will get overriden", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = rlang::exprs(self, self)
+      trace_exprs = rlang::exprs(self, self),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -82,7 +89,8 @@ test_that("once = FALSE creates persistent trace", {
       Stat$compute_layer,
       trace_steps = c(1, 3),
       trace_exprs = rlang::exprs(head(data), head(data)),
-      once = FALSE
+      once = FALSE,
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -111,7 +119,8 @@ test_that("trace_exprs length-1 exprs can be recycled", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = rlang::exprs(head(data), head(data))
+      trace_exprs = rlang::exprs(head(data), head(data)),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -125,7 +134,8 @@ test_that("trace_exprs length-1 exprs can be recycled", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = rlang::exprs(head(data))
+      trace_exprs = rlang::exprs(head(data)),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -144,7 +154,8 @@ test_that("trace_exprs single expr can be recycled", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = list(quote(head(data)), quote(head(data)))
+      trace_exprs = list(quote(head(data)), quote(head(data))),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -157,7 +168,8 @@ test_that("trace_exprs single expr can be recycled", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = quote(head(data))
+      trace_exprs = quote(head(data)),
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -178,7 +190,8 @@ test_that("trace_expr can take a list of exprs as value", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = exprs_list1
+      trace_exprs = exprs_list1,
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -190,7 +203,8 @@ test_that("trace_expr can take a list of exprs as value", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = exprs_list2
+      trace_exprs = exprs_list2,
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -206,7 +220,8 @@ test_that("clean_names = TRUE preserves names", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = exprs_list1
+      trace_exprs = exprs_list1,
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -220,7 +235,8 @@ test_that("clean_names = TRUE preserves names", {
     ggtrace(
       Stat$compute_layer,
       trace_steps = c(1, 3),
-      trace_exprs = exprs_list2
+      trace_exprs = exprs_list2,
+      verbose = FALSE
     ),
     "now being traced"
   )
@@ -234,7 +250,7 @@ test_that("clean_names = TRUE preserves names", {
 test_that("NULL handled like any other value", {
 
   # Alone unnamed
-  ggtrace(Stat$compute_layer, c(1), list(quote(NULL)))
+  ggtrace(Stat$compute_layer, c(1), list(quote(NULL)), verbose = FALSE)
   invisible(ggplotGrob(boxplot_plot))
   null_alone_unnamed <- last_ggtrace()
 
@@ -244,7 +260,7 @@ test_that("NULL handled like any other value", {
   expect_null(null_alone_unnamed[[1]])
 
   # Alone named
-  ggtrace(Stat$compute_layer, c(1), list(null = quote(NULL)))
+  ggtrace(Stat$compute_layer, c(1), list(null = quote(NULL)), verbose = FALSE)
   invisible(ggplotGrob(boxplot_plot))
   null_alone_named <- last_ggtrace()
 
@@ -254,7 +270,7 @@ test_that("NULL handled like any other value", {
   expect_null(null_alone_named[[1]])
 
   # Last
-  ggtrace(Stat$compute_layer, c(1, 1), list(hi = quote(1), bye = quote(NULL)))
+  ggtrace(Stat$compute_layer, c(1, 1), list(hi = quote(1), bye = quote(NULL)), verbose = FALSE)
   invisible(ggplotGrob(boxplot_plot))
   null_last <- last_ggtrace()
 
@@ -328,20 +344,14 @@ test_that("incomplete traces are logged appropriately", {
   expect_true(isFALSE(grepl("INCOMPLETE", names(partial_incomplete[2]))))
   expect_equal(length(partial_incomplete[[2]]), 21)
 
-  ggtrace(
-    ggplot2:::Layer$map_statistic,
-    10,
-    quote(1 + 1)
-  )
+  ggtrace(ggplot2:::Layer$map_statistic, 10, quote(1 + 1), verbose = FALSE)
   expect_warning(invisible(ggplotGrob(ggplot())), "incomplete")
   expect_null(last_ggtrace())
 
-  ggtrace(
-    ggplot2:::Layer$map_statistic,
-    c(1, 2, 10),
-    quote(1 + 1)
-  )
+  ggtrace(ggplot2:::Layer$map_statistic, c(1, 2, 10), quote(1 + 1), verbose = FALSE)
   expect_warning(invisible(ggplotGrob(ggplot())), "incomplete")
   expect_true(length(last_ggtrace()) == 2)
 
 })
+
+global_ggtrace_state(FALSE)
