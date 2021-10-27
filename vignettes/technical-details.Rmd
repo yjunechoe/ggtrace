@@ -1,8 +1,8 @@
 ---
-title: "Metaprogramming with trace()"
+title: "Technical details"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Metaprogramming with trace()}
+  %\VignetteIndexEntry{Technical details}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

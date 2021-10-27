@@ -1,0 +1,35 @@
+---
+title: "Frequently asked questions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Frequently asked questions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Under construction
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggtrace)
+```
+
+## What can you `ggtrace()`?
+
+- ggproto methods
+- functions
+- S3/S4 generics
+- R6, etc.
+
+## Is ggtrace() safe?
+
+- Cleans up after itself (`once = TRUE` by default)
+- Doesn't rely on side effects - but be careful about assignment (ex: replacing `ggproto$method <- ...` will change the ggproto obj - but thats just a general referencing thing not something unique to ggtrace)
+- Traced method masks the original and doesn't override it (original stored in `attr(..., "original")` of traced function)
+- Built-in safety measures (ex: always untraces before tracing which prevents nested traces from being created, all pkg functions give ample warning about whether things are already being traced, doesn't let you trace functions that aren't bound to a variable, etc.)

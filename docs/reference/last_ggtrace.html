@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
       </span>
     </div>
 
@@ -105,15 +105,21 @@
       <a href="../articles/intro.html">Introduction to ggtrace()</a>
     </li>
     <li>
-      <a href="../articles/usecase-aes_eval.html">Usecase: aes evaluation</a>
+      <a href="../articles/showcase-ggplot_build.html">Showcase: ggplot build</a>
+    </li>
+    <li>
+      <a href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
+      <a href="../articles/FAQ.html">Frequently asked questions</a>
+    </li>
+    <li>
       <a href="../articles/comparisons.html">Comparison of debugging methods</a>
     </li>
     <li>
-      <a href="../articles/metaprogramming.html">Metaprogramming with trace()</a>
+      <a href="../articles/technical-details.html">Technical details</a>
     </li>
   </ul>
 </li>
@@ -161,8 +167,8 @@
     <tr>
       <th>state</th>
       <td><p>If missing, returns whether the global tracedump is currently active.
-The global tracedump is active by default (<code>state</code> is <code>TRUE</code>), meaning that
-every time a trace created by <code><a href='ggtrace.html'>ggtrace()</a></code> is triggered, its tracedump is added
+The global tracedump is inactive by default (<code>state</code> is <code>FALSE</code>). If activated,
+every time a trace created by <code><a href='ggtrace.html'>ggtrace()</a></code> is triggered its tracedump is added
 to the global tracedump storage, which can be inspected with <code>global_ggtrace()</code>.</p>
 <p>The global tracedump can be turned on/off by setting <code>state</code> to <code>TRUE</code>/<code>FALSE</code>.</p></td>
     </tr>
@@ -170,7 +176,7 @@ to the global tracedump storage, which can be inspected with <code>global_ggtrac
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list</p>
+    <p>list</p>
 <p>A logical indicating the current state of the global trace dump.
 If <code>state</code> is provided, changes the state first, then returns the state invisibly.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
@@ -243,8 +249,9 @@ and a hex code identifying the method's runtime environment, e.g. <code>"Stat$co
 
 <span class='co'># Inspect an accumulation of trace dumps</span>
 
-<span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='op'>)</span> <span class='co'># global tracedump is inactive by default since v0.4.3</span>
+</div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Global tracedump activated.</span></div><div class='input'><span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span>
   <span class='va'>GeomBoxplot</span><span class='op'>$</span><span class='va'>draw_group</span>,
@@ -273,8 +280,7 @@ and a hex code identifying the method's runtime environment, e.g. <code>"Stat$co
 </div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Global tracedump deactivated.</span></div><div class='input'><span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Global tracedump activated.</span></div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Global tracedump deactivated.</span></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

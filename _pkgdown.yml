@@ -30,12 +30,14 @@ articles:
   navbar: Usage
   contents:
   - intro
-  - usecase-aes_eval
+  - showcase-ggplot_build
+  - showcase-aes_evaluation
 - title: Miscellaneous
   navbar: Miscellaneous
   contents:
+  - FAQ
   - comparisons
-  - metaprogramming
+  - technical-details
 
 navbar:
   structure:

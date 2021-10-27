@@ -1,8 +1,8 @@
 ---
-title: "Introduction to ggtrace()"
+title: "Showcase: ggplot build"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to ggtrace()}
+  %\VignetteIndexEntry{Showcase: ggplot build}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,4 +18,9 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(ggtrace)
+library(ggplot2)
 ```
+
+## Sneak peak:
+
+Read the [draft](https://xenodochial-franklin-34d864.netlify.app/)!

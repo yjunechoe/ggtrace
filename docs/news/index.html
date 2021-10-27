@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
       </span>
     </div>
 
@@ -104,15 +104,21 @@
       <a href="../articles/intro.html">Introduction to ggtrace()</a>
     </li>
     <li>
-      <a href="../articles/usecase-aes_eval.html">Usecase: aes evaluation</a>
+      <a href="../articles/showcase-ggplot_build.html">Showcase: ggplot build</a>
+    </li>
+    <li>
+      <a href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     </li>
     <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
+      <a href="../articles/FAQ.html">Frequently asked questions</a>
+    </li>
+    <li>
       <a href="../articles/comparisons.html">Comparison of debugging methods</a>
     </li>
     <li>
-      <a href="../articles/metaprogramming.html">Metaprogramming with trace()</a>
+      <a href="../articles/technical-details.html">Technical details</a>
     </li>
   </ul>
 </li>
@@ -142,6 +148,27 @@
     <div id="ggtrace-development-version" class="section level1">
 <h1 class="page-header" data-toc-text="development version">
 <a href="#ggtrace-development-version" class="anchor"></a>ggtrace (development version)</h1>
+</div>
+    <div id="ggtrace-043" class="section level1">
+<h1 class="page-header" data-toc-text="0.4.3">
+<a href="#ggtrace-043" class="anchor"></a>ggtrace 0.4.3</h1>
+<div id="breaking-changes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#breaking-changes" class="anchor"></a><strong>Breaking changes</strong>
+</h3>
+<ul>
+<li>Global tracedump is turned off by default (<code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code> is <code>FALSE</code> on load) and must be explicitly activated with <code><a href="../reference/last_ggtrace.html">global_ggtrace_state(TRUE)</a></code>.</li>
+</ul>
+</div>
+<div id="improvements" class="section level3">
+<h3 class="hasAnchor">
+<a href="#improvements" class="anchor"></a><strong>Improvements</strong>
+</h3>
+<ul>
+<li>Improved messages for <code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code>
+</li>
+</ul>
+</div>
 </div>
     <div id="ggtrace-042" class="section level1">
 <h1 class="page-header" data-toc-text="0.4.2">
@@ -178,9 +205,9 @@
 <li>All functions in the package now support the tracing/untracing of <strong>any arbitrary functions</strong> (exported, unexported, user-defined, etc.). This also includes S3/S4 methods like <code>ggplo2:::ggplot_build.ggplot</code> and <code>ggplot2:::ggplot_add.Layer</code>. Some other examples of what’s now possible.</li>
 </ul>
 </div>
-<div id="improvements" class="section level3">
+<div id="improvements-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-1" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li>
@@ -215,9 +242,9 @@
     <div id="ggtrace-036" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.6">
 <a href="#ggtrace-036" class="anchor"></a>ggtrace 0.3.6</h1>
-<div id="improvements-1" class="section level3">
+<div id="improvements-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-1" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-2" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li>
@@ -244,9 +271,9 @@
 <li>New function <code><a href="../reference/is_traced.html">is_traced()</a></code> checks whether a method is currently being traced</li>
 </ul>
 </div>
-<div id="improvements-2" class="section level3">
+<div id="improvements-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-2" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-3" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> now breaks early with a more informative message if the method is not a function (ex: <code>Stat$extra_params</code>, which is a 1-length character vector <code>"na.rm"</code>)</p></li>
@@ -267,9 +294,9 @@
     <div id="ggtrace-034" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.4">
 <a href="#ggtrace-034" class="anchor"></a>ggtrace 0.3.4</h1>
-<div id="breaking-changes" class="section level3">
+<div id="breaking-changes-1" class="section level3">
 <h3 class="hasAnchor">
-<a href="#breaking-changes" class="anchor"></a><strong>Breaking changes</strong>
+<a href="#breaking-changes-1" class="anchor"></a><strong>Breaking changes</strong>
 </h3>
 <ul>
 <li>The <code>.print</code> argument to <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is renamed to <code>print_output</code> to make its functionality more transparent.</li>
@@ -287,9 +314,9 @@
 <li><p>Setting <code><a href="https://rdrr.io/r/base/options.html">options(ggtrace.as_tibble = TRUE)</a></code> will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see <a href="https://github.com/tidyverse/ggplot2/issues/3018">related {ggplot2} Github issue</a>). This option is set to <code>FALSE</code> on package load.</p></li>
 </ul>
 </div>
-<div id="improvements-3" class="section level3">
+<div id="improvements-4" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-3" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-4" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>Tracedumps accumulated in <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> are named after the method (+ hexadecimal ID) for ease of searching. (<a href='https://github.com/yjunechoe/ggtrace/issues/31'>#31</a>)</p></li>
@@ -318,9 +345,9 @@
 <li><p>New function <code><a href="../reference/last_ggtrace.html">clear_global_ggtrace()</a></code> which clears <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> by setting it to <code>NULL</code>.</p></li>
 </ul>
 </div>
-<div id="improvements-4" class="section level3">
+<div id="improvements-5" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-4" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-5" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>Functions now pass around quosures instead of expressions (<a href='https://github.com/yjunechoe/ggtrace/issues/29'>#29</a>)</p></li>
@@ -339,9 +366,9 @@
     <div id="ggtrace-032" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.2">
 <a href="#ggtrace-032" class="anchor"></a>ggtrace 0.3.2</h1>
-<div id="improvements-5" class="section level3">
+<div id="improvements-6" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-5" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-6" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p><code>trace_exprs</code> argument can now take a named list of expressions (<a href='https://github.com/yjunechoe/ggtrace/issues/21'>#21</a>)</p></li>
@@ -362,9 +389,9 @@
     <div id="ggtrace-031" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.1">
 <a href="#ggtrace-031" class="anchor"></a>ggtrace 0.3.1</h1>
-<div id="improvements-6" class="section level3">
+<div id="improvements-7" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-6" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-7" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>The unary functions <code><a href="../reference/ggedit.html">ggedit()</a></code> and <code><a href="../reference/gguntrace.html">gguntrace()</a></code> gain dynamic dots <code>...</code> as the second argument, which gets ignored. This now makes it easy to call these function by modifying the call to an earlier<a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> function from the console or in other interactive contexts.</p></li>
@@ -391,9 +418,9 @@
     <div id="ggtrace-030" class="section level1">
 <h1 class="page-header" data-toc-text="0.3.0">
 <a href="#ggtrace-030" class="anchor"></a>ggtrace 0.3.0</h1>
-<div id="breaking-changes-1" class="section level3">
+<div id="breaking-changes-2" class="section level3">
 <h3 class="hasAnchor">
-<a href="#breaking-changes-1" class="anchor"></a><strong>Breaking changes</strong>
+<a href="#breaking-changes-2" class="anchor"></a><strong>Breaking changes</strong>
 </h3>
 <ul>
 <li>
@@ -414,9 +441,9 @@ Because the <code>obj</code> argument was only designed for compatibility with t
 </li>
 </ul>
 </div>
-<div id="improvements-7" class="section level3">
+<div id="improvements-8" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-7" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-8" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>Accurate string conversion for ggproto objects (<a href='https://github.com/yjunechoe/ggtrace/issues/9'>#9</a>), made possible by the breaking change.</p></li>
@@ -437,9 +464,9 @@ Because the <code>obj</code> argument was only designed for compatibility with t
     <div id="ggtrace-020" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
 <a href="#ggtrace-020" class="anchor"></a>ggtrace 0.2.0</h1>
-<div id="breaking-changes-2" class="section level3">
+<div id="breaking-changes-3" class="section level3">
 <h3 class="hasAnchor">
-<a href="#breaking-changes-2" class="anchor"></a><strong>Breaking changes</strong>
+<a href="#breaking-changes-3" class="anchor"></a><strong>Breaking changes</strong>
 </h3>
 <ul>
 <li><p>The <code>~line</code> keyword for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is renamed to <code>~step</code> for consistency with the argument name <code>trace_steps</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/14'>#14</a>)</p></li>
@@ -463,9 +490,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li><p>You can now tell <code><a href="../reference/ggbody.html">ggbody()</a></code> to (recursively) search for the method from its parents with <code>inherit = TRUE</code> (<a href='https://github.com/yjunechoe/ggtrace/issues/12'>#12</a>)</p></li>
 </ul>
 </div>
-<div id="improvements-8" class="section level3">
+<div id="improvements-9" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-8" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-9" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li>Documentation for some of the functions now contain a <strong>Gotchas</strong> section for explanations of / solutions to common problems (<a href='https://github.com/yjunechoe/ggtrace/issues/10'>#10</a>)</li>
@@ -504,9 +531,9 @@ For example, <code>~step</code> will not be substituted if <code><a href="https:
 <li>New function <a href="https://yjunechoe.github.io/ggtrace/reference/ggedit.html"><code>ggedit()</code></a> for interactive debugging via directly editing the source code.</li>
 </ul>
 </div>
-<div id="improvements-9" class="section level3">
+<div id="improvements-10" class="section level3">
 <h3 class="hasAnchor">
-<a href="#improvements-9" class="anchor"></a><strong>Improvements</strong>
+<a href="#improvements-10" class="anchor"></a><strong>Improvements</strong>
 </h3>
 <ul>
 <li><p>Refactored <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. The package now only depends on <a href="https://rlang.r-lib.org">rlang</a>.</p></li>

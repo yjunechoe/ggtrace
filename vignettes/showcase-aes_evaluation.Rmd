@@ -1,13 +1,13 @@
 ---
-title: "Usecase: aes evaluation"
+title: "Showcase: aes evaluation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Usecase: aes evaluation}
+  %\VignetteIndexEntry{Showcase: aes evaluation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## Under construction
+# Under construction
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -22,3 +22,5 @@ library(ggplot2)
 ```
 
 ## Sneak peak:
+
+Read the [draft](https://goofy-lovelace-d330f8.netlify.app/)!
