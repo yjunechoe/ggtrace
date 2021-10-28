@@ -593,7 +593,7 @@ Here we confirm that the method is restored on exit:
 <img src="man/figures/README-ex-4-ggtrace-restored-1.png" width="100%" />
 
 
-    sina_plot + wrap_elements(full = sina_plot_modified)
+    wrap_elements(full = sina_plot) + wrap_elements(full = sina_plot_modified)
 
 <img src="man/figures/README-ex-4-ggtrace-restored-2.png" width="100%" />
 

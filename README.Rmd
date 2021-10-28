@@ -345,7 +345,7 @@ Here we confirm that the method is restored on exit:
 ```{r ex-4-ggtrace-restored}
 sina_plot
 
-sina_plot + wrap_elements(full = sina_plot_modified)
+wrap_elements(full = sina_plot) + wrap_elements(full = sina_plot_modified)
 ```
 
 
