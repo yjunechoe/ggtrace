@@ -1,5 +1,9 @@
 # ggtrace (development version)
 
+### **Bug Fix**
+
+- Fixed but where methods with class <function> were being treated as bare functions. Now closures and methods outside of ggproto objects (e.g., R6 classes) can be traced too.
+
 # ggtrace 0.4.3
 
 ### **Breaking changes**

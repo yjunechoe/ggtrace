@@ -98,7 +98,7 @@ ggbody <- function(method, inherit = FALSE) {
   arg_provided <- TRUE
 
   # Special handling for functions
-  if (!grepl("\\$", method_deparsed) && "function" %in% class(method) || !is.null(attr(method, "original"))) {
+  if (!grepl("\\$", method_deparsed) && "function" %in% class(method)) {
     fn_expr <- rlang::quo_get_expr(method_quo)
     # Error if it's a call that evalutes to a function that's not `::` or `:::`
     if (rlang::is_call(fn_expr) && !rlang::call_name(fn_expr) %in% c("::", ":::")) {
@@ -106,7 +106,7 @@ ggbody <- function(method, inherit = FALSE) {
     }
     fn_deparsed <- gsub("^.*:", "", method_deparsed)
     fn_got <- get(fn_deparsed, envir = rlang::get_env(method))
-    if ("functionWithTrace" %in% class(fn_got)) {
+    if ("functionWithTrace" %in% class(fn_got)) { # another check: !is.null(attr(method, "original"))
       rlang::warn(paste(method_deparsed, "is currently being traced"))
     }
     result <- as.list(body(fn_got))
