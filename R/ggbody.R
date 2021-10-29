@@ -98,7 +98,7 @@ ggbody <- function(method, inherit = FALSE) {
   arg_provided <- TRUE
 
   # Special handling for functions
-  if (class(method)[1] == "function" || !is.null(attr(method, "original"))) {
+  if (!grepl("\\$", method_deparsed) && "function" %in% class(method) || !is.null(attr(method, "original"))) {
     fn_expr <- rlang::quo_get_expr(method_quo)
     # Error if it's a call that evalutes to a function that's not `::` or `:::`
     if (rlang::is_call(fn_expr) && !rlang::call_name(fn_expr) %in% c("::", ":::")) {
