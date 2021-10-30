@@ -25,17 +25,25 @@ library(ggtrace)
 
 `ggtrace()` is essentially just a wrapper around `base::trace()` designed to make it easy and safe to programmatically trace/untrace functions and methods.
 
-So the short answer is that `ggtrace()` is as safe as `trace()`. But how safe is `trace()`?
+So the short answer is that `ggtrace()` is at least as safe as `trace()`. But how safe _is_ `trace()`?
 
-The beauty of `trace()` is that the modified function being traced _masks_ over the original function without _overwriting_ it.
+The beauty of `trace()` is that the modified function being traced _masks_ over the original function without _overwriting_ it. This allows for **non-destructive modifications to the execution behavior**.
 
-Here, after tracing, the body of `replace()` is different and it runs with a different behavior
+In this simple example, we add a trace to `replace()` which multiples the value of `x` by 10 as the function enters the last step.
 
 ```{r}
 body(replace)
 
-trace(replace, tracer = quote(cat("Running...\n")), at = 1)
+replace(1:5, 3, 30)
 
+as.list(body(replace))
+
+trace(replace, tracer = quote(x <- x * 10), at = 3)
+```
+
+The traced function looks strange and runs with a different behavior
+
+```{r}
 class(replace)
 
 body(replace)
@@ -43,21 +51,23 @@ body(replace)
 replace(1:5, 3, 30)
 ```
 
-But the original is stored in the `"original"` attribute of the traced function
+But again, this is non-destructive. The original function body is safely stored away in the `"original"` attribute of the traced function
 
 ```{r}
 attr(replace, "original")
 ```
 
-This can be recovered with a call to `untrace()`
+The original function can be recovered by removing the trace with a call to `untrace()`
 
 ```{r}
 untrace(replace)
 
 body(replace)
+
+replace(1:5, 3, 30)
 ```
 
-Some extra built-in safety measures offered by `{ggtrace}`:
+Beyond this, `{ggtrace}` also offers some extra built-in safety measures:
 
 - Cleans up after itself by untracing on exit (the default behavior with `once = TRUE`)
 - Always untraces before tracing, which prevents nested traces from being created
@@ -252,6 +262,8 @@ modified_plot
 What you get is an object of class `<gtable>`, which you can draw to your device like any other grob:
 
 ```{r}
+class(modified_plot)
+
 library(grid)
 grid.newpage()
 grid.draw(modified_plot)
