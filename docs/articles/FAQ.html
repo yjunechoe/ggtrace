@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -115,26 +115,287 @@
 <h1 class="hasAnchor">
 <a href="#under-construction" class="anchor"></a>Under construction</h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span></code></pre></div>
-<div id="what-can-you-ggtrace" class="section level2">
-<h2 class="hasAnchor">
-<a href="#what-can-you-ggtrace" class="anchor"></a>What can you <code>ggtrace()</code>?</h2>
-<ul>
-<li>ggproto methods</li>
-<li>functions</li>
-<li>S3/S4 generics</li>
-<li>R6, etc.</li>
-</ul>
-</div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">2021</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span></code></pre></div>
 <div id="is-ggtrace-safe" class="section level2">
 <h2 class="hasAnchor">
 <a href="#is-ggtrace-safe" class="anchor"></a>Is ggtrace() safe?</h2>
+<p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> is essentially just a wrapper around <code><a href="https://rdrr.io/r/base/trace.html">base::trace()</a></code> with features designed to make it easy and safe to programmatically trace/untrace functions and methods.</p>
+<p>So <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is as safe as <code><a href="https://rdrr.io/r/base/trace.html">trace()</a></code>. But how safe is <code><a href="https://rdrr.io/r/base/trace.html">trace()</a></code>?</p>
+<p>The modified function being traced <em>masks</em> over the original function without <em>overwriting</em> it. Here, after tracing, the body of<code><a href="https://rdrr.io/r/base/replace.html">replace()</a></code> is different but the original is stored in the <code>"original"</code> attribute of the traced function, which can be recovered with a call to <code><a href="https://rdrr.io/r/base/trace.html">untrace()</a></code>.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/body.html">body</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     x[list] &lt;- values</span>
+<span class="co">#&gt;     x</span>
+<span class="co">#&gt; }</span>
+<span class="fu"><a href="https://rdrr.io/r/base/trace.html">trace</a></span><span class="op">(</span><span class="va">replace</span>, tracer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Running...\n"</span><span class="op">)</span><span class="op">)</span>, at <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>
+<span class="co">#&gt; Tracing function "replace" in package "base"</span>
+<span class="co">#&gt; [1] "replace"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/body.html">body</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     .doTrace(cat("Running...\n"), "step 1")</span>
+<span class="co">#&gt;     `{`</span>
+<span class="co">#&gt; }(x[list] &lt;- values, x)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
+<span class="co">#&gt; [1] "functionWithTrace"</span>
+<span class="co">#&gt; attr(,"package")</span>
+<span class="co">#&gt; [1] "methods"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="va">replace</span>, <span class="st">"original"</span><span class="op">)</span>
+<span class="co">#&gt; function (x, list, values) </span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     x[list] &lt;- values</span>
+<span class="co">#&gt;     x</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; &lt;bytecode: 0x0000000014accd40&gt;</span>
+<span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/replace.html">replace</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">30</span><span class="op">)</span>
+<span class="co">#&gt; Tracing replace(1:5, 3, 30) step 1 </span>
+<span class="co">#&gt; Running...</span>
+<span class="co">#&gt; [1]  1  2 30  4  5</span>
+<span class="fu"><a href="https://rdrr.io/r/base/trace.html">untrace</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
+<span class="co">#&gt; Untracing function "replace" in package "base"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/body.html">body</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     x[list] &lt;- values</span>
+<span class="co">#&gt;     x</span>
+<span class="co">#&gt; }</span></code></pre></div>
+<p>Some extra built-in safety measures offered by <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a>:</p>
 <ul>
-<li>Cleans up after itself (<code>once = TRUE</code> by default)</li>
-<li>Doesn’t rely on side effects - but be careful about assignment (ex: replacing <code>ggproto$method &lt;- ...</code> will change the ggproto obj - but thats just a general referencing thing not something unique to ggtrace)</li>
-<li>Traced method masks the original and doesn’t override it (original stored in <code><a href="https://rdrr.io/r/base/attr.html">attr(..., "original")</a></code> of traced function)</li>
-<li>Built-in safety measures (ex: always untraces before tracing which prevents nested traces from being created, all pkg functions give ample warning about whether things are already being traced, doesn’t let you trace functions that aren’t bound to a variable, etc.)</li>
+<li>Cleans up after itself by untracing on exit (the default behavior with <code>once = TRUE</code>)</li>
+<li>Always untraces before tracing, which prevents nested traces from being created</li>
+<li>Provides ample messages/warnings about whether methods are already being traced (and allows you to check directly with <code><a href="../reference/is_traced.html">is_traced()</a></code>)</li>
+<li>Exits as early as possible if the method expression is ill-formed with more informative error messages that you can actually act on</li>
+<li>Prevents traces from being created on functions that aren’t bound to a variable in some way (i.e., prevents you from creating traces that you can’t trigger)</li>
 </ul>
+<p>However, some expression you pass to <code><a href="../reference/ggtrace.html">ggtrace()</a></code> for delayed evaluation do have lasting consequences. You need to be careful about running functions that have side effects and making assignments inside environments (ex: <code>self$method &lt;- ...</code> will modify in place). But this isn’t an issue unique to working with <code><a href="../reference/ggtrace.html">ggtrace()</a></code> - they follow from the general rules of reference semantics in R.</p>
+</div>
+<div id="what-can-you-ggtrace" class="section level2">
+<h2 class="hasAnchor">
+<a href="#what-can-you-ggtrace" class="anchor"></a>What can you <code>ggtrace()</code>?</h2>
+<div id="ggproto-methods" class="section level3">
+<h3 class="hasAnchor">
+<a href="#ggproto-methods" class="anchor"></a>ggproto methods</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+
+<span class="va">boxplot_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">drv</span>, <span class="va">hwy</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">boxplot_plot</span></code></pre></div>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-4-1.png" width="1093.75"></p>
+<p>Plots not printed to save space</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span>, <span class="op">-</span><span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; StatBoxplot$compute_group now being traced.</span>
+
+<span class="va">boxplot_plot</span>
+<span class="co">#&gt; Triggering trace on StatBoxplot$compute_group</span>
+<span class="co">#&gt; Untracing StatBoxplot$compute_group on exit.</span>
+
+<span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
+<span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
+<span class="co">#&gt;   relvarwidth flipped_aes</span>
+<span class="co">#&gt; 1    10.14889       FALSE</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] FALSE</span>
+<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; Global tracedump activated.</span>
+<span class="fu"><a href="../reference/last_ggtrace.html">clear_global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; NULL</span>
+
+<span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span>, <span class="op">-</span><span class="fl">1</span>, once <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; StatBoxplot$compute_group now being traced.</span>
+<span class="co">#&gt; Creating a persistent trace. Remember to `gguntrace(StatBoxplot$compute_group)`!</span>
+
+<span class="va">boxplot_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">drv</span>, <span class="va">hwy</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">boxplot_plot</span>
+<span class="co">#&gt; Triggering persistent trace on StatBoxplot$compute_group</span>
+<span class="co">#&gt; Triggering persistent trace on StatBoxplot$compute_group</span>
+<span class="co">#&gt; Triggering persistent trace on StatBoxplot$compute_group</span>
+
+<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; Global tracedump deactivated.</span>
+<span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span>
+<span class="co">#&gt; StatBoxplot$compute_group no longer being traced.</span>
+
+<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Global collection of tracedumps is currently turned off. To activate, call `global_ggtrace_state(TRUE)`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000021130B08`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000021130B08`[[1]]</span>
+<span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
+<span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
+<span class="co">#&gt;   relvarwidth flipped_aes</span>
+<span class="co">#&gt; 1    10.14889       FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022B6F698`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022B6F698`[[1]]</span>
+<span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
+<span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
+<span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
+<span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-00000000231FA958`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-00000000231FA958`[[1]]</span>
+<span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
+<span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
+<span class="co">#&gt;   relvarwidth flipped_aes</span>
+<span class="co">#&gt; 1           5       FALSE</span></code></pre></div>
+</div>
+<div id="functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#functions" class="anchor"></a>functions</h3>
+<p>{base} functions</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; [1] "g" "f" "n" "z" "l"</span>
+<span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">sample</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; sample now being traced.</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; Triggering trace on sample</span>
+<span class="co">#&gt; Untracing sample on exit.</span>
+<span class="co">#&gt; [1] "T" "F" "Y" "X" "N"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">5</span><span class="op">)</span>
+<span class="co">#&gt; [1] "e" "o" "g" "i" "l"</span></code></pre></div>
+<p>Imported functions</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mean_se.html">mean_se</a></span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Running...\n"</span><span class="op">)</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; ggplot2::mean_se now being traced.</span>
+<span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/mean_se.html">mean_se</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>
+<span class="co">#&gt; Triggering trace on ggplot2::mean_se</span>
+<span class="co">#&gt; Running...</span>
+<span class="co">#&gt; Untracing ggplot2::mean_se on exit.</span>
+<span class="co">#&gt;          y    ymin     ymax</span>
+<span class="co">#&gt; 1 20.09062 19.0252 21.15605</span></code></pre></div>
+<p>Custom functions</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">please_return_number</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+  <span class="va">result</span>
+<span class="op">}</span>
+<span class="fu">please_return_number</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; [1] 0.5456977</span>
+
+<span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">please_return_number</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">result</span> <span class="op">&lt;-</span> <span class="st">"no"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; please_return_number now being traced.</span>
+<span class="fu">please_return_number</span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Triggering trace on please_return_number</span>
+<span class="co">#&gt; Untracing please_return_number on exit.</span>
+<span class="co">#&gt; [1] "no"</span></code></pre></div>
+</div>
+<div id="s3s4-generics" class="section level3">
+<h3 class="hasAnchor">
+<a href="#s3s4-generics" class="anchor"></a>S3/S4 generics</h3>
+<p>The exported generic function <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html">ggplot_build()</a></code> from <a href="https://ggplot2.tidyverse.org">ggplot2</a> is itself not very meaningful, but the unexported method for <ggplot> class <code>ggplot_build.ggplot()</code> contains the actual data transformation pipeline.</ggplot></p>
+<p>We can trace this too!</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/body.html">body</a></span><span class="op">(</span><span class="va">ggplot_build</span><span class="op">)</span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     UseMethod("ggplot_build")</span>
+<span class="co">#&gt; }</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/attr.html">attr</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html">methods</a></span><span class="op">(</span><span class="st">"ggplot_build"</span><span class="op">)</span>, <span class="st">"info"</span><span class="op">)</span>
+<span class="co">#&gt;                     visible                                 from      generic</span>
+<span class="co">#&gt; ggplot_build.ggplot   FALSE registered S3method for ggplot_build ggplot_build</span>
+<span class="co">#&gt;                      isS4</span>
+<span class="co">#&gt; ggplot_build.ggplot FALSE</span></code></pre></div>
+<p>You can trace the <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html">ggplot_build()</a></code> method defined for <ggplot> in the same way</ggplot></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; ggplot2:::ggplot_build.ggplot now being traced.</span>
+
+<span class="va">boxplot_plot</span>
+<span class="co">#&gt; Triggering trace on ggplot2:::ggplot_build.ggplot</span>
+<span class="co">#&gt; Untracing ggplot2:::ggplot_build.ggplot on exit.</span></code></pre></div>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-11-1.png" width="1093.75"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
+<span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
+<span class="co">#&gt; 1   12    17     18    22   28                                           </span>
+<span class="co">#&gt; 2   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
+<span class="co">#&gt; 3   15    17     21    24   26                                           </span>
+<span class="co">#&gt;   notchupper notchlower x flipped_aes PANEL group ymin_final ymax_final  xmin</span>
+<span class="co">#&gt; 1   18.77841   17.22159 1       FALSE     1     1         12         28 0.625</span>
+<span class="co">#&gt; 2   28.46039   27.53961 2       FALSE     1     2         17         44 1.625</span>
+<span class="co">#&gt; 3   23.21200   18.78800 3       FALSE     1     3         15         26 2.625</span>
+<span class="co">#&gt;    xmax xid newx new_width weight colour  fill size alpha shape linetype</span>
+<span class="co">#&gt; 1 1.375   1    1      0.75      1 grey20 white  0.5    NA    19    solid</span>
+<span class="co">#&gt; 2 2.375   2    2      0.75      1 grey20 white  0.5    NA    19    solid</span>
+<span class="co">#&gt; 3 3.375   3    3      0.75      1 grey20 white  0.5    NA    19    solid</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/identical.html">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html">layer_data</a></span><span class="op">(</span><span class="va">boxplot_plot</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; [1] TRUE</span></code></pre></div>
+</div>
+<div id="r6-methods" class="section level3">
+<h3 class="hasAnchor">
+<a href="#r6-methods" class="anchor"></a>R6 methods</h3>
+<p>Adpopted from <a href="https://adv-r.hadley.nz/r6.html">Advanced R Ch. 14.2</a></p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://r6.r-lib.org">R6</a></span><span class="op">)</span>
+<span class="va">Accumulator</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://r6.r-lib.org/reference/R6Class.html">R6Class</a></span><span class="op">(</span><span class="st">"Accumulator"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+  sum <span class="op">=</span> <span class="fl">0</span>,
+  add <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span> <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">self</span><span class="op">$</span><span class="va">sum</span> <span class="op">&lt;-</span> <span class="va">self</span><span class="op">$</span><span class="va">sum</span> <span class="op">+</span> <span class="va">x</span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/invisible.html">invisible</a></span><span class="op">(</span><span class="va">self</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">x</span> <span class="op">&lt;-</span> <span class="va">Accumulator</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
+<span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>
+<span class="va">x</span><span class="op">$</span><span class="va">sum</span>
+<span class="co">#&gt; [1] 1</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
+  method <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">add</span>,
+  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,
+  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+    before <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">self</span><span class="op">$</span><span class="va">sum</span><span class="op">)</span>,
+    after <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">self</span><span class="op">$</span><span class="va">sum</span><span class="op">)</span>
+  <span class="op">)</span>,
+  once <span class="op">=</span> <span class="cn">FALSE</span>,
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span>
+<span class="co">#&gt; x$add now being traced.</span>
+<span class="co">#&gt; Creating a persistent trace. Remember to `gguntrace(x$add)`!</span>
+<span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
+<span class="co">#&gt; Triggering persistent trace on x$add</span>
+<span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; $before</span>
+<span class="co">#&gt; [1] 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $after</span>
+<span class="co">#&gt; [1] 11</span>
+<span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
+<span class="co">#&gt; Triggering persistent trace on x$add</span>
+<span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; $before</span>
+<span class="co">#&gt; [1] 11</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $after</span>
+<span class="co">#&gt; [1] 111</span>
+<span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">add</span><span class="op">)</span>
+<span class="co">#&gt; x$add no longer being traced.</span>
+<span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
+<span class="va">x</span><span class="op">$</span><span class="va">sum</span>
+<span class="co">#&gt; [1] 1111</span></code></pre></div>
+</div>
+<div id="what-cant-you-trace" class="section level3">
+<h3 class="hasAnchor">
+<a href="#what-cant-you-trace" class="anchor"></a>What can’t you trace?</h3>
+<ul>
+<li>Non-functions (ex: constants, object properties). But you can still inspect the values for these with <code><a href="../reference/ggbody.html">ggbody()</a></code>
+</li>
+<li>Functions not defined in an environment (ex: you can’t define a function to trace on-the-spot inside <code><a href="../reference/ggtrace.html">ggtrace()</a></code>)</li>
+<li>Limited support for closures (the LHS of the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> must itself be an environment where the function can be searched for)</li>
+</ul>
+</div>
 </div>
 </div>
   </div>

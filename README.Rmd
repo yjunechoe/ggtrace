@@ -63,7 +63,7 @@ remotes::install_github("yjunechoe/ggtrace")
 ```
 
 ```{r setup}
-library(ggtrace) # v0.4.3
+library(ggtrace) # v0.4.4
 ```
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
@@ -345,7 +345,7 @@ Here we confirm that the method is restored on exit:
 ```{r ex-4-ggtrace-restored}
 sina_plot
 
-wrap_elements(full = sina_plot) + wrap_elements(full = sina_plot_modified)
+sina_plot + patchwork::wrap_ggplot_grob(sina_plot_modified)
 ```
 
 

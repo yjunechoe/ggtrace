@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -252,7 +252,7 @@ and a hex code identifying the method's runtime environment, e.g. <code>"Stat$co
 <span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='op'>)</span> <span class='co'># global tracedump is inactive by default since v0.4.3</span>
 </div><div class='output co'>#&gt; [1] FALSE</div><div class='input'><span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='cn'>TRUE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Global tracedump activated.</span></div><div class='input'><span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'>
+</div><div class='output co'>#&gt; <span class='message'>Global tracedump cleared.</span></div><div class='input'>
 <span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span>
   <span class='va'>GeomBoxplot</span><span class='op'>$</span><span class='va'>draw_group</span>,
   trace_steps <span class='op'>=</span> <span class='op'>-</span><span class='fl'>1</span>,
@@ -277,7 +277,7 @@ and a hex code identifying the method's runtime environment, e.g. <code>"Stat$co
 <span class='fu'>patchwork</span><span class='fu'>::</span><span class='fu'><a href='https://patchwork.data-imaginist.com/reference/wrap_plots.html'>wrap_plots</a></span><span class='op'>(</span><span class='va'>boxplot_group_tracedump</span>, nrow <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 </div><div class='img'><img src='last_ggtrace-4.png' alt='' width='1094' height='676' /></div><div class='input'>
 <span class='fu'>clear_global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; NULL</div><div class='input'><span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Global tracedump cleared.</span></div><div class='input'><span class='fu'>global_ggtrace</span><span class='op'>(</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; NULL</div><div class='input'>
 <span class='fu'>global_ggtrace_state</span><span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; <span class='message'>Global tracedump deactivated.</span></div><div class='input'>

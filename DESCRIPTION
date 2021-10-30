@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically debug ggproto methods with trace
-Version: 0.4.3
+Version: 0.4.4
 Authors@R: c(
       person(given = "June",
            family = "Choe",
@@ -30,6 +30,7 @@ Imports:
     rlang (>= 0.4.10)
 Suggests: 
     ggplot2 (>= 3.3.0),
+    grid,
     ggforce,
     patchwork,
     R6,

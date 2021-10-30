@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">ggtrace</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.4</span>
       </span>
     </div>
 
@@ -165,7 +165,7 @@
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("devtools")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"yjunechoe/ggtrace"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.4.3</span></span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.4.4</span></span></code></pre></div>
 </div>
 <div id="example-1---compute_layer-method-from-positionjitter" class="section level2">
 <h2 class="hasAnchor">
@@ -715,7 +715,7 @@
 <p>Here we confirm that the method is restored on exit:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sina_plot</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-ggtrace-restored-1.png" width="100%"></p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wrap_elements</span>(<span class="at">full =</span> sina_plot) <span class="sc">+</span> <span class="fu">wrap_elements</span>(<span class="at">full =</span> sina_plot_modified)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sina_plot <span class="sc">+</span> patchwork<span class="sc">::</span><span class="fu">wrap_ggplot_grob</span>(sina_plot_modified)</span></code></pre></div>
 <p><img src="reference/figures/README-ex-4-ggtrace-restored-2.png" width="100%"></p>
 </div>
 <div id="step-4-inspect-trace-dump-3" class="section level3">

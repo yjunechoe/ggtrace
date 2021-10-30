@@ -45,7 +45,7 @@ You can install the development version from
     # install.packages("devtools")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.3
+    library(ggtrace) # v0.4.4
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 
@@ -593,7 +593,7 @@ Here we confirm that the method is restored on exit:
 <img src="man/figures/README-ex-4-ggtrace-restored-1.png" width="100%" />
 
 
-    wrap_elements(full = sina_plot) + wrap_elements(full = sina_plot_modified)
+    sina_plot + patchwork::wrap_ggplot_grob(sina_plot_modified)
 
 <img src="man/figures/README-ex-4-ggtrace-restored-2.png" width="100%" />
 
