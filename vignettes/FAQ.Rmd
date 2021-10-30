@@ -17,8 +17,42 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+set.seed(2021)
 library(ggtrace)
 ```
+
+## Is ggtrace() safe?
+
+`ggtrace()` is essentially just a wrapper around `base::trace()` with features designed to  make it easy and safe to programmatically trace/untrace functions and methods.
+
+So `ggtrace()` is as safe as `trace()`. But how safe is `trace()`?
+
+The modified function being traced _masks_ over the original function without _overwriting_ it. Here, after tracing, the body of`replace()` is different but the original is stored in the `"original"` attribute of the traced function, which can be recovered with a call to `untrace()`.
+
+```{r}
+body(replace)
+trace(replace, tracer = quote(cat("Running...\n")), at = 1)
+body(replace)
+class(replace)
+attr(replace, "original")
+```
+
+```{r}
+replace(1:5, 3, 30)
+untrace(replace)
+body(replace)
+```
+
+Some extra built-in safety measures offered by `{ggtrace}`:
+
+- Cleans up after itself by untracing on exit (the default behavior with `once = TRUE`)
+- Always untraces before tracing, which prevents nested traces from being created
+- Provides ample messages/warnings about whether methods are already being traced (and allows you to check directly with `is_traced()`)
+- Exits as early as possible if the method expression is ill-formed with more informative error messages that you can actually act on
+- Prevents traces from being created on functions that aren't bound to a variable in some way (i.e., prevents you from creating traces that you can't trigger)
+
+However, some expression you pass to `ggtrace()` for delayed evaluation do have lasting consequences. You need to be careful about running functions that have side effects and making assignments inside environments (ex: `self$method <- ...` will modify in place). But this isn't an issue unique to working with `ggtrace()` - they follow from the general rules of reference semantics in R.
+
 
 ## What can you `ggtrace()`?
 
@@ -26,6 +60,11 @@ library(ggtrace)
 
 ```{r}
 library(ggplot2)
+
+boxplot_plot <- ggplot(mpg, aes(drv, hwy)) +
+  geom_boxplot()
+
+boxplot_plot
 ```
 
 Plots not printed to save space
@@ -33,8 +72,7 @@ Plots not printed to save space
 ```{r, fig.show='hide'}
 ggtrace(StatBoxplot$compute_group, -1, verbose = FALSE)
 
-ggplot(mpg, aes(drv, hwy)) +
-  geom_boxplot()
+boxplot_plot
 
 last_ggtrace()
 ```
@@ -56,9 +94,43 @@ gguntrace(StatBoxplot$compute_group)
 global_ggtrace()
 ```
 
+### functions
+
+{base} functions
+
+```{r}
+sample(letters, 5)
+ggtrace(sample, 1, quote(x <- LETTERS), verbose = FALSE)
+sample(letters, 5)
+sample(letters, 5)
+```
+
+Imported functions
+
+```{r}
+ggtrace(ggplot2::mean_se, 1, quote(cat("Running...\n")), verbose = FALSE)
+ggplot2::mean_se(mtcars$mpg)
+```
+
+
+Custom functions
+
+```{r}
+please_return_number <- function() {
+  result <- runif(1)
+  result
+}
+please_return_number()
+
+ggtrace(please_return_number, -1, quote(result <- "no"), verbose = FALSE)
+please_return_number()
+```
+
 ### S3/S4 generics
 
-The exported generic `ggplot_build()` is itself not meaningful but the unexported method for <ggplot> class `ggplot_build.ggplot()` contains the actual data transformation pipeline. 
+The exported generic function `ggplot_build()` from `{ggplot2}` is itself not very meaningful, but the unexported method for <ggplot> class `ggplot_build.ggplot()` contains the actual data transformation pipeline.
+
+We can trace this too!
 
 ```{r}
 body(ggplot_build)
@@ -79,39 +151,46 @@ identical(last_ggtrace()[[1]]$data[[1]], layer_data(boxplot_plot, 1))
 ```
 
 
-### functions
-
 ### R6 methods
 
+Adpopted from [Advanced R Ch. 14.2](https://adv-r.hadley.nz/r6.html)
+
 ```{r}
-gen_counter <- function() {
-  count <- 1
-  list(
-    increment = function() {
-      count <<- count + 1
-      count
-    },
-    get = function() { count }
-  )
-}
-my_counter <- gen_counter()
-
-my_counter$get()
-my_counter$increment()
-my_counter$increment()
-
-ggtrace(my_counter$increment, -1)
+library(R6)
+Accumulator <- R6Class("Accumulator", list(
+  sum = 0,
+  add = function(x = 1) {
+    self$sum <- self$sum + x 
+    invisible(self)
+  })
+)
+x <- Accumulator$new()
+x$add(1)
+x$sum
 ```
 
+```{r}
+ggtrace(
+  method = x$add,
+  trace_steps = c(1, -1),
+  trace_exprs = list(
+    before = quote(self$sum),
+    after = quote(self$sum)
+  ),
+  once = FALSE,
+  verbose = FALSE
+)
+x$add(10)
+last_ggtrace()
+x$add(100)
+last_ggtrace()
+gguntrace(x$add)
+x$add(1000)
+x$sum
+```
 
-- ggproto methods
-- functions
-- S3/S4 generics
-- R6, etc.
+### What can't you trace?
 
-## Is ggtrace() safe?
-
-- Cleans up after itself (`once = TRUE` by default)
-- Doesn't rely on side effects - but be careful about assignment (ex: replacing `ggproto$method <- ...` will change the ggproto obj - but thats just a general referencing thing not something unique to ggtrace)
-- Traced method masks the original and doesn't override it (original stored in `attr(..., "original")` of traced function)
-- Built-in safety measures (ex: always untraces before tracing which prevents nested traces from being created, all pkg functions give ample warning about whether things are already being traced, doesn't let you trace functions that aren't bound to a variable, etc.)
+- Non-functions (ex: constants, object properties). But you can still inspect the values for these with `ggbody()` 
+- Functions not defined in an environment (ex: you can't define a function to trace on-the-spot inside `ggtrace()`)
+- Limited support for closures (the LHS of the `$` must itself be an environment where the function can be searched for)

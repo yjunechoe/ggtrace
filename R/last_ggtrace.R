@@ -109,7 +109,8 @@ last_ggtrace <- function() .ggtrace_storage$get_last()
 #' @rdname last_ggtrace
 clear_last_ggtrace <- function() {
   set_last_ggtrace(NULL)
-  last_ggtrace()
+  message("Last tracedump cleared.")
+  invisible(last_ggtrace())
 }
 
 #' @export

@@ -32,6 +32,7 @@ Suggests:
     ggplot2 (>= 3.3.0),
     ggforce,
     patchwork,
+    R6,
     rmarkdown,
     knitr,
     pkgdown,
