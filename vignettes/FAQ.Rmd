@@ -266,12 +266,12 @@ ggsave(filename = "modified_plot.png", plot = modified_plot, ...)
 
 Still, `modified_plot` is only the graphical representation of the plot and not itself a ggplot object so you can't keep adding layers to it. So grobs are more limiting in that sense.
 
-But in case you're wondering, `{patchwork}` has `patchwork::wrap_ggplot_grob()` which allows a `<gtable>` to be properly aligned to other ggplots, so it's not totally limiting like a raster image of a figure.
+But it's not totally limiting like a raster image of a figure. For example, `{patchwork}` has `patchwork::wrap_ggplot_grob()` which allows a `<gtable>` to be properly aligned to other ggplots.
 
 ```{r}
 library(patchwork)
 original_plot_titled <- original_plot + ggtitle("original plot")
 
-# panels get aligned because `modified_plot` contains info about that
+# Panels get aligned since `modified_plot` contains info about that
 original_plot_titled + wrap_ggplot_grob(modified_plot)
 ```

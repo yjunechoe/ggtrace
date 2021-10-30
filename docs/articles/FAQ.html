@@ -155,7 +155,7 @@
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x000000001614be28&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x0000000016139fb0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>This can be recovered with a call to <code><a href="https://rdrr.io/r/base/trace.html">untrace()</a></code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -270,24 +270,24 @@
 <span class="co">#&gt; StatBoxplot$compute_group no longer being traced.</span>
 
 <span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EC0D9F8`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EC0D9F8`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EBE99C0`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EBE99C0`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A4F210`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A4F210`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A62E58`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A62E58`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
 <span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
 <span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000230E25F8`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000230E25F8`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-00000000230F5B80`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-00000000230F5B80`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
@@ -464,12 +464,12 @@
 <code class="sourceCode R"><span class="co"># Not ran </span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"modified_plot.png"</span>, plot <span class="op">=</span> <span class="va">modified_plot</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
 <p>Still, <code>modified_plot</code> is only the graphical representation of the plot and not itself a ggplot object so you can’t keep adding layers to it. So grobs are more limiting in that sense.</p>
-<p>But in case you’re wondering, <a href="https://patchwork.data-imaginist.com">patchwork</a> has <code><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html">patchwork::wrap_ggplot_grob()</a></code> which allows a <code>&lt;gtable&gt;</code> to be properly aligned to other ggplots, so it’s not totally limiting like a raster image of a figure.</p>
+<p>But it’s not totally limiting like a raster image of a figure. For example, <a href="https://patchwork.data-imaginist.com">patchwork</a> has <code><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html">patchwork::wrap_ggplot_grob()</a></code> which allows a <code>&lt;gtable&gt;</code> to be properly aligned to other ggplots.</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span>
 <span class="va">original_plot_titled</span> <span class="op">&lt;-</span> <span class="va">original_plot</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ggtitle</a></span><span class="op">(</span><span class="st">"original plot"</span><span class="op">)</span>
 
-<span class="co"># panels get aligned because `modified_plot` contains info about that</span>
+<span class="co"># Panels get aligned since `modified_plot` contains info about that</span>
 <span class="va">original_plot_titled</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html">wrap_ggplot_grob</a></span><span class="op">(</span><span class="va">modified_plot</span><span class="op">)</span></code></pre></div>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-22-1.png" width="1093.75"></p>
 </div>
