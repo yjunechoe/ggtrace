@@ -22,6 +22,60 @@ library(ggtrace)
 
 ## What can you `ggtrace()`?
 
+### ggproto methods
+
+```{r}
+library(ggplot2)
+```
+
+Plots not printed to save space
+
+```{r, fig.show='hide'}
+ggtrace(StatBoxplot$compute_group, -1, verbose = FALSE)
+
+ggplot(mpg, aes(drv, hwy)) +
+  geom_boxplot()
+
+last_ggtrace()
+```
+
+```{r fig.show='hide'}
+global_ggtrace_state()
+global_ggtrace_state(TRUE)
+clear_global_ggtrace()
+
+ggtrace(StatBoxplot$compute_group, -1, once = FALSE, verbose = FALSE)
+
+boxplot_plot <- ggplot(mpg, aes(drv, hwy)) +
+  geom_boxplot()
+boxplot_plot
+
+global_ggtrace_state(FALSE)
+gguntrace(StatBoxplot$compute_group)
+
+global_ggtrace()
+```
+
+### S3/S4 generics
+
+The exported generic `ggplot_build()` is itself not meaningful but the unexported method for <ggplot> class `ggplot_build.ggplot()` contains the actual data transformation pipeline. 
+
+```{r}
+body(ggplot_build)
+
+attr(utils::methods("ggplot_build"), "info")
+```
+
+You can trace the `ggplot_build()` method defined for <ggplot> in the same way
+
+```{r}
+ggtrace(ggplot2:::ggplot_build.ggplot, -1, verbose = FALSE)
+ggplot(mpg, aes(drv, hwy)) +
+  geom_boxplot()
+layer_data(last_ggtrace())
+```
+
+
 - ggproto methods
 - functions
 - S3/S4 generics

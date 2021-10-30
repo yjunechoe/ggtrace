@@ -120,7 +120,8 @@ global_ggtrace <- function() .ggtrace_storage$get_global()
 #' @rdname last_ggtrace
 clear_global_ggtrace <- function() {
   .ggtrace_storage$set_global(NULL)
-  global_ggtrace()
+  message("Global tracedump cleared.")
+  invisible(global_ggtrace())
 }
 
 #' @param state If missing, returns whether the global tracedump is currently active.
