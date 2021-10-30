@@ -7,8 +7,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Under construction
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -23,23 +21,37 @@ library(ggtrace)
 
 ## Is ggtrace() safe?
 
-`ggtrace()` is essentially just a wrapper around `base::trace()` with features designed to  make it easy and safe to programmatically trace/untrace functions and methods.
+`ggtrace()` is essentially just a wrapper around `base::trace()` designed to make it easy and safe to programmatically trace/untrace functions and methods.
 
-So `ggtrace()` is as safe as `trace()`. But how safe is `trace()`?
+So the short answer is that `ggtrace()` is as safe as `trace()`. But how safe is `trace()`?
 
-The modified function being traced _masks_ over the original function without _overwriting_ it. Here, after tracing, the body of`replace()` is different but the original is stored in the `"original"` attribute of the traced function, which can be recovered with a call to `untrace()`.
+The beauty of `trace()` is that the modified function being traced _masks_ over the original function without _overwriting_ it.
+
+Here, after tracing, the body of `replace()` is different and it runs with a different behavior
 
 ```{r}
 body(replace)
+
 trace(replace, tracer = quote(cat("Running...\n")), at = 1)
-body(replace)
+
 class(replace)
+
+body(replace)
+
+replace(1:5, 3, 30)
+```
+
+But the original is stored in the `"original"` attribute of the traced function
+
+```{r}
 attr(replace, "original")
 ```
 
+This can be recovered with a call to `untrace()`
+
 ```{r}
-replace(1:5, 3, 30)
 untrace(replace)
+
 body(replace)
 ```
 
@@ -47,11 +59,11 @@ Some extra built-in safety measures offered by `{ggtrace}`:
 
 - Cleans up after itself by untracing on exit (the default behavior with `once = TRUE`)
 - Always untraces before tracing, which prevents nested traces from being created
-- Provides ample messages/warnings about whether methods are already being traced (and allows you to check directly with `is_traced()`)
+- Provides ample messages about whethere there is an existing trace (which you can also check with `is_traced()`)
 - Exits as early as possible if the method expression is ill-formed with more informative error messages that you can actually act on
 - Prevents traces from being created on functions that aren't bound to a variable in some way (i.e., prevents you from creating traces that you can't trigger)
 
-However, some expression you pass to `ggtrace()` for delayed evaluation do have lasting consequences. You need to be careful about running functions that have side effects and making assignments inside environments (ex: `self$method <- ...` will modify in place). But this isn't an issue unique to working with `ggtrace()` - they follow from the general rules of reference semantics in R.
+However, some expression you pass to `ggtrace()` for delayed evaluation are not without consequences. You need to be careful about running functions that have _side effects_ and making _assignments to environments_ (ex: `self$method <- ...` will modify in place). But this isn't a problem of `{ggtrace}` - they follow from the general rules of reference semantics in R.
 
 
 ## What can you `ggtrace()`?
@@ -88,10 +100,11 @@ boxplot_plot <- ggplot(mpg, aes(drv, hwy)) +
   geom_boxplot()
 boxplot_plot
 
-global_ggtrace_state(FALSE)
 gguntrace(StatBoxplot$compute_group)
 
 global_ggtrace()
+
+global_ggtrace_state(FALSE)
 ```
 
 ### functions
@@ -128,7 +141,7 @@ please_return_number()
 
 ### S3/S4 generics
 
-The exported generic function `ggplot_build()` from `{ggplot2}` is itself not very meaningful, but the unexported method for <ggplot> class `ggplot_build.ggplot()` contains the actual data transformation pipeline.
+The exported generic function `ggplot_build()` from `{ggplot2}` is itself not very meaningful, but the unexported method for the `<ggplot>` class `ggplot_build.ggplot()` contains the actual data transformation pipeline.
 
 We can trace this too!
 
@@ -138,13 +151,15 @@ body(ggplot_build)
 attr(utils::methods("ggplot_build"), "info")
 ```
 
-You can trace the `ggplot_build()` method defined for <ggplot> in the same way
+You can trace the `ggplot_build()` method defined for `<ggplot>` in the same way
 
 ```{r}
 ggtrace(ggplot2:::ggplot_build.ggplot, -1, verbose = FALSE)
 
 boxplot_plot
+```
 
+```{r}
 last_ggtrace()[[1]]$data[[1]]
 
 identical(last_ggtrace()[[1]]$data[[1]], layer_data(boxplot_plot, 1))
@@ -153,7 +168,7 @@ identical(last_ggtrace()[[1]]$data[[1]], layer_data(boxplot_plot, 1))
 
 ### R6 methods
 
-Adpopted from [Advanced R Ch. 14.2](https://adv-r.hadley.nz/r6.html)
+Adopted from [Advanced R Ch. 14.2](https://adv-r.hadley.nz/r6.html)
 
 ```{r}
 library(R6)
@@ -189,7 +204,7 @@ x$add(1000)
 x$sum
 ```
 
-### What can't you trace?
+## What can't you `ggtrace()`?
 
 - Non-functions (ex: constants, object properties). But you can still inspect the values for these with `ggbody()` 
 - Functions not defined in an environment (ex: you can't define a function to trace on-the-spot inside `ggtrace()`)

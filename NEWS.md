@@ -1,8 +1,19 @@
 # ggtrace (development version)
 
+# ggtrace 0.4.4
+
+### **Improvements**
+
+- `clear_(last|global)_ggtrace()` functions now print a message saying that the trace dump has been cleared.
+- Better error handling for closures that aren't searchable from environments
+
 ### **Bug Fix**
 
 - Fixed but where methods with class <function> were being treated as bare functions. Now closures and methods outside of ggproto objects (e.g., R6 classes) can be traced too.
+
+### **Miscellaneous**
+
+- Added [FAQ vignette](https://yjunechoe.github.io/ggtrace/articles/FAQ.html)
 
 # ggtrace 0.4.3
 
