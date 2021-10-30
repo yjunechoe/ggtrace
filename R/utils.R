@@ -18,6 +18,10 @@ split_ggproto_method <- function(method) {
     ns = gsub("(^|:::?)[^:]*?$", "", method_deparsed)
   )
   split_list$formatted_call <- paste0(split_list[["obj_name"]], "$", split_list[["method_name"]])
+  # error handling for closures
+  if (!rlang::is_environment(split_list$obj)) {
+    rlang::abort("The lhs of `$` must be an environment")
+  }
   split_list
 }
 

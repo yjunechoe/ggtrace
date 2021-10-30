@@ -70,9 +70,37 @@ You can trace the `ggplot_build()` method defined for <ggplot> in the same way
 
 ```{r}
 ggtrace(ggplot2:::ggplot_build.ggplot, -1, verbose = FALSE)
-ggplot(mpg, aes(drv, hwy)) +
-  geom_boxplot()
-layer_data(last_ggtrace())
+
+boxplot_plot
+
+last_ggtrace()[[1]]$data[[1]]
+
+identical(last_ggtrace()[[1]]$data[[1]], layer_data(boxplot_plot, 1))
+```
+
+
+### functions
+
+### R6 methods
+
+```{r}
+gen_counter <- function() {
+  count <- 1
+  list(
+    increment = function() {
+      count <<- count + 1
+      count
+    },
+    get = function() { count }
+  )
+}
+my_counter <- gen_counter()
+
+my_counter$get()
+my_counter$increment()
+my_counter$increment()
+
+ggtrace(my_counter$increment, -1)
 ```
 
 
