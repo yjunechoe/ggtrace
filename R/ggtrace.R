@@ -1,4 +1,4 @@
-#' Programmatically debug ggproto methods with trace
+#' Programmatically debug and modify ggproto methods with trace
 #'
 #' @inheritParams ggbody
 #' @param trace_steps A sorted numeric vector of positions in the method's body to trace. Negative indices
@@ -246,7 +246,7 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
       tracer = function() {
 
         if (trace_idx == 1 && !silent) {
-          message("Triggering ", if (!once) "persistent ", "trace on ", formatted_call)
+          message("Triggering ", if (!once) "persistent ", "trace on `", formatted_call, "`")
         }
 
         trace_print <- gsub("\\n", "\n ", trace_msgs[trace_idx])
@@ -314,13 +314,13 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
         if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
         if (!!once) {
           suppressMessages(untrace(what = !!what, where = !!where))
-          if (isFALSE(!!silent)) { message("Untracing ", !!formatted_call, " on exit.") }
+          if (isFALSE(!!silent)) { message("Untracing `", !!formatted_call, "` on exit.") }
         }
       })
     )
   )
 
-  if (!silent) { message(formatted_call, " now being traced.") }
+  if (!silent) { message("`", formatted_call, "` now being traced.") }
   if (!silent && !once) { message("Creating a persistent trace. Remember to `gguntrace(", formatted_call, ")`!") }
   invisible(NULL)
 

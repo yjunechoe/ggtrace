@@ -86,11 +86,11 @@ test_that("errors if method missing or not defined for ggproto object", {
 test_that("errors if method not found in parent(s)", {
   expect_error(
     ggbody(StatBoxplot$not_a_method, inherit = TRUE),
-    "Method .* not inherited for .*"
+    "not found in parents"
   )
   expect_error(
     ggbody(StatDensityCommon$draw_layer, inherit = TRUE),
-    "Method .* not inherited for .*"
+    "not found in parents"
   )
 })
 

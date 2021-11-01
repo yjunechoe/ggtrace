@@ -107,7 +107,7 @@ ggbody <- function(method, inherit = FALSE) {
     fn_deparsed <- gsub("^.*:", "", method_deparsed)
     fn_got <- get(fn_deparsed, envir = rlang::get_env(method))
     if ("functionWithTrace" %in% class(fn_got)) { # another check: !is.null(attr(method, "original"))
-      rlang::warn(paste(method_deparsed, "is currently being traced"))
+      rlang::warn(paste0("`", method_deparsed, "` is currently being traced"))
     }
     result <- as.list(body(fn_got))
     return(result)
@@ -138,7 +138,7 @@ ggbody <- function(method, inherit = FALSE) {
         error = function(e) {
           if (parent == parents[length(parents)]) {
             rlang::abort(paste0(
-              "Method ", method_name, " is not inherited for ", obj_name,
+              "Method '", method_name, "' not found in parents of `", obj_name, "`",
               "\nMake sure that all relevant libraries have been loaded."
             ))
           }
@@ -146,13 +146,13 @@ ggbody <- function(method, inherit = FALSE) {
       )
       if (!is.null(parent_method)) {
         if (parent == parents[1]) {
-          message("Method ", method_name, " is defined for ", obj_name, ", not inherited.")
+          message("Method '", method_name, "' is defined for `", obj_name, "`, not inherited.")
         } else {
           message("Returning `ggbody(", parent, "$", method_name, ")`")
         }
         # Inform if already being traced
         if (arg_provided && "functionWithTrace" %in% class(parent_method)) {
-          rlang::warn(paste0(parent, "$", method_name, " is currently being traced"))
+          rlang::warn(paste0("`", parent, "$", method_name, "` is currently being traced"))
         }
         # Break loop and return when found
         return(resolve_method(parent_method))
@@ -167,7 +167,7 @@ ggbody <- function(method, inherit = FALSE) {
     )
     # Inform if already being traced
     if (arg_provided && "functionWithTrace" %in% class(get(method_name, obj))) {
-      rlang::warn(paste(method_deparsed, "is currently being traced"))
+      rlang::warn(paste0("`", method_deparsed, "` is currently being traced"))
     }
     return(result)
   }

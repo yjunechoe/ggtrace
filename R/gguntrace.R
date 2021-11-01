@@ -49,12 +49,12 @@ gguntrace <- function(method, ...) {
   traced <- method_info$traced
 
   if (!traced) {
-    message(formatted_call, " not currently being traced.")
+    message("`", formatted_call, "` not currently being traced.")
   } else {
     tryCatch(
       expr = {
         suppressMessages(untrace(what = what, where = where))
-        message(formatted_call, " no longer being traced.")
+        message("`", formatted_call, "` no longer being traced.")
       },
       error = function(e) { NULL }
     )

@@ -40,7 +40,7 @@ resolve_method <- function(got) {
 sanitize_get_error <- function(e, method_name, obj_name) {
   if (e$message == paste0("object '", method_name, "' not found")) {
     rlang::abort(paste0(
-      "Method ", method_name, " is not defined for ", obj_name,
+      "Method '", method_name, "' is not defined for `", obj_name, "`",
       "\nCheck inheritance with `ggbody(", obj_name, "$", method_name, ", inherit = TRUE)`"
     ))
   }
