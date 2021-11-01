@@ -114,11 +114,11 @@ You can install the development version from
       ),
       print_output = FALSE   # Don't print evaluated expressions to console
     )
-    #> PositionJitter$compute_layer now being traced.
+    #> `PositionJitter$compute_layer` now being traced.
 
     # plot not printed to save space
     jitter_plot
-    #> Triggering trace on PositionJitter$compute_layer
+    #> Triggering trace on `PositionJitter$compute_layer`
     #> 
     #> [Step 01]> data
     #> 
@@ -129,7 +129,7 @@ You can install the development version from
     #> [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)
     #> 
     #> Call `last_ggtrace()` to get the trace dump.
-    #> Untracing PositionJitter$compute_layer on exit.
+    #> Untracing `PositionJitter$compute_layer` on exit.
 
 ### **Step 4. Inspect trace dump**
 
@@ -219,17 +219,17 @@ You can install the development version from
       trace_exprs = quote(~step), # Grab the gList() object it returns
       print_output = FALSE
     )
-    #> GeomSmooth$draw_group now being traced.
+    #> `GeomSmooth$draw_group` now being traced.
 
     # plot not printed to save space
     smooth_plot
-    #> Triggering trace on GeomSmooth$draw_group
+    #> Triggering trace on `GeomSmooth$draw_group`
     #> 
     #> [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
     #>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord))
     #> 
     #> Call `last_ggtrace()` to get the trace dump.
-    #> Untracing GeomSmooth$draw_group on exit.
+    #> Untracing `GeomSmooth$draw_group` on exit.
 
 ### **Step 4. Inspect trace dump**
 
@@ -309,7 +309,7 @@ Actually, `"compute_panel"` method is not defined for `StatBoxplot`.
 `ggbody()` gives you a hint that it may be inherited.
 
     ggbody(StatBoxplot$compute_panel)
-    #> Error: Method compute_panel is not defined for StatBoxplot
+    #> Error: Method 'compute_panel' is not defined for `StatBoxplot`
     #> Check inheritance with `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`
 
 `StatBoxplot` is a child of the parent ggproto `Stat`, and the
@@ -370,12 +370,12 @@ Let’s return the split and the combine:
       verbose = FALSE         # Suppress all printing (except `message()`s)
                               # This entails the effects of `print_output = FALSE`
     )
-    #> Stat$compute_panel now being traced.
+    #> `Stat$compute_panel` now being traced.
 
     # plot not printed to save space
     boxplot_plot
-    #> Triggering trace on Stat$compute_panel
-    #> Untracing Stat$compute_panel on exit.
+    #> Triggering trace on `Stat$compute_panel`
+    #> Untracing `Stat$compute_panel` on exit.
 
 ### **Step 4. Inspect trace dump**
 
@@ -573,11 +573,11 @@ Using the returned environment opens up more powerful manipulations:
       ),
       verbose = FALSE
     )
-    #> StatSina$compute_group now being traced.
+    #> `StatSina$compute_group` now being traced.
 
     sina_plot_modified <- ggplotGrob(sina_plot + ggtitle("Modified"))
-    #> Triggering trace on StatSina$compute_group
-    #> Untracing StatSina$compute_group on exit.
+    #> Triggering trace on `StatSina$compute_group`
+    #> Untracing `StatSina$compute_group` on exit.
     grid.draw(sina_plot_modified)
 
 <img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />

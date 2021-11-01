@@ -1,5 +1,7 @@
 # ggtrace (development version)
 
+- Deparsed expressions printed as messages are now wrapped in backticks (#57)
+
 # ggtrace 0.4.4
 
 ### **Improvements**

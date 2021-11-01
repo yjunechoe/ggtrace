@@ -171,7 +171,7 @@
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x00000000144007d8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x00000000144059d8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a call to <code><a href="https://rdrr.io/r/base/trace.html">untrace()</a></code></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -207,21 +207,21 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; [1] "g" "f" "n" "z" "l"</span>
 <span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">sample</span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">LETTERS</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; sample now being traced.</span>
+<span class="co">#&gt; `sample` now being traced.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">5</span><span class="op">)</span>
-<span class="co">#&gt; Triggering trace on sample</span>
-<span class="co">#&gt; Untracing sample on exit.</span>
+<span class="co">#&gt; Triggering trace on `sample`</span>
+<span class="co">#&gt; Untracing `sample` on exit.</span>
 <span class="co">#&gt; [1] "T" "F" "Y" "X" "N"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">letters</span>, <span class="fl">5</span><span class="op">)</span>
 <span class="co">#&gt; [1] "e" "o" "g" "i" "l"</span></code></pre></div>
 <p>Imported functions</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/mean_se.html">mean_se</a></span>, <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"Running...\n"</span><span class="op">)</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; ggplot2::mean_se now being traced.</span>
+<span class="co">#&gt; `ggplot2::mean_se` now being traced.</span>
 <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/mean_se.html">mean_se</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">$</span><span class="va">mpg</span><span class="op">)</span>
-<span class="co">#&gt; Triggering trace on ggplot2::mean_se</span>
+<span class="co">#&gt; Triggering trace on `ggplot2::mean_se`</span>
 <span class="co">#&gt; Running...</span>
-<span class="co">#&gt; Untracing ggplot2::mean_se on exit.</span>
+<span class="co">#&gt; Untracing `ggplot2::mean_se` on exit.</span>
 <span class="co">#&gt;          y    ymin     ymax</span>
 <span class="co">#&gt; 1 20.09062 19.0252 21.15605</span></code></pre></div>
 <p>Custom functions</p>
@@ -234,10 +234,10 @@
 <span class="co">#&gt; [1] 0.5456977</span>
 
 <span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">please_return_number</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">result</span> <span class="op">&lt;-</span> <span class="st">"no"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; please_return_number now being traced.</span>
+<span class="co">#&gt; `please_return_number` now being traced.</span>
 <span class="fu">please_return_number</span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Triggering trace on please_return_number</span>
-<span class="co">#&gt; Untracing please_return_number on exit.</span>
+<span class="co">#&gt; Triggering trace on `please_return_number`</span>
+<span class="co">#&gt; Untracing `please_return_number` on exit.</span>
 <span class="co">#&gt; [1] "no"</span></code></pre></div>
 </div>
 <div id="ggproto-methods" class="section level3">
@@ -253,12 +253,12 @@
 <p>Default tracing behavior with untracing on exit</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span>, <span class="op">-</span><span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; StatBoxplot$compute_group now being traced.</span>
+<span class="co">#&gt; `StatBoxplot$compute_group` now being traced.</span>
 
 <span class="co"># Plot not printed to save space</span>
 <span class="va">boxplot_plot</span>
-<span class="co">#&gt; Triggering trace on StatBoxplot$compute_group</span>
-<span class="co">#&gt; Untracing StatBoxplot$compute_group on exit.</span>
+<span class="co">#&gt; Triggering trace on `StatBoxplot$compute_group`</span>
+<span class="co">#&gt; Untracing `StatBoxplot$compute_group` on exit.</span>
 
 <span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
@@ -276,37 +276,37 @@
 <span class="co">#&gt; Global tracedump cleared.</span>
 
 <span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span>, <span class="op">-</span><span class="fl">1</span>, once <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; StatBoxplot$compute_group now being traced.</span>
+<span class="co">#&gt; `StatBoxplot$compute_group` now being traced.</span>
 <span class="co">#&gt; Creating a persistent trace. Remember to `gguntrace(StatBoxplot$compute_group)`!</span>
 
 <span class="co"># Plot not printed to save space</span>
 <span class="va">boxplot_plot</span>
-<span class="co">#&gt; Triggering persistent trace on StatBoxplot$compute_group</span>
-<span class="co">#&gt; Triggering persistent trace on StatBoxplot$compute_group</span>
-<span class="co">#&gt; Triggering persistent trace on StatBoxplot$compute_group</span>
+<span class="co">#&gt; Triggering persistent trace on `StatBoxplot$compute_group`</span>
+<span class="co">#&gt; Triggering persistent trace on `StatBoxplot$compute_group`</span>
+<span class="co">#&gt; Triggering persistent trace on `StatBoxplot$compute_group`</span>
 
 <span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span>
-<span class="co">#&gt; StatBoxplot$compute_group no longer being traced.</span>
+<span class="co">#&gt; `StatBoxplot$compute_group` no longer being traced.</span>
 
 <span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000210A3E90`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000210A3E90`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002109A9B8`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002109A9B8`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A6B738`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A6B738`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A7F638`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A7F638`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
 <span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
 <span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000230FD2F0`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000230FD2F0`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000023113088`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000023113088`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
@@ -333,11 +333,11 @@
 <p>You can trace the <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html">ggplot_build()</a></code> method defined for <code>&lt;ggplot&gt;</code> in the same way as functions</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; ggplot2:::ggplot_build.ggplot now being traced.</span>
+<span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span>
 
 <span class="va">boxplot_plot</span>
-<span class="co">#&gt; Triggering trace on ggplot2:::ggplot_build.ggplot</span>
-<span class="co">#&gt; Untracing ggplot2:::ggplot_build.ggplot on exit.</span></code></pre></div>
+<span class="co">#&gt; Triggering trace on `ggplot2:::ggplot_build.ggplot`</span>
+<span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span></code></pre></div>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-13-1.png" width="1093.75"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>
@@ -385,10 +385,10 @@
   once <span class="op">=</span> <span class="cn">FALSE</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
-<span class="co">#&gt; x$add now being traced.</span>
+<span class="co">#&gt; `x$add` now being traced.</span>
 <span class="co">#&gt; Creating a persistent trace. Remember to `gguntrace(x$add)`!</span>
 <span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; Triggering persistent trace on x$add</span>
+<span class="co">#&gt; Triggering persistent trace on `x$add`</span>
 <span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; $before</span>
 <span class="co">#&gt; [1] 1</span>
@@ -396,7 +396,7 @@
 <span class="co">#&gt; $after</span>
 <span class="co">#&gt; [1] 11</span>
 <span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>
-<span class="co">#&gt; Triggering persistent trace on x$add</span>
+<span class="co">#&gt; Triggering persistent trace on `x$add`</span>
 <span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; $before</span>
 <span class="co">#&gt; [1] 11</span>
@@ -404,7 +404,7 @@
 <span class="co">#&gt; $after</span>
 <span class="co">#&gt; [1] 111</span>
 <span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">add</span><span class="op">)</span>
-<span class="co">#&gt; x$add no longer being traced.</span>
+<span class="co">#&gt; `x$add` no longer being traced.</span>
 <span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span>
 <span class="va">x</span><span class="op">$</span><span class="va">sum</span>
 <span class="co">#&gt; [1] 1111</span></code></pre></div>
@@ -429,14 +429,14 @@
 <code class="sourceCode R"><span class="va">original_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; ggplot2:::ggplot_build.ggplot now being traced.</span>
+<span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span>
 
 <span class="va">modified_plot</span> <span class="op">&lt;-</span> <span class="va">original_plot</span></code></pre></div>
 <p>It looks like it worked when you first print it…</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">modified_plot</span>
-<span class="co">#&gt; Triggering trace on ggplot2:::ggplot_build.ggplot</span>
-<span class="co">#&gt; Untracing ggplot2:::ggplot_build.ggplot on exit.</span></code></pre></div>
+<span class="co">#&gt; Triggering trace on `ggplot2:::ggplot_build.ggplot`</span>
+<span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span></code></pre></div>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-18-1.png" width="1093.75"></p>
 <p>But the variable <code>modified_pot</code> doesn’t hold modified <em>code</em> for generating the plot. Instead, it just happened to trigger the trace on ggplot_build.ggplot(). So the next time it runs, it’s ran with the normal behavior of <code>original_plot</code>.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
@@ -445,11 +445,11 @@
 <p>To capture the actual figure generated by a ggplot, you can use <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html">ggplotGrob()</a></code>, which returns the <strong>Gr</strong>aphical <strong>ob</strong>ject representation of the plot:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; ggplot2:::ggplot_build.ggplot now being traced.</span>
+<span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span>
 
 <span class="va">modified_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html">ggplotGrob</a></span><span class="op">(</span><span class="va">original_plot</span><span class="op">)</span>
-<span class="co">#&gt; Triggering trace on ggplot2:::ggplot_build.ggplot</span>
-<span class="co">#&gt; Untracing ggplot2:::ggplot_build.ggplot on exit.</span>
+<span class="co">#&gt; Triggering trace on `ggplot2:::ggplot_build.ggplot`</span>
+<span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span>
 
 <span class="va">modified_plot</span>
 <span class="co">#&gt; TableGrob (12 x 9) "layout": 18 grobs</span>
