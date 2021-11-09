@@ -57,7 +57,7 @@ ggedit <- function(method, remove_trace = FALSE, ...) {
   traced <- method_info$traced
 
   # Inform if editing on top of existing trace
-  if (traced && !remove_trace) { message("Editing on top of existing trace") }
+  if (traced && !remove_trace) { message("Editing on top of existing trace...") }
 
   suppressMessages(trace(what = what, where = where, edit = TRUE))
   message("Creating a persistent trace on `", formatted_call, "`",

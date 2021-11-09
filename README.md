@@ -3,6 +3,9 @@
 # **{ggtrace}**
 
 <!-- badges: start -->
+
+[![](https://img.shields.io/badge/devel%20version-0.4.4-blue.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 <!-- badges: end -->
 
 #### **Programmatically inspect, debug, and manipulate ggproto methods**
@@ -40,9 +43,9 @@ More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 ## **Installation**
 
 You can install the development version from
-[GitHub](https://github.com/) with:
+[GitHub](https://github.com/yjunechoe/ggtrace/) with:
 
-    # install.packages("devtools")
+    # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
     library(ggtrace) # v0.4.4
