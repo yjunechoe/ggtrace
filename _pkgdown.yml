@@ -32,6 +32,10 @@ articles:
   - intro
   - showcase-ggplot_build
   - showcase-aes_evaluation
+- title: Case Studies
+  navbar: Case Studies
+  contents:
+  - casestudy-ggxmean
 - title: Miscellaneous
   navbar: Miscellaneous
   contents:

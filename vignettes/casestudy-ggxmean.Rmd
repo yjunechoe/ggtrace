@@ -1,0 +1,527 @@
+---
+title: "Case Study: {ggxmean}"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{casestudy-ggxmean}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette is a detailed walk-through of an **exploratory debugging workflow** with {ggtrace}, using a [Github issue](https://github.com/EvaMaeRey/ggxmean/issues/1) opened on the [`{ggxmean}`](https://github.com/EvaMaeRey/ggxmean) package by [Gina Reynolds](https://twitter.com/EvaMaeRey).
+
+# Setup
+
+```{r}
+library(ggtrace)
+library(ggplot2)
+theme_set(theme_minimal())
+```
+
+If you would like to follow along, you can install the version of the {ggxmean} package containing the bug that this vignette will address:
+
+```{r, eval = FALSE}
+remotes::install_github("EvaMaeRey/ggxmean@cbb909cee7d4f0a4395722020a75330641e5f54c")
+library(ggxmean)
+```
+
+
+```{r replicate, echo = FALSE}
+# https://github.com/EvaMaeRey/ggxmean/blob/cbb909cee7d4f0a4395722020a75330641e5f54c/R/geom_x_line.R 
+GeomXline <- ggplot2::ggproto("GeomXline", ggplot2::Geom,
+                     draw_panel = function(data, panel_params, coord) {
+                       ranges <- coord$backtransform_range(panel_params)
+                       data$x    <- data$x
+                       data$xend <- data$x
+                       data$y    <- ranges$y[1]
+                       data$yend <- ranges$y[2]
+                       GeomSegment$draw_panel(unique(data), panel_params, coord)
+                     },
+                     default_aes = ggplot2::aes(colour = "black", size = 0.5,
+                                       linetype = 1, alpha = NA),
+                     required_aes = "x",
+                     draw_key = ggplot2::draw_key_vline
+)
+
+# https://github.com/EvaMaeRey/ggxmean/blob/cbb909cee7d4f0a4395722020a75330641e5f54c/R/geom_x_mean.R
+StatXmean <- ggplot2::ggproto("StatXmean",
+                              ggplot2::Stat,
+                              compute_group = function(data, scales) {
+                                data.frame(x = mean(data$x))
+                              },
+                              required_aes = c("x")
+)
+
+geom_x_mean <- function(mapping = NULL, data = NULL,
+                        position = "identity", na.rm = FALSE, show.legend = NA,
+                        inherit.aes = TRUE, ...) {
+  ggplot2::layer(
+    stat = StatXmean, geom = GeomXline, data = data, mapping = mapping,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
+}
+```
+
+
+# The issue
+
+{ggxmean} is a {ggplot2} extension package that offers many features, including the layer `geom_x_mean()` which can be used to draw a line at the mean value of the variable represented by the x-axis.
+
+```{r}
+ggplot(mpg, aes(x = hwy)) +
+  geom_histogram() +
+  geom_x_mean()
+```
+
+`geom_x_mean()` works smoothly with groups and facets, as we might expect from our experience with ggplot.
+
+```{r}
+ggplot(mpg, aes(x = hwy, group = drv)) +
+  geom_histogram() +
+  geom_x_mean() +
+  facet_wrap(~drv)
+```
+
+However, something somewhat unexpected happens when we pass map a discrete variable to an aesthetic that is not understandable by `geom_x_mean()`. Despite the fact that the lines do not understand the `fill` aesthetic, the aesthetic mapping of `fill = drv` nevertheless _highjacks_ the calculation of grouping for `geom_x_mean()`
+
+```{r}
+ggplot(mpg, aes(x = hwy, fill = drv)) +
+  geom_histogram() +
+  geom_x_mean()
+```
+
+# Making a reprex
+
+To isolate the problem, let's remove `geom_histogram()` from the examples.
+
+Here is a [reprex](https://reprex.tidyverse.org/) (reproducible example) of the issue:
+
+```{r}
+ggplot(mpg) +
+  aes(x = hwy, fill = drv) +
+  geom_x_mean()
+```
+
+We can pinpoint and formalize the issue with the help of `layer_data()`. We see that in both our expected `group = drv` and unexpected `fill = drv` cases, we end up with three unique groups (lines) as indicated by the values in the `group` column.
+
+```{r}
+p <- ggplot(mpg) +
+  aes(x = hwy) +
+  geom_x_mean()
+layer_data(p + aes(group = drv))
+layer_data(p + aes(fill = drv))
+```
+
+Here are some more examples to the point:
+
+```{r}
+# Expected cases
+layer_data(p + aes(color = drv))$group
+layer_data(p + aes(group = drv))$group
+
+# Unexpected cases
+layer_data(p + aes(shape = drv))$group             # Expected: 1 group
+layer_data(p + aes(fill = fl, color = drv))$group  # Expected: 3 groups for `drv`
+```
+
+# Debugging the issue with {ggtrace}
+
+## Step 1 - Locating where `group` is assigned
+
+As our very first step, let's see where the groups are being calculated and added to the data by inspecting `ggplot_build()`, the [main engine behind ggplot](https://ggplot2-book.org/internals.html#ggplotbuild).
+
+If this is your first exposure to `ggplot_build()`, you just need to know that its output is basically what's returned by `layer_data()` that we demoed above.
+
+```{r}
+layer_data
+```
+
+We use `ggbody()` function from {ggtrace} to grab the body of `ggplot_build()` as a list, and pick out the steps where the data gets transformed.
+
+```{r}
+build_pipeline <- ggbody(ggplot2:::ggplot_build.ggplot)
+data_assigns <- sapply(build_pipeline,
+  function(x) {
+    rlang::is_call(x) &&
+      !is.null(rlang::call_name(x)) && 
+      rlang::call_name(x) == "<-" &&
+      rlang::call_args(x)[[1]] == "data"
+  }
+)
+which(data_assigns)
+```
+
+After each data transformation step (steps `+ 1L`), let's log the data for the first (and only) layer of our reprex plot.
+
+```{r, fig.show='hide'}
+ggtrace(
+  method = ggplot2:::ggplot_build.ggplot,
+  trace_steps = which(data_assigns) + 1, # After each data transformation step ...
+  trace_exprs = quote(data[[1]]),        # ... return the data for the first layer
+  verbose = FALSE
+)
+
+# plot not printed for space
+p + aes(fill = drv)
+
+tracedump1 <- last_ggtrace()
+```
+
+Here, `tracedump1` is a list of what `data` looked like after each data-transformation step inside `ggplot_build()`. We can now map over every element of the list to see where the `group` column was first present.
+
+```{r}
+group_present1 <- sapply(tracedump1, function(x) {
+  "group" %in% colnames(x) && sort(unique(x$group)) == 1:3
+})
+```
+
+Step 12 of `ggplot_build()` seems to be where `group` is computed and assigned
+
+```{r}
+which(data_assigns)[min(which(group_present1))]
+ggbody(ggplot2:::ggplot_build.ggplot)[[12]]
+```
+
+As we can see from the step, it calls the `compute_aesthetic` for every layer (that's what the `by_layer()` function is doing - it was defined in Step 7).
+
+Let's now repeat the same process inside `Layer$compute_aesthetic` - where does `group` get computed and assigned?
+
+```{r, fig.show='hide'}
+ggtrace(
+  method = ggplot2:::Layer$compute_aesthetics,
+  trace_steps = seq_along(ggbody(ggplot2:::Layer$compute_aesthetics)),
+  trace_exprs = quote(~step),
+  verbose = FALSE
+)
+
+# plot not printed for space
+p + aes(fill = drv)
+
+tracedump2 <- last_ggtrace()
+
+group_present2 <- sapply(tracedump2, function(x) {
+  "group" %in% colnames(x) && sort(unique(x$group)) == 1:3
+})
+```
+
+Step 21 of `Layer$compute_aesthetic` seems to be where this happens. Here, it calls an unexported internal utility function called `add_group()`, and if we look at the [source code](https://github.com/tidyverse/ggplot2/blob/759c63c2fd9e00ba3322c1b74b227f63c98d2e06/R/grouping.r#L11-L29) we can confirm that we have indeed located where `group` is calculated and assigned.
+
+```{r}
+min(which(group_present2))
+ggbody(ggplot2:::Layer$compute_aesthetics)[[21]]
+```
+
+But that only gets us half-way there to solving the issue because we can't modify the Layer ggproto - it's also unexported! Plus, we want to change the behavior for `geom_x_mean()` specifically, such that the aesthetics that it can't understand are ignored for the calculation of _its_ own groups, but not for the groups of other layers.
+
+## Step 2 - Locating the extension point
+
+At this point, we have to hunt down the _next time_ Layer dispatches a Stat or Geom ggproto method with the transformed data after `group` is calculated, so that we can undo the grouping calculation inside Stat/Geom as necessary (since those ggproto classes are exported).
+
+Going back to `ggplot_build()`, the next `l$<method>` call after `l$compute_aesthetics` is the `compute_statistic` method at Step 18
+
+```{r}
+ggbody(ggplot2:::ggplot_build.ggplot)[[18]]
+```
+
+Let's see what ggproto methods the `Layer$compute_statistic` method calls
+
+```{r}
+ggbody(ggplot2:::Layer$compute_statistic)
+```
+
+The next time the data gets transformed after being passed to `Layer$compute_statistic` is by the `setup_data` method of the layer's Stat ggproto at Step 4.
+
+```{r}
+ggbody(ggplot2:::Layer$compute_statistic)[[4]]
+```
+
+
+Let's see what kind of information we have at this stage, and whether the information is sufficient for us to implement our desired design change to `geom_x_mean()`
+
+### Step 2.1 - Inspecting the `setup_data` method
+
+First, let's figure out what the Stat ggproto for `geom_x_mean()` is
+
+```{r}
+class(geom_x_mean()$stat)[1]
+```
+
+And let's inspect its `setup_data` method
+
+```{r, error=TRUE}
+ggbody(ggxmean:::StatXmean$setup_data) # errors!
+```
+
+It looks like `setup_data` is inherited from a parent ggproto (the only candidate here from looking at its `class()` is the Stat ggproto). If we decied to change the behavior of `setup_data` for StatXmean, we'll need to define its own version of the method.
+
+For now, let's get the inherited method with `inherit = TRUE` and proceed with inspecting its behavior. Here we confirm that `StatXmean` indeed inherits `Stat$setup_data`
+
+```{r}
+ggbody(ggxmean:::StatXmean$setup_data, inherit = TRUE)
+```
+
+Okay so this method just returns the data by default. But what does this look like in practice?
+
+### Step 2.2 - Logging the execution of `Stat$setup_data`
+
+The following is a shorthand for creating a trace that simply returns the output of the last step of the method:
+
+```{r, fig.show='hide'}
+ggtrace(Stat$setup_data, -1, verbose = FALSE)
+
+# plot not printed for space
+p + aes(fill = drv)
+```
+
+We see that the data contains information about the supplied aesthetics and the calculated `PANEL` and `group` information.
+
+```{r}
+head(last_ggtrace()[[1]])
+```
+
+This is sufficient information for our purposes.
+
+## Step 3 - Developing a solution
+
+### Step 3.1 - Devising a plan (pseudo-code outline)
+
+Here's the plan. Instead of having the `setup_data` method just return the data it receives, let's have it check for two conditions:
+
+1. Is the group explicitly supplied?
+    - If so, leave the data alone. Otherwise...
+2. Are all the discrete variable used to calculate groups understandable by the geom?
+    - If so, leave the data alone. Otherwise, re-calculate groups by dropping those extraneous variables and passing the data through `add_group()` again.
+  
+### Step 3.2 - Setting up for testing
+
+One of the biggest perks of {ggtrace} is the ability to log the output of the triggered traces. We've been seeing a bit of that with `last_ggtrace()` but we can scale this up.
+
+Using `global_ggtrace` and persistent tracing with `ggtrace(once = FALSE)`, we can capture what `data` looks like inside the `setup_data` method across our two expected and two unexpected cases from our reprex.
+
+```{r, fig.show='hide'}
+global_ggtrace_state(TRUE)
+ggtrace(Stat$setup_data, -1, once = FALSE, verbose = FALSE)
+
+# plots not printed for space
+p + aes(color = drv)
+p + aes(group = drv)
+p + aes(shape = drv)
+p + aes(fill = fl, color = drv)
+
+tracedump3 <- global_ggtrace()
+tracedump3 <- lapply(tracedump3, `[[`, 1) # simplify
+
+gguntrace(Stat$setup_data)
+clear_global_ggtrace()
+global_ggtrace_state(FALSE)
+
+names(tracedump3) <- c(paste0("expected", 1:2), paste0("unexpected", 1:2))
+names(tracedump3)
+```
+
+Now `tracedump3` holds the value for `data` from inside `setup_data` for our four plots of interest.
+
+### Step 3.3 - Tackling the problem piece by piece
+
+#### Part 1 - Check if group is derived
+
+Our first condition for whether `group` is explicitly supplied is actually very easy to implement.
+
+Going back to `Layer$compute_aesthetics`, we can see that the `PANEL` column is assigned first and then the `group` column is assigned. This means that if group did not already exist, it'd appear to the _right_ of PANEL. But if it did exist before, it'd just be modified in its original position and appear to the _left_ of PANEL.
+
+We can confirm this from our two expected cases:
+
+```{r}
+colnames(tracedump3$expected1) # `aes(color = drv)`
+colnames(tracedump3$expected2) # `aes(group = drv)`
+```
+
+We can make a function that checks for the position of the `group` column relative to the `PANEL` column, and use our tracedump to validate it
+
+```{r}
+group_is_derived <- function(data) {
+  is.unsorted(match(c("group", "PANEL"), colnames(data)))
+}
+group_is_derived(tracedump3$expected1)
+group_is_derived(tracedump3$expected2)
+```
+
+#### Part 2 - Check if geom can understand all discrete aesthetics
+
+For our second condition, we need to find out which aesthetics our geom can understand.
+
+First, we check what geom `geom_x_mean()` uses
+
+```{r}
+class(geom_x_mean()$geom)[1]
+```
+
+Then we gather all the aesthetics that it can handle
+
+```{r}
+understandable_aes <- unique(c(
+  ggxmean:::GeomXline$required_aes,
+  names(ggxmean:::GeomXline$default_aes),
+  ggxmean:::GeomXline$optional_aes
+))
+understandable_aes
+```
+
+We use this to write a function that returns the discrete variables in the data that cannot be understood by GeomXline.
+
+```{r}
+not_understandable_aes <- function(data) {
+  discretes <- colnames(data)[sapply(data, ggplot2:::is.discrete)]
+  discretes <- discretes[!discretes %in% c("group", "PANEL")]
+  discretes[!discretes %in% c("colour", "size", "linetype", "alpha")] # `understandable_aes` cleaned up and hard-coded
+
+}
+```
+
+We then validate the function against our tracedump
+
+```{r}
+lengths(lapply(tracedump3, not_understandable_aes)) > 0
+not_understandable_aes(tracedump3$unexpected1)
+not_understandable_aes(tracedump3$unexpected2)
+```
+
+#### Part 3 - Handle the exception
+
+Lastly, in the case where groups were computed using discrete variables mapped to aesthetics that GeomXline _doesn't_ understand, we want to re-assign groups.
+
+The following function takes the data, strips it of the offending variables/columns, and returns a vector of the new groups
+
+```{r}
+retrained_groups <- function(data) {
+  not_understandables <- not_understandable_aes(data)
+  data <- data[!colnames(data) %in% c("group", not_understandables)]
+  ggplot2:::add_group(data)$group
+}
+```
+
+This returns us the expected number of groups from our unexpected reprex cases (recall that `unexpected2` used to have 12 groups but now has 3 because it's correctly ignoring the interaction with `fill = fl`)
+
+```{r}
+lapply(tracedump3[3:4], function(x) { sort(unique(retrained_groups(x))) })
+```
+
+#### Part 4 - Bring it together
+
+Now we melt the functions from Parts 1-3 into a single function that will become our new `setup_data` method for `StatXmean`. 
+
+```{r}
+setup_data_draft <- function(data) {
+  if (is.unsorted(match(c("group", "PANEL"), colnames(data)))) {
+    discretes <- colnames(data)[sapply(data, ggplot2:::is.discrete)]
+    discretes <- discretes[!discretes %in% c("group", "PANEL")]
+    not_understandables <- discretes[!discretes %in% c("colour", "size", "linetype", "alpha")]
+    if (length(not_understandables) > 0) {
+      dummy_data <- data[!colnames(data) %in% c("group", not_understandables)]
+      data$group <- ggplot2:::add_group(dummy_data)$group
+    }
+  }
+  data
+}
+```
+
+We again validate it against our tracedump, and check that it indeed works!
+
+```{r}
+tracedump3_modified <- lapply(tracedump3, setup_data_draft)
+lapply(tracedump3_modified, function(x) sort(unique(x$group) ))
+```
+
+*Note that we're still using unexported ggplot2 functions here like `is.discrete` and `add_group`. You'd normally refactor them or copy them over before releasing the fix, but we'll skip that here for the sake of time.
+
+### Step 3.4 - Implementing the solution
+
+We'd like to test this whole solution out as a user-facing layer before we call it a day.
+
+There are just two important pieces here:
+
+1. We create a ggproto class called StatXmean2 which is an exact copy of StatXmean except it also defines its own `setup_data` method as we defined above.
+
+2. We create a layer called `geom_x_mean2()` which is an exact copy of `geom_x_mean()` except that the `stat` argument of`ggplot2::layer()` is StatXmean2
+
+```{r}
+StatXmean2 <- ggplot2::ggproto(
+  "StatXmean2",
+  ggplot2::Stat,
+  setup_data = function(data, params) {
+    if (is.unsorted(match(c("group", "PANEL"), colnames(data)))) {
+      discretes <- colnames(data)[sapply(data, ggplot2:::is.discrete)]
+      discretes <- discretes[!discretes %in% c("group", "PANEL")]
+      not_understandables <- discretes[!discretes %in% c("colour", "size", "linetype", "alpha")]
+      if (length(not_understandables) > 0) {
+        dummy_data <- data[!colnames(data) %in% c("group", not_understandables)]
+        data$group <- ggplot2:::add_group(dummy_data)$group
+      }
+    }
+    data
+  },
+  compute_group = function(data, scales) {
+    data.frame(x = mean(data$x))
+  },
+  required_aes = c("x")
+)
+
+geom_x_mean2 <- function(mapping = NULL, data = NULL,
+                        position = "identity", na.rm = FALSE, show.legend = NA,
+                        inherit.aes = TRUE, ...) {
+  ggplot2::layer(
+    stat = StatXmean2, geom = ggxmean:::GeomXline, data = data, mapping = mapping,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
+}
+```
+
+Our final check against our original reprexes shows that it works as intended
+
+```{r}
+p2 <- ggplot(mpg) +
+  aes(x = hwy) +
+  geom_x_mean2()
+
+p2 + aes(color = drv)
+p2 + aes(group = drv)
+p2 + aes(shape = drv)
+p2 + aes(fill = fl, color = drv)
+```
+
+### Step 3.5 - Testing the solution
+
+If you want to write tests, we can also check whether solution generalizes to other cases.
+
+Here, we can see it correctly works with facets even when some groups are missing in a facet, so that's good
+
+```{r}
+p2 +
+  aes(color = drv) +
+  facet_wrap(~fl)
+```
+
+And we can also see that it fails the way it should when it's supplied an explicit group aesthetic but also receives another discrete mapping to `color` 
+
+```{r}
+p2 + aes(group = fl, color = drv)
+```
+
+This is because there's a unique match between for `fl == "c"` in `drv` (`drv== "f"`), but there are multiple colors (`drv` categories) mapped to the four other lines (`fl` categories), so ggplot just gives up and gives you NAs
+
+```{r}
+table(mpg$drv, mpg$fl)
+p2 +
+  aes(group = fl, color = drv) +
+  geom_label(aes(label = fl, y = 1), stat = StatXmean2)
+```
+
+
