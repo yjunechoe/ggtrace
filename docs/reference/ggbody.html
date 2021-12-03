@@ -111,6 +111,11 @@
       <a href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     </li>
     <li class="divider"></li>
+    <li class="dropdown-header">Case Studies</li>
+    <li>
+      <a href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    </li>
+    <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
       <a href="../articles/FAQ.html">Frequently asked questions</a>
@@ -177,11 +182,11 @@ If <code>TRUE</code>, returns the parent's method and the corresponding <code>gg
     <p>A list</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>ggbody()</code> calls <code><a href='https://rdrr.io/r/base/list.html'>as.list(body(get("method", ggproto)))</a></code> under the hood.
-The <code><a href='https://rdrr.io/r/base/get.html'>get("method", ggproto)</a></code> syntax is the long form of <code>ggproto$method</code> which retrieves
+    <p><code>ggbody()</code> calls <code>as.list(body(get("method", ggproto)))</code> under the hood.
+The <code>get("method", ggproto)</code> syntax is the long form of <code>ggproto$method</code> which retrieves
 the actual function body. This is a subtle but important difference for inspecting ggproto methods.</p><ul>
-<li><p>For example, this works: <code><a href='https://rdrr.io/r/base/debug.html'>debugonce(get("compute_group", StatCount))</a></code></p></li>
-<li><p>But this fails to insert a break point: <code><a href='https://rdrr.io/r/base/debug.html'>debugonce(StatCount$compute_group)</a></code></p></li>
+<li><p>For example, this works: <code>debugonce(get("compute_group", StatCount))</code></p></li>
+<li><p>But this fails to insert a break point: <code>debugonce(StatCount$compute_group)</code></p></li>
 </ul>
 
 <p><code>ggbody()</code> was designed so that you do not have to worry about this distinction.</p>
@@ -193,271 +198,289 @@ the actual function body. This is a subtle but important difference for inspecti
 <li><p>If a method is being traced via <code><a href='ggtrace.html'>ggtrace()</a></code> or <code><a href='ggedit.html'>ggedit()</a></code>, <code>ggbody()</code> will return the current <em>modified state</em>
 of the method. As of v0.3.5, calling <code>ggbody()</code> on a method that has a trace on it will return a warning
 to emphasize this fact.</p></li>
-<li><p>When using <code>inherit = TRUE</code>, make sure that all ggproto objects from <code><a href='https://rdrr.io/r/base/class.html'>class(ggproto)</a></code> are available (by loading
+<li><p>When using <code>inherit = TRUE</code>, make sure that all ggproto objects from <code>class(ggproto)</code> are available (by loading
 the packages where they are defined, for example). Under the hood, <code>ggbody()</code> loops through the parents
-to search for the method, so it needs to be able to evaluate each element of <code><a href='https://rdrr.io/r/base/class.html'>class(ggproto)</a></code> as an object.</p></li>
+to search for the method, so it needs to be able to evaluate each element of <code>class(ggproto)</code> as an object.</p></li>
 </ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatCount</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; data &lt;- flip_data(data, flipped_aes)
-#&gt; 
-#&gt; [[3]]
-#&gt; x &lt;- data$x
-#&gt; 
-#&gt; [[4]]
-#&gt; weight &lt;- data$weight %||% rep(1, length(x))
-#&gt; 
-#&gt; [[5]]
-#&gt; count &lt;- as.numeric(tapply(weight, x, sum, na.rm = TRUE))
-#&gt; 
-#&gt; [[6]]
-#&gt; count[is.na(count)] &lt;- 0
-#&gt; 
-#&gt; [[7]]
-#&gt; bars &lt;- new_data_frame(list(count = count, prop = count/sum(abs(count)), 
-#&gt;     x = sort(unique(x)), width = width, flipped_aes = flipped_aes), 
-#&gt;     n = length(count))
-#&gt; 
-#&gt; [[8]]
-#&gt; flip_data(bars, flipped_aes)
-#&gt; </div><div class='input'>
-<span class='co'># Works for ggproto in extension packages</span>
-
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='fu'>ggforce</span><span class='fu'>::</span><span class='va'><a href='https://ggforce.data-imaginist.com/reference/ggforce-extensions.html'>StatDelaunaySegment</a></span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; if (any(duplicated(data[, c("x", "y")]))) {
-#&gt;     warning("stat_delaunay_segment: dropping duplicated points", 
-#&gt;         call. = FALSE)
-#&gt; }
-#&gt; 
-#&gt; [[3]]
-#&gt; if (normalize) {
-#&gt;     x_range &lt;- range(data$x, na.rm = TRUE, finite = TRUE)
-#&gt;     y_range &lt;- range(data$y, na.rm = TRUE, finite = TRUE)
-#&gt;     data$x &lt;- rescale(data$x, from = x_range) * asp.ratio
-#&gt;     data$y &lt;- rescale(data$y, from = y_range)
-#&gt;     if (!is.null(bound)) {
-#&gt;         bound[1:2] &lt;- rescale(bound[1:2], from = x_range) * asp.ratio
-#&gt;         bound[3:4] &lt;- rescale(bound[3:4], from = x_range)
-#&gt;     }
-#&gt; }
-#&gt; 
-#&gt; [[4]]
-#&gt; vor &lt;- deldir::deldir(data$x, data$y, rw = bound, eps = eps, 
-#&gt;     suppressMsge = TRUE)
-#&gt; 
-#&gt; [[5]]
-#&gt; segments &lt;- vor$delsgs[, 1:5]
-#&gt; 
-#&gt; [[6]]
-#&gt; names(segments) &lt;- c("x", "y", "xend", "yend", "group")
-#&gt; 
-#&gt; [[7]]
-#&gt; segments$group &lt;- vor$ind.orig[segments$group]
-#&gt; 
-#&gt; [[8]]
-#&gt; data &lt;- cbind(segments[, 1:4], data[segments$group, !names(data) %in% 
-#&gt;     c("x", "y"), drop = FALSE])
-#&gt; 
-#&gt; [[9]]
-#&gt; if (normalize) {
-#&gt;     data$x &lt;- rescale(data$x/asp.ratio, to = x_range, from = c(0, 
-#&gt;         1))
-#&gt;     data$xend &lt;- rescale(data$xend/asp.ratio, to = x_range, from = c(0, 
-#&gt;         1))
-#&gt;     data$y &lt;- rescale(data$y, to = y_range, from = c(0, 1))
-#&gt;     data$yend &lt;- rescale(data$yend, to = y_range, from = c(0, 
-#&gt;         1))
-#&gt; }
-#&gt; 
-#&gt; [[10]]
-#&gt; data
-#&gt; </div><div class='input'>
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggforce.data-imaginist.com'>ggforce</a></span><span class='op'>)</span>
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatBezier</span><span class='op'>$</span><span class='va'>compute_panel</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; if (is.null(data)) return(data)
-#&gt; 
-#&gt; [[3]]
-#&gt; nControls &lt;- table(data$group)
-#&gt; 
-#&gt; [[4]]
-#&gt; controlRange &lt;- range(nControls)
-#&gt; 
-#&gt; [[5]]
-#&gt; if (min(controlRange) &lt; 3 || max(controlRange) &gt; 4) {
-#&gt;     stop("Only support for quadratic and cubic beziers")
-#&gt; }
-#&gt; 
-#&gt; [[6]]
-#&gt; data &lt;- data[order(data$group), ]
-#&gt; 
-#&gt; [[7]]
-#&gt; groups &lt;- unique(data$group)
-#&gt; 
-#&gt; [[8]]
-#&gt; paths &lt;- getBeziers(data$x, data$y, match(data$group, groups), 
-#&gt;     n)
-#&gt; 
-#&gt; [[9]]
-#&gt; paths &lt;- data.frame(x = paths$paths[, 1], y = paths$paths[, 2], 
-#&gt;     group = groups[paths$pathID])
-#&gt; 
-#&gt; [[10]]
-#&gt; paths$index &lt;- rep(seq(0, 1, length.out = n), length(nControls))
-#&gt; 
-#&gt; [[11]]
-#&gt; dataIndex &lt;- rep(match(unique(data$group), data$group), each = n)
-#&gt; 
-#&gt; [[12]]
-#&gt; cbind(paths, data[dataIndex, !names(data) %in% c("x", "y", "group"), 
-#&gt;     drop = FALSE])
-#&gt; </div><div class='input'>
-<span class='co'># `inherit = TRUE` will return the method from the closest parent</span>
-
-<span class='co'>## ERRORS:</span>
-<span class='co'>## ggbody(StatBoxplot$compute_panel)</span>
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatBoxplot</span><span class='op'>$</span><span class='va'>compute_panel</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(Stat$compute_panel)`</span></div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; if (empty(data)) return(new_data_frame())
-#&gt; 
-#&gt; [[3]]
-#&gt; groups &lt;- split(data, data$group)
-#&gt; 
-#&gt; [[4]]
-#&gt; stats &lt;- lapply(groups, function(group) {
-#&gt;     self$compute_group(data = group, scales = scales, ...)
-#&gt; })
-#&gt; 
-#&gt; [[5]]
-#&gt; stats &lt;- mapply(function(new, old) {
-#&gt;     if (empty(new)) 
-#&gt;         return(new_data_frame())
-#&gt;     unique &lt;- uniquecols(old)
-#&gt;     missing &lt;- !(names(unique) %in% names(new))
-#&gt;     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])
-#&gt; }, stats, groups, SIMPLIFY = FALSE)
-#&gt; 
-#&gt; [[6]]
-#&gt; rbind_dfs(stats)
-#&gt; </div><div class='input'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_panel</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; if (empty(data)) return(new_data_frame())
-#&gt; 
-#&gt; [[3]]
-#&gt; groups &lt;- split(data, data$group)
-#&gt; 
-#&gt; [[4]]
-#&gt; stats &lt;- lapply(groups, function(group) {
-#&gt;     self$compute_group(data = group, scales = scales, ...)
-#&gt; })
-#&gt; 
-#&gt; [[5]]
-#&gt; stats &lt;- mapply(function(new, old) {
-#&gt;     if (empty(new)) 
-#&gt;         return(new_data_frame())
-#&gt;     unique &lt;- uniquecols(old)
-#&gt;     missing &lt;- !(names(unique) %in% names(new))
-#&gt;     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])
-#&gt; }, stats, groups, SIMPLIFY = FALSE)
-#&gt; 
-#&gt; [[6]]
-#&gt; rbind_dfs(stats)
-#&gt; </div><div class='input'>
-<span class='co'># Navigating complex inheritance</span>
-<span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "GeomArcBar"  "GeomShape"   "GeomPolygon" "Geom"        "ggproto"    
-#&gt; [6] "gg"         </div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>default_aes</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># self</span>
-</div><div class='output co'>#&gt; <span class='message'>Method 'default_aes' is defined for `GeomArcBar`, not inherited.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_panel</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># parent</span>
-</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(GeomShape$draw_panel)`</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_key</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># grandparent</span>
-</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(GeomPolygon$draw_key)`</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_group</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># top-level</span>
-</div><div class='output co'>#&gt; <span class='message'>Returning `ggbody(Geom$draw_group)`</span></div><div class='input'>
-<span class='co'># Works for custom ggproto</span>
-<span class='co'># - Example from {ggplot2} "Extending ggplot2" vignette</span>
-<span class='va'>StatDensityCommon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggproto.html'>ggproto</a></span><span class='op'>(</span><span class='st'>"StatDensityCommon"</span>, <span class='va'>Stat</span>,
-  required_aes <span class='op'>=</span> <span class='st'>"x"</span>,
-
-  setup_params <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>params</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='va'>params</span><span class='op'>$</span><span class='va'>bandwidth</span><span class='op'>)</span><span class='op'>)</span>
-      <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>params</span><span class='op'>)</span>
-
-    <span class='va'>xs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>x</span>, <span class='va'>data</span><span class='op'>$</span><span class='va'>group</span><span class='op'>)</span>
-    <span class='va'>bws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>vapply</a></span><span class='op'>(</span><span class='va'>xs</span>, <span class='va'>bw.nrd0</span>, <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>numeric</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span>
-    <span class='va'>bw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>bws</span><span class='op'>)</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Picking bandwidth of "</span>, <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span><span class='op'>(</span><span class='va'>bw</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span>
-
-    <span class='va'>params</span><span class='op'>$</span><span class='va'>bandwidth</span> <span class='op'>&lt;-</span> <span class='va'>bw</span>
-    <span class='va'>params</span>
-  <span class='op'>}</span>,
-
-  compute_group <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>scales</span>, <span class='va'>bandwidth</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>{</span>
-    <span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/density.html'>density</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>x</span>, bw <span class='op'>=</span> <span class='va'>bandwidth</span><span class='op'>)</span>
-    <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>d</span><span class='op'>$</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>d</span><span class='op'>$</span><span class='va'>y</span><span class='op'>)</span>
-  <span class='op'>}</span>
-<span class='op'>)</span>
-
-<span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/body.html'>body</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/get.html'>get</a></span><span class='op'>(</span><span class='st'>"compute_group"</span>, <span class='va'>StatDensityCommon</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; d &lt;- density(data$x, bw = bandwidth)
-#&gt; 
-#&gt; [[3]]
-#&gt; data.frame(x = d$x, y = d$y)
-#&gt; </div><div class='input'>
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatDensityCommon</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; d &lt;- density(data$x, bw = bandwidth)
-#&gt; 
-#&gt; [[3]]
-#&gt; data.frame(x = d$x, y = d$y)
-#&gt; </div><div class='input'>
-<span class='co'># As of v.0.4.0, ggbody works for functions as well</span>
-<span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; if (length(x) == 1L &amp;&amp; is.numeric(x) &amp;&amp; is.finite(x) &amp;&amp; x &gt;= 
-#&gt;     1) {
-#&gt;     if (missing(size)) 
-#&gt;         size &lt;- x
-#&gt;     sample.int(x, size, replace, prob)
-#&gt; } else {
-#&gt;     if (missing(size)) 
-#&gt;         size &lt;- length(x)
-#&gt;     x[sample.int(length(x), size, replace, prob)]
-#&gt; }
-#&gt; </div><div class='input'><span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>sample</span>, <span class='fl'>1</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`sample` now being traced.</span></div><div class='input'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: `sample` is currently being traced</span></div><div class='input'><span class='fu'><a href='is_traced.html'>is_traced</a></span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] TRUE</div><div class='input'><span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`sample` no longer being traced.</span></div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatCount</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> data &lt;- flip_data(data, flipped_aes)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x &lt;- data$x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> weight &lt;- data$weight %||% rep(1, length(x))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> count &lt;- as.numeric(tapply(weight, x, sum, na.rm = TRUE))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> count[is.na(count)] &lt;- 0</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> bars &lt;- new_data_frame(list(count = count, prop = count/sum(abs(count)), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     x = sort(unique(x)), width = width, flipped_aes = flipped_aes), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     n = length(count))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[8]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> flip_data(bars, flipped_aes)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Works for ggproto in extension packages</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'>ggbody</span><span class='op'>(</span><span class='fu'>ggforce</span><span class='fu'>::</span><span class='va'><a href='https://ggforce.data-imaginist.com/reference/ggforce-extensions.html'>StatDelaunaySegment</a></span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (any(duplicated(data[, c("x", "y")]))) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     warning("stat_delaunay_segment: dropping duplicated points", </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         call. = FALSE)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (normalize) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     x_range &lt;- range(data$x, na.rm = TRUE, finite = TRUE)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     y_range &lt;- range(data$y, na.rm = TRUE, finite = TRUE)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     data$x &lt;- rescale(data$x, from = x_range) * asp.ratio</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     data$y &lt;- rescale(data$y, from = y_range)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (!is.null(bound)) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         bound[1:2] &lt;- rescale(bound[1:2], from = x_range) * asp.ratio</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         bound[3:4] &lt;- rescale(bound[3:4], from = x_range)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> vor &lt;- deldir::deldir(data$x, data$y, rw = bound, eps = eps, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     suppressMsge = TRUE)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> segments &lt;- vor$delsgs[, 1:5]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> names(segments) &lt;- c("x", "y", "xend", "yend", "group")</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> segments$group &lt;- vor$ind.orig[segments$group]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[8]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> data &lt;- cbind(segments[, 1:4], data[segments$group, !names(data) %in% </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     c("x", "y"), drop = FALSE])</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[9]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (normalize) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     data$x &lt;- rescale(data$x/asp.ratio, to = x_range, from = c(0, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         1))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     data$xend &lt;- rescale(data$xend/asp.ratio, to = x_range, from = c(0, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         1))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     data$y &lt;- rescale(data$y, to = y_range, from = c(0, 1))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     data$yend &lt;- rescale(data$yend, to = y_range, from = c(0, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         1))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[10]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> data</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggforce.data-imaginist.com'>ggforce</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatBezier</span><span class='op'>$</span><span class='va'>compute_panel</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (is.null(data)) return(data)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> nControls &lt;- table(data$group)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> controlRange &lt;- range(nControls)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (min(controlRange) &lt; 3 || max(controlRange) &gt; 4) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     stop("Only support for quadratic and cubic beziers")</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> data &lt;- data[order(data$group), ]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> groups &lt;- unique(data$group)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[8]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> paths &lt;- getBeziers(data$x, data$y, match(data$group, groups), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     n)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[9]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> paths &lt;- data.frame(x = paths$paths[, 1], y = paths$paths[, 2], </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     group = groups[paths$pathID])</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[10]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> paths$index &lt;- rep(seq(0, 1, length.out = n), length(nControls))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[11]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> dataIndex &lt;- rep(match(unique(data$group), data$group), each = n)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[12]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> cbind(paths, data[dataIndex, !names(data) %in% c("x", "y", "group"), </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     drop = FALSE])</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># `inherit = TRUE` will return the method from the closest parent</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## ERRORS:</span></span>
+<span class='r-in'><span class='co'>## ggbody(StatBoxplot$compute_panel)</span></span>
+<span class='r-in'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatBoxplot</span><span class='op'>$</span><span class='va'>compute_panel</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Returning `ggbody(Stat$compute_panel)`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (empty(data)) return(new_data_frame())</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> groups &lt;- split(data, data$group)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stats &lt;- lapply(groups, function(group) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     self$compute_group(data = group, scales = scales, ...)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> })</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stats &lt;- mapply(function(new, old) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (empty(new)) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         return(new_data_frame())</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     unique &lt;- uniquecols(old)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     missing &lt;- !(names(unique) %in% names(new))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }, stats, groups, SIMPLIFY = FALSE)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> rbind_dfs(stats)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>Stat</span><span class='op'>$</span><span class='va'>compute_panel</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (empty(data)) return(new_data_frame())</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> groups &lt;- split(data, data$group)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stats &lt;- lapply(groups, function(group) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     self$compute_group(data = group, scales = scales, ...)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> })</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> stats &lt;- mapply(function(new, old) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (empty(new)) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         return(new_data_frame())</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     unique &lt;- uniquecols(old)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     missing &lt;- !(names(unique) %in% names(new))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }, stats, groups, SIMPLIFY = FALSE)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> rbind_dfs(stats)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Navigating complex inheritance</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "GeomArcBar"  "GeomShape"   "GeomPolygon" "Geom"        "ggproto"    </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [6] "gg"         </span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>default_aes</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># self</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Method 'default_aes' is defined for `GeomArcBar`, not inherited.</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_panel</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># parent</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Returning `ggbody(GeomShape$draw_panel)`</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_key</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>    <span class='co'># grandparent</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Returning `ggbody(GeomPolygon$draw_key)`</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>GeomArcBar</span><span class='op'>$</span><span class='va'>draw_group</span>, inherit <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>  <span class='co'># top-level</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Returning `ggbody(Geom$draw_group)`</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Works for custom ggproto</span></span>
+<span class='r-in'><span class='co'># - Example from {ggplot2} "Extending ggplot2" vignette</span></span>
+<span class='r-in'><span class='va'>StatDensityCommon</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggproto.html'>ggproto</a></span><span class='op'>(</span><span class='st'>"StatDensityCommon"</span>, <span class='va'>Stat</span>,</span>
+<span class='r-in'>  required_aes <span class='op'>=</span> <span class='st'>"x"</span>,</span>
+<span class='r-in'></span>
+<span class='r-in'>  setup_params <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>params</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>    <span class='kw'>if</span> <span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NULL.html'>is.null</a></span><span class='op'>(</span><span class='va'>params</span><span class='op'>$</span><span class='va'>bandwidth</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'>      <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>params</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'>    <span class='va'>xs</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/split.html'>split</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>x</span>, <span class='va'>data</span><span class='op'>$</span><span class='va'>group</span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='va'>bws</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>vapply</a></span><span class='op'>(</span><span class='va'>xs</span>, <span class='va'>bw.nrd0</span>, <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>numeric</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='va'>bw</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>bws</span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Picking bandwidth of "</span>, <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>signif</a></span><span class='op'>(</span><span class='va'>bw</span>, <span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'>    <span class='va'>params</span><span class='op'>$</span><span class='va'>bandwidth</span> <span class='op'>&lt;-</span> <span class='va'>bw</span></span>
+<span class='r-in'>    <span class='va'>params</span></span>
+<span class='r-in'>  <span class='op'>}</span>,</span>
+<span class='r-in'></span>
+<span class='r-in'>  compute_group <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>scales</span>, <span class='va'>bandwidth</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>    <span class='va'>d</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/density.html'>density</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>$</span><span class='va'>x</span>, bw <span class='op'>=</span> <span class='va'>bandwidth</span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>d</span><span class='op'>$</span><span class='va'>x</span>, y <span class='op'>=</span> <span class='va'>d</span><span class='op'>$</span><span class='va'>y</span><span class='op'>)</span></span>
+<span class='r-in'>  <span class='op'>}</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/list.html'>as.list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/body.html'>body</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/get.html'>get</a></span><span class='op'>(</span><span class='st'>"compute_group"</span>, <span class='va'>StatDensityCommon</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> d &lt;- density(data$x, bw = bandwidth)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> data.frame(x = d$x, y = d$y)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>StatDensityCommon</span><span class='op'>$</span><span class='va'>compute_group</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> d &lt;- density(data$x, bw = bandwidth)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> data.frame(x = d$x, y = d$y)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># As of v.0.4.0, ggbody works for functions as well</span></span>
+<span class='r-in'><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> if (length(x) == 1L &amp;&amp; is.numeric(x) &amp;&amp; is.finite(x) &amp;&amp; x &gt;= </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     1) {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (missing(size)) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         size &lt;- x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     sample.int(x, size, replace, prob)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> } else {</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     if (missing(size)) </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>         size &lt;- length(x)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     x[sample.int(length(x), size, replace, prob)]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> }</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'><span class='fu'><a href='ggtrace.html'>ggtrace</a></span><span class='op'>(</span><span class='va'>sample</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> `sample` now being traced.</span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'>ggbody</span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-wrn co'><span class='r-pr'>#&gt;</span> <span class='warning'>Warning: </span>`sample` is currently being traced</span>
+<span class='r-in'><span class='fu'><a href='is_traced.html'>is_traced</a></span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] TRUE</span>
+<span class='r-in'><span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>sample</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> `sample` no longer being traced.</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

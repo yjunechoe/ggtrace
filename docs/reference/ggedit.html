@@ -111,6 +111,11 @@
       <a href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     </li>
     <li class="divider"></li>
+    <li class="dropdown-header">Case Studies</li>
+    <li>
+      <a href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    </li>
+    <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
       <a href="../articles/FAQ.html">Frequently asked questions</a>
@@ -197,28 +202,28 @@ mix programmatic and interactive workflows.</p></li>
     <div class='dont-index'><p><code><a href='gguntrace.html'>gguntrace()</a></code>, <code><a href='is_traced.html'>is_traced()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-
-<span class='va'>jitter_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>diamonds</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span>,<span class='op'>]</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>cut</span>, <span class='va'>depth</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/position_jitter.html'>position_jitter</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.2</span>, seed <span class='op'>=</span> <span class='fl'>2021</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='co'># Interactively modify the method's source code in text editor</span>
-<span class='fu'>ggedit</span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
-
-<span class='co'># Check the edited code</span>
-<span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
-
-<span class='co'># Execute method with edit</span>
-<span class='va'>jitter_plot</span>
-
-<span class='co'># Untrace</span>
-<span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
-
-<span class='co'># Edit is removed in the next call</span>
-<span class='va'>jitter_plot</span>
-
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>jitter_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>diamonds</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span>,<span class='op'>]</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>cut</span>, <span class='va'>depth</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/position_jitter.html'>position_jitter</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.2</span>, seed <span class='op'>=</span> <span class='fl'>2021</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Interactively modify the method's source code in text editor</span></span>
+<span class='r-in'><span class='fu'>ggedit</span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Check the edited code</span></span>
+<span class='r-in'><span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Execute method with edit</span></span>
+<span class='r-in'><span class='va'>jitter_plot</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Untrace</span></span>
+<span class='r-in'><span class='fu'><a href='gguntrace.html'>gguntrace</a></span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Edit is removed in the next call</span></span>
+<span class='r-in'><span class='va'>jitter_plot</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -110,6 +110,11 @@
       <a href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     </li>
     <li class="divider"></li>
+    <li class="dropdown-header">Case Studies</li>
+    <li>
+      <a href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    </li>
+    <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
       <a href="../articles/FAQ.html">Frequently asked questions</a>
@@ -192,7 +197,7 @@
 <a href="#breaking-changes" class="anchor"></a><strong>Breaking changes</strong>
 </h3>
 <ul>
-<li>Global tracedump is turned off by default (<code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code> is <code>FALSE</code> on load) and must be explicitly activated with <code><a href="../reference/last_ggtrace.html">global_ggtrace_state(TRUE)</a></code>.</li>
+<li>Global tracedump is turned off by default (<code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code> is <code>FALSE</code> on load) and must be explicitly activated with <code>global_ggtrace_state(TRUE)</code>.</li>
 </ul>
 </div>
 <div id="improvements-1" class="section level3">
@@ -225,7 +230,7 @@
 <a href="#new-features" class="anchor"></a><strong>New Features</strong>
 </h3>
 <ul>
-<li>Global collection of tracedumps can be turned on/off with <code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code>. It is still active by default but should memory become a concern, it can be turned off with <code><a href="../reference/last_ggtrace.html">global_ggtrace_state(state = FALSE)</a></code>.</li>
+<li>Global collection of tracedumps can be turned on/off with <code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code>. It is still active by default but should memory become a concern, it can be turned off with <code>global_ggtrace_state(state = FALSE)</code>.</li>
 </ul>
 </div>
 </div>
@@ -283,7 +288,7 @@
 </h3>
 <ul>
 <li>
-<code><a href="../reference/ggtrace.html">ggtrace(..., once = TRUE)</a></code> is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created. When it’s triggered, it’ll tell you that there is a persistent trace on the methodbut will not remind you to untrace it later nor print the corresponding <code><a href="../reference/gguntrace.html">gguntrace()</a></code> code to do so.</li>
+<code>ggtrace(..., once = TRUE)</code> is less noisy about there being a persistent trace. It now only sends a line of message saying so when the persistent trace is created. When it’s triggered, it’ll tell you that there is a persistent trace on the methodbut will not remind you to untrace it later nor print the corresponding <code><a href="../reference/gguntrace.html">gguntrace()</a></code> code to do so.</li>
 </ul>
 </div>
 <div id="bug-fixes-3" class="section level3">
@@ -345,8 +350,8 @@
 <ul>
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gets a <code>use_names</code> argument. When <code>TRUE</code>, it uses the names of the list of expressions passed to <code>trace_exprs</code> as the names for the tracedump set to <code><a href="../reference/last_ggtrace.html">last_ggtrace()</a></code> and added to <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code>.</p></li>
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gets a <code>verbose</code> argument. When <code>FALSE</code>, it suppresses the display of all non-<code><a href="https://rdrr.io/r/base/message.html">message()</a></code> information, including information about which expression is evaluated where, as well as the output of those expressions when evaluated (which can be selectively suppressed with <code>.print</code> for finer control). <code>verbose</code> is <code>TRUE</code> by default.</p></li>
-<li><p>Setting <code><a href="https://rdrr.io/r/base/options.html">options(ggtrace.suppressMessages = TRUE)</a></code> will also suppress <code>messages()</code>s about what method is being traced, whether a trace has been triggered on a method, whether there exists a persistent trace, etc. This information is very important so using this option is not recommended, but it has been made available. This option is set to <code>FALSE</code> on package load.</p></li>
-<li><p>Setting <code><a href="https://rdrr.io/r/base/options.html">options(ggtrace.as_tibble = TRUE)</a></code> will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see <a href="https://github.com/tidyverse/ggplot2/issues/3018">related {ggplot2} Github issue</a>). This option is set to <code>FALSE</code> on package load.</p></li>
+<li><p>Setting <code>options(ggtrace.suppressMessages = TRUE)</code> will also suppress <code>messages()</code>s about what method is being traced, whether a trace has been triggered on a method, whether there exists a persistent trace, etc. This information is very important so using this option is not recommended, but it has been made available. This option is set to <code>FALSE</code> on package load.</p></li>
+<li><p>Setting <code>options(ggtrace.as_tibble = TRUE)</code> will return evaluated expressions as tibbles if the output is a data frame. Using this option may be convenient for interactive inspections but it is not recommended for testing or debugging (see <a href="https://github.com/tidyverse/ggplot2/issues/3018">related {ggplot2} Github issue</a>). This option is set to <code>FALSE</code> on package load.</p></li>
 </ul>
 </div>
 <div id="improvements-5" class="section level3">
@@ -376,7 +381,7 @@
 <a href="#new-features-4" class="anchor"></a><strong>New features</strong>
 </h3>
 <ul>
-<li><p>New function <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> which returns accumulated tracedumps from <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. This is useful in conjunction with <code><a href="../reference/ggtrace.html">ggtrace(once = FALSE)</a></code> for tracing a method that you expect will be called multiple times (ex: <code>Stat$compute_group</code> gets triggered the same number of times as the number of groups in a panel).</p></li>
+<li><p>New function <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> which returns accumulated tracedumps from <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. This is useful in conjunction with <code>ggtrace(once = FALSE)</code> for tracing a method that you expect will be called multiple times (ex: <code>Stat$compute_group</code> gets triggered the same number of times as the number of groups in a panel).</p></li>
 <li><p>New function <code><a href="../reference/last_ggtrace.html">clear_global_ggtrace()</a></code> which clears <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> by setting it to <code>NULL</code>.</p></li>
 </ul>
 </div>
@@ -434,7 +439,7 @@
 <p>Significant re-write of <code><a href="../reference/ggbody.html">ggbody()</a></code> for better error handling (<a href='https://github.com/yjunechoe/ggtrace/issues/23'>#23</a>)</p>
 <ul>
 <li><p>Aborts if method is not a call or is not of the accepted form, with specific error messages for each.</p></li>
-<li><p>If a method doesn’t exist in a parent, directs users to call <code><a href="../reference/ggbody.html">ggbody(, inherit = TRUE)</a></code></p></li>
+<li><p>If a method doesn’t exist in a parent, directs users to call <code>ggbody(, inherit = TRUE)</code></p></li>
 <li><p>If the recursive search with <code>inherit = TRUE</code> fails, directs users to load all relevant packages</p></li>
 <li><p>Notifies if <code>inherit = TRUE</code> but method is defined for the object, not inherited</p></li>
 </ul>
@@ -462,7 +467,7 @@
 <p>The <code>obj</code> argument is completely removed from all functions in the package. The constraint on supplying methods as expressions forces users to be intentional about tracing ggproto methods by having to provide them as code. This also allows the functions to return more informative messages, which was the main motivation for this breaking change.</p>
 <ul>
 <li><p>
-Because the <code>obj</code> argument was only designed for compatibility with the <code><a href="https://rdrr.io/r/base/get.html">get("method", ggproto)</a></code> syntax for retrieving the function body of ggproto methods, it should not affect interactive workflows. In fact, the shortform <code>method = ggproto$method</code> is more convenient and has always been recommended for passing a ggproto method to <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> functions.
+Because the <code>obj</code> argument was only designed for compatibility with the <code>get("method", ggproto)</code> syntax for retrieving the function body of ggproto methods, it should not affect interactive workflows. In fact, the shortform <code>method = ggproto$method</code> is more convenient and has always been recommended for passing a ggproto method to <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> functions.
 </p></li>
 </ul>
 </li>
@@ -509,11 +514,11 @@ Because the <code>obj</code> argument was only designed for compatibility with t
 <p>For safety reasons, the <code>~step</code> keyword will now only be substituted for the expression at the current step only if <code>~step</code> is by itself (i.e., is an exact match) (<a href='https://github.com/yjunechoe/ggtrace/issues/16'>#16</a>, <a href='https://github.com/yjunechoe/ggtrace/issues/11'>#11</a>).</p>
 <ul>
 <li><p>
-For example, <code>~step</code> will not be substituted if <code><a href="https://rdrr.io/r/base/substitute.html">quote(head(~step))</a></code> is passed to <code>trace_exprs</code>. Users are encouraged to return the method’s environment with <code><a href="https://rdrr.io/r/base/substitute.html">quote(environment())</a></code> or interactively debug with <code><a href="../reference/ggedit.html">ggedit()</a></code> if they want to manipulate the expression.
+For example, <code>~step</code> will not be substituted if <code>quote(head(~step))</code> is passed to <code>trace_exprs</code>. Users are encouraged to return the method’s environment with <code>quote(environment())</code> or interactively debug with <code><a href="../reference/ggedit.html">ggedit()</a></code> if they want to manipulate the expression.
 </p></li>
 </ul>
 </li>
-<li><p>The position of the <code>obj</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> has been moved from second to fourth, to allow for shortcuts like <code><a href="../reference/ggtrace.html">ggtrace(method = ..., 2:3, quote(data))</a></code>, which will evaluate and store the output of the <code>data</code> variable at the second and third steps of the method body. (<a href='https://github.com/yjunechoe/ggtrace/issues/15'>#15</a>)</p></li>
+<li><p>The position of the <code>obj</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> has been moved from second to fourth, to allow for shortcuts like <code>ggtrace(method = ..., 2:3, quote(data))</code>, which will evaluate and store the output of the <code>data</code> variable at the second and third steps of the method body. (<a href='https://github.com/yjunechoe/ggtrace/issues/15'>#15</a>)</p></li>
 </ul>
 </div>
 <div id="new-features-5" class="section level3">

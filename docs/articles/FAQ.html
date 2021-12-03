@@ -70,6 +70,11 @@
       <a href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     </li>
     <li class="divider">
+    <li class="dropdown-header">Case Studies</li>
+    <li>
+      <a href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    </li>
+    <li class="divider">
     <li class="dropdown-header">Miscellaneous</li>
     <li>
       <a href="../articles/FAQ.html">Frequently asked questions</a>
@@ -171,7 +176,7 @@
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x00000000144059d8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x000000001440ad50&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a call to <code><a href="https://rdrr.io/r/base/trace.html">untrace()</a></code></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -289,24 +294,24 @@
 <span class="co">#&gt; `StatBoxplot$compute_group` no longer being traced.</span>
 
 <span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002109A9B8`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002109A9B8`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EB42118`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EB42118`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A7F638`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022A7F638`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000023034B08`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000023034B08`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
 <span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
 <span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000023113088`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000023113088`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000020775D30`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000020775D30`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
@@ -417,7 +422,7 @@
 <li>Non-functions (ex: constants, object properties). But you can still inspect the values for these with <code><a href="../reference/ggbody.html">ggbody()</a></code>
 </li>
 <li>Functions not defined in an environment (ex: you can’t define a function to trace on-the-spot inside <code><a href="../reference/ggtrace.html">ggtrace()</a></code>)</li>
-<li>Limited support for closures (the LHS of the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> must itself be an environment where the function can be searched for)</li>
+<li>Limited support for closures (the LHS of the <code>$</code> must itself be an environment where the function can be searched for)</li>
 </ul>
 </div>
 <div id="how-can-i-save-a-modified-ggplot" class="section level2">

@@ -111,6 +111,11 @@
       <a href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     </li>
     <li class="divider"></li>
+    <li class="dropdown-header">Case Studies</li>
+    <li>
+      <a href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    </li>
+    <li class="divider"></li>
     <li class="dropdown-header">Miscellaneous</li>
     <li>
       <a href="../articles/FAQ.html">Frequently asked questions</a>
@@ -233,7 +238,7 @@ A method's environment contextualizes the <code>self</code> object in addition t
 <p>A reference to the method's runtime environment can be returned with <code><a href='https://rdrr.io/r/base/environment.html'>environment()</a></code>, as in <code>trace_exprs = quote(environment())</code>.
 Note that environments are mutable, meaning that <code><a href='https://rdrr.io/r/base/environment.html'>environment()</a></code> returned from the first and last steps will reference
 the same environment. To get a snapshot of the environment at a particular step, you can return a deep copy with
-<code><a href='https://rlang.r-lib.org/reference/env_clone.html'>rlang::env_clone(environment())</a></code>.</p></li>
+<code>rlang::env_clone(environment())</code>.</p></li>
 <li><p><strong>Inject</strong>: The strategy of modifying the behavior of a method as it runs by passing in expressions that make assignments.</p>
 <p>For example, <code>trace_steps = c(1, 10)</code> with <code>trace_exprs = rlang::exprs(a &lt;- 5, a)</code> will first assign a new variable <code>a</code>
 at step 1, and return its value <code>5</code> at step 10. This can also be used to modify important variables like
@@ -275,144 +280,162 @@ a few wrapping environments created by <code><a href='https://rdrr.io/r/base/tra
 <code>verbose</code>, which are both <code>TRUE</code> by default. <code>print_output</code> simply calls <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code> on the evaluated expressions, and turning this
 off may be desirable if expressions in <code>trace_exprs</code> evaluates to a long dataframe or vector. <code>verbose</code> controls all
 information printed to the console including those by <code><a href='https://rdrr.io/r/base/print.html'>print()</a></code>, and setting <code>verbose = FALSE</code> will mean that only
-<code><a href='https://rdrr.io/r/base/message.html'>message()</a></code>s will be displayed. Lastly, you can suppress <code><a href='https://rdrr.io/r/base/message.html'>message()</a></code> from <code>ggtrace()</code> with <code><a href='https://rdrr.io/r/base/options.html'>options(ggtrace.suppressMessages = TRUE)</a></code>,
+<code><a href='https://rdrr.io/r/base/message.html'>message()</a></code>s will be displayed. Lastly, you can suppress <code><a href='https://rdrr.io/r/base/message.html'>message()</a></code> from <code>ggtrace()</code> with <code>options(ggtrace.suppressMessages = TRUE)</code>,
 though suppressing messages is generally not recommended.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='gguntrace.html'>gguntrace()</a></code>, <code><a href='is_traced.html'>is_traced()</a></code>, <code><a href='last_ggtrace.html'>last_ggtrace()</a></code>, <code><a href='last_ggtrace.html'>global_ggtrace()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># One example of an Inspect workflow ----</span>
-
-<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
-
-<span class='va'>jitter_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>diamonds</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span>,<span class='op'>]</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>cut</span>, <span class='va'>depth</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
-  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/position_jitter.html'>position_jitter</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.2</span>, seed <span class='op'>=</span> <span class='fl'>2021</span><span class='op'>)</span><span class='op'>)</span>
-
-<span class='va'>jitter_plot</span>
-</div><div class='img'><img src='ggtrace-1.png' alt='' width='1094' height='676' /></div><div class='input'>
-<span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [[1]]
-#&gt; `{`
-#&gt; 
-#&gt; [[2]]
-#&gt; trans_x &lt;- if (params$width &gt; 0) function(x) jitter(x, amount = params$width)
-#&gt; 
-#&gt; [[3]]
-#&gt; trans_y &lt;- if (params$height &gt; 0) function(x) jitter(x, amount = params$height)
-#&gt; 
-#&gt; [[4]]
-#&gt; x_aes &lt;- intersect(ggplot_global$x_aes, names(data))
-#&gt; 
-#&gt; [[5]]
-#&gt; x &lt;- if (length(x_aes) == 0) 0 else data[[x_aes[1]]]
-#&gt; 
-#&gt; [[6]]
-#&gt; y_aes &lt;- intersect(ggplot_global$y_aes, names(data))
-#&gt; 
-#&gt; [[7]]
-#&gt; y &lt;- if (length(y_aes) == 0) 0 else data[[y_aes[1]]]
-#&gt; 
-#&gt; [[8]]
-#&gt; dummy_data &lt;- new_data_frame(list(x = x, y = y), nrow(data))
-#&gt; 
-#&gt; [[9]]
-#&gt; fixed_jitter &lt;- with_seed_null(params$seed, transform_position(dummy_data, 
-#&gt;     trans_x, trans_y))
-#&gt; 
-#&gt; [[10]]
-#&gt; x_jit &lt;- fixed_jitter$x - x
-#&gt; 
-#&gt; [[11]]
-#&gt; y_jit &lt;- fixed_jitter$y - y
-#&gt; 
-#&gt; [[12]]
-#&gt; transform_position(data, function(x) x + x_jit, function(x) x + 
-#&gt;     y_jit)
-#&gt; </div><div class='input'>
-<span class='co'>## Step 1 ====</span>
-<span class='co'>## Inspect what `data` look like at the start of the function</span>
-<span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>, trace_steps <span class='op'>=</span> <span class='fl'>1</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`PositionJitter$compute_layer` now being traced.</span></div><div class='input'>
-<span class='va'>jitter_plot</span>
-</div><div class='output co'>#&gt; <span class='message'>Triggering trace on `PositionJitter$compute_layer`</span></div><div class='output co'>#&gt; 
-#&gt; [Step 01]&gt; head(data)
-#&gt;   x    y PANEL group
-#&gt; 1 5 61.5     1     5
-#&gt; 2 4 59.8     1     4
-#&gt; 3 2 56.9     1     2
-#&gt; 4 4 62.4     1     4
-#&gt; 5 2 63.3     1     2
-#&gt; 6 3 62.8     1     3
-#&gt; 
-#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>Untracing `PositionJitter$compute_layer` on exit.</span></div><div class='img'><img src='ggtrace-2.png' alt='' width='1094' height='676' /></div><div class='input'>
-<span class='co'>## Step 2 ====</span>
-<span class='co'>## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter</span>
-<span class='co'>## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To</span>
-<span class='co'>## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.</span>
-<span class='co'>## We also set `print_output = FALSE` to disable printing of the output</span>
-<span class='fu'>ggtrace</span><span class='op'>(</span>
-  <span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>,
-  trace_steps <span class='op'>=</span> <span class='fl'>12</span>,
-  trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>step</span><span class='op'>)</span>, <span class='co'># This is the default if `trace_exprs` is not provided</span>
-  print_output <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`PositionJitter$compute_layer` now being traced.</span></div><div class='input'>
-<span class='co'># We wrap the plot in `ggplotGrob()` and `invisible()` to force</span>
-<span class='co'># its evaluation while suppressing its rendering</span>
-<span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplotGrob.html'>ggplotGrob</a></span><span class='op'>(</span><span class='va'>jitter_plot</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Triggering trace on `PositionJitter$compute_layer`</span></div><div class='output co'>#&gt; 
-#&gt; [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)
-#&gt; 
-#&gt; Call `last_ggtrace()` to get the trace dump.</div><div class='output co'>#&gt; <span class='message'>Untracing `PositionJitter$compute_layer` on exit.</span></div><div class='input'>
-<span class='co'># The output of the evaluated expressions can be inspected with `last_ggtrace()`</span>
-<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='last_ggtrace.html'>last_ggtrace</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt;          x        y PANEL group
-#&gt; 1 4.980507 61.50684     1     5
-#&gt; 2 4.113512 59.77872     1     4
-#&gt; 3 2.083873 56.86655     1     2
-#&gt; 4 3.952698 62.42703     1     4
-#&gt; 5 2.054530 63.29763     1     2
-#&gt; 6 3.080538 62.77536     1     3</div><div class='input'>
-<span class='co'>## Step 3 ====</span>
-<span class='co'>## If we want both to be returned at the same time for an easier comparison, we can pass in a</span>
-<span class='co'>## (named) list of expressions.</span>
-<span class='fu'>ggtrace</span><span class='op'>(</span>
-  <span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>,
-  trace_steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>12</span><span class='op'>)</span>,
-  trace_exprs <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>exprs</a></span><span class='op'>(</span>
-    before_jitter <span class='op'>=</span> <span class='va'>data</span>,
-    after_jitter <span class='op'>=</span> <span class='op'>~</span><span class='va'>step</span>
-  <span class='op'>)</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>`PositionJitter$compute_layer` now being traced.</span></div><div class='input'>
-<span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplotGrob.html'>ggplotGrob</a></span><span class='op'>(</span><span class='va'>jitter_plot</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Triggering trace on `PositionJitter$compute_layer`</span></div><div class='output co'>#&gt; <span class='message'>Untracing `PositionJitter$compute_layer` on exit.</span></div><div class='input'>
-<span class='co'>## Step 4 ====</span>
-<span class='co'>## The output of the evaluated expressions can be inspected with `last_ggtrace()`</span>
-<span class='va'>jitter_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'><a href='last_ggtrace.html'>last_ggtrace</a></span><span class='op'>(</span><span class='op'>)</span>
-
-<span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>jitter_tracedump</span>, <span class='va'>head</span>, <span class='fl'>3</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $before_jitter
-#&gt;   x    y PANEL group
-#&gt; 1 5 61.5     1     5
-#&gt; 2 4 59.8     1     4
-#&gt; 3 2 56.9     1     2
-#&gt; 
-#&gt; $after_jitter
-#&gt;          x        y PANEL group
-#&gt; 1 4.980507 61.50684     1     5
-#&gt; 2 4.113512 59.77872     1     4
-#&gt; 3 2.083873 56.86655     1     2
-#&gt; </div><div class='input'>
-<span class='va'>jitter_distances</span> <span class='op'>&lt;-</span> <span class='va'>jitter_tracedump</span><span class='op'>[[</span><span class='st'>"before_jitter"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>x</span> <span class='op'>-</span>
-  <span class='va'>jitter_tracedump</span><span class='op'>[[</span><span class='st'>"after_jitter"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>x</span>
-
-<span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>jitter_distances</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] -0.1994971  0.1995346</div><div class='input'><span class='va'>jitter_plot</span><span class='op'>$</span><span class='va'>layers</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>position</span><span class='op'>$</span><span class='va'>width</span>
-</div><div class='output co'>#&gt; [1] 0.2</div><div class='input'>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># One example of an Inspect workflow ----</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>jitter_plot</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>diamonds</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>1000</span>,<span class='op'>]</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>cut</span>, <span class='va'>depth</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span class='r-in'>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span>position <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/position_jitter.html'>position_jitter</a></span><span class='op'>(</span>width <span class='op'>=</span> <span class='fl'>0.2</span>, seed <span class='op'>=</span> <span class='fl'>2021</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>jitter_plot</span></span>
+<span class='r-plt img'><img src='ggtrace-1.png' alt='' width='1094' height='676' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='ggbody.html'>ggbody</a></span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[1]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> `{`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[2]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> trans_x &lt;- if (params$width &gt; 0) function(x) jitter(x, amount = params$width)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[3]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> trans_y &lt;- if (params$height &gt; 0) function(x) jitter(x, amount = params$height)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[4]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x_aes &lt;- intersect(ggplot_global$x_aes, names(data))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[5]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x &lt;- if (length(x_aes) == 0) 0 else data[[x_aes[1]]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[6]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> y_aes &lt;- intersect(ggplot_global$y_aes, names(data))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[7]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> y &lt;- if (length(y_aes) == 0) 0 else data[[y_aes[1]]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[8]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> dummy_data &lt;- new_data_frame(list(x = x, y = y), nrow(data))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[9]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> fixed_jitter &lt;- with_seed_null(params$seed, transform_position(dummy_data, </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     trans_x, trans_y))</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[10]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> x_jit &lt;- fixed_jitter$x - x</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[11]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> y_jit &lt;- fixed_jitter$y - y</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [[12]]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> transform_position(data, function(x) x + x_jit, function(x) x + </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>     y_jit)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## Step 1 ====</span></span>
+<span class='r-in'><span class='co'>## Inspect what `data` look like at the start of the function</span></span>
+<span class='r-in'><span class='fu'>ggtrace</span><span class='op'>(</span><span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>, trace_steps <span class='op'>=</span> <span class='fl'>1</span>, trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> `PositionJitter$compute_layer` now being traced.</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>jitter_plot</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Triggering trace on `PositionJitter$compute_layer`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [Step 01]&gt; head(data)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   x    y PANEL group</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 5 61.5     1     5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 4 59.8     1     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 2 56.9     1     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4 4 62.4     1     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5 2 63.3     1     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6 3 62.8     1     3</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Call `last_ggtrace()` to get the trace dump.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Untracing `PositionJitter$compute_layer` on exit.</span>
+<span class='r-plt img'><img src='ggtrace-2.png' alt='' width='1094' height='676' /></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## Step 2 ====</span></span>
+<span class='r-in'><span class='co'>## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter</span></span>
+<span class='r-in'><span class='co'>## at the beginning of a step, so we can't inspect what happens after the last step is evaluated. To</span></span>
+<span class='r-in'><span class='co'>## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.</span></span>
+<span class='r-in'><span class='co'>## We also set `print_output = FALSE` to disable printing of the output</span></span>
+<span class='r-in'><span class='fu'>ggtrace</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>,</span>
+<span class='r-in'>  trace_steps <span class='op'>=</span> <span class='fl'>12</span>,</span>
+<span class='r-in'>  trace_exprs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>quote</a></span><span class='op'>(</span><span class='op'>~</span><span class='va'>step</span><span class='op'>)</span>, <span class='co'># This is the default if `trace_exprs` is not provided</span></span>
+<span class='r-in'>  print_output <span class='op'>=</span> <span class='cn'>FALSE</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> `PositionJitter$compute_layer` now being traced.</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># We wrap the plot in `ggplotGrob()` and `invisible()` to force</span></span>
+<span class='r-in'><span class='co'># its evaluation while suppressing its rendering</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplotGrob.html'>ggplotGrob</a></span><span class='op'>(</span><span class='va'>jitter_plot</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Triggering trace on `PositionJitter$compute_layer`</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Call `last_ggtrace()` to get the trace dump.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Untracing `PositionJitter$compute_layer` on exit.</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># The output of the evaluated expressions can be inspected with `last_ggtrace()`</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='fu'><a href='last_ggtrace.html'>last_ggtrace</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          x        y PANEL group</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 4.980507 61.50684     1     5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 4.113512 59.77872     1     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 2.083873 56.86655     1     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 4 3.952698 62.42703     1     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 5 2.054530 63.29763     1     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 6 3.080538 62.77536     1     3</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## Step 3 ====</span></span>
+<span class='r-in'><span class='co'>## If we want both to be returned at the same time for an easier comparison, we can pass in a</span></span>
+<span class='r-in'><span class='co'>## (named) list of expressions.</span></span>
+<span class='r-in'><span class='fu'>ggtrace</span><span class='op'>(</span></span>
+<span class='r-in'>  <span class='va'>PositionJitter</span><span class='op'>$</span><span class='va'>compute_layer</span>,</span>
+<span class='r-in'>  trace_steps <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>12</span><span class='op'>)</span>,</span>
+<span class='r-in'>  trace_exprs <span class='op'>=</span> <span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/nse-defuse.html'>exprs</a></span><span class='op'>(</span></span>
+<span class='r-in'>    before_jitter <span class='op'>=</span> <span class='va'>data</span>,</span>
+<span class='r-in'>    after_jitter <span class='op'>=</span> <span class='op'>~</span><span class='va'>step</span></span>
+<span class='r-in'>  <span class='op'>)</span>,</span>
+<span class='r-in'>  verbose <span class='op'>=</span> <span class='cn'>FALSE</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> `PositionJitter$compute_layer` now being traced.</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/invisible.html'>invisible</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplotGrob.html'>ggplotGrob</a></span><span class='op'>(</span><span class='va'>jitter_plot</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Triggering trace on `PositionJitter$compute_layer`</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Untracing `PositionJitter$compute_layer` on exit.</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'>## Step 4 ====</span></span>
+<span class='r-in'><span class='co'>## The output of the evaluated expressions can be inspected with `last_ggtrace()`</span></span>
+<span class='r-in'><span class='va'>jitter_tracedump</span> <span class='op'>&lt;-</span> <span class='fu'><a href='last_ggtrace.html'>last_ggtrace</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>lapply</a></span><span class='op'>(</span><span class='va'>jitter_tracedump</span>, <span class='va'>head</span>, <span class='fl'>3</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $before_jitter</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   x    y PANEL group</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 5 61.5     1     5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 4 59.8     1     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 2 56.9     1     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $after_jitter</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>          x        y PANEL group</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 1 4.980507 61.50684     1     5</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 2 4.113512 59.77872     1     4</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> 3 2.083873 56.86655     1     2</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-in'></span>
+<span class='r-in'><span class='va'>jitter_distances</span> <span class='op'>&lt;-</span> <span class='va'>jitter_tracedump</span><span class='op'>[[</span><span class='st'>"before_jitter"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>x</span> <span class='op'>-</span></span>
+<span class='r-in'>  <span class='va'>jitter_tracedump</span><span class='op'>[[</span><span class='st'>"after_jitter"</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>x</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/range.html'>range</a></span><span class='op'>(</span><span class='va'>jitter_distances</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] -0.1994971  0.1995346</span>
+<span class='r-in'><span class='va'>jitter_plot</span><span class='op'>$</span><span class='va'>layers</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span><span class='op'>$</span><span class='va'>position</span><span class='op'>$</span><span class='va'>width</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] 0.2</span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
