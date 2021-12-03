@@ -7,8 +7,8 @@ authors:
     href: https://yjunechoe.github.io
 
 template:
-  bootstrap: 4
-  bootswatch: materia
+  bootstrap: 5
+  bootswatch: lux
 
 reference:
 - title: Trace and edit
