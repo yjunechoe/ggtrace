@@ -8,7 +8,7 @@ authors:
 
 template:
   bootstrap: 5
-  bootswatch: lux
+  bootswatch: flatly
 
 reference:
 - title: Trace and edit
