@@ -24,6 +24,9 @@
       <ul class="navbar-nav"><li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
+<li class="active nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
@@ -60,8 +63,24 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggtrace-development-version">ggtrace (development version)<a class="anchor" aria-label="anchor" href="#ggtrace-development-version"></a></h2>
+<div class="section level4">
+<h4 id="improvements-development-version"><strong>Improvements</strong><a class="anchor" aria-label="anchor" href="#improvements-development-version"></a></h4>
 <ul><li>Deparsed expressions printed as messages are now wrapped in backticks (<a href="https://github.com/yjunechoe/ggtrace/issues/57" class="external-link">#57</a>)</li>
+<li>
+<code><a href="../reference/ggedit.html">ggedit()</a></code> now only works when <code>isTRUE(interactive())</code>
+</li>
 </ul></div>
+<div class="section level4">
+<h4 id="new-features-development-version"><strong>New Features</strong><a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
+<ul><li>Added <code>global_ggtrace_on/off()</code> which are aliases for <code>global_ggtrace_state(TRUE/FALSE)</code>
+</li>
+</ul></div>
+<div class="section level4">
+<h4 id="miscellaneous-development-version"><strong>Miscellaneous</strong><a class="anchor" aria-label="anchor" href="#miscellaneous-development-version"></a></h4>
+<ul><li>Added <a href="https://yjunechoe.github.io/ggtrace/articles/casestudy-ggxmean.html" class="external-link">exploratory debugging case study vignette</a>
+</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.4" id="ggtrace-044">ggtrace 0.4.4<a class="anchor" aria-label="anchor" href="#ggtrace-044"></a></h2>
 <div class="section level4">

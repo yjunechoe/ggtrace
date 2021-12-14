@@ -35,7 +35,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'   times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
 #'   when the plot has multiple layers which all call the method being traced).
 #'
-#'   When a trace dump is pushed to `global_ggtrace()` upon exiting a trace, it gets named after the ggproto method
+#'   - When a trace dump is pushed to `global_ggtrace()` upon exiting a trace, it gets named after the ggproto method
 #'   and a hex code identifying the method's runtime environment, e.g. `"Stat$compute_layer-00000267437FD3D8"`.
 #'
 #'   - `clear_global_ggtrace()` sets the value of `global_ggtrace()` to `NULL` and returns `NULL`.

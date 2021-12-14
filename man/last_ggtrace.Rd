@@ -6,6 +6,8 @@
 \alias{global_ggtrace}
 \alias{clear_global_ggtrace}
 \alias{global_ggtrace_state}
+\alias{global_ggtrace_on}
+\alias{global_ggtrace_off}
 \title{Retrieve the trace dump created by \code{ggtrace()}}
 \usage{
 last_ggtrace()
@@ -17,6 +19,10 @@ global_ggtrace()
 clear_global_ggtrace()
 
 global_ggtrace_state(state)
+
+global_ggtrace_on()
+
+global_ggtrace_off()
 }
 \arguments{
 \item{state}{If missing, returns whether the global tracedump is currently active.
@@ -43,12 +49,12 @@ the trace has been triggered.
 for use with \code{ggtrace(once = FALSE)} when you expect a trace to be independently triggered multiple
 times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
 when the plot has multiple layers which all call the method being traced).
-}
-
-When a trace dump is pushed to \code{global_ggtrace()} upon exiting a trace, it gets named after the ggproto method
+\item When a trace dump is pushed to \code{global_ggtrace()} upon exiting a trace, it gets named after the ggproto method
 and a hex code identifying the method's runtime environment, e.g. \code{"Stat$compute_layer-00000267437FD3D8"}.
-\itemize{
-\item \code{clear_global_ggtrace()} sets the value of \code{global_ggtrace()} to \code{NULL} and returns it.
+\item \code{clear_global_ggtrace()} sets the value of \code{global_ggtrace()} to \code{NULL} and returns \code{NULL}.
+\item Inspect the state of the global trace dump with \code{global_ggtrace_state()} and activate or deactivate
+it with \code{global_ggtrace_on()} and \code{global_ggtrace_off()}, which are aliases of \code{global_ggtrace_state(TRUE)}
+and \code{global_ggtrace_state(FALSE)}, respectively.
 }
 }
 \examples{

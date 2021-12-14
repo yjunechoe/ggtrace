@@ -46,7 +46,7 @@ articles:
 navbar:
   structure:
     left: []
-    right: [reference, articles, github]
+    right: [reference, news, articles, github]
 
 figures:
   dev: ragg::agg_png

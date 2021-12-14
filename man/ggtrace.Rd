@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggtrace.R
 \name{ggtrace}
 \alias{ggtrace}
-\title{Programmatically debug and modify ggproto methods with trace}
+\title{Programmatically inspect, debug, and modify functions and methods}
 \usage{
 ggtrace(
   method,
@@ -47,7 +47,7 @@ active until \code{gguntrace()} is called on the method. Defaults to \code{TRUE}
 meaning that \code{verbose = FALSE} also triggers the effect of \code{print_output = FALSE} by consequence.}
 }
 \description{
-Programmatically debug and modify ggproto methods with trace
+Programmatically inspect, debug, and modify functions and methods
 }
 \details{
 \code{ggtrace()} is a wrapper around \code{base::trace()} which is called on the ggproto method.

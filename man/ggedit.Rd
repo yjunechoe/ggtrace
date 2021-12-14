@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggedit.R
 \name{ggedit}
 \alias{ggedit}
-\title{Interactively edit the source code of a ggproto method}
+\title{Interactively edit the source code of a function or method}
 \usage{
 ggedit(method, remove_trace = FALSE, ...)
 }
@@ -20,13 +20,15 @@ The ggproto method may be specified using any of the following forms:
 \item{...}{Unused, for extensibility.}
 }
 \description{
-Interactively edit the source code of a ggproto method
+Interactively edit the source code of a function or method
 }
 \details{
 Like \code{base::trace()}, the edit is in effect until \code{gguntrace()} is called.
 Changes with \code{ggedit()} are cumulative, so \code{ggedit()} will inform you via a warning
 if you're making an edit on top of an existing edit. Call \code{gguntrace()} on the object
 first if you'd like to edit the method's original unaltered source code.
+
+Only works in interactive contexts.
 }
 \section{Gotchas}{
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggbody.R
 \name{ggbody}
 \alias{ggbody}
-\title{Retrieve the body of a ggproto method as a list}
+\title{Retrieve the body of a function or a method as a list}
 \usage{
 ggbody(method, inherit = FALSE)
 }
@@ -22,7 +22,7 @@ If \code{TRUE}, returns the parent's method and the corresponding \code{ggbody()
 A list
 }
 \description{
-Retrieve the body of a ggproto method as a list
+Retrieve the body of a function or a method as a list
 }
 \details{
 \code{ggbody()} calls \code{as.list(body(get("method", ggproto)))} under the hood.

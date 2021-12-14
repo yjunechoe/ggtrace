@@ -19,3 +19,11 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(ggtrace)
 ```
+
+Slides from ggplot internals / {ggtrace} talk on December 4th 2021:
+
+```{r echo = FALSE}
+xaringanExtra::embed_xaringan("https://yjunechoe.github.io/ggtrace-talk")
+```
+
+[https://yjunechoe.github.io/ggtrace-talk](https://yjunechoe.github.io/ggtrace-talk)

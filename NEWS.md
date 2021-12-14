@@ -1,6 +1,17 @@
 # ggtrace (development version)
 
+### **Improvements**
+
 - Deparsed expressions printed as messages are now wrapped in backticks (#57)
+- `ggedit()` now only works when `isTRUE(interactive())`
+
+### **New Features**
+
+- Added `global_ggtrace_on/off()` which are aliases for `global_ggtrace_state(TRUE/FALSE)`
+
+### **Miscellaneous**
+
+- Added [exploratory debugging case study vignette](https://yjunechoe.github.io/ggtrace/articles/casestudy-ggxmean.html)
 
 # ggtrace 0.4.4
 
