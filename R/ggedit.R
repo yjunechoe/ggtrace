@@ -1,6 +1,5 @@
-#' Interactively edit the source code of a ggproto method
+#' Interactively edit the source code of a function or method
 #'
-#' @inheritParams ggtrace
 #' @inheritParams ggtrace
 #' @param remove_trace Whether to edit from a clean slate. Defaults to `FALSE`.
 #'
@@ -8,6 +7,8 @@
 #'   Changes with `ggedit()` are cumulative, so `ggedit()` will inform you via a warning
 #'   if you're making an edit on top of an existing edit. Call `gguntrace()` on the object
 #'   first if you'd like to edit the method's original unaltered source code.
+#'
+#'   Only works in interactive contexts.
 #'
 #' @section Gotchas:
 #'
@@ -45,23 +46,26 @@
 #' }
 ggedit <- function(method, remove_trace = FALSE, ...) {
 
-  # Capture method expression
-  method_quo <- rlang::enquo(method)
+  if (interactive()) {
+    # Capture method expression
+    method_quo <- rlang::enquo(method)
 
-  # Resolve formatting and dump vars
-  method_info <- resolve_formatting(method_quo, remove_trace = FALSE)
-  what <- method_info$what
-  where <- method_info$where
-  method_body <- method_info$method_body
-  formatted_call <- method_info$formatted_call
-  traced <- method_info$traced
+    # Resolve formatting and dump vars
+    method_info <- resolve_formatting(method_quo, remove_trace = FALSE)
+    what <- method_info$what
+    where <- method_info$where
+    method_body <- method_info$method_body
+    formatted_call <- method_info$formatted_call
+    traced <- method_info$traced
 
-  # Inform if editing on top of existing trace
-  if (traced && !remove_trace) { message("Editing on top of existing trace...") }
+    # Inform if editing on top of existing trace
+    if (traced && !remove_trace) { message("Editing on top of existing trace...") }
 
-  suppressMessages(trace(what = what, where = where, edit = TRUE))
-  message("Creating a persistent trace on `", formatted_call, "`",
-          "\nCall `gguntrace(", formatted_call,  ")` to untrace")
-  invisible(NULL)
+    suppressMessages(trace(what = what, where = where, edit = TRUE))
+    message("Creating a persistent trace on `", formatted_call, "`",
+            "\nCall `gguntrace(", formatted_call,  ")` to untrace")
+    invisible(NULL)
+  }
+
 }
 

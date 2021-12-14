@@ -1,4 +1,4 @@
-#' Retrieve the body of a ggproto method as a list
+#' Retrieve the body of a function or a method as a list
 #'
 #' @param method A function or a ggproto method.
 #'   The ggproto method may be specified using any of the following forms:

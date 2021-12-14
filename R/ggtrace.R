@@ -1,4 +1,4 @@
-#' Programmatically debug and modify ggproto methods with trace
+#' Programmatically inspect, debug, and modify functions and methods
 #'
 #' @inheritParams ggbody
 #' @param trace_steps A sorted numeric vector of positions in the method's body to trace. Negative indices
