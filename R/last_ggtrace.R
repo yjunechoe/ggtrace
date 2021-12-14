@@ -38,7 +38,11 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'   When a trace dump is pushed to `global_ggtrace()` upon exiting a trace, it gets named after the ggproto method
 #'   and a hex code identifying the method's runtime environment, e.g. `"Stat$compute_layer-00000267437FD3D8"`.
 #'
-#'   - `clear_global_ggtrace()` sets the value of `global_ggtrace()` to `NULL` and returns it.
+#'   - `clear_global_ggtrace()` sets the value of `global_ggtrace()` to `NULL` and returns `NULL`.
+#'
+#'   - Inspect the state of the global trace dump with `global_ggtrace_state()` and activate or deactivate
+#'   it with `global_ggtrace_on()` and `global_ggtrace_off()`, which are aliases of `global_ggtrace_state(TRUE)`
+#'   and `global_ggtrace_state(FALSE)`, respectively.
 #'
 #' @seealso [ggtrace()], [gguntrace()]
 #'
@@ -145,4 +149,15 @@ global_ggtrace_state <- function(state) {
   } else {
     .ggtrace_storage$get_state()
   }
+}
+
+#' @export
+#' @rdname last_ggtrace
+global_ggtrace_on <- function() {
+  global_ggtrace_state(TRUE)
+}
+#' @export
+#' @rdname last_ggtrace
+global_ggtrace_off <- function() {
+  global_ggtrace_state(FALSE)
 }
