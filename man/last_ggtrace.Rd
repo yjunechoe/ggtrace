@@ -83,7 +83,7 @@ head(last_ggtrace()[[1]])
 # Inspect an accumulation of trace dumps
 
 global_ggtrace_state() # global tracedump is inactive by default since v0.4.3
-global_ggtrace_state(TRUE)
+global_ggtrace_on()    # alias for global_ggtrace_state(TRUE)
 clear_global_ggtrace()
 
 ggtrace(
@@ -112,7 +112,7 @@ patchwork::wrap_plots(boxplot_group_tracedump, nrow = 1)
 clear_global_ggtrace()
 global_ggtrace()
 
-global_ggtrace_state(FALSE)
+global_ggtrace_off() # alias for global_ggtrace_state(FALSE)
 
 }
 \seealso{

@@ -670,7 +670,7 @@ devtools::dev_mode(on = FALSE)
 devtools::package_info("ggxmean", FALSE, FALSE)$source
 ```
 
-Finally, since this vignette covered a real-world debugging scenario, the solution has been [submitted as a PR]()!
+Finally, since this vignette covered a real-world debugging scenario, the solution has been [submitted as a PR](https://github.com/EvaMaeRey/ggxmean/pull/4)!
 
 Many thanks to Gina for allowing me to use {ggxmean} as a case study for exploratory debugging with {ggtrace}!
 

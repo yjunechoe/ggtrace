@@ -76,7 +76,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #' # Inspect an accumulation of trace dumps
 #'
 #' global_ggtrace_state() # global tracedump is inactive by default since v0.4.3
-#' global_ggtrace_state(TRUE)
+#' global_ggtrace_on()    # alias for global_ggtrace_state(TRUE)
 #' clear_global_ggtrace()
 #'
 #' ggtrace(
@@ -105,7 +105,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #' clear_global_ggtrace()
 #' global_ggtrace()
 #'
-#' global_ggtrace_state(FALSE)
+#' global_ggtrace_off() # alias for global_ggtrace_state(FALSE)
 #'
 last_ggtrace <- function() .ggtrace_storage$get_last()
 

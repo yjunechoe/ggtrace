@@ -1,19 +1,21 @@
 # ggtrace (development version)
 
+## ggtrace 0.4.5
+
 ### **Improvements**
 
 - Deparsed expressions printed as messages are now wrapped in backticks (#57)
-- `ggedit()` now only works when `isTRUE(interactive())`
+- `ggedit()` now only works when `isTRUE(interactive())` (#62)
 
 ### **New Features**
 
-- Added `global_ggtrace_on/off()` which are aliases for `global_ggtrace_state(TRUE/FALSE)`
+- Added `global_ggtrace_on/off()` which are aliases for `global_ggtrace_state(TRUE/FALSE)` (#63)
 
 ### **Miscellaneous**
 
 - Added [exploratory debugging case study vignette](https://yjunechoe.github.io/ggtrace/articles/casestudy-ggxmean.html)
 
-# ggtrace 0.4.4
+## ggtrace 0.4.4
 
 ### **Improvements**
 
@@ -28,7 +30,7 @@
 
 - Added [FAQ vignette](https://yjunechoe.github.io/ggtrace/articles/FAQ.html)
 
-# ggtrace 0.4.3
+## ggtrace 0.4.3
 
 ### **Breaking changes**
 
@@ -38,19 +40,19 @@
 
 - Improved messages for `global_ggtrace_state()`
 
-# ggtrace 0.4.2
+## ggtrace 0.4.2
 
 ### **Bug Fixes**
 
 - Fixed bug where `print_output = TRUE` would evaluate the expression twice (problematic for Inject workflows and causing general slowdowns)
 
-# ggtrace 0.4.1
+## ggtrace 0.4.1
 
 ### **New Features**
 
 - Global collection of tracedumps can be turned on/off with `global_ggtrace_state()`. It is still active by default but should memory become a concern, it can be turned off with `global_ggtrace_state(state = FALSE)`.
 
-# ggtrace 0.4.0
+## ggtrace 0.4.0
 
 ### **New Features**
 
@@ -66,13 +68,13 @@
 
 - Fix bug where `ggtrace()` fails to evaluate the first line when it's the only reachable line (#44)
 
-# ggtrace 0.3.7
+## ggtrace 0.3.7
 
 ### **Bug Fixes**
 
 - Fixed bug where incomplete traces due to early returns would not be logged without any special warning. `ggtrace()` now throws a warning when the actual number of traced steps does not match the expected number of traced steps (i.e., length of `trace_steps`) and logs incomplete tracedumps (#44)
 
-# ggtrace 0.3.6
+## ggtrace 0.3.6
 
 ### **Improvements**
 
@@ -82,7 +84,7 @@
 
 - Fixed bug where `trace_exprs` evaluating to `NULL` would be removed from the tracedump (#38)
 
-# ggtrace 0.3.5
+## ggtrace 0.3.5
 
 ### **New features**
 
@@ -102,7 +104,7 @@
 
 - Fixed bug where `ggtrace()` wouldn't loop over `trace_exprs` after the first time it's triggered with persistent tracing on (`once = TRUE`). Issue was due to failing to reset the internal counter after each time the trace is triggered.
 
-# ggtrace 0.3.4
+## ggtrace 0.3.4
 
 ### **Breaking changes**
 
@@ -130,7 +132,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - `ggtrace()` correctly throws an error when `trace_steps` is not ordered. This is checked after the negative index conversion, so something like `trace_steps = c(1, -1)` still works fine).
 
-# ggtrace 0.3.3
+## ggtrace 0.3.3
 
 ### **New features**
 
@@ -148,7 +150,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - Fixed a bug where the number of expressions passed to `trace_exprs` were allowed to be different from the number of `trace_steps`, causing `ggtrace()` to silently fail. This now throws an error.
 
-# ggtrace 0.3.2
+## ggtrace 0.3.2
 
 ### **Improvements**
 
@@ -162,7 +164,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - No longer errors on exit when creating a persistence trace with `once = FALSE`
 
-# ggtrace 0.3.1
+## ggtrace 0.3.1
 
 ### **Improvements**
 
@@ -187,7 +189,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - Standardization of messages printed by all `{ggtrace}` functions. Messages are now more informative and refer to the ggproto method in the callable format `ggproto$method`.
 
-# ggtrace 0.3.0
+## ggtrace 0.3.0
 
 ### **Breaking changes**
 
@@ -215,7 +217,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - Internal variable `.store` renamed to `.ggtrace_storage` to prevent overriding `ggplot2::.store` (#18)
 
-# ggtrace 0.2.0
+## ggtrace 0.2.0
 
 ### **Breaking changes**
 
@@ -237,7 +239,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - Documentation for some of the functions now contain a **Gotchas** section for explanations of / solutions to common problems (#10)
 
-# ggtrace 0.1.2
+## ggtrace 0.1.2
 
 ### **New features**
 
@@ -249,7 +251,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - Fix bug in `ggtrace()` where `step_deparsed` was being returned as a multi-length vector
 
-# ggtrace 0.1.1
+## ggtrace 0.1.1
 
 ### **New features**
 - New function [`ggedit()`](https://yjunechoe.github.io/ggtrace/reference/ggedit.html) for interactive debugging via directly editing the source code.
@@ -260,7 +262,7 @@ Several options for finer control over printing and formatting of output from `g
 
 - Significant re-write to the readme / documentation
 
-# ggtrace 0.1.0
+## ggtrace 0.1.0
 
 Initial release
 
