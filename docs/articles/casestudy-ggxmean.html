@@ -87,31 +87,80 @@
 
     
     
-<p>This vignette is a detailed walk-through of an <strong>exploratory debugging workflow</strong> with {ggtrace}, using a <a href="https://github.com/EvaMaeRey/ggxmean/issues/1" class="external-link">Github issue</a> opened on the <a href="https://github.com/EvaMaeRey/ggxmean" class="external-link"><code>{ggxmean}</code></a> package by <a href="https://twitter.com/EvaMaeRey" class="external-link">Gina Reynolds</a>.</p>
-<div class="section level1">
-<h1 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
-</h1>
+<p>This vignette is a detailed walk-through of an <strong>exploratory debugging workflow</strong> with {ggtrace}, using a <a href="https://github.com/EvaMaeRey/ggxmean/issues/1" class="external-link">Github issue</a> opened on the <a href="https://github.com/EvaMaeRey/ggxmean" class="external-link"><code>{ggxmean}</code></a> package by <a href="https://twitter.com/EvaMaeRey" class="external-link">Gina Reynolds</a>. We define “exploratory debugging” here as the process of simultaneous learning and developing - it assumes very minimal prior knowledge about ggplot internals.</p>
+<div class="section level2">
+<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_minimal</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>If you would like to follow along, you can install the version of the {ggxmean} package containing the bug that this vignette will address:</p>
+<p>If you would like to follow along, you can install the version of the {ggxmean} package containing the bug that this vignette will address. We use <code><a href="https://devtools.r-lib.org/reference/dev_mode.html" class="external-link">devtools::dev_mode()</a></code> here to install and inspect this version of {ggxmean} in development mode (except I skip installation here because I already have that version in my dev director).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"EvaMaeRey/ggxmean@cbb909cee7d4f0a4395722020a75330641e5f54c"</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># Current installation version</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
+<span class="co">#&gt; [1] "Github (EvaMaeRey/ggxmean@909e304)"</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span>
+<span class="co">#&gt; Loading required package: usethis</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/dev_mode.html" class="external-link">dev_mode</a></span><span class="op">(</span>on <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #00BB00;">v</span> Dev mode: ON</span>
+<span class="co"># devtools::install_github("EvaMaeRey/ggxmean@cbb909c")</span>
+<span class="co"># Prior version in dev mode</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
+<span class="co">#&gt; [1] "Github (EvaMaeRey/ggxmean@cbb909c)"</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ggxmean</span><span class="op">)</span></code></pre></div>
+<p>I’ve also attached the code relevant to the issue at hand here, if you would like to familiarize yourself with it before we begin.</p>
+<details><summary>
+Relevant code from {ggxmean}
+</summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># https://github.com/EvaMaeRey/ggxmean/blob/cbb909cee7d4f0a4395722020a75330641e5f54c/R/geom_x_line.R </span>
+<span class="va">GeomXline</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggproto.html" class="external-link">ggproto</a></span><span class="op">(</span><span class="st">"GeomXline"</span>, <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">Geom</a></span>,
+                     draw_panel <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">panel_params</span>, <span class="va">coord</span><span class="op">)</span> <span class="op">{</span>
+                       <span class="va">ranges</span> <span class="op">&lt;-</span> <span class="va">coord</span><span class="op">$</span><span class="fu">backtransform_range</span><span class="op">(</span><span class="va">panel_params</span><span class="op">)</span>
+                       <span class="va">data</span><span class="op">$</span><span class="va">x</span>    <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">x</span>
+                       <span class="va">data</span><span class="op">$</span><span class="va">xend</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">x</span>
+                       <span class="va">data</span><span class="op">$</span><span class="va">y</span>    <span class="op">&lt;-</span> <span class="va">ranges</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
+                       <span class="va">data</span><span class="op">$</span><span class="va">yend</span> <span class="op">&lt;-</span> <span class="va">ranges</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>
+                       <span class="va">GeomSegment</span><span class="op">$</span><span class="fu">draw_panel</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>, <span class="va">panel_params</span>, <span class="va">coord</span><span class="op">)</span>
+                     <span class="op">}</span>,
+                     default_aes <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"black"</span>, size <span class="op">=</span> <span class="fl">0.5</span>,
+                                       linetype <span class="op">=</span> <span class="fl">1</span>, alpha <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>,
+                     required_aes <span class="op">=</span> <span class="st">"x"</span>,
+                     draw_key <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/draw_key.html" class="external-link">draw_key_vline</a></span>
+<span class="op">)</span>
+
+<span class="co"># https://github.com/EvaMaeRey/ggxmean/blob/cbb909cee7d4f0a4395722020a75330641e5f54c/R/geom_x_mean.R</span>
+<span class="va">StatXmean</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggproto.html" class="external-link">ggproto</a></span><span class="op">(</span><span class="st">"StatXmean"</span>,
+                              <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">Stat</a></span>,
+                              compute_group <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">scales</span><span class="op">)</span> <span class="op">{</span>
+                                <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
+                              <span class="op">}</span>,
+                              required_aes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">geom_x_mean</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">mapping</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">data</span> <span class="op">=</span> <span class="cn">NULL</span>,
+                        <span class="va">position</span> <span class="op">=</span> <span class="st">"identity"</span>, <span class="va">na.rm</span> <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">show.legend</span> <span class="op">=</span> <span class="cn">NA</span>,
+                        <span class="va">inherit.aes</span> <span class="op">=</span> <span class="cn">TRUE</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span>
+  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer</a></span><span class="op">(</span>
+    stat <span class="op">=</span> <span class="va">StatXmean</span>, geom <span class="op">=</span> <span class="va">GeomXline</span>, data <span class="op">=</span> <span class="va">data</span>, mapping <span class="op">=</span> <span class="va">mapping</span>,
+    position <span class="op">=</span> <span class="va">position</span>, show.legend <span class="op">=</span> <span class="va">show.legend</span>, inherit.aes <span class="op">=</span> <span class="va">inherit.aes</span>,
+    params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>na.rm <span class="op">=</span> <span class="va">na.rm</span>, <span class="va">...</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</details>
 </div>
-<div class="section level1">
-<h1 id="the-issue">The issue<a class="anchor" aria-label="anchor" href="#the-issue"></a>
-</h1>
+<div class="section level2">
+<h2 id="the-issue">The issue<a class="anchor" aria-label="anchor" href="#the-issue"></a>
+</h2>
 <p>{ggxmean} is a {ggplot2} extension package that offers many features, including the layer <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> which can be used to draw a line at the mean value of the variable represented by the x-axis.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-4-1.png" width="1093.75"></p>
 <p><code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> works smoothly with groups and facets, as we might expect from our experience with ggplot.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span>, group <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -119,25 +168,24 @@
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-5-1.png" width="1093.75"></p>
 <p>However, something somewhat unexpected happens when we pass map a discrete variable to an aesthetic that is not understandable by <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code>. Despite the fact that the lines do not understand the <code>fill</code> aesthetic, the aesthetic mapping of <code>fill = drv</code> nevertheless <em>highjacks</em> the calculation of grouping for <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code></p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span>, fill <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-6-1.png" width="1093.75"></p>
-</div>
-<div class="section level1">
-<h1 id="making-a-reprex">Making a reprex<a class="anchor" aria-label="anchor" href="#making-a-reprex"></a>
-</h1>
+<div class="section level3">
+<h3 id="making-a-reprex">Making a reprex<a class="anchor" aria-label="anchor" href="#making-a-reprex"></a>
+</h3>
 <p>To isolate the problem, let’s remove <code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram()</a></code> from the examples.</p>
-<p>Here is a <a href="https://reprex.tidyverse.org/" class="external-link">reprex</a> (reproducible example) of the issue:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<p>Here is a minimal <a href="https://reprex.tidyverse.org/" class="external-link">reprex</a> (reproducible example) of the issue:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span>, fill <span class="op">=</span> <span class="va">drv</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-7-1.png" width="1093.75"></p>
 <p>We can pinpoint and formalize the issue with the help of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data()</a></code>. We see that in both our expected <code>group = drv</code> and unexpected <code>fill = drv</code> cases, we end up with three unique groups (lines) as indicated by the values in the <code>group</code> column.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span>
@@ -151,38 +199,62 @@
 <span class="co">#&gt; 1 #F8766D 19.17476     1     1  black  0.5        1    NA</span>
 <span class="co">#&gt; 2 #00BA38 28.16038     1     2  black  0.5        1    NA</span>
 <span class="co">#&gt; 3 #619CFF 21.00000     1     3  black  0.5        1    NA</span></code></pre></div>
-<p>Here are some more examples to the point:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Expected cases</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
-<span class="co">#&gt; [1] 1 2 3</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
-<span class="co">#&gt; [1] 1 2 3</span>
-
-<span class="co"># Unexpected cases</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>             <span class="co"># Expected: 1 group</span>
-<span class="co">#&gt; [1] 1 2 3</span>
-<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>  <span class="co"># Expected: 3 groups for `drv`</span>
+</div>
+<div class="section level3">
+<h3 id="expected-cases">Expected cases<a class="anchor" aria-label="anchor" href="#expected-cases"></a>
+</h3>
+<p>Here, we correctly get groups for each category of <code>drv</code> because lines understand the <code>color</code> aesthetic.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-9-1.png" width="1093.75"></p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
+<span class="co">#&gt; [1] 1 2 3</span></code></pre></div>
+<p>We also correctly get groups for each category of <code>drv</code> when we set the <code>group</code> aesthetic explicitly.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-10-1.png" width="1093.75"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
+<span class="co">#&gt; [1] 1 2 3</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="unexpected-cases">Unexpected cases<a class="anchor" aria-label="anchor" href="#unexpected-cases"></a>
+</h3>
+<p>Here, we’d only like there to be 1 group/line because lines don’t understand the <code>shape</code> aesthetic</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-11-1.png" width="1093.75"></p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
+<span class="co">#&gt; [1] 1 2 3</span></code></pre></div>
+<p>Here, we’d only like there to be 3 groups for <code>drv</code> mapped to <code>color</code>. Categories in the <code>fl</code> variable should not interact with <code>drv</code> in the creation of the groups because liens don’t understand the <code>fill</code> aesthetic.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-12-1.png" width="1093.75"></p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
 <span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12</span></code></pre></div>
+</div>
 </div>
 <div class="section level1">
 <h1 id="debugging-the-issue-with-ggtrace">Debugging the issue with {ggtrace}<a class="anchor" aria-label="anchor" href="#debugging-the-issue-with-ggtrace"></a>
 </h1>
 <div class="section level2">
-<h2 id="step-1---locating-where-group-is-assigned">Step 1 - Locating where <code>group</code> is assigned<a class="anchor" aria-label="anchor" href="#step-1---locating-where-group-is-assigned"></a>
+<h2 id="step-1---locating-the-problem">Step 1 - Locating the problem<a class="anchor" aria-label="anchor" href="#step-1---locating-the-problem"></a>
 </h2>
-<p>As our very first step, let’s see where the groups are being calculated and added to the data by inspecting <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>, the <a href="https://ggplot2-book.org/internals.html#ggplotbuild" class="external-link">main engine behind ggplot</a>.</p>
-<p>If this is your first exposure to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>, you just need to know that its output is basically what’s returned by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data()</a></code> that we demoed above.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<p>As our very first step, let’s see where the groups are being calculated and added to the data by inspecting <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>, the <a href="https://ggplot2-book.org/internals.html#ggplotbuild" class="external-link">main engine behind ggplot</a>. For exploratory debugging of ggplot internals, inspecting the data transformation pipeline in <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> is often the best place to start.</p>
+<p>If this is your first exposure to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>, you just need to know that its output is basically what’s returned by the <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data()</a></code> function that we demoed above.</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">layer_data</span>
 <span class="co">#&gt; function (plot, i = 1L) </span>
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     ggplot_build(plot)$data[[i]]</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x0000000016f48fa8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x000000002010e2d8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></code></pre></div>
-<p>We use <code><a href="../reference/ggbody.html">ggbody()</a></code> function from {ggtrace} to grab the body of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> as a list, and pick out the steps where the data gets transformed.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<p>We use <code><a href="../reference/ggbody.html">ggbody()</a></code> function from {ggtrace} to grab the body of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> as a list, and, with some metaprogramming with <a href="https://rlang.r-lib.org" class="external-link">rlang</a>, pick out the steps where the data gets transformed. Note that the syntax <code>ggplot2:::ggplot_build.ggplot</code> reflects the fact that <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> is an S3 generic defined for the class <code>&lt;&lt;ggplot&gt;&gt;</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">build_pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span>
 <span class="va">data_assigns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">build_pipeline</span>,
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
@@ -192,10 +264,124 @@
       <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/call_args.html" class="external-link">call_args</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">==</span> <span class="st">"data"</span>
   <span class="op">}</span>
 <span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">data_assigns</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">data_assigns</span><span class="op">)</span> <span class="co"># Steps of the build pipeline where data is transformed</span>
 <span class="co">#&gt;  [1]  8  9 11 12 13 17 18 19 21 22 26 29 30 31</span></code></pre></div>
-<p>After each data transformation step (steps <code>+ 1L</code>), let’s log the data for the first (and only) layer of our reprex plot.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p>You can inspect the source code for <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> on the <a href="https://github.com/tidyverse/ggplot2/blob/c89c265a57fd71f8a0288ce81037296aadc0a012/R/plot-build.r#L28-L115" class="external-link">ggplot2 Github repo</a>, and the output of <code>ggbody(ggplot2:::ggplot_build.ggplot)</code> is also available below:</p>
+<details><summary>
+Body of <code>ggplot_build()</code>
+</summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; `{`</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; plot &lt;- plot_clone(plot)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; if (length(plot$layers) == 0) {</span>
+<span class="co">#&gt;     plot &lt;- plot + geom_blank()</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; layers &lt;- plot$layers</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt; layer_data &lt;- lapply(layers, function(y) y$layer_data(plot$data))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt; scales &lt;- plot$scales</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt; by_layer &lt;- function(f) {</span>
+<span class="co">#&gt;     out &lt;- vector("list", length(data))</span>
+<span class="co">#&gt;     for (i in seq_along(data)) {</span>
+<span class="co">#&gt;         out[[i]] &lt;- f(l = layers[[i]], d = data[[i]])</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     out</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt; data &lt;- layer_data</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[9]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$setup_layer(d, plot))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[10]]</span>
+<span class="co">#&gt; layout &lt;- create_layout(plot$facet, plot$coordinates)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[11]]</span>
+<span class="co">#&gt; data &lt;- layout$setup(data, plot$data, plot$plot_env)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[12]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_aesthetics(d, plot))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[13]]</span>
+<span class="co">#&gt; data &lt;- lapply(data, scales_transform_df, scales = scales)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[14]]</span>
+<span class="co">#&gt; scale_x &lt;- function() scales$get_scales("x")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[15]]</span>
+<span class="co">#&gt; scale_y &lt;- function() scales$get_scales("y")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[16]]</span>
+<span class="co">#&gt; layout$train_position(data, scale_x(), scale_y())</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[17]]</span>
+<span class="co">#&gt; data &lt;- layout$map_position(data)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[18]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_statistic(d, layout))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[19]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$map_statistic(d, plot))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[20]]</span>
+<span class="co">#&gt; scales_add_missing(plot, c("x", "y"), plot$plot_env)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[21]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_geom_1(d))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[22]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_position(d, layout))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[23]]</span>
+<span class="co">#&gt; layout$reset_scales()</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[24]]</span>
+<span class="co">#&gt; layout$train_position(data, scale_x(), scale_y())</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[25]]</span>
+<span class="co">#&gt; layout$setup_panel_params()</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[26]]</span>
+<span class="co">#&gt; data &lt;- layout$map_position(data)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[27]]</span>
+<span class="co">#&gt; npscales &lt;- scales$non_position_scales()</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[28]]</span>
+<span class="co">#&gt; if (npscales$n() &gt; 0) {</span>
+<span class="co">#&gt;     lapply(data, scales_train_df, scales = npscales)</span>
+<span class="co">#&gt;     data &lt;- lapply(data, scales_map_df, scales = npscales)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[29]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_geom_2(d))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[30]]</span>
+<span class="co">#&gt; data &lt;- by_layer(function(l, d) l$finish_statistics(d))</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[31]]</span>
+<span class="co">#&gt; data &lt;- layout$finish_data(data)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[32]]</span>
+<span class="co">#&gt; plot$labels$alt &lt;- get_alt_text(plot)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[33]]</span>
+<span class="co">#&gt; structure(list(data = data, layout = layout, plot = plot), class = "ggplot_built")</span></code></pre></div>
+</details><p>After each data transformation step (steps <code>+ 1L</code>), let’s log the data for the first (and only) layer of our reprex plot.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>,
   trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">data_assigns</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span>, <span class="co"># After each data transformation step ...</span>
@@ -210,20 +396,336 @@
 <span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span>
 
 <span class="va">tracedump1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>Here, <code>tracedump1</code> is a list of what <code>data</code> looked like after each data-transformation step inside <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>. We can now map over every element of the list to see where the <code>group</code> column was first present.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<p>Here, <code>tracedump1</code> is a list of what <code>data</code> looked like after each data-transformation step inside <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>. It’s a list of data frames and there’s a lot here, but here’s what it looks like after it’s been cleaned up with <code><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">tibble::as_tibble()</a></code></p>
+<details><summary>
+The evaluated trace expressions captured by <code>last_ggtrace()</code>
+</summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump1</span>, <span class="fu">tibble</span><span class="fu">::</span><span class="va"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 11</span></span>
+<span class="co">#&gt;    manufacturer model      displ  year   cyl trans drv     cty   hwy fl    class</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ f        18    29 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ f        21    29 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu~ f        20    31 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto~ f        21    30 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto~ f        16    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu~ f        18    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto~ f        18    27 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ 4        18    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ 4        16    25 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu~ 4        20    28 p     comp~</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 11</span></span>
+<span class="co">#&gt;    manufacturer model      displ  year   cyl trans drv     cty   hwy fl    class</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ f        18    29 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ f        21    29 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu~ f        20    31 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto~ f        21    30 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto~ f        16    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu~ f        18    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto~ f        18    27 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ 4        18    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ 4        16    25 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu~ 4        20    28 p     comp~</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 12</span></span>
+<span class="co">#&gt;    manufacturer model      displ  year   cyl trans drv     cty   hwy fl    class</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ f        18    29 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ f        21    29 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu~ f        20    31 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto~ f        21    30 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto~ f        16    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu~ f        18    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto~ f        18    27 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ 4        18    26 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ 4        16    25 p     comp~</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu~ 4        20    28 p     comp~</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows, and 1 more variable: PANEL &lt;fct&gt;</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt;    fill      x PANEL group</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> f        31 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> f        30 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> f        27 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt;    fill      x PANEL group</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> f        31 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> f        30 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> f        27 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt;    fill      x PANEL group</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> f        31 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> f        30 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> f        27 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt;       x fill  PANEL group</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  28.2 f     1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt;       x fill  PANEL group</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  28.2 f     1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[9]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt;       x fill  PANEL group</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  28.2 f     1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[10]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt;       x fill  PANEL group</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  28.2 f     1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[11]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt;       x fill  PANEL group</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>  28.2 f     1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[12]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 8</span></span>
+<span class="co">#&gt;   fill        x PANEL group colour  size linetype alpha</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> #F8766D  19.2 1         1 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> #00BA38  28.2 1         2 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> #619CFF  21   1         3 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[13]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 8</span></span>
+<span class="co">#&gt;   fill        x PANEL group colour  size linetype alpha</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> #F8766D  19.2 1         1 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> #00BA38  28.2 1         2 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> #619CFF  21   1         3 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[14]]</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 8</span></span>
+<span class="co">#&gt;   fill        x PANEL group colour  size linetype alpha</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> #F8766D  19.2 1         1 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> #00BA38  28.2 1         2 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> #619CFF  21   1         3 black    0.5        1 <span style="color: #BB0000;">NA</span></span></code></pre></div>
+</details><p>We can now map over every element of the list to see where the <code>group</code> column was first present.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">group_present1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">tracedump1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
   <span class="st">"group"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
-<p>Step 12 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> seems to be where <code>group</code> is computed and assigned</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<span class="op">}</span><span class="op">)</span>
+<span class="va">group_present1</span>
+<span class="co">#&gt;  [1] FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</span>
+<span class="co">#&gt; [13]  TRUE  TRUE</span></code></pre></div>
+<p>Step 12 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> is where <code>group</code> first appears. We suspect that that’s where <code>group</code> is computed and assigned</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">data_assigns</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">group_present1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt; [1] 12</span>
 <span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">12</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_aesthetics(d, plot))</span></code></pre></div>
-<p>As we can see from the step, it calls the <code>compute_aesthetic</code> for every layer (that’s what the <code>by_layer()</code> function is doing - it was defined in Step 7).</p>
-<p>Let’s now repeat the same process inside <code>Layer$compute_aesthetic</code> - where does <code>group</code> get computed and assigned?</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<p>The code from Step 12 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> calls the <code>compute_aesthetics</code> method of each layer <code>l</code>. The <code>by_layer()</code> function defined in Step 7 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> is what’s doing this.</p>
+<details><summary>
+The internal function <code>by_layer()</code>
+</summary><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">7</span><span class="op">]</span><span class="op">]</span>
+<span class="co">#&gt; by_layer &lt;- function(f) {</span>
+<span class="co">#&gt;     out &lt;- vector("list", length(data))</span>
+<span class="co">#&gt;     for (i in seq_along(data)) {</span>
+<span class="co">#&gt;         out[[i]] &lt;- f(l = layers[[i]], d = data[[i]])</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     out</span>
+<span class="co">#&gt; }</span></code></pre></div>
+</details><p>At this point we realize that we have to go a little deeper than <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>. We need to inspect <code>Layer$compute_aesthetics</code> - the <code>compute_aesthetics</code> method of the <code>Layer</code> ggproto.</p>
+<p>(Check out the quick aside on the <code>Layer</code> ggproto below if this is your first time encountering it, but for the purposes of this vignette you just need to know that <code>Layer$compute_aesthetics</code> is a function called inside <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> where we think <code>group</code> is being calculated.)</p>
+<details><summary>
+An aside on the <code>Layer</code> ggproto
+</summary><p>A <code>Layer</code> is an object returned by <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">ggplot2::layer()</a></code>. You don’t see that function often, but it’s what gets returned by <code>geom_*()</code> and <code>stat_*()</code> functions, so you’ve actually seen this a lot.</p>
+<p>For example, if you call <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> on its own, you’ll get back an object of class <code>LayerInstance</code>/<code>Layer</code></p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; geom_bar: width = NULL, na.rm = FALSE, orientation = NA</span>
+<span class="co">#&gt; stat_count: width = NULL, na.rm = FALSE, orientation = NA</span>
+<span class="co">#&gt; position_stack</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; [1] "LayerInstance" "Layer"         "ggproto"       "gg"</span></code></pre></div>
+<p>The body of <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> just calls <code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer()</a></code> with some defaults optimized for drawing bar plots.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/body.html" class="external-link">body</a></span><span class="op">(</span><span class="va">geom_bar</span><span class="op">)</span>
+<span class="co">#&gt; {</span>
+<span class="co">#&gt;     layer(data = data, mapping = mapping, stat = stat, geom = GeomBar, </span>
+<span class="co">#&gt;         position = position, show.legend = show.legend, inherit.aes = inherit.aes, </span>
+<span class="co">#&gt;         params = list(width = width, na.rm = na.rm, orientation = orientation, </span>
+<span class="co">#&gt;             ...))</span>
+<span class="co">#&gt; }</span></code></pre></div>
+<p>So these two are practically the same:</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; geom_bar: width = NULL, na.rm = FALSE, orientation = NA</span>
+<span class="co">#&gt; stat_count: width = NULL, na.rm = FALSE, orientation = NA</span>
+<span class="co">#&gt; position_stack</span>
+<span class="fu"><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">layer</a></span><span class="op">(</span>
+  geom <span class="op">=</span> <span class="va">GeomBar</span>, stat <span class="op">=</span> <span class="va">StatCount</span>, position <span class="op">=</span> <span class="va">PositionStack</span>,
+  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>width <span class="op">=</span> <span class="cn">NULL</span>, na.rm <span class="op">=</span> <span class="cn">FALSE</span>, orientation <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="co">#&gt; geom_bar: width = NULL, na.rm = FALSE, orientation = NA</span>
+<span class="co">#&gt; stat_count: width = NULL, na.rm = FALSE, orientation = NA</span>
+<span class="co">#&gt; position_stack</span></code></pre></div>
+<p>These <code>Layer</code> objects have various properties and methods, including <code>compute_aesthetics</code>.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt;  [1] "mapping"              "geom_params"          "layer_data"          </span>
+<span class="co">#&gt;  [4] "compute_statistic"    "computed_mapping"     "compute_aesthetics"  </span>
+<span class="co">#&gt;  [7] "stat_params"          "map_statistic"        "draw_geom"           </span>
+<span class="co">#&gt; [10] "stat"                 "setup_layer"          "inherit.aes"         </span>
+<span class="co">#&gt; [13] "finish_statistics"    "geom"                 "compute_position"    </span>
+<span class="co">#&gt; [16] "position"             "print"                "data"                </span>
+<span class="co">#&gt; [19] "aes_params"           "computed_stat_params" "computed_geom_params"</span>
+<span class="co">#&gt; [22] "compute_geom_1"       "compute_geom_2"       "show.legend"</span></code></pre></div>
+<p>The <code>compute_aesthetics</code> method is defined in the parent <code>Layer</code> ggproto which is unexported. The layer returned by <code><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar()</a></code> simply inherits this method, and this is reflected in the fact that it has the class <code>LayerInstance</code>, as we also so above.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">)</span>
+<span class="co">#&gt; [1] "Layer"   "ggproto" "gg"</span>
+<span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+<span class="co">#&gt; [1] "LayerInstance" "Layer"         "ggproto"       "gg"</span>
+<span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span>
+<span class="co">#&gt; [[1]]</span>
+<span class="co">#&gt; `{`</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[2]]</span>
+<span class="co">#&gt; aesthetics &lt;- self$computed_mapping</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[3]]</span>
+<span class="co">#&gt; set &lt;- names(aesthetics) %in% names(self$aes_params)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[4]]</span>
+<span class="co">#&gt; calculated &lt;- is_calculated_aes(aesthetics)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[5]]</span>
+<span class="co">#&gt; modifiers &lt;- is_scaled_aes(aesthetics)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[6]]</span>
+<span class="co">#&gt; aesthetics &lt;- aesthetics[!set &amp; !calculated &amp; !modifiers]</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[7]]</span>
+<span class="co">#&gt; if (!is.null(self$geom_params$group)) {</span>
+<span class="co">#&gt;     aesthetics[["group"]] &lt;- self$aes_params$group</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[8]]</span>
+<span class="co">#&gt; scales_add_defaults(plot$scales, data, aesthetics, plot$plot_env)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[9]]</span>
+<span class="co">#&gt; env &lt;- child_env(baseenv(), stage = stage)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[10]]</span>
+<span class="co">#&gt; evaled &lt;- lapply(aesthetics, eval_tidy, data = data, env = env)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[11]]</span>
+<span class="co">#&gt; evaled &lt;- compact(evaled)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[12]]</span>
+<span class="co">#&gt; warn_for_aes_extract_usage(aesthetics, data[setdiff(names(data), </span>
+<span class="co">#&gt;     "PANEL")])</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[13]]</span>
+<span class="co">#&gt; nondata_cols &lt;- check_nondata_cols(evaled)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[14]]</span>
+<span class="co">#&gt; if (length(nondata_cols) &gt; 0) {</span>
+<span class="co">#&gt;     msg &lt;- paste0("Aesthetics must be valid data columns. Problematic aesthetic(s): ", </span>
+<span class="co">#&gt;         paste0(vapply(nondata_cols, function(x) {</span>
+<span class="co">#&gt;             paste0(x, " = ", as_label(aesthetics[[x]]))</span>
+<span class="co">#&gt;         }, character(1)), collapse = ", "), ". \nDid you mistype the name of a data column or forget to add after_stat()?")</span>
+<span class="co">#&gt;     abort(msg)</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[15]]</span>
+<span class="co">#&gt; n &lt;- nrow(data)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[16]]</span>
+<span class="co">#&gt; if (n == 0) {</span>
+<span class="co">#&gt;     if (length(evaled) == 0) {</span>
+<span class="co">#&gt;         n &lt;- 0</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt;     else {</span>
+<span class="co">#&gt;         n &lt;- max(vapply(evaled, length, integer(1)))</span>
+<span class="co">#&gt;     }</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[17]]</span>
+<span class="co">#&gt; check_aesthetics(evaled, n)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[18]]</span>
+<span class="co">#&gt; if (empty(data) &amp;&amp; n &gt; 0) {</span>
+<span class="co">#&gt;     evaled$PANEL &lt;- 1</span>
+<span class="co">#&gt; } else {</span>
+<span class="co">#&gt;     evaled$PANEL &lt;- data$PANEL</span>
+<span class="co">#&gt; }</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[19]]</span>
+<span class="co">#&gt; evaled &lt;- lapply(evaled, unname)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[20]]</span>
+<span class="co">#&gt; evaled &lt;- as_gg_data_frame(evaled)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[21]]</span>
+<span class="co">#&gt; evaled &lt;- add_group(evaled)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; [[22]]</span>
+<span class="co">#&gt; evaled</span></code></pre></div>
+</details><p>Let’s now repeat the same know-nothing, brute-force exploratory process inside <code>Layer$compute_aesthetic</code>. Here, we inspect the output of every line using the <code>~step</code> keyword inside the <code>trace_exprs</code> argument to locate where <code>group</code> get computed.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span>,
   trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span><span class="op">)</span>,
@@ -241,25 +743,29 @@
 
 <span class="va">group_present2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">tracedump2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
   <span class="st">"group"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<span class="op">}</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">group_present2</span><span class="op">)</span>
+<span class="co">#&gt; [1] 22</span>
+<span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">group_present2</span><span class="op">)</span>
+<span class="co">#&gt; [1] 21 22</span></code></pre></div>
 <p>Step 21 of <code>Layer$compute_aesthetic</code> seems to be where this happens. Here, it calls an unexported internal utility function called <code>add_group()</code>, and if we look at the <a href="https://github.com/tidyverse/ggplot2/blob/759c63c2fd9e00ba3322c1b74b227f63c98d2e06/R/grouping.r#L11-L29" class="external-link">source code</a> we can confirm that we have indeed located where <code>group</code> is calculated and assigned.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">group_present2</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] 21</span>
 <span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span><span class="op">[[</span><span class="fl">21</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; evaled &lt;- add_group(evaled)</span></code></pre></div>
-<p>But that only gets us half-way there to solving the issue because we can’t modify the Layer ggproto - it’s also unexported! Plus, we want to change the behavior for <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> specifically, such that the aesthetics that it can’t understand are ignored for the calculation of <em>its</em> own groups, but not for the groups of other layers.</p>
+<p>But that only gets us half-way there to solving the issue because we can’t/shouldn’t modify the Layer ggproto in extension packages - it’s unexported! Plus, we want to change the behavior for <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> specifically, such that the aesthetics that it can’t understand are ignored for the calculation of <em>its own groups</em>, but not for the groups of other layers.</p>
 </div>
 <div class="section level2">
-<h2 id="step-2---locating-the-extension-point">Step 2 - Locating the extension point<a class="anchor" aria-label="anchor" href="#step-2---locating-the-extension-point"></a>
+<h2 id="step-2---identifying-the-extension-point">Step 2 - Identifying the extension point<a class="anchor" aria-label="anchor" href="#step-2---identifying-the-extension-point"></a>
 </h2>
-<p>At this point, we have to hunt down the <em>next time</em> Layer dispatches a Stat or Geom ggproto method with the transformed data after <code>group</code> is calculated, so that we can undo the grouping calculation inside Stat/Geom as necessary (since those ggproto classes are exported).</p>
+<p>At this point, we have to hunt down the <em>next time</em> that the Layer dispatches a Stat or Geom ggproto method with the transformed data after <code>group</code> is calculated, so that we can undo the grouping calculation inside Stat/Geom as necessary (since <code>Stat</code> and <code>Geom</code> are exported and are the recommended extension points).</p>
 <p>Going back to <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>, the next <code>l$&lt;method&gt;</code> call after <code>l$compute_aesthetics</code> is the <code>compute_statistic</code> method at Step 18</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">18</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_statistic(d, layout))</span></code></pre></div>
-<p>Let’s see what ggproto methods the <code>Layer$compute_statistic</code> method calls</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<p>Let’s see what happens inside the <code>Layer$compute_statistic</code> method</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
@@ -275,26 +781,30 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[5]]</span>
 <span class="co">#&gt; self$stat$compute_layer(data, self$computed_stat_params, layout)</span></code></pre></div>
-<p>The next time the data gets transformed after being passed to <code>Layer$compute_statistic</code> is by the <code>setup_data</code> method of the layer’s Stat ggproto at Step 4.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<p>We see that the next time the data gets transformed after being passed to <code>Layer$compute_statistic</code> is by the <code>setup_data</code> method of the layer’s Stat ggproto at Step 4.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; data &lt;- self$stat$setup_data(data, self$computed_stat_params)</span></code></pre></div>
 <p>Let’s see what kind of information we have at this stage, and whether the information is sufficient for us to implement our desired design change to <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code></p>
 <div class="section level3">
 <h3 id="step-2-1---inspecting-the-setup_data-method">Step 2.1 - Inspecting the <code>setup_data</code> method<a class="anchor" aria-label="anchor" href="#step-2-1---inspecting-the-setup_data-method"></a>
 </h3>
-<p>First, let’s figure out what the Stat ggproto for <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> is</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<p>First, let’s figure out what the Stat ggproto associated with <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> is</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">stat</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 <span class="co">#&gt; [1] "StatXmean"</span></code></pre></div>
 <p>And let’s inspect its <code>setup_data</code> method</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">StatXmean</span><span class="op">$</span><span class="va">setup_data</span><span class="op">)</span> <span class="co"># errors!</span>
 <span class="co">#&gt; Error: Method 'setup_data' is not defined for `ggxmean:::StatXmean`</span>
 <span class="co">#&gt; Check inheritance with `ggbody(ggxmean:::StatXmean$setup_data, inherit = TRUE)`</span></code></pre></div>
-<p>It looks like <code>setup_data</code> is inherited from a parent ggproto (the only candidate here from looking at its <code><a href="https://rdrr.io/r/base/class.html" class="external-link">class()</a></code> is the Stat ggproto). If we decied to change the behavior of <code>setup_data</code> for StatXmean, we’ll need to define its own version of the method.</p>
-<p>For now, let’s get the inherited method with <code>inherit = TRUE</code> and proceed with inspecting its behavior. Here we confirm that <code>StatXmean</code> indeed inherits <code>Stat$setup_data</code></p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<p>It looks like <code>setup_data</code> is inherited from a parent ggproto. The only candidate here from looking at its <code><a href="https://rdrr.io/r/base/class.html" class="external-link">class()</a></code> is the Stat parent ggproto.</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">StatXmean</span><span class="op">)</span>
+<span class="co">#&gt; [1] "StatXmean" "Stat"      "ggproto"   "gg"</span></code></pre></div>
+<p>If we decide to change the behavior of <code>setup_data</code> for StatXmean, we’ll need to define its own version of the method, instead of having it simlpy inherit <code>Stat$setup_data</code>.</p>
+<p>For now, let’s grab the inherited method from Stat and proceed with inspecting its behavior. With the <code>inherit = TRUE</code> argument inside <code><a href="../reference/ggbody.html">ggbody()</a></code>, we confirm that <code>StatXmean</code> indeed inherits <code>Stat$setup_data</code></p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">StatXmean</span><span class="op">$</span><span class="va">setup_data</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; Returning `ggbody(Stat$setup_data)`</span>
 <span class="co">#&gt; [[1]]</span>
@@ -302,13 +812,13 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[2]]</span>
 <span class="co">#&gt; data</span></code></pre></div>
-<p>Okay so this method just returns the data by default. But what does this look like in practice?</p>
+<p>Okay so this method just returns the data by default. But what does <code>data</code> look like in practice?</p>
 </div>
 <div class="section level3">
 <h3 id="step-2-2---logging-the-execution-of-statsetup_data">Step 2.2 - Logging the execution of <code>Stat$setup_data</code><a class="anchor" aria-label="anchor" href="#step-2-2---logging-the-execution-of-statsetup_data"></a>
 </h3>
-<p>The following is a shorthand for creating a trace that simply returns the output of the last step of the method:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<p>The following <code><a href="../reference/ggtrace.html">ggtrace()</a></code> code is a shorthand for inserting a trace that simply returns the output of the last step (<code>-1</code>) of the method:</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">setup_data</span>, <span class="op">-</span><span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; `Stat$setup_data` now being traced.</span>
 
@@ -317,15 +827,22 @@
 <span class="co">#&gt; Triggering trace on `Stat$setup_data`</span>
 <span class="co">#&gt; Untracing `Stat$setup_data` on exit.</span></code></pre></div>
 <p>We see that the data contains information about the supplied aesthetics and the calculated <code>PANEL</code> and <code>group</code> information.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt;   fill  x PANEL group</span>
-<span class="co">#&gt; 1    f 29     1     2</span>
-<span class="co">#&gt; 2    f 29     1     2</span>
-<span class="co">#&gt; 3    f 31     1     2</span>
-<span class="co">#&gt; 4    f 30     1     2</span>
-<span class="co">#&gt; 5    f 26     1     2</span>
-<span class="co">#&gt; 6    f 26     1     2</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt;    fill      x PANEL group</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> f        31 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> f        30 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> f        27 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span></code></pre></div>
 <p>This is sufficient information for our purposes.</p>
 </div>
 </div>
@@ -337,14 +854,14 @@
 </h3>
 <p>Here’s the plan. Instead of having the <code>setup_data</code> method just return the data it receives, let’s have it check for two conditions:</p>
 <ol style="list-style-type: decimal">
-<li>Is the group explicitly supplied?
+<li>Is the group <em>explicitly supplied</em>?
 <ul>
 <li>If so, leave the data alone. Otherwise…</li>
 </ul>
 </li>
-<li>Are all the discrete variable used to calculate groups understandable by the geom?
+<li>Are all the discrete variable used to calculate groups <em>understandable by the geom</em>?
 <ul>
-<li>If so, leave the data alone. Otherwise, re-calculate groups by dropping those extraneous variables and passing the data through <code>add_group()</code> again.</li>
+<li>If so, leave the data alone. Otherwise, re-calculate groups by dropping those extraneous variables and passing the data through <code>ggplot2:::add_group()</code> again.</li>
 </ul>
 </li>
 </ol>
@@ -353,10 +870,12 @@
 <h3 id="step-3-2---setting-up-for-testing">Step 3.2 - Setting up for testing<a class="anchor" aria-label="anchor" href="#step-3-2---setting-up-for-testing"></a>
 </h3>
 <p>One of the biggest perks of {ggtrace} is the ability to log the output of the triggered traces. We’ve been seeing a bit of that with <code><a href="../reference/last_ggtrace.html">last_ggtrace()</a></code> but we can scale this up.</p>
-<p>Using <code>global_ggtrace</code> and persistent tracing with <code>ggtrace(once = FALSE)</code>, we can capture what <code>data</code> looks like inside the <code>setup_data</code> method across our two expected and two unexpected cases from our reprex.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<p>Using <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> and persistent tracing with <code>ggtrace(once = FALSE)</code>, we can capture what <code>data</code> looks like inside the <code>setup_data</code> method across our two expected and two unexpected cases from our reprex.</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Turn the global tracedump on</span>
+<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_on</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump activated.</span>
+
 <span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">setup_data</span>, <span class="op">-</span><span class="fl">1</span>, once <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; `Stat$setup_data` now being traced.</span>
 <span class="co">#&gt; Creating a persistent trace. Remember to `gguntrace(Stat$setup_data)`!</span>
@@ -374,17 +893,87 @@
 <span class="va">tracedump3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">tracedump3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span>, <span class="va">`[[`</span>, <span class="fl">1</span><span class="op">)</span> <span class="co"># simplify</span>
 
+<span class="co"># Clean up and turn the global tracedump back off</span>
 <span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">setup_data</span><span class="op">)</span>
 <span class="co">#&gt; `Stat$setup_data` no longer being traced.</span>
 <span class="fu"><a href="../reference/last_ggtrace.html">clear_global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump cleared.</span>
-<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_off</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump deactivated.</span>
 
+<span class="co"># Label the trace dumps</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">tracedump3</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"expected"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"unexpected"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">tracedump3</span><span class="op">)</span>
 <span class="co">#&gt; [1] "expected1"   "expected2"   "unexpected1" "unexpected2"</span></code></pre></div>
-<p>Now <code>tracedump3</code> holds the value for <code>data</code> from inside <code>setup_data</code> for our four plots of interest.</p>
+<p>Now <code>tracedump3</code> holds the value for <code>data</code> from inside the <code>setup_data</code> method for our four plots of interest.</p>
+<details><summary>
+The value of <code>tracedump3</code>
+</summary><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span>, <span class="fu">tibble</span><span class="fu">::</span><span class="va"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">)</span>
+<span class="co">#&gt; $expected1</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt;    colour     x PANEL group</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f         29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> f         29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> f         31 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> f         30 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> f         26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> f         26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> f         27 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4         26 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4         25 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4         28 1         1</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $expected2</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 3</span></span>
+<span class="co">#&gt;        x group PANEL</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>    29     2 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>    29     2 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>    31     2 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>    30     2 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>    26     2 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>    26     2 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>    27     2 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>    26     1 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>    25     1 1    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    28     1 1    </span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $unexpected1</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt;    shape     x PANEL group</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> f        29 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> f        31 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> f        30 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> f        26 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> f        27 1         2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $unexpected2</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 5</span></span>
+<span class="co">#&gt;    fill  colour     x PANEL group</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> p     f         29 1         8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> p     f         29 1         8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> p     f         31 1         8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> p     f         30 1         8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> p     f         26 1         8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> p     f         26 1         8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> p     f         27 1         8</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> p     4         26 1         7</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> p     4         25 1         7</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> p     4         28 1         7</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level3">
 <h3 id="step-3-3---tackling-the-problem-piece-by-piece">Step 3.3 - Tackling the problem piece by piece<a class="anchor" aria-label="anchor" href="#step-3-3---tackling-the-problem-piece-by-piece"></a>
@@ -392,17 +981,18 @@
 <div class="section level4">
 <h4 id="part-1---check-if-group-is-derived">Part 1 - Check if group is derived<a class="anchor" aria-label="anchor" href="#part-1---check-if-group-is-derived"></a>
 </h4>
-<p>Our first condition for whether <code>group</code> is explicitly supplied is actually very easy to implement.</p>
-<p>Going back to <code>Layer$compute_aesthetics</code>, we can see that the <code>PANEL</code> column is assigned first and then the <code>group</code> column is assigned. This means that if group did not already exist, it’d appear to the <em>right</em> of PANEL. But if it did exist before, it’d just be modified in its original position and appear to the <em>left</em> of PANEL.</p>
+<p>Our first condition checking for whether <code>group</code> is explicitly supplied is actually very easy to implement.</p>
+<p>Going back to <code>Layer$compute_aesthetics</code>, we can see that the <code>PANEL</code> column is assigned first and then the <code>group</code> column is assigned afterwards. This means that if <code>group</code> did not already exist, it’d appear to the <em>right</em> of <code>PANEL.</code> But if it did exist before, it’d just be modified in its original position and appear to the <em>left</em> of <code>PANEL</code> (since <code>PANEL</code> can never exist before).</p>
 <p>We can confirm this from our two expected cases:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">tracedump3</span><span class="op">$</span><span class="va">expected1</span><span class="op">)</span> <span class="co"># `aes(color = drv)`</span>
 <span class="co">#&gt; [1] "colour" "x"      "PANEL"  "group"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">tracedump3</span><span class="op">$</span><span class="va">expected2</span><span class="op">)</span> <span class="co"># `aes(group = drv)`</span>
 <span class="co">#&gt; [1] "x"     "group" "PANEL"</span></code></pre></div>
 <p>We can make a function that checks for the position of the <code>group</code> column relative to the <code>PANEL</code> column, and use our tracedump to validate it</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">group_is_derived</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span>
+  <span class="co"># Do "group" and "PANEL" appear out of order?</span>
   <span class="fu"><a href="https://rdrr.io/r/base/is.unsorted.html" class="external-link">is.unsorted</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"PANEL"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
 <span class="fu">group_is_derived</span><span class="op">(</span><span class="va">tracedump3</span><span class="op">$</span><span class="va">expected1</span><span class="op">)</span>
@@ -411,15 +1001,15 @@
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="part-2---check-if-geom-can-understand-all-discrete-aesthetics">Part 2 - Check if geom can understand all discrete aesthetics<a class="anchor" aria-label="anchor" href="#part-2---check-if-geom-can-understand-all-discrete-aesthetics"></a>
+<h4 id="part-2---check-if-the-geom-can-understand-all-discrete-aesthetics">Part 2 - Check if the geom can understand all discrete aesthetics<a class="anchor" aria-label="anchor" href="#part-2---check-if-the-geom-can-understand-all-discrete-aesthetics"></a>
 </h4>
-<p>For our second condition, we need to find out which aesthetics our geom can understand.</p>
-<p>First, we check what geom <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> uses</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<p>For our second condition, we need to figure out which aesthetics our geom can understand.</p>
+<p>First, we check what geom <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> uses. We see that it uses the unexported geom <code>ggxmean:::GeomXline</code>.</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">geom</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>
 <span class="co">#&gt; [1] "GeomXline"</span></code></pre></div>
 <p>Then we gather all the aesthetics that it can handle</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">understandable_aes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
   <span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">GeomXline</span><span class="op">$</span><span class="va">required_aes</span>,
   <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">GeomXline</span><span class="op">$</span><span class="va">default_aes</span><span class="op">)</span>,
@@ -427,16 +1017,19 @@
 <span class="op">)</span><span class="op">)</span>
 <span class="va">understandable_aes</span>
 <span class="co">#&gt; [1] "x"        "colour"   "size"     "linetype" "alpha"</span></code></pre></div>
-<p>We use this to write a function that returns the discrete variables in the data that cannot be understood by GeomXline.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<p>We just want to check among the non-positional aesthetics, so this is the set we want:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">understandable_aes</span><span class="op">[</span><span class="op">!</span><span class="va">understandable_aes</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span><span class="op">]</span>
+<span class="co">#&gt; [1] "colour"   "size"     "linetype" "alpha"</span></code></pre></div>
+<p>We can now write a function that returns the discrete variables in the data that cannot be understood by GeomXline.</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">not_understandable_aes</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">discretes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">is.discrete</span><span class="op">)</span><span class="op">]</span>
   <span class="va">discretes</span> <span class="op">&lt;-</span> <span class="va">discretes</span><span class="op">[</span><span class="op">!</span><span class="va">discretes</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"PANEL"</span><span class="op">)</span><span class="op">]</span>
-  <span class="va">discretes</span><span class="op">[</span><span class="op">!</span><span class="va">discretes</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"size"</span>, <span class="st">"linetype"</span>, <span class="st">"alpha"</span><span class="op">)</span><span class="op">]</span> <span class="co"># `understandable_aes` cleaned up and hard-coded</span>
-
+  <span class="va">discretes</span><span class="op">[</span><span class="op">!</span><span class="va">discretes</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"colour"</span>, <span class="st">"size"</span>, <span class="st">"linetype"</span>, <span class="st">"alpha"</span><span class="op">)</span><span class="op">]</span>
 <span class="op">}</span></code></pre></div>
 <p>We then validate the function against our tracedump</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span>, <span class="va">not_understandable_aes</span><span class="op">)</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span>
 <span class="co">#&gt;   expected1   expected2 unexpected1 unexpected2 </span>
 <span class="co">#&gt;       FALSE       FALSE        TRUE        TRUE</span>
@@ -449,15 +1042,15 @@
 <h4 id="part-3---handle-the-exception">Part 3 - Handle the exception<a class="anchor" aria-label="anchor" href="#part-3---handle-the-exception"></a>
 </h4>
 <p>Lastly, in the case where groups were computed using discrete variables mapped to aesthetics that GeomXline <em>doesn’t</em> understand, we want to re-assign groups.</p>
-<p>The following function takes the data, strips it of the offending variables/columns, and returns a vector of the new groups</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<p>The following function takes the data, strips it of the offending variables/columns, and returns a vector of the new groupings.</p>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">retrained_groups</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">not_understandables</span> <span class="op">&lt;-</span> <span class="fu">not_understandable_aes</span><span class="op">(</span><span class="va">data</span><span class="op">)</span>
   <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="va">not_understandables</span><span class="op">)</span><span class="op">]</span>
   <span class="fu">ggplot2</span><span class="fu">:::</span><span class="fu">add_group</span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
 <span class="op">}</span></code></pre></div>
-<p>This returns us the expected number of groups from our unexpected reprex cases (recall that <code>unexpected2</code> used to have 12 groups but now has 3 because it’s correctly ignoring the interaction with <code>fill = fl</code>)</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<p>This returns us the expected number of groups from our unexpected reprex cases (recall that <code>unexpected2</code> used to have 12 groups but now has 3 because it’s correctly ignoring the interaction with <code>fill = fl</code>).</p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span><span class="op">[</span><span class="fl">3</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="fu">retrained_groups</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">}</span><span class="op">)</span>
 <span class="co">#&gt; $unexpected1</span>
 <span class="co">#&gt; [1] -1</span>
@@ -469,8 +1062,8 @@
 <h4 id="part-4---bring-it-together">Part 4 - Bring it together<a class="anchor" aria-label="anchor" href="#part-4---bring-it-together"></a>
 </h4>
 <p>Now we melt the functions from Parts 1-3 into a single function that will become our new <code>setup_data</code> method for <code>StatXmean</code>.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">setup_data_draft</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">setup_data_new</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span>
   <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/is.unsorted.html" class="external-link">is.unsorted</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"PANEL"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
     <span class="va">discretes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">is.discrete</span><span class="op">)</span><span class="op">]</span>
     <span class="va">discretes</span> <span class="op">&lt;-</span> <span class="va">discretes</span><span class="op">[</span><span class="op">!</span><span class="va">discretes</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group"</span>, <span class="st">"PANEL"</span><span class="op">)</span><span class="op">]</span>
@@ -482,9 +1075,9 @@
   <span class="op">}</span>
   <span class="va">data</span>
 <span class="op">}</span></code></pre></div>
-<p>We again validate it against our tracedump, and check that it indeed works!</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tracedump3_modified</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span>, <span class="va">setup_data_draft</span><span class="op">)</span>
+<p>We again validate it against our expected and unexpected cases and see that it indeed works!</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tracedump3_modified</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span>, <span class="va">setup_data_new</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3_modified</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">group</span><span class="op">)</span> <span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; $expected1</span>
 <span class="co">#&gt; [1] 1 2 3</span>
@@ -509,7 +1102,7 @@
 <li><p>We create a ggproto class called StatXmean2 which is an exact copy of StatXmean except it also defines its own <code>setup_data</code> method as we defined above.</p></li>
 <li><p>We create a layer called <code>geom_x_mean2()</code> which is an exact copy of <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> except that the <code>stat</code> argument of<code><a href="https://ggplot2.tidyverse.org/reference/layer.html" class="external-link">ggplot2::layer()</a></code> is StatXmean2</p></li>
 </ol>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">StatXmean2</span> <span class="op">&lt;-</span> <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggproto.html" class="external-link">ggproto</a></span><span class="op">(</span>
   <span class="st">"StatXmean2"</span>,
   <span class="fu">ggplot2</span><span class="fu">::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">Stat</a></span>,
@@ -541,39 +1134,39 @@
   <span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p>Our final check against our original reprexes shows that it works as intended</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_x_mean2</span><span class="op">(</span><span class="op">)</span>
 
 <span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
-<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-37-1.png" width="1093.75"></p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-51-1.png" width="1093.75"></p>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
-<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-37-2.png" width="1093.75"></p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-51-2.png" width="1093.75"></p>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
-<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-37-3.png" width="1093.75"></p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-51-3.png" width="1093.75"></p>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
-<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-37-4.png" width="1093.75"></p>
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-51-4.png" width="1093.75"></p>
 </div>
 <div class="section level3">
 <h3 id="step-3-5---testing-the-solution">Step 3.5 - Testing the solution<a class="anchor" aria-label="anchor" href="#step-3-5---testing-the-solution"></a>
 </h3>
 <p>If you want to write tests, we can also check whether solution generalizes to other cases.</p>
 <p>Here, we can see it correctly works with facets even when some groups are missing in a facet, so that’s good</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">fl</span><span class="op">)</span></code></pre></div>
-<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-38-1.png" width="1093.75"></p>
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-52-1.png" width="1093.75"></p>
 <p>And we can also see that it fails the way it should when it’s supplied an explicit group aesthetic but also receives another discrete mapping to <code>color</code></p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
-<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-39-1.png" width="1093.75"></p>
-<p>This is because there’s a unique match between for <code>fl == "c"</code> in <code>drv</code> (<code>drv== "f"</code>), but there are multiple colors (<code>drv</code> categories) mapped to the four other lines (<code>fl</code> categories), so ggplot just gives up and gives you NAs</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-53-1.png" width="1093.75"></p>
+<p>This is because there’s one unique match between <code>fl == "c"</code> and <code>drv== "f"</code>, but no unique value for <code>drv</code> for the other four <code>fl</code> categories. So the color scale assigns a color to one of the lines but then for the other four lines it just gives up and returns NAs (which are colored grey by default)</p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">$</span><span class="va">drv</span>, <span class="va">mpg</span><span class="op">$</span><span class="va">fl</span><span class="op">)</span>
 <span class="co">#&gt;    </span>
 <span class="co">#&gt;      c  d  e  p  r</span>
@@ -582,9 +1175,21 @@
 <span class="co">#&gt;   r  0  0  1  7 17</span>
 <span class="va">p2</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_label</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">fl</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>, stat <span class="op">=</span> <span class="va">StatXmean2</span><span class="op">)</span></code></pre></div>
-<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-40-1.png" width="1093.75"></p>
+  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_text.html" class="external-link">geom_label</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>label <span class="op">=</span> <span class="va">fl</span>, y <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>, stat <span class="op">=</span> <span class="va">StatXmean2</span><span class="op">)</span></code></pre></div>
+<p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-54-1.png" width="1093.75"></p>
 </div>
+</div>
+<div class="section level2">
+<h2 id="wrapping-up">Wrapping up<a class="anchor" aria-label="anchor" href="#wrapping-up"></a>
+</h2>
+<p>We’re satisfied so we can now turn development mode off, which lets us access our current installation of {ggxmean} again. This allows us to test our solution against the current version of the package to see whether it’d still work (although we skip that step here).</p>
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/dev_mode.html" class="external-link">dev_mode</a></span><span class="op">(</span>on <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="co">#&gt; <span style="color: #00BB00;">v</span> Dev mode: OFF</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
+<span class="co">#&gt; [1] "Github (EvaMaeRey/ggxmean@909e304)"</span></code></pre></div>
+<p>Finally, since this vignette covered a real-world debugging scenario, the solution has been <a href="">submitted as a PR</a>.</p>
+<p>Many thanks to Gina for allowing me to use {ggxmean} as a case study for exploratory debugging with {ggtrace}!</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
