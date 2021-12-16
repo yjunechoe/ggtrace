@@ -24,13 +24,11 @@ knitr::opts_chunk$set(
 # **{ggtrace}**
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/devel%20version-0.4.4-blue.svg)](https://github.com/yjunechoe/ggtrace)
-[![](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
+[![](https://img.shields.io/badge/devel%20version-0.4.5-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/lifecycle-stable-gogreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 <!-- badges: end -->
 
-#### **Programmatically inspect, debug, and manipulate ggproto methods**
-
-## **Why {ggtrace}?**
+#### **Programmatically inspect, debug, and manipulate ggplot internals**
 
 - **Lightweight** ⚡
     - The only dependency is `{rlang}` - not even `{ggplot2}`!

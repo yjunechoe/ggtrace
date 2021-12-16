@@ -9,7 +9,8 @@
 <title>Frequently asked questions • ggtrace</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="../deps/_Atkinson%20Hyperlegible-0.4.0/font.css" rel="stylesheet">
+<!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Frequently asked questions">
@@ -148,7 +149,7 @@
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x0000000016166308&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x0000000016b2c3e8&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
@@ -266,24 +267,24 @@
 <span class="co">#&gt; `StatBoxplot$compute_group` no longer being traced.</span>
 
 <span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EA0B138`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001EA0B138`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001F3CC398`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001F3CC398`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000215E92D8`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-00000000215E92D8`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000021FA85F0`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0000000021FA85F0`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
 <span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
 <span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022AABBB8`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000022AABBB8`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002346B5D0`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002346B5D0`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>

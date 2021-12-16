@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-This vignette is a detailed walk-through of an **exploratory debugging workflow** with {ggtrace}, using a [Github issue](https://github.com/EvaMaeRey/ggxmean/issues/1) opened on the [`{ggxmean}`](https://github.com/EvaMaeRey/ggxmean) package by [Gina Reynolds](https://twitter.com/EvaMaeRey). We define "exploratory debugging" here as the process of learning and developing simultaneously, assuming very minimal prior knowledge about ggplot internals.
+This vignette is a detailed walk-through of an **exploratory debugging workflow** with {ggtrace}, using a [Github issue](https://github.com/EvaMaeRey/ggxmean/issues/1) opened on the [`{ggxmean}`](https://github.com/EvaMaeRey/ggxmean) package by [Gina Reynolds](https://twitter.com/EvaMaeRey). We define "exploratory debugging" here as the process of learning and developing simultaneously, assuming little prior knowledge about ggplot internals.
 
 ## Setup
 
@@ -161,7 +161,7 @@ p + aes(shape = drv)
 layer_data(p + aes(shape = drv))$group
 ```
 
-Here, we'd only like there to be 3 groups for `drv` mapped to `color`. Categories in the `fl` variable should not interact with `drv` in the creation of the groups because liens don't understand the `fill` aesthetic.
+Here, we'd only like there to be 3 groups for `drv` mapped to `color`. Categories in the `fl` variable should not interact with `drv` in the creation of the groups because lines don't understand the `fill` aesthetic.
 
 ```{r}
 p + aes(fill = fl, color = drv)

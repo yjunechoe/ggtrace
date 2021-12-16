@@ -9,6 +9,8 @@ authors:
 template:
   bootstrap: 5
   bootswatch: flatly
+  bslib:
+    base_font: {google: "Atkinson Hyperlegible"}
 
 reference:
 - title: Trace and edit
