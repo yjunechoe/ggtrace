@@ -2,6 +2,8 @@
 
 # ggtrace 0.4.x
 
+- The default value for the `verbose` argument of `ggtrace()` is changed to `FALSE`.
+
 ## ggtrace 0.4.5
 
 ### Improvements

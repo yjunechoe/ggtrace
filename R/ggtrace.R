@@ -14,9 +14,10 @@
 #'   active until `gguntrace()` is called on the method. Defaults to `TRUE`.
 #' @param use_names Whether the trace dump should use the names from `trace_exprs`. Defaults to `TRUE`.
 #' @param ... Unused, for extensibility.
-#' @param print_output Whether to print the output of each expression to the console. Defaults to `TRUE`.
+#' @param print_output Whether to `print()` the output of each expression to the console. Defaults to `TRUE`.
 #' @param verbose Whether logs should be printed when trace is triggered. Encompasses `print_output`,
 #'   meaning that `verbose = FALSE` also triggers the effect of `print_output = FALSE` by consequence.
+#'   Defaults to `FALSE`.
 #'
 #' @details `ggtrace()` is a wrapper around `base::trace()` which is called on the ggproto method.
 #'  It calls `base::untrace()` on itself on exit by default, to make its effect ephemeral like `base::debugonce()`.
@@ -154,7 +155,7 @@
 #' range(jitter_distances)
 #' jitter_plot$layers[[1]]$position$width
 #'
-ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = TRUE, ..., print_output = TRUE, verbose = TRUE) {
+ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = TRUE, ..., print_output = TRUE, verbose = FALSE) {
 
   # Capture method expression
   method_quo <- rlang::enquo(method)

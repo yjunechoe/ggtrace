@@ -12,7 +12,7 @@ ggtrace(
   use_names = TRUE,
   ...,
   print_output = TRUE,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \arguments{
@@ -41,10 +41,11 @@ active until \code{gguntrace()} is called on the method. Defaults to \code{TRUE}
 
 \item{...}{Unused, for extensibility.}
 
-\item{print_output}{Whether to print the output of each expression to the console. Defaults to \code{TRUE}.}
+\item{print_output}{Whether to \code{print()} the output of each expression to the console. Defaults to \code{TRUE}.}
 
 \item{verbose}{Whether logs should be printed when trace is triggered. Encompasses \code{print_output},
-meaning that \code{verbose = FALSE} also triggers the effect of \code{print_output = FALSE} by consequence.}
+meaning that \code{verbose = FALSE} also triggers the effect of \code{print_output = FALSE} by consequence.
+Defaults to \code{FALSE}.}
 }
 \description{
 Programmatically inspect, debug, and modify functions and methods

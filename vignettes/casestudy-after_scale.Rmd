@@ -1,0 +1,54 @@
+---
+title: "Case Study: inspecting aes evaluation with `after_scale()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Case Study: inspecting aes evaluation with `after_scale()`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Motivating thing
+
+- this vignette starts with a question - what happens to ggplot internals when we do something? Often times we can make inferences about surface form, but what if surface form shares the same thing? Then we've hit a roadblock with traditional tools
+- As users, we develop mental models. This vignette shows how you can test hypotheses about competing (mental) models of ggplot internals who make the same predictions (i.e., plots that "look" the same).
+
+Going to approach this like a scientific endeavor - fancy way of saying the kind of trial-and-error way of self-learning that many useRs are comfortable with
+
+
+## The research question
+
+We know that we can map variable to aesthetic.
+
+-- plot
+
+We also know taht we can grab the mapped aesthetics after statistical transofmration and scaling has been applied, with `after_stat()` and `after_scale()` respectivelyt.
+
+-- plots
+
+We also know that you can override aes with a constant supplied directly to the aes.
+
+(should be a 2-layer plot with global aes inheritance)
+
+
+
+
+# Under construction
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggtrace)
+```
+
+Slides from ggplot internals / {ggtrace} talk on December 4th 2021:
+
+```{r echo = FALSE}
+xaringanExtra::embed_xaringan("https://yjunechoe.github.io/ggtrace-talk")
+```
+
+[https://yjunechoe.github.io/ggtrace-talk](https://yjunechoe.github.io/ggtrace-talk)

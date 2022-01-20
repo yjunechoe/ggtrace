@@ -2,6 +2,7 @@ pandoc: 2.11.4
 pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
+  casestudy-after_scale: casestudy-after_scale.html
   casestudy-ggxmean: casestudy-ggxmean.html
   comparisons: comparisons.html
   FAQ: FAQ.html
@@ -9,5 +10,5 @@ articles:
   showcase-aes_evaluation: showcase-aes_evaluation.html
   showcase-ggplot_build: showcase-ggplot_build.html
   technical-details: technical-details.html
-last_built: 2021-12-16T02:19Z
+last_built: 2022-01-20T03:23Z
 

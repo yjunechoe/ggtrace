@@ -36,7 +36,7 @@
     <a class="dropdown-item" href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Case Study: debugging an extension package {ggxmean}</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -76,7 +76,7 @@
   use_names <span class="op">=</span> <span class="cn">TRUE</span>,
   <span class="va">...</span>,
   print_output <span class="op">=</span> <span class="cn">TRUE</span>,
-  verbose <span class="op">=</span> <span class="cn">TRUE</span>
+  verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -105,10 +105,11 @@ active until <code><a href="gguntrace.html">gguntrace()</a></code> is called on 
 <dt>...</dt>
 <dd><p>Unused, for extensibility.</p></dd>
 <dt>print_output</dt>
-<dd><p>Whether to print the output of each expression to the console. Defaults to <code>TRUE</code>.</p></dd>
+<dd><p>Whether to <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> the output of each expression to the console. Defaults to <code>TRUE</code>.</p></dd>
 <dt>verbose</dt>
 <dd><p>Whether logs should be printed when trace is triggered. Encompasses <code>print_output</code>,
-meaning that <code>verbose = FALSE</code> also triggers the effect of <code>print_output = FALSE</code> by consequence.</p></dd>
+meaning that <code>verbose = FALSE</code> also triggers the effect of <code>print_output = FALSE</code> by consequence.
+Defaults to <code>FALSE</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -238,17 +239,6 @@ though suppressing messages is generally not recommended.</p>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">jitter_plot</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Triggering trace on `PositionJitter$compute_layer`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Step 01]&gt; head(data)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   x    y PANEL group</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 5 61.5     1     5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 4 59.8     1     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 2 56.9     1     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 4 62.4     1     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 2 63.3     1     2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 3 62.8     1     3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call `last_ggtrace()` to get the trace dump.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Untracing `PositionJitter$compute_layer` on exit.</span>
 <span class="r-plt img"><img src="ggtrace-2.png" alt="" width="1094" height="676"></span>
 <span class="r-in"></span>
@@ -269,10 +259,6 @@ though suppressing messages is generally not recommended.</p>
 <span class="r-in"><span class="co"># its evaluation while suppressing its rendering</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/invisible.html" class="external-link">invisible</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob</a></span><span class="op">(</span><span class="va">jitter_plot</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Triggering trace on `PositionJitter$compute_layer`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call `last_ggtrace()` to get the trace dump.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Untracing `PositionJitter$compute_layer` on exit.</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># The output of the evaluated expressions can be inspected with `last_ggtrace()`</span></span>

@@ -37,6 +37,7 @@ articles:
 - title: Case Studies
   navbar: Case Studies
   contents:
+# - casestudy-after_scale
   - casestudy-ggxmean
 - title: Miscellaneous
   navbar: Miscellaneous

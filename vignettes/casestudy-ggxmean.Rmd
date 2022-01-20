@@ -1,8 +1,8 @@
 ---
-title: "Case Study: {ggxmean}"
+title: "Debugging an extension package"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{casestudy-ggxmean}
+  %\VignetteIndexEntry{Debugging an extension package}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
