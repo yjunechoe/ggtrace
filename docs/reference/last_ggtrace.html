@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,7 +36,7 @@
     <a class="dropdown-item" href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -131,17 +131,6 @@ and <code>global_ggtrace_state(FALSE)</code>, respectively.</p></li>
 <span class="r-in"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">'lm'</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using formula 'y ~ x'</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Triggering trace on `StatSmooth$compute_group`</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [Step 13]&gt; head(prediction)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          x        y     ymin     ymax       se flipped_aes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 10.40000 232.2531 201.8649 262.6414 14.87963       FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 10.69747 229.6265 199.9139 259.3392 14.54880       FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 10.99494 227.0000 197.9569 256.0430 14.22094       FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 11.29241 224.3734 195.9934 252.7534 13.89627       FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 11.58987 221.7468 194.0230 249.4707 13.57502       FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 11.88734 219.1203 192.0450 246.1956 13.25743       FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Call `last_ggtrace()` to get the trace dump.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Untracing `StatSmooth$compute_group` on exit.</span>
 <span class="r-plt img"><img src="last_ggtrace-1.png" alt="" width="1094" height="676"></span>
 <span class="r-in"></span>
@@ -244,7 +233,8 @@ and <code>global_ggtrace_state(FALSE)</code>, respectively.</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
     </footer></div>

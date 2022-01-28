@@ -13,19 +13,32 @@ template:
     base_font: {google: "Atkinson Hyperlegible"}
 
 reference:
-- title: Trace and edit
-  desc: Programmatically inspect, debug, and manipulate ggproto methods
+- title: Trace
+  desc: Programmatically inspect, debug, and manipulate functions and ggproto methods
   contents:
   - ggtrace
   - ggedit
   - ggbody
   - gguntrace
+
+- title: Helpers
+  desc: Helpers for ggtrace workflows
+  contents:
   - is_traced
+  - get_method
 
 - title: Interact with tracedumps
   desc: Retrieve the output of evaluated expressions from triggered traces
   contents:
   - last_ggtrace
+
+- title: One-offs
+  desc: Call common inspection workflows without logging to the tracedumps
+  contents:
+  - ggdebugonce
+  - ggtraceback
+
+
 
 articles:
 - title: Usage

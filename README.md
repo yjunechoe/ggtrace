@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.4.5-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.4.6-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![](https://img.shields.io/badge/lifecycle-stable-gogreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 <!-- badges: end -->
 
@@ -46,7 +46,7 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.5
+    library(ggtrace) # v0.4.6
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 
@@ -120,16 +120,6 @@ You can install the development version from
     # plot not printed to save space
     jitter_plot
     #> Triggering trace on `PositionJitter$compute_layer`
-    #> 
-    #> [Step 01]> data
-    #> 
-    #> [Step 01]> params
-    #> 
-    #> [Step 09]> dummy_data
-    #> 
-    #> [Step 12]> transform_position(data, function(x) x + x_jit, function(x) x + y_jit)
-    #> 
-    #> Call `last_ggtrace()` to get the trace dump.
     #> Untracing `PositionJitter$compute_layer` on exit.
 
 ### **Step 4. Inspect trace dump**
@@ -225,11 +215,6 @@ You can install the development version from
     # plot not printed to save space
     smooth_plot
     #> Triggering trace on `GeomSmooth$draw_group`
-    #> 
-    #> [Step 7]> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,
-    #>    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord))
-    #> 
-    #> Call `last_ggtrace()` to get the trace dump.
     #> Untracing `GeomSmooth$draw_group` on exit.
 
 ### **Step 4. Inspect trace dump**

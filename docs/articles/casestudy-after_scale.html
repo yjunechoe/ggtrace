@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
     <a class="dropdown-item" href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Case Study: debugging an extension package {ggxmean}</a>
+    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -92,19 +92,30 @@
 <h2 id="motivating-thing">Motivating thing<a class="anchor" aria-label="anchor" href="#motivating-thing"></a>
 </h2>
 <ul>
-<li>this vignette starts with a question - what happens to ggplot internals when we do something? Often times we can make inferences about surface form, but what if surface form shares the same thing? Then we’ve hit a roadblock with traditional tools</li>
-<li>As users, we develop mental models. This vignette shows how you can test hypotheses about competing (mental) models of ggplot internals who make the same predictions (i.e., plots that “look” the same).</li>
+<li>this vignette starts with a question - what happens to ggplot
+internals when we do something? Often times we can make inferences about
+surface form, but what if surface form shares the same thing? Then we’ve
+hit a roadblock with traditional tools</li>
+<li>As users, we develop mental models. This vignette shows how you can
+test hypotheses about competing (mental) models of ggplot internals who
+make the same predictions (i.e., plots that “look” the same).</li>
 </ul>
-<p>Going to approach this like a scientific endeavor - fancy way of saying the kind of trial-and-error way of self-learning that many useRs are comfortable with</p>
+<p>Going to approach this like a scientific endeavor - fancy way of
+saying the kind of trial-and-error way of self-learning that many useRs
+are comfortable with</p>
 </div>
 <div class="section level2">
 <h2 id="the-research-question">The research question<a class="anchor" aria-label="anchor" href="#the-research-question"></a>
 </h2>
 <p>We know that we can map variable to aesthetic.</p>
 <p>– plot</p>
-<p>We also know taht we can grab the mapped aesthetics after statistical transofmration and scaling has been applied, with <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_scale()</a></code> respectivelyt.</p>
+<p>We also know taht we can grab the mapped aesthetics after statistical
+transofmration and scaling has been applied, with
+<code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_stat()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">after_scale()</a></code>
+respectivelyt.</p>
 <p>– plots</p>
-<p>We also know that you can override aes with a constant supplied directly to the aes.</p>
+<p>We also know that you can override aes with a constant supplied
+directly to the aes.</p>
 <p>(should be a 2-layer plot with global aes inheritance)</p>
 </div>
 <div class="section level1">
@@ -112,7 +123,8 @@
 </h1>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a></span><span class="op">)</span></code></pre></div>
-<p>Slides from ggplot internals / {ggtrace} talk on December 4th 2021:</p>
+<p>Slides from ggplot internals / {ggtrace} talk on December 4th
+2021:</p>
 <div class="shareagain" style="min-width:300px;margin:1em auto;">
 <iframe src="https://yjunechoe.github.io/ggtrace-talk" width="1600" height="900" style="border:2px solid currentColor;" loading="lazy" allowfullscreen></iframe>
 <script>fitvids('.shareagain', {players: 'iframe'});</script>
@@ -132,7 +144,8 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
     </footer>

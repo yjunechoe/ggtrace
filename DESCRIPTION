@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically debug ggproto methods with trace
-Version: 0.4.5
+Version: 0.4.6
 Authors@R: c(
       person(given = "June",
            family = "Choe",
@@ -21,10 +21,11 @@ Collate:
   'utils.R'
   'ggbody.R'
   'is_traced.R'
-  'last_ggtrace.R'
+  'tracedump.R'
   'ggedit.R'
   'gguntrace.R'
   'ggtrace.R'
+  'one-offs.R'
   'zzz.R'
 Imports: 
     rlang (>= 0.4.10)

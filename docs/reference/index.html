@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,9 +61,10 @@
     </div>
 
     <div class="section level2">
-      <h2 id="trace-and-edit">Trace and edit<a class="anchor" aria-label="anchor" href="#trace-and-edit"></a></h2>
+      <h2 id="trace">Trace<a class="anchor" aria-label="anchor" href="#trace"></a></h2>
       
-      <p class="section-desc"></p><p>Programmatically inspect, debug, and manipulate ggproto methods</p>
+      <p class="section-desc"></p><p>Programmatically inspect, debug, and manipulate functions and ggproto
+methods</p>
 
       
     </div><div id="" class="section level2">
@@ -91,11 +92,27 @@
           <code><a href="gguntrace.html">gguntrace()</a></code> 
         </dt>
         <dd>Untrace a ggproto method</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
+      
+      <p class="section-desc"></p><p>Helpers for ggtrace workflows</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="is_traced.html">is_traced()</a></code> 
         </dt>
         <dd>Check if a method is being traced</dd>
+      </dl><dl><dt>
+          
+          <code><a href="get_method.html">get_method()</a></code> 
+        </dt>
+        <dd>Use <code><a href="https://rdrr.io/r/base/get.html" class="external-link">get()</a></code> on a ggproto method</dd>
       </dl></div><div class="section level2">
       <h2 id="interact-with-tracedumps">Interact with tracedumps<a class="anchor" aria-label="anchor" href="#interact-with-tracedumps"></a></h2>
       
@@ -113,6 +130,23 @@ traces</p>
           <code><a href="last_ggtrace.html">last_ggtrace()</a></code> <code><a href="last_ggtrace.html">clear_last_ggtrace()</a></code> <code><a href="last_ggtrace.html">global_ggtrace()</a></code> <code><a href="last_ggtrace.html">clear_global_ggtrace()</a></code> <code><a href="last_ggtrace.html">global_ggtrace_state()</a></code> <code><a href="last_ggtrace.html">global_ggtrace_on()</a></code> <code><a href="last_ggtrace.html">global_ggtrace_off()</a></code> 
         </dt>
         <dd>Retrieve the trace dump created by <code><a href="../reference/ggtrace.html">ggtrace()</a></code></dd>
+      </dl></div><div class="section level2">
+      <h2 id="one-offs">One-offs<a class="anchor" aria-label="anchor" href="#one-offs"></a></h2>
+      
+      <p class="section-desc"></p><p>Call common inspection workflows without logging to the
+tracedumps</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="one-offs.html">ggdebugonce()</a></code> <code><a href="one-offs.html">ggtraceback()</a></code> 
+        </dt>
+        <dd>Debugonce a ggproto method</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>

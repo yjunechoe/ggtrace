@@ -52,6 +52,9 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
+    <loc>/reference/get_method.html</loc>
+  </url>
+  <url>
     <loc>/reference/ggbody.html</loc>
   </url>
   <url>
@@ -71,5 +74,8 @@
   </url>
   <url>
     <loc>/reference/last_ggtrace.html</loc>
+  </url>
+  <url>
+    <loc>/reference/one-offs.html</loc>
   </url>
 </urlset>

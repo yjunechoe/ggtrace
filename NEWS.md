@@ -2,6 +2,15 @@
 
 # ggtrace 0.4.x
 
+# ggtrace 0.4.6
+
+### New Features
+
+- Added `get_method()` which returns ggproto methods as functions
+- Added wrappers for one-off workflows `ggdebugonce()` and `ggtraceback()` 
+
+### Improvements
+
 - The default value for the `verbose` argument of `ggtrace()` is changed to `FALSE`.
 
 ## ggtrace 0.4.5

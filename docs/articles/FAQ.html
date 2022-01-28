@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
     <a class="dropdown-item" href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -95,10 +95,19 @@
 <div class="section level2">
 <h2 id="is-ggtrace-safe">Is ggtrace() safe?<a class="anchor" aria-label="anchor" href="#is-ggtrace-safe"></a>
 </h2>
-<p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> is essentially just a wrapper around <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code> designed to make it easy and safe to programmatically trace/untrace functions and methods.</p>
-<p>So the short answer is that <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is at least as safe as <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code>. But how safe <em>is</em> <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code>?</p>
-<p>The beauty of <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code> is that the modified function being traced <em>masks</em> over the original function without <em>overwriting</em> it. This allows for <strong>non-destructive modifications to the execution behavior</strong>.</p>
-<p>In this simple example, we add a trace to <code><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace()</a></code> which multiples the value of <code>x</code> by 10 as the function enters the last step.</p>
+<p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> is essentially just a wrapper around
+<code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code> designed to make it easy and safe to
+programmatically trace/untrace functions and methods.</p>
+<p>So the short answer is that <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is at least as
+safe as <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code>. But how safe <em>is</em>
+<code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code>?</p>
+<p>The beauty of <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code> is that the modified function
+being traced <em>masks</em> over the original function without
+<em>overwriting</em> it. This allows for <strong>non-destructive
+modifications to the execution behavior</strong>.</p>
+<p>In this simple example, we add a trace to <code><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace()</a></code>
+which multiples the value of <code>x</code> by 10 as the function enters
+the last step.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/body.html" class="external-link">body</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
 <span class="co">#&gt; {</span>
@@ -122,7 +131,8 @@
 <span class="fu"><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace</a></span><span class="op">(</span><span class="va">replace</span>, tracer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">x</span> <span class="op">*</span> <span class="fl">10</span><span class="op">)</span>, at <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>
 <span class="co">#&gt; Tracing function "replace" in package "base"</span>
 <span class="co">#&gt; [1] "replace"</span></code></pre></div>
-<p>The traced function looks strange and runs with a different behavior</p>
+<p>The traced function looks strange and runs with a different
+behavior</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
 <span class="co">#&gt; [1] "functionWithTrace"</span>
@@ -141,7 +151,9 @@
 <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">30</span><span class="op">)</span>
 <span class="co">#&gt; Tracing replace(1:5, 3, 30) step 3</span>
 <span class="co">#&gt; [1]  10  20 300  40  50</span></code></pre></div>
-<p>But again, this is non-destructive. The original function body is safely stored away in the <code>"original"</code> attribute of the traced function</p>
+<p>But again, this is non-destructive. The original function body is
+safely stored away in the <code>"original"</code> attribute of the
+traced function</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">replace</span>, <span class="st">"original"</span><span class="op">)</span>
 <span class="co">#&gt; function (x, list, values) </span>
@@ -149,9 +161,10 @@
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x0000000016b2c3e8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x00000000162f18f0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
-<p>The original function can be recovered by removing the trace with a call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
+<p>The original function can be recovered by removing the trace with a
+call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace</a></span><span class="op">(</span><span class="va">replace</span><span class="op">)</span>
 <span class="co">#&gt; Untracing function "replace" in package "base"</span>
@@ -164,15 +177,28 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/replace.html" class="external-link">replace</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fl">3</span>, <span class="fl">30</span><span class="op">)</span>
 <span class="co">#&gt; [1]  1  2 30  4  5</span></code></pre></div>
-<p>Beyond this, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> also offers some extra built-in safety measures:</p>
+<p>Beyond this, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> also offers some extra built-in
+safety measures:</p>
 <ul>
-<li>Cleans up after itself by untracing on exit (the default behavior with <code>once = TRUE</code>)</li>
-<li>Always untraces before tracing, which prevents nested traces from being created</li>
-<li>Provides ample messages about whethere there is an existing trace (which you can also check with <code><a href="../reference/is_traced.html">is_traced()</a></code>)</li>
-<li>Exits as early as possible if the method expression is ill-formed with more informative error messages that you can actually act on</li>
-<li>Prevents traces from being created on functions that aren’t bound to a variable in some way (i.e., prevents you from creating traces that you can’t trigger)</li>
+<li>Cleans up after itself by untracing on exit (the default behavior
+with <code>once = TRUE</code>)</li>
+<li>Always untraces before tracing, which prevents nested traces from
+being created</li>
+<li>Provides ample messages about whethere there is an existing trace
+(which you can also check with <code><a href="../reference/is_traced.html">is_traced()</a></code>)</li>
+<li>Exits as early as possible if the method expression is ill-formed
+with more informative error messages that you can actually act on</li>
+<li>Prevents traces from being created on functions that aren’t bound to
+a variable in some way (i.e., prevents you from creating traces that you
+can’t trigger)</li>
 </ul>
-<p>However, some expression you pass to <code><a href="../reference/ggtrace.html">ggtrace()</a></code> for delayed evaluation are not without consequences. You need to be careful about running functions that have <em>side effects</em> and making <em>assignments to environments</em> (ex: <code>self$method &lt;- ...</code> will modify in place). But this isn’t a problem of <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> - they follow from the general rules of reference semantics in R.</p>
+<p>However, some expression you pass to <code><a href="../reference/ggtrace.html">ggtrace()</a></code> for
+delayed evaluation are not without consequences. You need to be careful
+about running functions that have <em>side effects</em> and making
+<em>assignments to environments</em> (ex: <code>self$method &lt;-
+...</code> will modify in place). But this isn’t a problem of
+<a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> - they follow from the general rules of reference
+semantics in R.</p>
 </div>
 <div class="section level2">
 <h2 id="what-can-you-ggtrace">What can you <code>ggtrace()</code>?<a class="anchor" aria-label="anchor" href="#what-can-you-ggtrace"></a>
@@ -244,7 +270,8 @@
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span></code></pre></div>
-<p>Persistent trace with <code>once = FALSE</code> and explicit untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code></p>
+<p>Persistent trace with <code>once = FALSE</code> and explicit
+untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; [1] FALSE</span>
@@ -267,24 +294,24 @@
 <span class="co">#&gt; `StatBoxplot$compute_group` no longer being traced.</span>
 
 <span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001F3CC398`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001F3CC398`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001E9BBE48`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001E9BBE48`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000021FA85F0`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0000000021FA85F0`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002159DDC8`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002159DDC8`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
 <span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
 <span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002346B5D0`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002346B5D0`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002298E868`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002298E868`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
@@ -296,7 +323,11 @@
 <div class="section level3">
 <h3 id="s3s4-generics">S3/S4 generics<a class="anchor" aria-label="anchor" href="#s3s4-generics"></a>
 </h3>
-<p>The exported generic function <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> from <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is itself not very meaningful, but the unexported method for the <code>&lt;ggplot&gt;</code> class <code>ggplot_build.ggplot()</code> contains the actual data transformation pipeline.</p>
+<p>The exported generic function <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> from
+<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is itself not very meaningful, but the unexported
+method for the <code>&lt;ggplot&gt;</code> class
+<code>ggplot_build.ggplot()</code> contains the actual data
+transformation pipeline.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/body.html" class="external-link">body</a></span><span class="op">(</span><span class="va">ggplot_build</span><span class="op">)</span>
 <span class="co">#&gt; {</span>
@@ -308,7 +339,8 @@
 <span class="co">#&gt; ggplot_build.ggplot   FALSE registered S3method for ggplot_build ggplot_build</span>
 <span class="co">#&gt;                      isS4</span>
 <span class="co">#&gt; ggplot_build.ggplot FALSE</span></code></pre></div>
-<p>You can trace the <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> method defined for <code>&lt;ggplot&gt;</code> in the same way as functions</p>
+<p>You can trace the <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> method defined for
+<code>&lt;ggplot&gt;</code> in the same way as functions</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span>
@@ -338,7 +370,8 @@
 <div class="section level3">
 <h3 id="r6-methods">R6 methods<a class="anchor" aria-label="anchor" href="#r6-methods"></a>
 </h3>
-<p>Adopted from <a href="https://adv-r.hadley.nz/r6.html" class="external-link">Advanced R Ch. 14.2</a></p>
+<p>Adopted from <a href="https://adv-r.hadley.nz/r6.html" class="external-link">Advanced R Ch.
+14.2</a></p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r6.r-lib.org" class="external-link">R6</a></span><span class="op">)</span>
 <span class="va">Accumulator</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6Class</a></span><span class="op">(</span><span class="st">"Accumulator"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -392,17 +425,25 @@
 <h2 id="what-cant-you-ggtrace">What can’t you <code>ggtrace()</code>?<a class="anchor" aria-label="anchor" href="#what-cant-you-ggtrace"></a>
 </h2>
 <ul>
-<li>Non-functions (ex: constants, object properties). But you can still inspect the values for these with <code><a href="../reference/ggbody.html">ggbody()</a></code>
+<li>Non-functions (ex: constants, object properties). But you can still
+inspect the values for these with <code><a href="../reference/ggbody.html">ggbody()</a></code>
 </li>
-<li>Functions not defined in an environment (ex: you can’t define a function to trace on-the-spot inside <code><a href="../reference/ggtrace.html">ggtrace()</a></code>)</li>
-<li>Limited support for closures (the LHS of the <code>$</code> must itself be an environment where the function can be searched for)</li>
+<li>Functions not defined in an environment (ex: you can’t define a
+function to trace on-the-spot inside <code><a href="../reference/ggtrace.html">ggtrace()</a></code>)</li>
+<li>Limited support for closures (the LHS of the <code>$</code> must
+itself be an environment where the function can be searched for)</li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="how-can-i-save-a-modified-ggplot">How can I save a modified ggplot?<a class="anchor" aria-label="anchor" href="#how-can-i-save-a-modified-ggplot"></a>
 </h2>
-<p>When you trace the internals of ggplot, that doesn’t directly modify the <em>instructions</em> for plotting. Instead, it changes how certain components behave when they are <em>executed</em>.</p>
-<p>This means that you will not get a different ggplot with the following code if <code>original_plot</code> is being traced with modifications, since <code>original_plot</code> is not being executed here.</p>
+<p>When you trace the internals of ggplot, that doesn’t directly modify
+the <em>instructions</em> for plotting. Instead, it changes how certain
+components behave when they are <em>executed</em>.</p>
+<p>This means that you will not get a different ggplot with the
+following code if <code>original_plot</code> is being traced with
+modifications, since <code>original_plot</code> is not being executed
+here.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">original_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span>
 
@@ -416,11 +457,16 @@
 <span class="co">#&gt; Triggering trace on `ggplot2:::ggplot_build.ggplot`</span>
 <span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span></code></pre></div>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-18-1.png" width="1093.75"></p>
-<p>But the variable <code>modified_pot</code> doesn’t hold modified <em>code</em> for generating the plot. Instead, it just happened to trigger the trace on ggplot_build.ggplot(). So the next time it runs, it’s ran with the normal behavior of <code>original_plot</code>.</p>
+<p>But the variable <code>modified_pot</code> doesn’t hold modified
+<em>code</em> for generating the plot. Instead, it just happened to
+trigger the trace on ggplot_build.ggplot(). So the next time it runs,
+it’s ran with the normal behavior of <code>original_plot</code>.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">modified_plot</span></code></pre></div>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-19-1.png" width="1093.75"></p>
-<p>To capture the actual figure generated by a ggplot, you can use <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code>, which returns the <strong>Gr</strong>aphical <strong>ob</strong>ject representation of the plot:</p>
+<p>To capture the actual figure generated by a ggplot, you can use
+<code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code>, which returns the <strong>Gr</strong>aphical
+<strong>ob</strong>ject representation of the plot:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span>
@@ -450,7 +496,8 @@
 <span class="co">#&gt; 16 15 ( 3- 3, 5- 5)      title            zeroGrob[plot.title..zeroGrob.352]</span>
 <span class="co">#&gt; 17 16 (10-10, 5- 5)    caption          zeroGrob[plot.caption..zeroGrob.355]</span>
 <span class="co">#&gt; 18 17 ( 2- 2, 2- 2)        tag              zeroGrob[plot.tag..zeroGrob.354]</span></code></pre></div>
-<p>What you get is an object of class <code>&lt;gtable&gt;</code>, which you can draw to your device like any other grob:</p>
+<p>What you get is an object of class <code>&lt;gtable&gt;</code>, which
+you can draw to your device like any other grob:</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">modified_plot</span><span class="op">)</span>
 <span class="co">#&gt; [1] "gtable" "gTree"  "grob"   "gDesc"</span>
@@ -459,12 +506,18 @@
 <span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="va">modified_plot</span><span class="op">)</span></code></pre></div>
 <p><img src="FAQ_files/figure-html/unnamed-chunk-21-1.png" width="1093.75"></p>
-<p>You can also use ggsave() to render a <code>&lt;gtable&gt;</code> to an image:</p>
+<p>You can also use ggsave() to render a <code>&lt;gtable&gt;</code> to
+an image:</p>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Not ran </span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"modified_plot.png"</span>, plot <span class="op">=</span> <span class="va">modified_plot</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
-<p>Still, <code>modified_plot</code> is only the graphical representation of the plot and not itself a ggplot object so you can’t keep adding layers to it. So grobs are more limiting in that sense.</p>
-<p>But it’s not totally limiting like a raster image of a figure. For example, <a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a> has <code><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html" class="external-link">patchwork::wrap_ggplot_grob()</a></code> which allows a <code>&lt;gtable&gt;</code> to be properly aligned to other ggplots.</p>
+<p>Still, <code>modified_plot</code> is only the graphical
+representation of the plot and not itself a ggplot object so you can’t
+keep adding layers to it. So grobs are more limiting in that sense.</p>
+<p>But it’s not totally limiting like a raster image of a figure. For
+example, <a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a> has
+<code><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html" class="external-link">patchwork::wrap_ggplot_grob()</a></code> which allows a
+<code>&lt;gtable&gt;</code> to be properly aligned to other ggplots.</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span>
 <span class="va">original_plot_titled</span> <span class="op">&lt;-</span> <span class="va">original_plot</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"original plot"</span><span class="op">)</span>
@@ -486,7 +539,8 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
     </footer>

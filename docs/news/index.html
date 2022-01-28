@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,12 +66,26 @@
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4" id="ggtrace-04x">ggtrace 0.4.x<a class="anchor" aria-label="anchor" href="#ggtrace-04x"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.6" id="ggtrace-046">ggtrace 0.4.6<a class="anchor" aria-label="anchor" href="#ggtrace-046"></a></h2>
+<div class="section level4">
+<h4 id="new-features-0-4-6">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-6"></a></h4>
+<ul><li>Added <code><a href="../reference/get_method.html">get_method()</a></code> which returns ggproto methods as
+functions</li>
+<li>Added wrappers for one-off workflows <code><a href="../reference/one-offs.html">ggdebugonce()</a></code> and
+<code><a href="../reference/one-offs.html">ggtraceback()</a></code>
+</li>
+</ul></div>
+<div class="section level4">
+<h4 id="improvements-0-4-6">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-6"></a></h4>
 <ul><li>The default value for the <code>verbose</code> argument of
 <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is changed to <code>FALSE</code>.</li>
-</ul><div class="section level3">
-<h3 id="ggtrace-0-4">ggtrace 0.4.5<a class="anchor" aria-label="anchor" href="#ggtrace-0-4"></a></h3>
+</ul></div>
+<div class="section level3">
+<h3 id="ggtrace-0-4-6">ggtrace 0.4.5<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-6"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4"></a></h4>
+<h4 id="improvements-0-4-6-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-6-1"></a></h4>
 <ul><li>Deparsed expressions printed as messages are now wrapped in
 backticks (<a href="https://github.com/yjunechoe/ggtrace/issues/57" class="external-link">#57</a>)</li>
 <li>
@@ -79,21 +93,21 @@ backticks (<a href="https://github.com/yjunechoe/ggtrace/issues/57" class="exter
 <code>isTRUE(interactive())</code> (<a href="https://github.com/yjunechoe/ggtrace/issues/62" class="external-link">#62</a>)</li>
 </ul></div>
 <div class="section level4">
-<h4 id="new-features-0-4">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4"></a></h4>
+<h4 id="new-features-0-4-6-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-6-1"></a></h4>
 <ul><li>Added <code>global_ggtrace_on/off()</code> which are aliases for
 <code>global_ggtrace_state(TRUE/FALSE)</code> (<a href="https://github.com/yjunechoe/ggtrace/issues/63" class="external-link">#63</a>)</li>
 </ul></div>
 <div class="section level4">
-<h4 id="miscellaneous-0-4">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-4"></a></h4>
+<h4 id="miscellaneous-0-4-6">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-4-6"></a></h4>
 <ul><li>Added <a href="https://yjunechoe.github.io/ggtrace/articles/casestudy-ggxmean.html" class="external-link">exploratory
 debugging case study vignette</a>
 </li>
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="ggtrace-0-4-1">ggtrace 0.4.4<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-1"></a></h3>
+<h3 id="ggtrace-0-4-6-1">ggtrace 0.4.4<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-6-1"></a></h3>
 <div class="section level4">
-<h4 id="improvements-0-4-1">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-1"></a></h4>
+<h4 id="improvements-0-4-6-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-6-2"></a></h4>
 <ul><li>
 <code>clear_(last|global)_ggtrace()</code> functions now print a
 message saying that the trace dump has been cleared.</li>
@@ -101,46 +115,46 @@ message saying that the trace dump has been cleared.</li>
 environments</li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fix-0-4">Bug Fix<a class="anchor" aria-label="anchor" href="#bug-fix-0-4"></a></h4>
+<h4 id="bug-fix-0-4-6">Bug Fix<a class="anchor" aria-label="anchor" href="#bug-fix-0-4-6"></a></h4>
 <ul><li>Fixed but where methods with class <function> were being treated as
 bare functions. Now closures and methods outside of ggproto objects
 (e.g., R6 classes) can be traced too.</function></li>
 </ul></div>
 <div class="section level4">
-<h4 id="miscellaneous-0-4-1">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-4-1"></a></h4>
+<h4 id="miscellaneous-0-4-6-1">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-4-6-1"></a></h4>
 <ul><li>Added <a href="https://yjunechoe.github.io/ggtrace/articles/FAQ.html" class="external-link">FAQ
 vignette</a>
 </li>
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="ggtrace-0-4-2">ggtrace 0.4.3<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-2"></a></h3>
+<h3 id="ggtrace-0-4-6-2">ggtrace 0.4.3<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-6-2"></a></h3>
 <div class="section level4">
-<h4 id="breaking-changes-0-4">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4"></a></h4>
+<h4 id="breaking-changes-0-4-6">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4-6"></a></h4>
 <ul><li>Global tracedump is turned off by default
 (<code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code> is <code>FALSE</code> on load) and
 must be explicitly activated with
 <code>global_ggtrace_state(TRUE)</code>.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="improvements-0-4-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-2"></a></h4>
+<h4 id="improvements-0-4-6-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-6-3"></a></h4>
 <ul><li>Improved messages for <code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code>
 </li>
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="ggtrace-0-4-3">ggtrace 0.4.2<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-3"></a></h3>
+<h3 id="ggtrace-0-4-6-3">ggtrace 0.4.2<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-6-3"></a></h3>
 <div class="section level4">
-<h4 id="bug-fixes-0-4">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4"></a></h4>
+<h4 id="bug-fixes-0-4-6">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-6"></a></h4>
 <ul><li>Fixed bug where <code>print_output = TRUE</code> would evaluate the
 expression twice (problematic for Inject workflows and causing general
 slowdowns)</li>
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="ggtrace-0-4-4">ggtrace 0.4.1<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-4"></a></h3>
+<h3 id="ggtrace-0-4-6-4">ggtrace 0.4.1<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-6-4"></a></h3>
 <div class="section level4">
-<h4 id="new-features-0-4-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-1"></a></h4>
+<h4 id="new-features-0-4-6-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-6-2"></a></h4>
 <ul><li>Global collection of tracedumps can be turned on/off with
 <code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code>. It is still active by default but
 should memory become a concern, it can be turned off with
@@ -148,9 +162,9 @@ should memory become a concern, it can be turned off with
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="ggtrace-0-4-5">ggtrace 0.4.0<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-5"></a></h3>
+<h3 id="ggtrace-0-4-6-5">ggtrace 0.4.0<a class="anchor" aria-label="anchor" href="#ggtrace-0-4-6-5"></a></h3>
 <div class="section level4">
-<h4 id="new-features-0-4-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-2"></a></h4>
+<h4 id="new-features-0-4-6-3">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-6-3"></a></h4>
 <ul><li>All functions in the package now support the tracing/untracing of
 <strong>any arbitrary functions</strong> (exported, unexported,
 user-defined, etc.). This also includes S3/S4 methods like
@@ -159,7 +173,7 @@ user-defined, etc.). This also includes S3/S4 methods like
 now possible.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="improvements-0-4-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-3"></a></h4>
+<h4 id="improvements-0-4-6-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-6-4"></a></h4>
 <ul><li>
 <code><a href="../reference/ggtrace.html">ggtrace()</a></code> gains a <code>...</code> for extensibility in
 future updates.</li>
@@ -171,7 +185,7 @@ When <code>TRUE</code>, it untraces first before editing.</li>
 </li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fixes-0-4-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-1"></a></h4>
+<h4 id="bug-fixes-0-4-6-1">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-6-1"></a></h4>
 <ul><li>Fix bug where <code><a href="../reference/ggtrace.html">ggtrace()</a></code> fails to evaluate the first
 line when it’s the only reachable line (<a href="https://github.com/yjunechoe/ggtrace/issues/44" class="external-link">#44</a>)</li>
 </ul></div>

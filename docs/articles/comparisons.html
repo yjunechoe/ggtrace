@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,7 +57,7 @@
     <a class="dropdown-item" href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Case Study: {ggxmean}</a>
+    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -96,7 +96,8 @@
 <h2 id="sneak-peak">Sneak peak:<a class="anchor" aria-label="anchor" href="#sneak-peak"></a>
 </h2>
 <ul>
-<li>An overview of methods for debugging/inspecting ggplot and their pros/cons
+<li>An overview of methods for debugging/inspecting ggplot and their
+pros/cons
 <ul>
 <li>
 <code><a href="https://rdrr.io/r/base/debug.html" class="external-link">debug()</a></code>/<code><a href="https://rdrr.io/r/base/debug.html" class="external-link">debugonce()</a></code>
@@ -108,19 +109,27 @@
 <li><code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code></li>
 </ul>
 </li>
-<li>A review and discussion of what came before {ggtrace} (the shoulders of giants)
+<li>A review and discussion of what came before {ggtrace} (the shoulders
+of giants)
 <ul>
 <li>
-<a href="https://twitter.com/yutannihilat_en" class="external-link">Hiroaki Yutani</a>’s <a href="https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/" class="external-link">blog post on {ggplot2} + browser()</a>
+<a href="https://twitter.com/yutannihilat_en" class="external-link">Hiroaki Yutani</a>’s
+<a href="https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/" class="external-link">blog post
+on {ggplot2} + browser()</a>
 </li>
 <li>
 <a href="https://github.com/aphalo" class="external-link">Pedro J. Aphalo</a>’s <a href="https://cran.r-project.org/web/packages/gginnards/vignettes/user-guide-1.html" class="external-link">{gginnards}</a>
 </li>
 <li>
-<a href="https://twitter.com/BrodieGaslam" class="external-link">Brodie Gaslam</a>’s <a href="https://github.com/brodieG/ggbg" class="external-link">{ggbg}</a> and <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/brodieG/ggbg/development/inst/doc/extensions.html" class="external-link">ggplot2 internals reference document</a>
+<a href="https://twitter.com/BrodieGaslam" class="external-link">Brodie Gaslam</a>’s <a href="https://github.com/brodieG/ggbg" class="external-link">{ggbg}</a> and <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/brodieG/ggbg/development/inst/doc/extensions.html" class="external-link">ggplot2
+internals reference document</a>
 </li>
 <li>
-<a href="https://twitter.com/paleolimbot" class="external-link">Dewey Dunnington</a>’s <a href="https://github.com/paleolimbot/ggdebug" class="external-link">{ggdebug}</a>, which also features a function of the same name <code><a href="https://rdrr.io/pkg/ggdebug/man/ggtrace.html" class="external-link">ggdebug::ggtrace</a></code> but which does not use <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code>. Maybe things have changed in the last 2-3 years, but <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code> and <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code> do work with ggproto methods, as this package shows!</li>
+<a href="https://twitter.com/paleolimbot" class="external-link">Dewey Dunnington</a>’s <a href="https://github.com/paleolimbot/ggdebug" class="external-link">{ggdebug}</a>, which also
+features a function of the same name <code><a href="https://rdrr.io/pkg/ggdebug/man/ggtrace.html" class="external-link">ggdebug::ggtrace</a></code> but
+which does not use <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code>. Maybe things have changed in
+the last 2-3 years, but <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">trace()</a></code> and <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code>
+do work with ggproto methods, as this package shows!</li>
 </ul>
 </li>
 </ul>
@@ -138,7 +147,8 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.1.</p>
 </div>
 
     </footer>

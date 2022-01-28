@@ -7,7 +7,10 @@
     set_last = function(value) .last_ggtrace <<- value,
     get_global = function() {
       if(!.global_ggtrace_state) {
-        message("Global collection of tracedumps is currently turned off. To activate, call `global_ggtrace_state(TRUE)`")
+        message(paste0(
+          "Global collection of tracedumps is currently turned off.\n",
+          "To activate, call `global_ggtrace_state(TRUE)`"
+        ))
       }
       .global_ggtrace
     },
@@ -23,28 +26,19 @@
 set_last_ggtrace <- function(value) .ggtrace_storage$set_last(value)
 add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 
-#' Retrieve the trace dump created by `ggtrace()`
+#' Retrieve the last trace dump created by `ggtrace()`
 #'
-#' @details
+#' `last_ggtrace()` retrieves the last trace dump created by `ggtrace()` - i.e., from the last time
+#' the trace has been triggered.
 #'
-#'   - `last_ggtrace()` retrieves the last trace dump created by `ggtrace()` - i.e., from the last time
-#'   the trace has been triggered.
+#' @details A **tracedump** refers to the output of an expression evaluated inside a traced function when
+#' a trace is triggered. In the context of `ggtrace()`, the tracedump is a list that is as long as the number of
+#' step-expression pairs, where each element is the output of each expression (`trace_exprs`) evaluated at each
+#' step (`trace_steps`) inside the execution environment of the function or ggproto method.
 #'
-#'   - `global_ggtrace()` is a list of trace dumps collected across multiple traces, and is recommended
-#'   for use with `ggtrace(once = FALSE)` when you expect a trace to be independently triggered multiple
-#'   times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
-#'   when the plot has multiple layers which all call the method being traced).
+#'  `clear_last_ggtrace()` sets the value of `last_ggtrace()` to `NULL` and returns `NULL`.
 #'
-#'   - When a trace dump is pushed to `global_ggtrace()` upon exiting a trace, it gets named after the ggproto method
-#'   and a hex code identifying the method's runtime environment, e.g. `"Stat$compute_layer-00000267437FD3D8"`.
-#'
-#'   - `clear_global_ggtrace()` sets the value of `global_ggtrace()` to `NULL` and returns `NULL`.
-#'
-#'   - Inspect the state of the global trace dump with `global_ggtrace_state()` and activate or deactivate
-#'   it with `global_ggtrace_on()` and `global_ggtrace_off()`, which are aliases of `global_ggtrace_state(TRUE)`
-#'   and `global_ggtrace_state(FALSE)`, respectively.
-#'
-#' @seealso [ggtrace()], [gguntrace()]
+#' @seealso [global_ggtrace()]
 #'
 #' @return list
 #' @export
@@ -52,8 +46,6 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #' @keywords internal
 #' @examples
 #' library(ggplot2)
-#'
-#' # Inspect last tracedump
 #'
 #' ggtrace(StatSmooth$compute_group, trace_steps = -1, trace_exprs = quote(head(prediction)))
 #'
@@ -72,8 +64,42 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' head(last_ggtrace()[[1]])
 #'
+last_ggtrace <- function() .ggtrace_storage$get_last()
+
+#' @export
+#' @rdname last_ggtrace
+clear_last_ggtrace <- function() {
+  set_last_ggtrace(NULL)
+  message("Last tracedump cleared.")
+  invisible(last_ggtrace())
+}
+
+#' Retrieve all trace dump created by `ggtrace()`
 #'
-#' # Inspect an accumulation of trace dumps
+#' `global_ggtrace()` is a list of trace dumps collected across multiple traces, and is recommended
+#' for use with `ggtrace(once = FALSE)` when you expect a trace to be independently triggered multiple
+#' times (for example, when you are tracing a (compute/draw)_group method and there are multiple groups, or
+#' when the plot has multiple layers which all call the method being traced).
+#'
+#' @details
+#'
+#'   - `clear_global_ggtrace()` sets the value of `global_ggtrace()` to `NULL` and returns `NULL`.
+#'
+#'   - You can inspect the state of the global trace dump with `global_ggtrace_state()` and activate or deactivate
+#'   it with `global_ggtrace_on()` and `global_ggtrace_off()`, which are aliases of `global_ggtrace_state(TRUE)`
+#'   and `global_ggtrace_state(FALSE)`, respectively.
+#'
+#' @note When a trace dump is pushed to `global_ggtrace()`, it gets named after the ggproto method
+#'   and a hex code identifying the method's runtime environment, e.g. `"Stat$compute_layer-00000267437FD3D8"`.
+#'
+#' @seealso [last_ggtrace()]
+#'
+#' @return list
+#' @export
+#'
+#' @keywords internal
+#' @examples
+#' library(ggplot2)
 #'
 #' global_ggtrace_state() # global tracedump is inactive by default since v0.4.3
 #' global_ggtrace_on()    # alias for global_ggtrace_state(TRUE)
@@ -107,22 +133,10 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' global_ggtrace_off() # alias for global_ggtrace_state(FALSE)
 #'
-last_ggtrace <- function() .ggtrace_storage$get_last()
-
-#' @export
-#' @rdname last_ggtrace
-clear_last_ggtrace <- function() {
-  set_last_ggtrace(NULL)
-  message("Last tracedump cleared.")
-  invisible(last_ggtrace())
-}
-
-#' @export
-#' @rdname last_ggtrace
 global_ggtrace <- function() .ggtrace_storage$get_global()
 
 #' @export
-#' @rdname last_ggtrace
+#' @rdname global_ggtrace
 clear_global_ggtrace <- function() {
   .ggtrace_storage$set_global(NULL)
   message("Global tracedump cleared.")
@@ -138,7 +152,7 @@ clear_global_ggtrace <- function() {
 #' @return A logical indicating the current state of the global trace dump.
 #'   If `state` is provided, changes the state first, then returns the state invisibly.
 #' @export
-#' @rdname last_ggtrace
+#' @rdname global_ggtrace
 global_ggtrace_state <- function(state) {
   if (!rlang::is_missing(state) && is.logical(state)) {
     message("Global tracedump ",
@@ -152,12 +166,12 @@ global_ggtrace_state <- function(state) {
 }
 
 #' @export
-#' @rdname last_ggtrace
+#' @rdname global_ggtrace
 global_ggtrace_on <- function() {
   global_ggtrace_state(TRUE)
 }
 #' @export
-#' @rdname last_ggtrace
+#' @rdname global_ggtrace
 global_ggtrace_off <- function() {
   global_ggtrace_state(FALSE)
 }

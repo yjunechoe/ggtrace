@@ -2,9 +2,12 @@
 
 export(clear_global_ggtrace)
 export(clear_last_ggtrace)
+export(get_method)
 export(ggbody)
+export(ggdebugonce)
 export(ggedit)
 export(ggtrace)
+export(ggtraceback)
 export(gguntrace)
 export(global_ggtrace)
 export(global_ggtrace_off)
