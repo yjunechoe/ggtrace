@@ -19,8 +19,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Collate:
   'utils.R'
+  'helpers.R'
   'ggbody.R'
-  'is_traced.R'
   'tracedump.R'
   'ggedit.R'
   'gguntrace.R'

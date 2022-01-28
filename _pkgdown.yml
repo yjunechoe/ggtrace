@@ -14,30 +14,30 @@ template:
 
 reference:
 - title: Trace
-  desc: Programmatically inspect, debug, and manipulate functions and ggproto methods
+  desc: Programmatically inspect, debug, and manipulate functions and methods
   contents:
   - ggtrace
   - ggedit
-  - ggbody
   - gguntrace
 
 - title: Helpers
   desc: Helpers for ggtrace workflows
   contents:
+  - ggbody
   - is_traced
   - get_method
 
-- title: Interact with tracedumps
-  desc: Retrieve the output of evaluated expressions from triggered traces
+- title: Tracedumps
+  desc: Log and interact with the output of injected expressions
   contents:
   - last_ggtrace
+  - global_ggtrace
 
 - title: One-offs
-  desc: Call common inspection workflows without logging to the tracedumps
+  desc: Convenient shortcuts to common workflows without logging to tracedumps
   contents:
   - ggdebugonce
   - ggtraceback
-
 
 
 articles:

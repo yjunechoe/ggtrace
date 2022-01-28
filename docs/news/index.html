@@ -73,8 +73,8 @@
 <h4 id="new-features-0-4-6">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-6"></a></h4>
 <ul><li>Added <code><a href="../reference/get_method.html">get_method()</a></code> which returns ggproto methods as
 functions</li>
-<li>Added wrappers for one-off workflows <code><a href="../reference/one-offs.html">ggdebugonce()</a></code> and
-<code><a href="../reference/one-offs.html">ggtraceback()</a></code>
+<li>Added wrappers for one-off workflows <code><a href="../reference/ggdebugonce.html">ggdebugonce()</a></code> and
+<code><a href="../reference/ggtraceback.html">ggtraceback()</a></code>
 </li>
 </ul></div>
 <div class="section level4">
@@ -132,13 +132,13 @@ vignette</a>
 <div class="section level4">
 <h4 id="breaking-changes-0-4-6">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4-6"></a></h4>
 <ul><li>Global tracedump is turned off by default
-(<code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code> is <code>FALSE</code> on load) and
+(<code><a href="../reference/global_ggtrace.html">global_ggtrace_state()</a></code> is <code>FALSE</code> on load) and
 must be explicitly activated with
 <code>global_ggtrace_state(TRUE)</code>.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="improvements-0-4-6-3">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-4-6-3"></a></h4>
-<ul><li>Improved messages for <code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code>
+<ul><li>Improved messages for <code><a href="../reference/global_ggtrace.html">global_ggtrace_state()</a></code>
 </li>
 </ul></div>
 </div>
@@ -156,7 +156,7 @@ slowdowns)</li>
 <div class="section level4">
 <h4 id="new-features-0-4-6-2">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-6-2"></a></h4>
 <ul><li>Global collection of tracedumps can be turned on/off with
-<code><a href="../reference/last_ggtrace.html">global_ggtrace_state()</a></code>. It is still active by default but
+<code><a href="../reference/global_ggtrace.html">global_ggtrace_state()</a></code>. It is still active by default but
 should memory become a concern, it can be turned off with
 <code>global_ggtrace_state(state = FALSE)</code>.</li>
 </ul></div>
@@ -270,7 +270,7 @@ output from <code><a href="../reference/ggtrace.html">ggtrace()</a></code>, in a
 When <code>TRUE</code>, it uses the names of the list of expressions
 passed to <code>trace_exprs</code> as the names for the tracedump set to
 <code><a href="../reference/last_ggtrace.html">last_ggtrace()</a></code> and added to
-<code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code>.</p></li>
+<code><a href="../reference/global_ggtrace.html">global_ggtrace()</a></code>.</p></li>
 <li><p><code><a href="../reference/ggtrace.html">ggtrace()</a></code> gets a <code>verbose</code> argument. When
 <code>FALSE</code>, it suppresses the display of all
 non-<code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code> information, including information about
@@ -293,7 +293,7 @@ package load.</p></li>
 </ul></div>
 <div class="section level4">
 <h4 id="improvements-0-3-2">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-3-2"></a></h4>
-<ul><li><p>Tracedumps accumulated in <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> are named
+<ul><li><p>Tracedumps accumulated in <code><a href="../reference/global_ggtrace.html">global_ggtrace()</a></code> are named
 after the method (+ hexadecimal ID) for ease of searching.
 (<a href="https://github.com/yjunechoe/ggtrace/issues/31" class="external-link">#31</a>)</p></li>
 <li><p>Triggering of a trace is now informed via <code><a href="https://rdrr.io/r/base/message.html" class="external-link">message()</a></code>
@@ -312,14 +312,14 @@ negative index conversion, so something like <code>trace_steps = c(1,
 <h3 id="ggtrace-0-3-4">ggtrace 0.3.3<a class="anchor" aria-label="anchor" href="#ggtrace-0-3-4"></a></h3>
 <div class="section level4">
 <h4 id="new-features-0-3-2">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-2"></a></h4>
-<ul><li><p>New function <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> which returns
+<ul><li><p>New function <code><a href="../reference/global_ggtrace.html">global_ggtrace()</a></code> which returns
 accumulated tracedumps from <code><a href="../reference/ggtrace.html">ggtrace()</a></code>. This is useful in
 conjunction with <code>ggtrace(once = FALSE)</code> for tracing a method
 that you expect will be called multiple times (ex:
 <code>Stat$compute_group</code> gets triggered the same number of times
 as the number of groups in a panel).</p></li>
-<li><p>New function <code><a href="../reference/last_ggtrace.html">clear_global_ggtrace()</a></code> which clears
-<code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> by setting it to
+<li><p>New function <code><a href="../reference/global_ggtrace.html">clear_global_ggtrace()</a></code> which clears
+<code><a href="../reference/global_ggtrace.html">global_ggtrace()</a></code> by setting it to
 <code>NULL</code>.</p></li>
 </ul></div>
 <div class="section level4">

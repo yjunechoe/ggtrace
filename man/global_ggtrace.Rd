@@ -27,7 +27,7 @@ to the global tracedump storage, which can be inspected with \code{global_ggtrac
 The global tracedump can be turned on/off by setting \code{state} to \code{TRUE}/\code{FALSE}.}
 }
 \value{
-list
+List
 
 A logical indicating the current state of the global trace dump.
 If \code{state} is provided, changes the state first, then returns the state invisibly.

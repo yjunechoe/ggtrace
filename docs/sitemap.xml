@@ -58,13 +58,22 @@
     <loc>/reference/ggbody.html</loc>
   </url>
   <url>
+    <loc>/reference/ggdebugonce.html</loc>
+  </url>
+  <url>
     <loc>/reference/ggedit.html</loc>
   </url>
   <url>
     <loc>/reference/ggtrace.html</loc>
   </url>
   <url>
+    <loc>/reference/ggtraceback.html</loc>
+  </url>
+  <url>
     <loc>/reference/gguntrace.html</loc>
+  </url>
+  <url>
+    <loc>/reference/global_ggtrace.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>

@@ -161,7 +161,7 @@ traced function</p>
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x00000000162f18f0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x000000001634e550&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a
 call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
@@ -273,11 +273,11 @@ semantics in R.</p>
 <p>Persistent trace with <code>once = FALSE</code> and explicit
 untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code></p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; [1] FALSE</span>
-<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump activated.</span>
-<span class="fu"><a href="../reference/last_ggtrace.html">clear_global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/global_ggtrace.html">clear_global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump cleared.</span>
 
 <span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span>, <span class="op">-</span><span class="fl">1</span>, once <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -293,31 +293,31 @@ untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code
 <span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span>
 <span class="co">#&gt; `StatBoxplot$compute_group` no longer being traced.</span>
 
-<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001E9BBE48`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000001E9BBE48`[[1]]</span>
+<span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001E9BCB68`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000001E9BCB68`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002159DDC8`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002159DDC8`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002158EC00`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002158EC00`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
 <span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
 <span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002298E868`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-000000002298E868`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002295B410`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-000000002295B410`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1           5       FALSE</span>
 
-<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace_state</a></span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump deactivated.</span></code></pre></div>
 </div>
 <div class="section level3">

@@ -40,7 +40,7 @@ add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 #'
 #' @seealso [global_ggtrace()]
 #'
-#' @return list
+#' @return List
 #' @export
 #'
 #' @keywords internal
@@ -94,7 +94,7 @@ clear_last_ggtrace <- function() {
 #'
 #' @seealso [last_ggtrace()]
 #'
-#' @return list
+#' @return List
 #' @export
 #'
 #' @keywords internal

@@ -107,7 +107,7 @@ internals</strong><a class="anchor" aria-label="anchor" href="#programmatically-
 inspect the internals!</li>
 <li>The output is available for inspection outside of the debugging
 context with <code><a href="reference/last_ggtrace.html">last_ggtrace()</a></code> and
-<code><a href="reference/last_ggtrace.html">global_ggtrace()</a></code>
+<code><a href="reference/global_ggtrace.html">global_ggtrace()</a></code>
 </li>
 <li>Untraces on exit by default, like <code><a href="https://rdrr.io/r/base/debug.html" class="external-link">debugonce()</a></code>
 </li>
@@ -151,7 +151,7 @@ upon <code><a href="reference/gguntrace.html">gguntrace()</a></code>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("remotes")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"yjunechoe/ggtrace"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.4.5</span></span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.4.6</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-1---compute_layer-method-from-positionjitter">
@@ -234,17 +234,7 @@ with keyword <code>~step</code></strong><a class="anchor" aria-label="anchor" hr
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>jitter_plot</span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on `PositionJitter$compute_layer`</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 01]&gt; data</span></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 01]&gt; params</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 09]&gt; dummy_data</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 12]&gt; transform_position(data, function(x) x + x_jit, function(x) x + y_jit)</span></span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing `PositionJitter$compute_layer` on exit.</span></span></code></pre></div>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing `PositionJitter$compute_layer` on exit.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="step-4-inspect-trace-dump">
@@ -351,12 +341,7 @@ with keyword <code>~step</code></strong><a class="anchor" aria-label="anchor" hr
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># plot not printed to save space</span></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>smooth_plot</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on `GeomSmooth$draw_group`</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [Step 7]&gt; gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, coord,</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    flipped_aes = flipped_aes), GeomLine$draw_panel(path, panel_params, coord))</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call `last_ggtrace()` to get the trace dump.</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing `GeomSmooth$draw_group` on exit.</span></span></code></pre></div>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing `GeomSmooth$draw_group` on exit.</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="step-4-inspect-trace-dump-1">
@@ -790,7 +775,7 @@ method env</strong><a class="anchor" aria-label="anchor" href="#step-3-ggtrace--
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.4.5-gogreen.svg"></a></li>
+<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.4.6-gogreen.svg"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-gogreen.svg"></a></li>
 </ul>
 </div>

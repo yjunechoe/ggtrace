@@ -10,7 +10,7 @@ last_ggtrace()
 clear_last_ggtrace()
 }
 \value{
-list
+List
 }
 \description{
 \code{last_ggtrace()} retrieves the last trace dump created by \code{ggtrace()} - i.e., from the last time

@@ -301,7 +301,7 @@ just need to know that its output is basically what’s returned by the
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     ggplot_build(plot)$data[[i]]</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x00000000327c0de0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x00000000339ba1e0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></code></pre></div>
 <p>We use <code><a href="../reference/ggbody.html">ggbody()</a></code> function from {ggtrace} to grab the body
 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> as a list, and, with some metaprogramming
@@ -1015,13 +1015,13 @@ dropping those extraneous variables and passing the data through
 <p>One of the biggest perks of {ggtrace} is the ability to log the
 output of the triggered traces. We’ve been seeing a bit of that with
 <code><a href="../reference/last_ggtrace.html">last_ggtrace()</a></code> but we can scale this up.</p>
-<p>Using <code><a href="../reference/last_ggtrace.html">global_ggtrace()</a></code> and persistent tracing with
+<p>Using <code><a href="../reference/global_ggtrace.html">global_ggtrace()</a></code> and persistent tracing with
 <code>ggtrace(once = FALSE)</code>, we can capture what
 <code>data</code> looks like inside the <code>setup_data</code> method
 across our two expected and two unexpected cases from our reprex.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Turn the global tracedump on</span>
-<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_on</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace_on</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump activated.</span>
 
 <span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">setup_data</span>, <span class="op">-</span><span class="fl">1</span>, once <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
@@ -1038,15 +1038,15 @@ across our two expected and two unexpected cases from our reprex.</p>
 <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span>
 <span class="co">#&gt; Triggering persistent trace on `Stat$setup_data`</span>
 
-<span class="va">tracedump3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">tracedump3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">tracedump3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span>, <span class="va">`[[`</span>, <span class="fl">1</span><span class="op">)</span> <span class="co"># simplify</span>
 
 <span class="co"># Clean up and turn the global tracedump back off</span>
 <span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">setup_data</span><span class="op">)</span>
 <span class="co">#&gt; `Stat$setup_data` no longer being traced.</span>
-<span class="fu"><a href="../reference/last_ggtrace.html">clear_global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/global_ggtrace.html">clear_global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump cleared.</span>
-<span class="fu"><a href="../reference/last_ggtrace.html">global_ggtrace_off</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace_off</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Global tracedump deactivated.</span>
 
 <span class="co"># Label the trace dumps</span>
