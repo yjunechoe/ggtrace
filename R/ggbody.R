@@ -101,7 +101,7 @@ ggbody <- function(method, inherit = FALSE) {
   if (!grepl("\\$", method_deparsed) && "function" %in% class(method) || !is.null(attr(method, "original"))) {
     fn_expr <- rlang::quo_get_expr(method_quo)
     # Error if it's a call that evalutes to a function that's not `::` or `:::`
-    if (rlang::is_call(fn_expr) && !rlang::call_name(fn_expr) %in% c("::", ":::")) {
+    if (rlang::is_call(fn_expr) && !is.null(rlang::call_name(fn_expr))) {
       rlang::abort("Invalid expression. If you mean to pass in a function, it must be a variable not a call.")
     }
     fn_deparsed <- gsub("^.*:", "", method_deparsed)

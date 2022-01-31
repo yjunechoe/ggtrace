@@ -57,8 +57,11 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
   if (grepl("\\$", deparsed)) {
     method_body <- ggbody(method_quo)
 
+    # Error if not evaluatable
+    evalled <- rlang::eval_tidy(method_quo)
+
     # Error if not a method
-    if (class(method_body) != "list" || !all(vapply(method_body, rlang::is_expression, logical(1)))) {
+    if (class(method_body) != "list" || !all(vapply(method_body, function(x) x == rlang::expr(`{`) | rlang::is_call(x), logical(1)))) {
       rlang::abort("Cannot trace a non-function.")
     }
 
