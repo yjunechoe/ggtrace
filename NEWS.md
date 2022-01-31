@@ -2,6 +2,10 @@
 
 # ggtrace 0.4.x
 
+### Bug Fix
+
+- Fixed compatibility issues with {rlang} v1.0.0 new changes to the _call_ and _expression_ API
+
 # ggtrace 0.4.6
 
 ### New Features

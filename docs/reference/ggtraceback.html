@@ -87,7 +87,13 @@ represents the oldest call in the backtrace.</p>
 <p>This is needed in particular when you call <code>trace_back()</code>
 indirectly or from a larger context, for example in tests or
 inside an RMarkdown document where you don't want all of the
-knitr evaluation mechanisms to appear in the backtrace.</p></dd>
+knitr evaluation mechanisms to appear in the backtrace.</p>
+<p>If not supplied, the <code>rlang_trace_top_env</code> global option is
+consulted. This makes it possible to trim the embedding context
+for all backtraces created while the option is set. If knitr is
+in progress, the default value for this option is
+<code><a href="https://rdrr.io/pkg/knitr/man/knit_global.html" class="external-link">knitr::knit_global()</a></code> so that the knitr context is trimmed out
+of backtraces.</p></dd>
 
     <dt><code>bottom</code></dt>
 <dd><p>The last frame environment to be included in the
@@ -95,7 +101,7 @@ backtrace. This becomes the rightmost leaf of the backtrace tree
 and represents the youngest call in the backtrace.</p>
 <p>Set this when you would like to capture a backtrace without the
 capture context.</p>
-<p>Can also be an integer that will be passed to <code><a href="https://rlang.r-lib.org/reference/caller_env.html" class="external-link">caller_env()</a></code>.</p></dd>
+<p>Can also be an integer that will be passed to <code><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env()</a></code>.</p></dd>
 
   
 </dl></dd>
