@@ -61,7 +61,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
     evalled <- rlang::eval_tidy(method_quo)
 
     # Error if not a method
-    if (class(method_body) != "list" || !all(vapply(method_body, function(x) x == rlang::expr(`{`) | rlang::is_call(x), logical(1)))) {
+    if (typeof(method_body) != "list" | class(evalled) != "ggproto_method" | method_body[[1]] != rlang::expr(`{`)) {
       rlang::abort("Cannot trace a non-function.")
     }
 
