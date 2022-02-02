@@ -28,7 +28,7 @@ Collate:
   'one-offs.R'
   'zzz.R'
 Imports: 
-    rlang (>= 0.4.10)
+    rlang (>= 1.0.0)
 Suggests: 
     ggplot2 (>= 3.3.0),
     grid,

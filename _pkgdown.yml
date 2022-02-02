@@ -34,7 +34,7 @@ reference:
   - global_ggtrace
 
 - title: One-offs
-  desc: Convenient shortcuts to common workflows without logging to tracedumps
+  desc: Convenient shortcuts to common workflows without side effects
   contents:
   - ggdebugonce
   - ggtraceback
