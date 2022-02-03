@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,7 +117,7 @@ Defaults to <code>FALSE</code>.</p></dd>
 It calls <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::untrace()</a></code> on itself on exit by default, to make its effect ephemeral like <code><a href="https://rdrr.io/r/base/debug.html" class="external-link">base::debugonce()</a></code>.
 A major feature is the ability to pass multiple positions and expressions to <code>trace_steps</code> and <code>trace_exprs</code> to
 inspect, capture, and modify the run time environment of ggproto methods. It is recommended to consult the output
-of <code><a href="ggbody.html">ggbody()</a></code> when deciding which expressions to evaluate at which steps.</p>
+of <code><a href="get_method.html">ggbody()</a></code> when deciding which expressions to evaluate at which steps.</p>
 <p>The output of the expressions passed to <code>trace_exprs</code> is printed while tracing takes place. The
 list of outputs from <code>ggtrace()</code> ("trace dumps") can be returned for further inspection with
 <code><a href="last_ggtrace.html">last_ggtrace()</a></code> or <code><a href="global_ggtrace.html">global_ggtrace()</a></code>.</p>
@@ -161,7 +161,7 @@ the trace again. To check if a method is being traced, call <code><a href="is_tr
 <code><a href="gguntrace.html">gguntrace()</a></code> since unlike <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::untrace()</a></code>, it will not error if a trace doesn't exist on the method.
 Instead, <code><a href="gguntrace.html">gguntrace()</a></code> will do nothing in that case and simply inform you that there is no trace to remove.</p></li>
 <li><p>Because <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code> wraps the method body in a special environment, it is not possible to inspect the
-method/function which called it, even with something like <code><a href="https://rlang.r-lib.org/reference/caller_env.html" class="external-link">rlang::caller_env()</a></code>. You will traverse through
+method/function which called it, even with something like <code><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">rlang::caller_env()</a></code>. You will traverse through
 a few wrapping environments created by <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code> which eventually ends up looping around.</p></li>
 </ul></div>
     <div class="section level2">
@@ -192,7 +192,7 @@ though suppressing messages is generally not recommended.</p>
 <span class="r-in"><span class="va">jitter_plot</span></span>
 <span class="r-plt img"><img src="ggtrace-1.png" alt="" width="1094" height="676"></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="ggbody.html">ggbody</a></span><span class="op">(</span><span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="get_method.html">ggbody</a></span><span class="op">(</span><span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> `{`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -277,7 +277,7 @@ though suppressing messages is generally not recommended.</p>
 <span class="r-in"><span class="fu">ggtrace</span><span class="op">(</span></span>
 <span class="r-in">  <span class="va">PositionJitter</span><span class="op">$</span><span class="va">compute_layer</span>,</span>
 <span class="r-in">  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">12</span><span class="op">)</span>,</span>
-<span class="r-in">  trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/nse-defuse.html" class="external-link">exprs</a></span><span class="op">(</span></span>
+<span class="r-in">  trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/defusing-advanced.html" class="external-link">exprs</a></span><span class="op">(</span></span>
 <span class="r-in">    before_jitter <span class="op">=</span> <span class="va">data</span>,</span>
 <span class="r-in">    after_jitter <span class="op">=</span> <span class="op">~</span><span class="va">step</span></span>
 <span class="r-in">  <span class="op">)</span>,</span>

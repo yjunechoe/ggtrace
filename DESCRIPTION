@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically debug ggproto methods with trace
-Version: 0.4.6
+Version: 0.4.7
 Authors@R: c(
       person(given = "June",
            family = "Choe",
@@ -28,7 +28,7 @@ Collate:
   'one-offs.R'
   'zzz.R'
 Imports: 
-    rlang (>= 1.0.0)
+    rlang (>= 0.4.10)
 Suggests: 
     ggplot2 (>= 3.3.0),
     grid,

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -186,7 +186,7 @@ future updates.</li>
 <code><a href="../reference/ggedit.html">ggedit()</a></code> gains a <code>remove_trace</code> argument.
 When <code>TRUE</code>, it untraces first before editing.</li>
 <li>Improved error messages for invalid expressions passed to
-<code>method</code> argument of <code><a href="../reference/ggbody.html">ggbody()</a></code>
+<code>method</code> argument of <code><a href="../reference/get_method.html">ggbody()</a></code>
 </li>
 </ul></div>
 <div class="section level4">
@@ -240,7 +240,7 @@ currently being traced</li>
 message if the method is not a function (ex:
 <code>Stat$extra_params</code>, which is a 1-length character vector
 <code>"na.rm"</code>)</p></li>
-<li><p><code><a href="../reference/ggbody.html">ggbody()</a></code> now warns if it’s returning the body of a
+<li><p><code><a href="../reference/get_method.html">ggbody()</a></code> now warns if it’s returning the body of a
 method that’s currently being traced (<a href="https://github.com/yjunechoe/ggtrace/issues/35" class="external-link">#35</a>)</p></li>
 <li><p><code><a href="../reference/ggedit.html">ggedit()</a></code> now informs you if you’re editing on top of
 an existing trace/edit.</p></li>
@@ -347,7 +347,7 @@ fail. This now throws an error.</li>
 <h4 id="improvements-0-3-4">Improvements<a class="anchor" aria-label="anchor" href="#improvements-0-3-4"></a></h4>
 <ul><li><p><code>trace_exprs</code> argument can now take a named list of
 expressions (<a href="https://github.com/yjunechoe/ggtrace/issues/21" class="external-link">#21</a>)</p></li>
-<li><p>Improved documentation for <code><a href="../reference/ggbody.html">ggbody()</a></code></p></li>
+<li><p>Improved documentation for <code><a href="../reference/get_method.html">ggbody()</a></code></p></li>
 <li><p>More informative messages for <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and
 <code><a href="../reference/gguntrace.html">gguntrace()</a></code></p></li>
 </ul></div>
@@ -368,7 +368,7 @@ second argument, which gets ignored. This now makes it easy to call
 these function by modifying the call to an earlier<a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a>
 function from the console or in other interactive contexts.</p></li>
 <li>
-<p>Significant re-write of <code><a href="../reference/ggbody.html">ggbody()</a></code> for better error
+<p>Significant re-write of <code><a href="../reference/get_method.html">ggbody()</a></code> for better error
 handling (<a href="https://github.com/yjunechoe/ggtrace/issues/23" class="external-link">#23</a>)</p>
 <ul><li><p>Aborts if method is not a call or is not of the accepted form,
 with specific error messages for each.</p></li>
@@ -382,7 +382,7 @@ the object, not inherited</p></li>
 <li>
 <p>Better error handling for <code><a href="../reference/gguntrace.html">gguntrace()</a></code> when the
 method is no longer being traced (<a href="https://github.com/yjunechoe/ggtrace/issues/24" class="external-link">#24</a>)</p>
-<ul><li><p>Uses the re-written <code><a href="../reference/ggbody.html">ggbody()</a></code> to validate the
+<ul><li><p>Uses the re-written <code><a href="../reference/get_method.html">ggbody()</a></code> to validate the
 method</p></li>
 <li><p>Unlike <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::untrace()</a></code>, no longer errors if given a
 method not currently being traced. It now prints a message saying so
@@ -475,7 +475,7 @@ variable at the second and third steps of the method body.
 <ul><li><p><code>trace_exprs</code> argument of <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is
 now optional. If not provided, defaults to <code>~step</code>
 (<a href="https://github.com/yjunechoe/ggtrace/issues/13" class="external-link">#13</a>)</p></li>
-<li><p>You can now tell <code><a href="../reference/ggbody.html">ggbody()</a></code> to (recursively) search
+<li><p>You can now tell <code><a href="../reference/get_method.html">ggbody()</a></code> to (recursively) search
 for the method from its parents with <code>inherit = TRUE</code>
 (<a href="https://github.com/yjunechoe/ggtrace/issues/12" class="external-link">#12</a>)</p></li>
 </ul></div>

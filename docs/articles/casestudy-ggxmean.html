@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -301,9 +301,9 @@ just need to know that its output is basically what’s returned by the
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     ggplot_build(plot)$data[[i]]</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x00000000339ba1e0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x00000000247e3948&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></code></pre></div>
-<p>We use <code><a href="../reference/ggbody.html">ggbody()</a></code> function from {ggtrace} to grab the body
+<p>We use <code><a href="../reference/get_method.html">ggbody()</a></code> function from {ggtrace} to grab the body
 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> as a list, and, with some metaprogramming
 with <a href="https://rlang.r-lib.org" class="external-link">rlang</a>, pick out the steps where the data gets
 transformed. Note that the syntax
@@ -311,7 +311,7 @@ transformed. Note that the syntax
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> is an S3 generic defined for the class
 <code>&lt;&lt;ggplot&gt;&gt;</code>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">build_pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span>
+<code class="sourceCode R"><span class="va">build_pipeline</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span>
 <span class="va">data_assigns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">build_pipeline</span>,
   <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
     <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/is_call.html" class="external-link">is_call</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&amp;&amp;</span>
@@ -330,7 +330,7 @@ below:</p>
 <details><summary>
 Body of <code>ggplot_build()</code>
 </summary><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
 <span class="co">#&gt; </span>
@@ -640,7 +640,7 @@ computed and assigned</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">data_assigns</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">group_present1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt; [1] 12</span>
-<span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">12</span><span class="op">]</span><span class="op">]</span>
+<span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">12</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_aesthetics(d, plot))</span></code></pre></div>
 <p>The code from Step 12 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> calls the
 <code>compute_aesthetics</code> method of each layer <code>l</code>. The
@@ -649,7 +649,7 @@ computed and assigned</p>
 <details><summary>
 The internal function <code>by_layer()</code>
 </summary><div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">7</span><span class="op">]</span><span class="op">]</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">7</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; by_layer &lt;- function(f) {</span>
 <span class="co">#&gt;     out &lt;- vector("list", length(data))</span>
 <span class="co">#&gt;     for (i in seq_along(data)) {</span>
@@ -734,7 +734,7 @@ as we also so above.</p>
 <span class="co">#&gt; [1] "Layer"   "ggproto" "gg"</span>
 <span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] "LayerInstance" "Layer"         "ggproto"       "gg"</span>
-<span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span>
+<span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
 <span class="co">#&gt; </span>
@@ -828,7 +828,7 @@ computed.</p>
 <div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span>
   method <span class="op">=</span> <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span>,
-  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span><span class="op">)</span>,
+  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_along</a></span><span class="op">(</span><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span><span class="op">)</span>,
   trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">step</span><span class="op">)</span>,
   verbose <span class="op">=</span> <span class="cn">FALSE</span>
 <span class="op">)</span>
@@ -856,7 +856,7 @@ code</a> we can confirm that we have indeed located where
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">group_present2</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; [1] 21</span>
-<span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span><span class="op">[[</span><span class="fl">21</span><span class="op">]</span><span class="op">]</span>
+<span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_aesthetics</span><span class="op">)</span><span class="op">[[</span><span class="fl">21</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; evaled &lt;- add_group(evaled)</span></code></pre></div>
 <p>But that only gets us half-way there to solving the issue because we
 can’t/shouldn’t modify the Layer ggproto in extension packages - it’s
@@ -880,12 +880,12 @@ points).</p>
 <code>l$compute_aesthetics</code> is the <code>compute_statistic</code>
 method at Step 18</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">18</span><span class="op">]</span><span class="op">]</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">18</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; data &lt;- by_layer(function(l, d) l$compute_statistic(d, layout))</span></code></pre></div>
 <p>Let’s see what happens inside the
 <code>Layer$compute_statistic</code> method</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
 <span class="co">#&gt; </span>
@@ -905,7 +905,7 @@ passed to <code>Layer$compute_statistic</code> is by the
 <code>setup_data</code> method of the layer’s Stat ggproto at Step
 4.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>
 <span class="co">#&gt; data &lt;- self$stat$setup_data(data, self$computed_stat_params)</span></code></pre></div>
 <p>Let’s see what kind of information we have at this stage, and whether
 the information is sufficient for us to implement our desired design
@@ -920,9 +920,10 @@ change to <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class
 <span class="co">#&gt; [1] "StatXmean"</span></code></pre></div>
 <p>And let’s inspect its <code>setup_data</code> method</p>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">StatXmean</span><span class="op">$</span><span class="va">setup_data</span><span class="op">)</span> <span class="co"># errors!</span>
-<span class="co">#&gt; Error: Method 'setup_data' is not defined for `ggxmean:::StatXmean`</span>
-<span class="co">#&gt; Check inheritance with `ggbody(ggxmean:::StatXmean$setup_data, inherit = TRUE)`</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">StatXmean</span><span class="op">$</span><span class="va">setup_data</span><span class="op">)</span> <span class="co"># errors!</span>
+<span class="co">#&gt; <span style="color: #BBBB00; font-weight: bold;">Error</span><span style="font-weight: bold;">:</span></span>
+<span class="co">#&gt; <span style="color: #BBBB00;">!</span> Method 'setup_data' is not defined for `ggxmean:::StatXmean`</span>
+<span class="co">#&gt; Check inheritance with `get_method(ggxmean:::StatXmean$setup_data, inherit = TRUE)`</span></code></pre></div>
 <p>It looks like <code>setup_data</code> is inherited from a parent
 ggproto. The only candidate here from looking at its
 <code><a href="https://rdrr.io/r/base/class.html" class="external-link">class()</a></code> is the Stat parent ggproto.</p>
@@ -934,11 +935,11 @@ StatXmean, we’ll need to define its own version of the method, instead
 of having it simlpy inherit <code>Stat$setup_data</code>.</p>
 <p>For now, let’s grab the inherited method from Stat and proceed with
 inspecting its behavior. With the <code>inherit = TRUE</code> argument
-inside <code><a href="../reference/ggbody.html">ggbody()</a></code>, we confirm that <code>StatXmean</code>
+inside <code><a href="../reference/get_method.html">ggbody()</a></code>, we confirm that <code>StatXmean</code>
 indeed inherits <code>Stat$setup_data</code></p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/ggbody.html">ggbody</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">StatXmean</span><span class="op">$</span><span class="va">setup_data</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; Returning `ggbody(Stat$setup_data)`</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggxmean</span><span class="fu">:::</span><span class="va">StatXmean</span><span class="op">$</span><span class="va">setup_data</span>, inherit <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co">#&gt; Method inherited from `Stat$setup_data`</span>
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt; `{`</span>
 <span class="co">#&gt; </span>

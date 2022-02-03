@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -151,7 +151,7 @@ upon <code><a href="reference/gguntrace.html">gguntrace()</a></code>
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("remotes")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"yjunechoe/ggtrace"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.4.6</span></span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.4.7</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example-1---compute_layer-method-from-positionjitter">
@@ -418,24 +418,25 @@ something, though it’s meant to be exploratory not practical.</p>
 <strong>Step 2. Inspect body of the ggproto method</strong><a class="anchor" aria-label="anchor" href="#step-2-inspect-body-of-the-ggproto-method-2"></a>
 </h3>
 <p>Actually, <code>"compute_panel"</code> method is not defined for
-<code>StatBoxplot</code>. <code><a href="reference/ggbody.html">ggbody()</a></code> gives you a hint that it
+<code>StatBoxplot</code>. <code><a href="reference/get_method.html">ggbody()</a></code> gives you a hint that it
 may be inherited.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbody</span>(StatBoxplot<span class="sc">$</span>compute_panel)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error: Method 'compute_panel' is not defined for `StatBoxplot`</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Check inheritance with `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`</span></span></code></pre></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error:</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ! Method 'compute_panel' is not defined for `StatBoxplot`</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Check inheritance with `get_method(StatBoxplot$compute_panel, inherit = TRUE)`</span></span></code></pre></div>
 <p><code>StatBoxplot</code> is a child of the parent ggproto
 <code>Stat</code>, and the <code>"compute_panel"</code> method is
 inherited from <code>Stat</code> as well, so that’s what we want to
 trace instead:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(StatBoxplot)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "StatBoxplot" "Stat"        "ggproto"     "gg"</span></span></code></pre></div>
-<p>With <code>inherit = TRUE</code>, <code><a href="reference/ggbody.html">ggbody()</a></code> returns the
+<p>With <code>inherit = TRUE</code>, <code><a href="reference/get_method.html">ggbody()</a></code> returns the
 method as defined in the closest parent, and the corresponding code to
 get it. We confirm that we should be passing
 <code>Stat$compute_panel</code> to the <code>method</code> argument for
 <code><a href="reference/ggtrace.html">ggtrace()</a></code>.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggbody</span>(StatBoxplot<span class="sc">$</span>compute_panel, <span class="at">inherit =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Returning `ggbody(Stat$compute_panel)`</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Method inherited from `Stat$compute_panel`</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `{`</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -775,7 +776,7 @@ method env</strong><a class="anchor" aria-label="anchor" href="#step-3-ggtrace--
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.4.6-gogreen.svg"></a></li>
+<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.4.7-gogreen.svg"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#maturing" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-gogreen.svg"></a></li>
 </ul>
 </div>

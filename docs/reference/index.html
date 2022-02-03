@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.6</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,19 +100,14 @@ methods</p>
 
       <dl><dt>
           
-          <code><a href="ggbody.html">ggbody()</a></code> 
+          <code><a href="get_method.html">get_method()</a></code> <code><a href="get_method.html">ggformals()</a></code> <code><a href="get_method.html">ggbody()</a></code> 
         </dt>
-        <dd>Retrieve the body of a function or a method as a list</dd>
+        <dd>Get ggproto methods</dd>
       </dl><dl><dt>
           
           <code><a href="is_traced.html">is_traced()</a></code> 
         </dt>
         <dd>Check if a method is being traced</dd>
-      </dl><dl><dt>
-          
-          <code><a href="get_method.html">get_method()</a></code> 
-        </dt>
-        <dd>Return ggproto methods as functions</dd>
       </dl></div><div class="section level2">
       <h2 id="tracedumps">Tracedumps<a class="anchor" aria-label="anchor" href="#tracedumps"></a></h2>
       
@@ -126,7 +121,7 @@ methods</p>
 
       <dl><dt>
           
-          <code><a href="last_ggtrace.html">last_ggtrace()</a></code> <code><a href="last_ggtrace.html">clear_last_ggtrace()</a></code> 
+          <code><a href="last_ggtrace.html">last_ggtrace()</a></code> <code><a href="last_ggtrace.html">set_last_ggtrace()</a></code> <code><a href="last_ggtrace.html">clear_last_ggtrace()</a></code> <code><a href="last_ggtrace.html">set_global_ggtrace()</a></code> 
         </dt>
         <dd>Retrieve the last trace dump created by <code><a href="../reference/ggtrace.html">ggtrace()</a></code></dd>
       </dl><dl><dt>
@@ -137,8 +132,7 @@ methods</p>
       </dl></div><div class="section level2">
       <h2 id="one-offs">One-offs<a class="anchor" aria-label="anchor" href="#one-offs"></a></h2>
       
-      <p class="section-desc"></p><p>Convenient shortcuts to common workflows without logging to
-tracedumps</p>
+      <p class="section-desc"></p><p>Convenient shortcuts to common workflows without side effects</p>
 
       
     </div><div id="" class="section level2">

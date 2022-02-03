@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.4.6-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.4.7-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![](https://img.shields.io/badge/lifecycle-stable-gogreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 <!-- badges: end -->
 
@@ -46,7 +46,7 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.6
+    library(ggtrace) # v0.4.7
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 
@@ -295,8 +295,9 @@ Actually, `"compute_panel"` method is not defined for `StatBoxplot`.
 `ggbody()` gives you a hint that it may be inherited.
 
     ggbody(StatBoxplot$compute_panel)
-    #> Error: Method 'compute_panel' is not defined for `StatBoxplot`
-    #> Check inheritance with `ggbody(StatBoxplot$compute_panel, inherit = TRUE)`
+    #> Error:
+    #> ! Method 'compute_panel' is not defined for `StatBoxplot`
+    #> Check inheritance with `get_method(StatBoxplot$compute_panel, inherit = TRUE)`
 
 `StatBoxplot` is a child of the parent ggproto `Stat`, and the
 `"compute_panel"` method is inherited from `Stat` as well, so that’s
@@ -311,7 +312,7 @@ should be passing `Stat$compute_panel` to the `method` argument for
 `ggtrace()`.
 
     ggbody(StatBoxplot$compute_panel, inherit = TRUE)
-    #> Returning `ggbody(Stat$compute_panel)`
+    #> Method inherited from `Stat$compute_panel`
     #> [[1]]
     #> `{`
     #> 
