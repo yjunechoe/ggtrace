@@ -2,7 +2,7 @@
 % Please edit documentation in R/with_ggtrace.R
 \name{with_ggtrace}
 \alias{with_ggtrace}
-\title{Contained ggtrace for a single object}
+\title{Isolate a ggtrace call for a single object}
 \usage{
 with_ggtrace(x, ...)
 }

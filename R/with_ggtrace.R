@@ -1,7 +1,7 @@
-#' Contained ggtrace for a single object
+#' Isolate a ggtrace call for a single object
 #'
-#'  `with_ggtrace()` provides a functional interface to `ggtrace()`. It takes an object
-#'   and parameters passed to `ggtrace()` and returns the immediate tracedump without side effects.
+#' `with_ggtrace()` provides a functional interface to `ggtrace()`. It takes an object
+#'  and parameters passed to `ggtrace()` and returns the immediate tracedump without side effects.
 #'
 #' @param x An object whose evaluation triggers the trace as specified by the `...`
 #' @inheritDotParams ggtrace

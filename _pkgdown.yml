@@ -19,13 +19,15 @@ reference:
   - ggtrace
   - ggedit
   - gguntrace
+  - with_ggtrace
 
 - title: Helpers
   desc: Helpers for ggtrace workflows
   contents:
-  - ggbody
-  - is_traced
   - get_method
+  - ggbody
+  - ggformals
+  - is_traced
 
 - title: Tracedumps
   desc: Log and interact with the output of injected expressions

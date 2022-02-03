@@ -1,4 +1,4 @@
-#' Programmatically inspect, debug, and manipulate functions and methods
+#' Insert traces for delayed evaluation
 #'
 #' @inheritParams get_method
 #' @param trace_steps A sorted numeric vector of positions in the method's body to trace. Negative indices

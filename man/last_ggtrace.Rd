@@ -4,7 +4,7 @@
 \alias{last_ggtrace}
 \alias{set_last_ggtrace}
 \alias{clear_last_ggtrace}
-\title{Retrieve the last trace dump created by \code{ggtrace()}}
+\title{Retrieve the last tracedump created by \code{ggtrace()}}
 \usage{
 last_ggtrace()
 

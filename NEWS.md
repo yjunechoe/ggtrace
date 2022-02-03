@@ -1,5 +1,9 @@
 # ggtrace (development version)
 
+### New Features
+
+- Added `with_ggtrace()` for a functional interface to `ggtrace()`
+
 # ggtrace 0.4.7
 
 ### New Features

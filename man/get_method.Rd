@@ -2,15 +2,15 @@
 % Please edit documentation in R/get_method.R
 \name{get_method}
 \alias{get_method}
-\alias{ggformals}
 \alias{ggbody}
+\alias{ggformals}
 \title{Get ggproto methods}
 \usage{
 get_method(method, inherit = FALSE)
 
-ggformals(method, inherit = FALSE)
-
 ggbody(method, inherit = FALSE, as.list = TRUE)
+
+ggformals(method, inherit = FALSE)
 }
 \arguments{
 \item{method}{A function or a ggproto method.

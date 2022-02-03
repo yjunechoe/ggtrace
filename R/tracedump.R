@@ -20,7 +20,7 @@
 # Moved out as functions because they're used internally in ggtrace()
 add_global_ggtrace <- function(value) .ggtrace_storage$add_global(value)
 
-#' Retrieve the last trace dump created by `ggtrace()`
+#' Retrieve the last tracedump created by `ggtrace()`
 #'
 #' `last_ggtrace()` retrieves the last trace dump created by `ggtrace()` - i.e., from the last time
 #' the trace has been triggered.
@@ -72,7 +72,7 @@ clear_last_ggtrace <- function() {
   invisible(last_ggtrace())
 }
 
-#' Retrieve all trace dump created by `ggtrace()`
+#' Retrieve all tracedumps created by `ggtrace()`
 #'
 #' `global_ggtrace()` is a list of trace dumps collected across multiple traces, and is recommended
 #' for use with `ggtrace(once = FALSE)` when you expect a trace to be independently triggered multiple

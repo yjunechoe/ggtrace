@@ -70,9 +70,9 @@
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_method</span><span class="op">(</span><span class="va">method</span>, inherit <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
-<span class="fu">ggformals</span><span class="op">(</span><span class="va">method</span>, inherit <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu">ggbody</span><span class="op">(</span><span class="va">method</span>, inherit <span class="op">=</span> <span class="cn">FALSE</span>, as.list <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="fu">ggbody</span><span class="op">(</span><span class="va">method</span>, inherit <span class="op">=</span> <span class="cn">FALSE</span>, as.list <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<span class="fu">ggformals</span><span class="op">(</span><span class="va">method</span>, inherit <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -168,7 +168,7 @@ to search for the method, so it needs to be able to evaluate each element of <co
 <span class="r-out co"><span class="r-pr">#&gt;</span>         n = length(count))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     flip_data(bars, flipped_aes)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000002c7fa2f0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;bytecode: 0x000000002d20bf30&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: namespace:ggplot2&gt;</span>
 <span class="r-in"><span class="fu">ggformals</span><span class="op">(</span><span class="va">StatCount</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span> <span class="co"># formals(get_method(StatCount$compute_group))</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $self</span>

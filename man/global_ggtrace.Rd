@@ -7,7 +7,7 @@
 \alias{global_ggtrace_state}
 \alias{global_ggtrace_on}
 \alias{global_ggtrace_off}
-\title{Retrieve all trace dump created by \code{ggtrace()}}
+\title{Retrieve all tracedumps created by \code{ggtrace()}}
 \usage{
 global_ggtrace()
 

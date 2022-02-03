@@ -2,7 +2,7 @@
 % Please edit documentation in R/gguntrace.R
 \name{gguntrace}
 \alias{gguntrace}
-\title{Untrace a ggproto method}
+\title{Remove any existing traces}
 \usage{
 gguntrace(method, ...)
 }
@@ -19,7 +19,7 @@ The ggproto method may be specified using any of the following forms:
 an earlier \code{{ggtrace}} function in interactive contexts.}
 }
 \description{
-For explicitly calling \code{untrace()} on a ggproto object.
+Used for explicitly calling \code{untrace()} on a ggproto object.
 }
 \details{
 Unlike \code{base::untrace()}, there is no adverse side effect to repeatedly calling \code{gguntrace()}

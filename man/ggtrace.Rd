@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggtrace.R
 \name{ggtrace}
 \alias{ggtrace}
-\title{Programmatically inspect, debug, and manipulate functions and methods}
+\title{Insert traces for delayed evaluation}
 \usage{
 ggtrace(
   method,
@@ -48,7 +48,7 @@ meaning that \code{verbose = FALSE} also triggers the effect of \code{print_outp
 Defaults to \code{FALSE}.}
 }
 \description{
-Programmatically inspect, debug, and manipulate functions and methods
+Insert traces for delayed evaluation
 }
 \details{
 \code{ggtrace()} is a wrapper around \code{base::trace()} which is called on the ggproto method.
