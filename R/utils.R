@@ -121,7 +121,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
       rlang::abort("Invalid expression. If you mean to pass in a function, it must be a variable not a call.")
     }
     fn_deparsed <- gsub("^.*:", "", method_deparsed)
-    fn_got <- get(fn_deparsed, envir = rlang::get_env(method))
+    fn_got <- get(fn_deparsed, envir = rlang::quo_get_env(method_quo))
     if ("functionWithTrace" %in% class(fn_got)) { # another check: !is.null(attr(method, "original"))
       rlang::warn(paste0("`", method_deparsed, "` is currently being traced"))
     }
