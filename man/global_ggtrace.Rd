@@ -2,6 +2,7 @@
 % Please edit documentation in R/tracedump.R
 \name{global_ggtrace}
 \alias{global_ggtrace}
+\alias{set_global_ggtrace}
 \alias{clear_global_ggtrace}
 \alias{global_ggtrace_state}
 \alias{global_ggtrace_on}
@@ -9,6 +10,8 @@
 \title{Retrieve all trace dump created by \code{ggtrace()}}
 \usage{
 global_ggtrace()
+
+set_global_ggtrace(value)
 
 clear_global_ggtrace()
 

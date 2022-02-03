@@ -139,7 +139,7 @@ clear_last_ggtrace <- function() {
 global_ggtrace <- function() .ggtrace_storage$get_global()
 
 #' @export
-#' @rdname last_ggtrace
+#' @rdname global_ggtrace
 set_global_ggtrace <- function(value) .ggtrace_storage$set_global(value)
 
 #' @export

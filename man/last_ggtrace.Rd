@@ -4,7 +4,6 @@
 \alias{last_ggtrace}
 \alias{set_last_ggtrace}
 \alias{clear_last_ggtrace}
-\alias{set_global_ggtrace}
 \title{Retrieve the last trace dump created by \code{ggtrace()}}
 \usage{
 last_ggtrace()
@@ -12,8 +11,6 @@ last_ggtrace()
 set_last_ggtrace(value)
 
 clear_last_ggtrace()
-
-set_global_ggtrace(value)
 }
 \value{
 List

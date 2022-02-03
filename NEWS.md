@@ -1,6 +1,12 @@
 # ggtrace (development version)
 
-# ggtrace 0.4.x
+# ggtrace 0.4.7
+
+### New Features
+
+- Added `ggformals()` which returns the `formals()` of functions and ggproto methods
+- `ggbody()` gains a `as.list` argument to control whether output of `body()` is turned into a list
+- Exported `set_last_ggtrace()` and `set_global_ggtrace()` for the tracedumps
 
 ### Bug Fix
 
