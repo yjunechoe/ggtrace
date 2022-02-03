@@ -6,6 +6,7 @@
 #' @param x An object whose evaluation triggers the trace as specified by the `...`
 #' @inheritDotParams ggtrace
 #'
+#' @note To force evaluation of `x`, `print(x)` is internally called.
 #'
 #' @return A list
 #' @export
@@ -20,16 +21,16 @@
 #'  trace_steps = -1, trace_exprs = quote(~step)
 #' )
 #' boxplot_plot
-#' last_ggtrace()
+#' first_tracedump <- last_ggtrace()
 #'
 #' # Short-form functional `with_ggtrace()` method:
-#' my_tracedump <- with_ggtrace(
+#' second_tracedump <- with_ggtrace(
 #'   x = boxplot_plot,
 #'   method = StatBoxplot$compute_group,
 #'   trace_steps = -1, trace_exprs = quote(~step)
 #' )
 #'
-#' identical(last_ggtrace(), my_tracedump)
+#' identical(first_tracedump, second_tracedump)
 #'
 with_ggtrace <- function(x, ...) {
   suppressMessages({

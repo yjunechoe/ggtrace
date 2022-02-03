@@ -43,6 +43,9 @@ A list
 \code{with_ggtrace()} provides a functional interface to \code{ggtrace()}. It takes an object
 and parameters passed to \code{ggtrace()} and returns the immediate tracedump without side effects.
 }
+\note{
+To force evaluation of \code{x}, \code{print(x)} is internally called.
+}
 \examples{
 library(ggplot2)
 
@@ -53,15 +56,15 @@ ggtrace(
  trace_steps = -1, trace_exprs = quote(~step)
 )
 boxplot_plot
-last_ggtrace()
+first_tracedump <- last_ggtrace()
 
 # Short-form functional `with_ggtrace()` method:
-my_tracedump <- with_ggtrace(
+second_tracedump <- with_ggtrace(
   x = boxplot_plot,
   method = StatBoxplot$compute_group,
   trace_steps = -1, trace_exprs = quote(~step)
 )
 
-identical(last_ggtrace(), my_tracedump)
+identical(first_tracedump, second_tracedump)
 
 }
