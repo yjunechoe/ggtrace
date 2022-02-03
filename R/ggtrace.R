@@ -1,6 +1,6 @@
 #' Programmatically inspect, debug, and manipulate functions and methods
 #'
-#' @inheritParams ggbody
+#' @inheritParams get_method
 #' @param trace_steps A sorted numeric vector of positions in the method's body to trace. Negative indices
 #'   reference steps from the last, where `-1` references the last step in the body.
 #' @param trace_exprs A list of expressions to evaluate at each position specified

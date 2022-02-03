@@ -20,7 +20,7 @@ RoxygenNote: 7.1.2
 Collate:
   'utils.R'
   'helpers.R'
-  'ggbody.R'
+  'get_method.R'
   'tracedump.R'
   'ggedit.R'
   'gguntrace.R'

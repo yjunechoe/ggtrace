@@ -2,7 +2,7 @@
 #'
 #' For explicitly calling `untrace()` on a ggproto object.
 #'
-#' @inheritParams ggbody
+#' @inheritParams get_method
 #' @param ... Ignored. Designed for the ease of calling this function by modifying the call to
 #'   an earlier `{ggtrace}` function in interactive contexts.
 #'
