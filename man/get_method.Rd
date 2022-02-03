@@ -76,7 +76,7 @@ body(StatCount$compute_group)
 # Informative
 get_method(StatCount$compute_group)
 ggformals(StatCount$compute_group) # formals(get_method(StatCount$compute_group))
-ggbody(StatCount$compute_group) # body(get_method(StatCount$compute_group))
+ggbody(StatCount$compute_group)    # body(get_method(StatCount$compute_group))
 
 # Works for ggproto in extension packages
 
