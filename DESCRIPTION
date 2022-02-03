@@ -25,6 +25,7 @@ Collate:
   'ggedit.R'
   'gguntrace.R'
   'ggtrace.R'
+  'with_ggtrace.R'
   'one-offs.R'
   'zzz.R'
 Imports: 

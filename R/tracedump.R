@@ -6,12 +6,7 @@
     get_last = function() .last_ggtrace,
     set_last = function(value) .last_ggtrace <<- value,
     get_global = function() {
-      if(!.global_ggtrace_state) {
-        message(paste0(
-          "Global collection of tracedumps is currently turned off.\n",
-          "To activate, call `global_ggtrace_state(TRUE)`"
-        ))
-      }
+      if(!.global_ggtrace_state) { message("Global collection of tracedumps is currently turned off.") }
       .global_ggtrace
     },
     set_global = function(value) .global_ggtrace <<- value,
