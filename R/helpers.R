@@ -37,6 +37,7 @@ get_method <- function(method) {
   if (rlang::is_quosure(method)) {
     method_quo <- method
   }
-  method_info <- resolve_formatting(method_quo)
-  get(method_info$what, envir = method_info$where)
+  method_info <- split_ggproto_method(method_quo)
+  got <- get(method_info$method_name, envir = method_info$obj)
+  got
 }
