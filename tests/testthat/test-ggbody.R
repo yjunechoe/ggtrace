@@ -49,7 +49,7 @@ test_that("warns if already being traced", {
 
 test_that("warns if parent already being traced", {
   ggtrace(Stat$compute_layer, 1)
-  expect_warning(expect_message(ggbody(StatBoxplot$compute_layer, inherit = TRUE), "Returning"), "currently being traced")
+  expect_warning(ggbody(StatBoxplot$compute_layer, inherit = TRUE), "currently being traced")
   expect_message(gguntrace(Stat$compute_layer), "no longer being traced")
   expect_true(!is_traced(Stat$compute_layer))
 })

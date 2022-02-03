@@ -1,3 +1,25 @@
+#' Get ggproto methods
+#'
+#' @inheritParams ggbody
+#'
+#' @return Function
+#' @export
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' # Uninformative
+#' StatCount$compute_group
+#' formals(StatCount$compute_group)
+#' body(StatCount$compute_group)
+#'
+#' # Errors
+#' # get(StatCount$compute_group)
+#'
+#' # Informative
+#' get_method(StatCount$compute_group)
+#' formals(get_method(StatCount$compute_group))
+#' body(get_method(StatCount$compute_group))
 #' Retrieve the body of a function or a method as a list
 #'
 #' @param method A function or a ggproto method.
@@ -90,10 +112,9 @@
 #' is_traced(sample)
 #' gguntrace(sample)
 #'
-ggbody <- function(method, inherit = FALSE) {
+get_method <- function(method_quo, inherit = FALSE) {
 
-  # Capture method expression
-  method_quo <- rlang::enquo(method)
+  method <- rlang::eval_tidy(method_quo)
   method_deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo))
   arg_provided <- TRUE
 
@@ -109,7 +130,7 @@ ggbody <- function(method, inherit = FALSE) {
     if ("functionWithTrace" %in% class(fn_got)) { # another check: !is.null(attr(method, "original"))
       rlang::warn(paste0("`", method_deparsed, "` is currently being traced"))
     }
-    result <- as.list(body(fn_got))
+    result <- fn_got
     return(result)
   }
 
@@ -146,21 +167,21 @@ ggbody <- function(method, inherit = FALSE) {
       )
       if (!is.null(parent_method)) {
         if (parent == parents[1]) {
-          message("Method '", method_name, "' is defined for `", obj_name, "`, not inherited.")
+          rlang::inform(paste0("Method '", method_name, "' is defined for `", obj_name, "`, not inherited."))
         } else {
-          message("Returning `ggbody(", parent, "$", method_name, ")`")
+          rlang::inform(paste0("Method inherited from `", parent, "$", method_name, "`"))
         }
         # Inform if already being traced
         if (arg_provided && "functionWithTrace" %in% class(parent_method)) {
           rlang::warn(paste0("`", parent, "$", method_name, "` is currently being traced"))
         }
         # Break loop and return when found
-        return(resolve_method(parent_method))
+        return(parent_method)
       }
     }
   } else {
     result <- tryCatch(
-      expr = resolve_method(get(method_name, obj)),
+      expr = get(method_name, obj),
       error = function(e) {
         sanitize_get_error(e, method_name, obj_name)
       }
@@ -170,5 +191,112 @@ ggbody <- function(method, inherit = FALSE) {
       rlang::warn(paste0("`", method_deparsed, "` is currently being traced"))
     }
     return(result)
+  }
+}
+
+
+#' Retrieve the body of a function or a method as a list
+#'
+#' @param method A function or a ggproto method.
+#'   The ggproto method may be specified using any of the following forms:
+#'   - `ggproto$method`
+#'   - `namespace::ggproto$method`
+#'   - `namespace:::ggproto$method`
+#'
+#' @param inherit Whether the method should be searched from its closest parent. Defaults to `FALSE`.
+#'   If `TRUE`, returns the parent's method and the corresponding `ggbody()` code as a message.
+#'
+#' @details `ggbody()` calls `as.list(body(get("method", ggproto)))` under the hood.
+#'   The `get("method", ggproto)` syntax is the long form of `ggproto$method` which retrieves
+#'   the actual function body. This is a subtle but important difference for inspecting ggproto methods.
+#'
+#'   - For example, this works: `debugonce(get("compute_group", StatCount))`
+#'
+#'   - But this fails to insert a break point: `debugonce(StatCount$compute_group)`
+#'
+#'   `ggbody()` was designed so that you do not have to worry about this distinction.
+#'
+#' @section Gotchas:
+#'  - If a method is being traced via `ggtrace()` or `ggedit()`, `ggbody()` will return the current _modified state_
+#'    of the method. As of v0.3.5, calling `ggbody()` on a method that has a trace on it will return a warning
+#'    to emphasize this fact.
+#'  - When using `inherit = TRUE`, make sure that all ggproto objects from `class(ggproto)` are available (by loading
+#'    the packages where they are defined, for example). Under the hood, `ggbody()` loops through the parents
+#'    to search for the method, so it needs to be able to evaluate each element of `class(ggproto)` as an object.
+#'
+#' @return A list
+#' @export
+#' @examples
+#' library(ggplot2)
+#'
+#' ggbody(StatCount$compute_group)
+#'
+#' # Works for ggproto in extension packages
+#'
+#' ggbody(ggforce::StatDelaunaySegment$compute_group)
+#'
+#' library(ggforce)
+#' ggbody(StatBezier$compute_panel)
+#'
+#' # `inherit = TRUE` will return the method from the closest parent
+#'
+#' ## ERRORS:
+#' ## ggbody(StatBoxplot$compute_panel)
+#' ggbody(StatBoxplot$compute_panel, inherit = TRUE)
+#' ggbody(Stat$compute_panel)
+#'
+#' # Navigating complex inheritance
+#' class(GeomArcBar)
+#' invisible(ggbody(GeomArcBar$default_aes, inherit = TRUE)) # self
+#' invisible(ggbody(GeomArcBar$draw_panel, inherit = TRUE))  # parent
+#' invisible(ggbody(GeomArcBar$draw_key, inherit = TRUE))    # grandparent
+#' invisible(ggbody(GeomArcBar$draw_group, inherit = TRUE))  # top-level
+#'
+#' # Works for custom ggproto
+#' # - Example from {ggplot2} "Extending ggplot2" vignette
+#' StatDensityCommon <- ggproto("StatDensityCommon", Stat,
+#'   required_aes = "x",
+#'
+#'   setup_params = function(data, params) {
+#'     if (!is.null(params$bandwidth))
+#'       return(params)
+#'
+#'     xs <- split(data$x, data$group)
+#'     bws <- vapply(xs, bw.nrd0, numeric(1))
+#'     bw <- mean(bws)
+#'     message("Picking bandwidth of ", signif(bw, 3))
+#'
+#'     params$bandwidth <- bw
+#'     params
+#'   },
+#'
+#'   compute_group = function(data, scales, bandwidth = 1) {
+#'     d <- density(data$x, bw = bandwidth)
+#'     data.frame(x = d$x, y = d$y)
+#'   }
+#' )
+#'
+#' as.list(body(get("compute_group", StatDensityCommon)))
+#'
+#' ggbody(StatDensityCommon$compute_group)
+#'
+#' # As of v.0.4.0, ggbody works for functions as well
+#' ggbody(sample)
+#' ggtrace(sample, 1)
+#' invisible(ggbody(sample))
+#' is_traced(sample)
+#' gguntrace(sample)
+#'
+ggbody <- function(method, inherit = FALSE, as.list = TRUE) {
+  method_quo <- rlang::enquo(method)
+  got <- get_method(method_quo, inherit = inherit)
+  if (rlang::is_function(got)) {
+    if (as.list) {
+      as.list(body(got))
+    } else {
+      body(got)
+    }
+  } else {
+    got
   }
 }
