@@ -33,6 +33,10 @@
 #' identical(first_tracedump, second_tracedump)
 #'
 with_ggtrace <- function(x, ...) {
+  x_quo <- rlang::enquo(x)
+  if (rlang::is_quosure(x_quo)) {
+    x_quo <- x
+  }
   suppressMessages({
     prev_silent_opt <- getOption("ggtrace.suppressMessages")
     options("ggtrace.suppressMessages" = TRUE)
@@ -43,7 +47,7 @@ with_ggtrace <- function(x, ...) {
     clear_global_ggtrace()
 
     ggtrace(...)
-    print(x)
+    rlang::eval_tidy(x_quo)
     gguntrace(...)
 
     out <- global_ggtrace()
@@ -56,3 +60,5 @@ with_ggtrace <- function(x, ...) {
   })
   out
 }
+
+
