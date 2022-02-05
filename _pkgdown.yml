@@ -38,7 +38,7 @@ reference:
 - title: Workflows
   desc: Wrappers for common workflows
   contents:
-  - ggtrace_capture_method
+  - ggtrace_capture
 
 - title: One-offs
   desc: Convenient shortcuts to common workflows without side effects
