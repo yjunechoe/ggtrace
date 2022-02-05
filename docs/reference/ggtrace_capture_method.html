@@ -262,14 +262,12 @@ to the captured method unless also provided in the <code>...</code></p>
 <span class="r-in"><span class="co"># For one, the body is different</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/body.html" class="external-link">body</a></span><span class="op">(</span><span class="va">p3_compute_panel</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     cur_args &lt;- formals(rlang::current_fn())</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     spec_args &lt;- cur_args[seq_len(which(names(cur_args) == "...") - </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         1)]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     dots &lt;- modify_list(.dots_captured, list(...))</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     do.call(inner, c(spec_args, dots))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cur_args &lt;- mget(names(formals(rlang::current_fn())))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     specs &lt;- names(cur_args) %in% names(formals(inner))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     do.call(inner, c(cur_args[specs], cur_args[!specs]))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># What's returned is actually a wrapper to the method, stored in the `"inner"` attribute</span></span>
+<span class="r-in"><span class="co"># The captured method is called internally, stored in the `"inner"` attribute</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">p3_compute_panel</span>, <span class="st">"inner"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> function (self, data, scales, ...) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
@@ -288,44 +286,18 @@ to the captured method unless also provided in the <code>...</code></p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }, stats, groups, SIMPLIFY = FALSE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rbind_dfs(stats)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000000003a09eae8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x00000000395196f0&gt;</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># Captured defaults are stored in the `.dots_captured` argument to the function</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">p3_compute_panel</span><span class="op">)</span><span class="op">$</span><span class="va">.dots_captured</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $method</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "loess"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $formula</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> y ~ x</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000000003a03f140&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $se</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 80</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $fullrange</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $level</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $na.rm</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $method.args</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> list()</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $span</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $flipped_aes</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span class="co"># Captured arguments are again stored in the formals of the function</span></span>
+<span class="r-in"><span class="co"># Note that arguments passed to the `...` are promoted to function arguments</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">p3_compute_panel</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] "self"        "data"        "scales"      "method"      "formula"    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6] "se"          "n"           "fullrange"   "level"       "na.rm"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11] "method.args" "span"        "flipped_aes"</span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="get_method.html">ggformals</a></span><span class="op">(</span><span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "self"   "data"   "scales" "..."   </span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># You should not modify `.dots_captured` directly - they're just for you to inspect</span></span>
-<span class="r-in"><span class="co"># Instead, you should override these parameters in the `...`</span></span>
+<span class="r-in"><span class="co"># It works the same otherwise - plus you get the benefit of autocomplete</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">p3_compute_panel</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>          x        y     ymin     ymax        se flipped_aes PANEL group</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1.000000 3.800000 2.456618 5.143382 0.6437060       FALSE     1    -1</span>

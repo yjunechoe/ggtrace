@@ -67,14 +67,15 @@ p3_compute_panel <- ggtrace_capture_method(p3, method = Stat$compute_panel)
 # For one, the body is different
 body(p3_compute_panel)
 
-# What's returned is actually a wrapper to the method, stored in the `"inner"` attribute
+# The captured method is called internally, stored in the `"inner"` attribute
 attr(p3_compute_panel, "inner")
 
-# Captured defaults are stored in the `.dots_captured` argument to the function
-formals(p3_compute_panel)$.dots_captured
+# Captured arguments are again stored in the formals of the function
+# Note that arguments passed to the `...` are promoted to function arguments
+names(formals(p3_compute_panel))
+names(ggformals(Stat$compute_panel))
 
-# You should not modify `.dots_captured` directly - they're just for you to inspect
-# Instead, you should override these parameters in the `...`
+# It works the same otherwise - plus you get the benefit of autocomplete
 head(p3_compute_panel())
 head(p3_compute_panel(level = .99)[, c("ymin", "ymax")])
 head(p3_compute_panel(flipped_aes = TRUE))
