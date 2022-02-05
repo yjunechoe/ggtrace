@@ -3,6 +3,7 @@
 ### New Features
 
 - Added `with_ggtrace()` for a functional interface to `ggtrace()`
+- Added `ggtrace_capture_method()` which returns a snapshot of a ggproto method at run-time as a function
 
 # ggtrace 0.4.7
 

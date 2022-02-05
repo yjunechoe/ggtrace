@@ -7,10 +7,10 @@
 ggeval_silent(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{A ggplot}
 }
 \value{
-
+A gtable
 }
 \description{
 Calls \code{ggplot_gtable(ggplot_build(x))}, which executes all the instructions for plotting \code{x} without

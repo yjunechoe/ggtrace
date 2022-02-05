@@ -15,8 +15,6 @@
 #' @return A function
 #' @export
 #'
-#' @importFrom rlang %||%
-#'
 #' @examples
 #' library(ggplot2)
 #'
@@ -62,16 +60,20 @@
 #' # What's returned is actually a wrapper to the captured method, stored in the `"inner"` attribute
 #' attr(p3_compute_panel, "inner")
 #'
-#' # Captured defaults are stored in the `.dots_captured` argument to the function.
-#' # You should not modify this directly - `...` will override them internally
+#' # Captured defaults are stored in the `.dots_captured` argument to the function
 #' formals(p3_compute_panel)$.dots_captured
 #'
-#' # Other than these differences, it works as expected
+#' # You should not modify `.dots_captured` directly - they're just exposed for you to inspect
+#' # Instead, override these parameters in the `...`
 #' head(p3_compute_panel())
 #' head(p3_compute_panel(level = .99)[, c("ymin", "ymax")])
 #' head(p3_compute_panel(flipped_aes = TRUE))
 #'
 ggtrace_capture_method <- function(x, ...) {
+
+  # Local binding shenanigans to pass check
+  modify_list <- .dots_captured <- NULL
+
   out <- with_ggtrace(
     x = x,
     ...,

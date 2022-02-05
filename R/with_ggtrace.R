@@ -35,7 +35,7 @@
 #' identical(first_tracedump, second_tracedump)
 #'
 with_ggtrace <- function(x, ...) {
-  if (!is.ggplot(x)) { rlang::abort("`x` must be a ggplot object") }
+  if (!inherits(x, "ggplot")) { rlang::abort("`x` must be a ggplot object") }
   suppressMessages({
     prev_silent_opt <- getOption("ggtrace.suppressMessages")
     options("ggtrace.suppressMessages" = TRUE)

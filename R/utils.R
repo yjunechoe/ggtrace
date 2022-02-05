@@ -1,3 +1,5 @@
+"%||%" <- rlang::`%||%`
+
 split_ggproto_method <- function(method) {
   method_expr <- rlang::enexpr(method)
   eval_env <- parent.frame()
