@@ -77,7 +77,7 @@ and parameters passed to <code><a href="ggtrace.html">ggtrace()</a></code> and r
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
-<dd><p>An object whose evaluation triggers the trace as specified by the <code>...</code></p></dd>
+<dd><p>A ggplot object whose evaluation triggers the trace as specified by the <code>...</code></p></dd>
 <dt>...</dt>
 <dd><p>Arguments passed on to <code><a href="ggtrace.html">ggtrace</a></code></p><dl><dt><code>trace_steps</code></dt>
 <dd><p>A sorted numeric vector of positions in the method's body to trace. Negative indices
@@ -121,7 +121,11 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>To force evaluation of <code>x</code>, <code>print(x)</code> is internally called.</p>
+    <p>To force evaluation of <code>x</code>, <code>ggeval_silent(x)</code> is called internally.</p>
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="ggtrace.html">ggtrace()</a></code>, <code><a href="ggeval_silent.html">ggeval_silent()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -147,7 +151,6 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-in">  method <span class="op">=</span> <span class="va">StatBoxplot</span><span class="op">$</span><span class="va">compute_group</span>,</span>
 <span class="r-in">  trace_steps <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>, trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="op">~</span><span class="va">step</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
-<span class="r-plt img"><img src="with_ggtrace-2.png" alt="" width="1094" height="676"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">first_tracedump</span>, <span class="va">second_tracedump</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>

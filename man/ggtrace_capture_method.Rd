@@ -32,7 +32,7 @@ set.seed(47)
 df <- as.data.frame(matrix(sample(5, 50, TRUE), ncol = 2))
 df
 
-p1 <- ggplot(df, aes(x = V1, y = V2)) + stat_summary(fun.data = mean_se, orientation = "x")
+p1 <- ggplot(df, aes(x = V1, y = V2)) + stat_summary(orientation = "x")
 p1
 
 p1_compute_panel <- ggtrace_capture_method(p1, method = StatSummary$compute_panel)
@@ -48,33 +48,33 @@ formals(p1_compute_panel)
 p1_compute_panel()
 
 # You can inspect changes to its behavior outisde of ggplot
-# For example, see what happens when aes is flipped via `orientation = "y`
+# For example, see what happens when aes is flipped via `orientation = "y"`
 p1_compute_panel(flipped_aes = TRUE)
 
 # We confirm this output to be true when `orientation = "y"`
-p2 <- ggplot(df, aes(x = V1, y = V2)) + stat_summary(fun.data = mean_se, orientation = "y")
+p2 <- ggplot(df, aes(x = V1, y = V2)) + stat_summary(orientation = "y")
 p2_compute_panel <- ggtrace_capture_method(p2, method = StatSummary$compute_panel)
 
 identical(p1_compute_panel(flipped_aes = TRUE), p2_compute_panel())
 
 
-# Note the captured method looks slightly different if the method takes `...`
-ggformals(Stat$compute_panel) # inherited by StatSmooth$compute_panel
+# Note that the captured method looks slightly different if the method takes `...`
 p3 <- ggplot(df, aes(x = V1, y = V2)) + stat_smooth() + geom_jitter()
 p3
 
-# For one, the body is different
 p3_compute_panel <- ggtrace_capture_method(p3, method = Stat$compute_panel)
+
+# For one, the body is different
 body(p3_compute_panel)
 
-# What's returned is actually a wrapper to the captured method, stored in the `"inner"` attribute
+# What's returned is actually a wrapper to the method, stored in the `"inner"` attribute
 attr(p3_compute_panel, "inner")
 
 # Captured defaults are stored in the `.dots_captured` argument to the function
 formals(p3_compute_panel)$.dots_captured
 
-# You should not modify `.dots_captured` directly - they're just exposed for you to inspect
-# Instead, override these parameters in the `...`
+# You should not modify `.dots_captured` directly - they're just for you to inspect
+# Instead, you should override these parameters in the `...`
 head(p3_compute_panel())
 head(p3_compute_panel(level = .99)[, c("ymin", "ymax")])
 head(p3_compute_panel(flipped_aes = TRUE))

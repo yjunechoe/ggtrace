@@ -37,6 +37,7 @@ reference:
 
 - title: Workflows
   desc: Wrappers for common workflows
+  contents:
   - ggtrace_capture_method
 
 - title: One-offs
