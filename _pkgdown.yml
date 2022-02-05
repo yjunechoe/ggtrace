@@ -35,6 +35,10 @@ reference:
   - last_ggtrace
   - global_ggtrace
 
+- title: Workflows
+  desc: Wrappers for common workflows
+  - ggtrace_capture_method
+
 - title: One-offs
   desc: Convenient shortcuts to common workflows without side effects
   contents:

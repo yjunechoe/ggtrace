@@ -7,7 +7,7 @@
 with_ggtrace(x, ...)
 }
 \arguments{
-\item{x}{An object whose evaluation triggers the trace as specified by the \code{...}}
+\item{x}{A ggplot object whose evaluation triggers the trace as specified by the \code{...}}
 
 \item{...}{
   Arguments passed on to \code{\link[=ggtrace]{ggtrace}}
@@ -44,7 +44,7 @@ A list
 and parameters passed to \code{ggtrace()} and returns the immediate tracedump without side effects.
 }
 \note{
-To force evaluation of \code{x}, \code{print(x)} is internally called.
+To force evaluation of \code{x}, \code{ggeval_silent(x)} is called internally.
 }
 \examples{
 library(ggplot2)
@@ -67,4 +67,7 @@ second_tracedump <- with_ggtrace(
 
 identical(first_tracedump, second_tracedump)
 
+}
+\seealso{
+\code{\link[=ggtrace]{ggtrace()}}, \code{\link[=ggeval_silent]{ggeval_silent()}}
 }

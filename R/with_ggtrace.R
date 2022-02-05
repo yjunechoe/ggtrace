@@ -3,10 +3,12 @@
 #' `with_ggtrace()` provides a functional interface to `ggtrace()`. It takes an object
 #'  and parameters passed to `ggtrace()` and returns the immediate tracedump without side effects.
 #'
-#' @param x An object whose evaluation triggers the trace as specified by the `...`
+#' @param x A ggplot object whose evaluation triggers the trace as specified by the `...`
 #' @inheritDotParams ggtrace
 #'
-#' @note To force evaluation of `x`, `print(x)` is internally called.
+#' @note To force evaluation of `x`, `ggeval_silent(x)` is called internally.
+#'
+#' @seealso [ggtrace()], [ggeval_silent()]
 #'
 #' @return A list
 #' @export
@@ -33,10 +35,7 @@
 #' identical(first_tracedump, second_tracedump)
 #'
 with_ggtrace <- function(x, ...) {
-  x_quo <- rlang::enquo(x)
-  if (rlang::is_quosure(x_quo)) {
-    x_quo <- x
-  }
+  if (!is.ggplot(x)) { rlang::abort("`x` must be a ggplot object") }
   suppressMessages({
     prev_silent_opt <- getOption("ggtrace.suppressMessages")
     options("ggtrace.suppressMessages" = TRUE)
@@ -47,7 +46,7 @@ with_ggtrace <- function(x, ...) {
     clear_global_ggtrace()
 
     ggtrace(...)
-    rlang::eval_tidy(x_quo)
+    ggeval_silent(x)
     gguntrace(...)
 
     out <- global_ggtrace()
