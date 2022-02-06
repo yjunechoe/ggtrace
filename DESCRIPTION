@@ -34,6 +34,7 @@ Imports:
     rlang (>= 0.4.10)
 Suggests: 
     ggplot2 (>= 3.3.0),
+    dplyr,
     grid,
     ggforce,
     patchwork,

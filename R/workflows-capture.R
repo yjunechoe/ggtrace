@@ -1,4 +1,4 @@
-#' Capture a snapshot of a ggproto method
+#' Capture a snapshot of a ggproto method as a pre-filled function
 #'
 #' Returns a ggproto method as a function with arguments pre-filled to their values when it was first called
 #'
@@ -6,9 +6,7 @@
 #' @param ... Passed to `ggtrace()`. The `method` to capture should be specified here.
 #'
 #' @note For methods that take `...`, if arguments are passed to `...` in runtime, they're captured and
-#'   stored in the `.dots_captured` argument of the returned function, accessible via `formals(x)$.dots_captured`.
-#'   The returned function will also expose the `...`, and the defaults in `.dots_captured` will be passed
-#'   to the captured method unless also provided in the `...`
+#'   promoted to function arguments. The captured values are available for inspection via `formals()`.
 #'
 #' @return A function
 #' @export
@@ -20,10 +18,12 @@
 #' df <- as.data.frame(matrix(sample(5, 50, TRUE), ncol = 2))
 #' df
 #'
-#' p1 <- ggplot(df, aes(x = V1, y = V2)) + stat_summary(orientation = "x")
+#' base <- ggplot(df, aes(x = V1, y = V2))
+#'
+#' p1 <- base + stat_summary(orientation = "x")
 #' p1
 #'
-#' p1_compute_panel <- ggtrace_capture(p1, method = StatSummary$compute_panel)
+#' p1_compute_panel <- ggtrace_capture_fn(p1, method = StatSummary$compute_panel)
 #'
 #' # `p1_compute_panel` is a copy of the ggproto method
 #' body(p1_compute_panel)
@@ -40,8 +40,8 @@
 #' p1_compute_panel(flipped_aes = TRUE)
 #'
 #' # We confirm this output to be true when `orientation = "y"`
-#' p2 <- ggplot(df, aes(x = V1, y = V2)) + stat_summary(orientation = "y")
-#' p2_compute_panel <- ggtrace_capture(p2, method = StatSummary$compute_panel)
+#' p2 <- base + stat_summary(orientation = "y")
+#' p2_compute_panel <- ggtrace_capture_fn(p2, method = StatSummary$compute_panel)
 #'
 #' identical(p1_compute_panel(flipped_aes = TRUE), p2_compute_panel())
 #'
@@ -49,10 +49,10 @@
 #'
 #'
 #' # Note that the captured method looks slightly different if the method takes `...`
-#' p3 <- ggplot(df, aes(x = V1, y = V2)) + stat_smooth() + geom_jitter()
+#' p3 <- base + stat_smooth() + geom_jitter()
 #' p3
 #'
-#' p3_compute_panel <- ggtrace_capture(p3, method = Stat$compute_panel)
+#' p3_compute_panel <- ggtrace_capture_fn(p3, method = Stat$compute_panel)
 #'
 #' # For one, the body is different
 #' body(p3_compute_panel)
@@ -60,10 +60,10 @@
 #' # The captured method is called internally, stored in the `"inner"` attribute
 #' attr(p3_compute_panel, "inner")
 #'
-#' # Captured arguments are again stored in the formals of the function
+#' # Captured argument defaults are again available for inspection via `formals()`
 #' # Note that arguments passed to the `...` are promoted to function arguments
-#' names(formals(p3_compute_panel))
 #' names(ggformals(Stat$compute_panel))
+#' names(formals(p3_compute_panel))
 #'
 #' # It works the same otherwise - plus you get the benefit of autocomplete
 #' head(p3_compute_panel())
@@ -72,7 +72,7 @@
 #'
 #' # Interactively explore with `debugonce(attr(p3_compute_panel, "inner"))`
 #'
-ggtrace_capture <- function(x, ...) {
+ggtrace_capture_fn <- function(x, ...) {
 
   # Local binding shenanigans to pass check
   modify_list <- .dots_captured <- NULL
@@ -112,9 +112,70 @@ ggtrace_capture <- function(x, ...) {
       }
     })
   )
-  if (is.null(out)) {
-    rlang::abort("No function to capture - did the ggplot call the method?")
-  } else {
-    out[[1]]
-  }
+  out[[1]]
 }
+
+#' Capture a snapshot of a ggproto method's execution environment
+#'
+#' @param x A ggplot object
+#' @param ... Passed to `ggtrace()`. The `method` to capture should be specified here.
+#' @param at The position in the method body when the environment should be captured.
+#'   Defaults to `1L`, which is at the start of the method's execution.
+#'
+#' @return An environment
+#' @export
+#'
+#' @examples
+#' library(ggplot2)
+#'
+#' # Example from https://ggplot2.tidyverse.org/reference/aes_eval.html
+#' after_scale_plot <- ggplot(mpg, aes(class, hwy)) +
+#'   geom_boxplot(aes(colour = class, fill = after_scale(alpha(colour, 0.4))))
+#' after_scale_plot
+#'
+#' # `after_scale()` is resolved by `Geom$use_defaults` (at Step 6)
+#'
+#' before_applying <- ggtrace_capture_env(
+#'   x = after_scale_plot,
+#'   method = Geom$use_defaults,
+#'   at = 1  # To be more specific, do `at = 6`
+#' )
+#' after_applying <- ggtrace_capture_env(
+#'   x = after_scale_plot,
+#'   method = Geom$use_defaults,
+#'   at = -1  # To be more specific, do `at = 7`
+#' )
+#'
+#' colnames(before_applying$data)
+#' colnames(after_applying$data)
+#'
+#' library(dplyr)
+#'
+#' before_applying$data %>%
+#'   select(any_of(c("colour", "fill")))
+#' after_applying$data %>%
+#'   select(any_of(c("colour", "fill")))
+#'
+#' identical(
+#'   before_applying$data %>%
+#'     select(any_of(c("colour", "fill"))) %>%
+#'     mutate(fill = alpha(colour, 0.4)),       #< after_scale() logic here
+#'   after_applying$data %>%
+#'     select(any_of(c("colour", "fill")))
+#' )
+#'
+ggtrace_capture_env <- function(x, ..., at = 1L) {
+  out <- with_ggtrace(
+    x = x,
+    ...,
+    trace_steps = at,
+    trace_exprs = rlang::expr(rlang::env_clone(rlang::current_env()))
+  )
+  out[[1]]
+}
+
+# ggtrace_capture_frame ...
+# rlang::expr(list(
+#   sys.function(length(sys.calls()) - 7),
+#   sys.call(length(sys.calls()) - 7)
+# ))

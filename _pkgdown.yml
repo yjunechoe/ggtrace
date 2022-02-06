@@ -19,7 +19,6 @@ reference:
   - ggtrace
   - ggedit
   - gguntrace
-  - with_ggtrace
 
 - title: Helpers
   desc: Helpers for ggtrace workflows
@@ -36,15 +35,24 @@ reference:
   - global_ggtrace
 
 - title: Workflows
-  desc: Wrappers for common workflows
+  desc: >
+    These function takes a ggplot object and a ggproto method, tracing and triggering
+    the method immediately without relying on side-effects
   contents:
-  - ggtrace_capture
+  - with_ggtrace
+
+- subtitle: Capture
+  desc: >
+    Return a snapshot of a ggproto method's execution
+  contents:
+  - ggtrace_capture_fn
+  - ggtrace_capture_env
 
 - title: One-offs
   desc: Convenient shortcuts to common workflows without side effects
   contents:
   - ggdebugonce
-  - ggtraceback
+  # - ggtraceback
 
 
 articles:

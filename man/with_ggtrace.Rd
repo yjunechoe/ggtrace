@@ -2,7 +2,7 @@
 % Please edit documentation in R/with_ggtrace.R
 \name{with_ggtrace}
 \alias{with_ggtrace}
-\title{Isolate a ggtrace call for a single object}
+\title{Isolate a ggtrace call for a single ggplot object}
 \usage{
 with_ggtrace(x, ...)
 }
@@ -40,8 +40,11 @@ The ggproto method may be specified using any of the following forms:
 A list
 }
 \description{
-\code{with_ggtrace()} provides a functional interface to \code{ggtrace()}. It takes an object
+\code{with_ggtrace()} provides a functional interface to \code{ggtrace()}. It takes a ggplot object
 and parameters passed to \code{ggtrace()} and returns the immediate tracedump without side effects.
+}
+\details{
+It is the lower-level function that powers all workflow functions in \code{{ggtrace}}.
 }
 \note{
 To force evaluation of \code{x}, \code{ggeval_silent(x)} is called internally.

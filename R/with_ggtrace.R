@@ -1,7 +1,9 @@
-#' Isolate a ggtrace call for a single object
+#' Isolate a ggtrace call for a single ggplot object
 #'
-#' `with_ggtrace()` provides a functional interface to `ggtrace()`. It takes an object
+#' `with_ggtrace()` provides a functional interface to `ggtrace()`. It takes a ggplot object
 #'  and parameters passed to `ggtrace()` and returns the immediate tracedump without side effects.
+#'
+#'  It is the lower-level function that powers all workflow functions in `{ggtrace}`.
 #'
 #' @param x A ggplot object whose evaluation triggers the trace as specified by the `...`
 #' @inheritDotParams ggtrace
@@ -57,6 +59,9 @@ with_ggtrace <- function(x, ...) {
     set_global_ggtrace(prev_global)
     options("ggtrace.suppressMessages" = prev_silent_opt)
   })
+  if (is.null(out)) {
+    rlang::abort("No function to capture - did the ggplot call the method?")
+  }
   out
 }
 

@@ -87,11 +87,6 @@ methods</p>
           <code><a href="gguntrace.html">gguntrace()</a></code> 
         </dt>
         <dd>Remove any existing traces</dd>
-      </dl><dl><dt>
-          
-          <code><a href="with_ggtrace.html">with_ggtrace()</a></code> 
-        </dt>
-        <dd>Isolate a ggtrace call for a single object</dd>
       </dl></div><div class="section level2">
       <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
       
@@ -137,7 +132,9 @@ methods</p>
       </dl></div><div class="section level2">
       <h2 id="workflows">Workflows<a class="anchor" aria-label="anchor" href="#workflows"></a></h2>
       
-      <p class="section-desc"></p><p>Wrappers for common workflows</p>
+      <p class="section-desc"></p><p>These function takes a ggplot object and a ggproto method, tracing
+and triggering the method immediately without relying on
+side-effects</p>
 
       
     </div><div id="" class="section level2">
@@ -147,9 +144,30 @@ methods</p>
 
       <dl><dt>
           
-          <code><a href="ggtrace_capture.html">ggtrace_capture()</a></code> 
+          <code><a href="with_ggtrace.html">with_ggtrace()</a></code> 
         </dt>
-        <dd>Capture a snapshot of a ggproto method</dd>
+        <dd>Isolate a ggtrace call for a single ggplot object</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="capture">Capture<a class="anchor" aria-label="anchor" href="#capture"></a></h3>
+      <p class="section-desc"></p><p>Return a snapshot of a ggproto method’s execution</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code> 
+        </dt>
+        <dd>Capture a snapshot of a ggproto method as a pre-filled function</dd>
+      </dl><dl><dt>
+          
+          <code><a href="ggtrace_capture_env.html">ggtrace_capture_env()</a></code> 
+        </dt>
+        <dd>Capture a snapshot of a ggproto method's execution environment</dd>
       </dl></div><div class="section level2">
       <h2 id="one-offs">One-offs<a class="anchor" aria-label="anchor" href="#one-offs"></a></h2>
       
@@ -166,11 +184,6 @@ methods</p>
           <code><a href="ggdebugonce.html">ggdebugonce()</a></code> 
         </dt>
         <dd>Debugonce a ggproto method</dd>
-      </dl><dl><dt>
-          
-          <code><a href="ggtraceback.html">ggtraceback()</a></code> 
-        </dt>
-        <dd>Inspect the call stack on enter</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
