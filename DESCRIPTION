@@ -28,7 +28,9 @@ Collate:
   'one-offs.R'
   'with_ggtrace.R'
   'workflows-utils.R'
+  'workflows-inspect.R'
   'workflows-capture.R'
+  'workflows-modify.R'
   'zzz.R'
 Imports: 
     rlang (>= 0.4.10)

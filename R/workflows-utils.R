@@ -13,3 +13,14 @@
 ggeval_silent <- function(x) {
   asNamespace("ggplot2")$ggplot_gtable(asNamespace("ggplot2")$ggplot_build(x))
 }
+
+ggdraw_silent <- function(x) {
+  asNamespace("grid")$grid.newpage()
+  asNamespace("grid")$grid.draw(x)
+}
+
+#' @export
+print.ggtrace_modified <- function(x, ...) {
+  ggdraw_silent(x)
+  invisible(x)
+}
