@@ -82,8 +82,7 @@ ggtrace_capture_fn <- function(x, ...) {
     ...,
     trace_steps = 1,
     trace_exprs = rlang::expr({
-      cur_fn <- rlang::current_fn()
-      cur_fn <- attr(cur_fn, "original") %||% cur_fn
+      cur_fn <- attr(rlang::current_fn(), "original")
       args <- names(formals(cur_fn))
       if ("..." %in% args) {
         dots_params <- list(...)
@@ -95,7 +94,7 @@ ggtrace_capture_fn <- function(x, ...) {
         inner <- rlang::new_function(args_inner, body(cur_fn))
 
         # define outer function
-        args_outer <- c(args_pairs, dots_params)
+        args_outer <- c(args_pairs, dots_params) # rlang::pairlist2("..." =)
         outer <- rlang::new_function(args_outer, rlang::expr({
           cur_args <- mget(names(formals(rlang::current_fn())))
           specs <- names(cur_args) %in% names(formals(inner))
