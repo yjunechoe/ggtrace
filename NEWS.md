@@ -1,9 +1,16 @@
 # ggtrace (development version)
 
+# ggtrace 0.4.8
+
 ### New Features
 
 - Added `with_ggtrace()` for a functional interface to `ggtrace()`
-- Added `ggtrace_capture_(fn|env)` functions which returns a snapshot of the function/environment of the ggproto method at execution time
+- Added `ggtrace_capture_fn()` and `ggtrace_capture_env()`, which return a snapshot of the function/environment of the ggproto method at execution time
+- Added `ggtrace_inspect_return()` and `ggtrace_modify_return()` to grab and swap return values at method's execution
+
+### Miscellaneous
+
+- Added workflows section to docs/references
 
 # ggtrace 0.4.7
 

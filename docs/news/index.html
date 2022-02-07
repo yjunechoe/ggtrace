@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,14 +63,24 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggtrace-development-version">ggtrace (development version)<a class="anchor" aria-label="anchor" href="#ggtrace-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.8" id="ggtrace-048">ggtrace 0.4.8<a class="anchor" aria-label="anchor" href="#ggtrace-048"></a></h2>
 <div class="section level4">
-<h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
+<h4 id="new-features-0-4-8">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-8"></a></h4>
 <ul><li>Added <code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> for a functional interface to
 <code><a href="../reference/ggtrace.html">ggtrace()</a></code>
 </li>
-<li>Added <code>ggtrace_capture_(fn|env)</code> functions which returns
-a snapshot of the function/environment of the ggproto method at
-execution time</li>
+<li>Added <code><a href="../reference/ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code> and
+<code><a href="../reference/ggtrace_capture_env.html">ggtrace_capture_env()</a></code>, which return a snapshot of the
+function/environment of the ggproto method at execution time</li>
+<li>Added <code><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code> and
+<code><a href="../reference/ggtrace_modify_return.html">ggtrace_modify_return()</a></code> to grab and swap return values at
+method’s execution</li>
+</ul></div>
+<div class="section level4">
+<h4 id="miscellaneous-0-4-8">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-4-8"></a></h4>
+<ul><li>Added workflows section to docs/references</li>
 </ul></div>
 </div>
     <div class="section level2">

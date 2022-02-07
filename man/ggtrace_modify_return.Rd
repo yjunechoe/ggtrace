@@ -24,7 +24,7 @@ The ggproto method may be specified using any of the following forms:
 \item{draw}{Whether to draw the modified plot}
 }
 \value{
-A gtable object
+A gtable object with class \verb{<ggtrace_modified>}
 }
 \description{
 Modify the return value of a method

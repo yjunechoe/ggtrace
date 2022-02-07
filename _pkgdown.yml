@@ -37,16 +37,30 @@ reference:
 - title: Workflows
   desc: >
     These function takes a ggplot object and a ggproto method, tracing and triggering
-    the method immediately without relying on side-effects
+    the method immediately without relying on side-effects. Most of these workflow
+    functions wraps around the lower-level function `with_ggtrace()`, a functional
+    complement to `ggtrace()`
   contents:
   - with_ggtrace
 
+- subtitle: Inspect
+  desc: >
+    Inspect values from steps in the method's execution for examination
+  contents:
+  - ggtrace_inspect_return
+
 - subtitle: Capture
   desc: >
-    Return a snapshot of a ggproto method's execution
+    Capture a snapshot of a method's execution state for dynamic evaluation
   contents:
   - ggtrace_capture_fn
   - ggtrace_capture_env
+
+- subtitle: Modify
+  desc: >
+    Modify the method's behavior as it is executed and return the graphical output
+  contents:
+  - ggtrace_modify_return
 
 - title: One-offs
   desc: Convenient shortcuts to common workflows without side effects

@@ -6,7 +6,7 @@
 #' @param cond When the return value should be replaced
 #' @param draw Whether to draw the modified plot
 #'
-#' @return A gtable object
+#' @return A gtable object with class `<ggtrace_modified>`
 #' @export
 #'
 ggtrace_modify_return <- function(x, method, value, cond = TRUE, draw = TRUE) {

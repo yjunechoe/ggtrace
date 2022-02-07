@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.7</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -133,8 +133,10 @@ methods</p>
       <h2 id="workflows">Workflows<a class="anchor" aria-label="anchor" href="#workflows"></a></h2>
       
       <p class="section-desc"></p><p>These function takes a ggplot object and a ggproto method, tracing
-and triggering the method immediately without relying on
-side-effects</p>
+and triggering the method immediately without relying on side-effects.
+Most of these workflow functions wraps around the lower-level function
+<code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code>, a functional complement to
+<code><a href="../reference/ggtrace.html">ggtrace()</a></code></p>
 
       
     </div><div id="" class="section level2">
@@ -146,11 +148,29 @@ side-effects</p>
           
           <code><a href="with_ggtrace.html">with_ggtrace()</a></code> 
         </dt>
-        <dd>Isolate a ggtrace call for a single ggplot object</dd>
+        <dd>Apply a ggtrace call to a single ggplot object</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="inspect">Inspect<a class="anchor" aria-label="anchor" href="#inspect"></a></h3>
+      <p class="section-desc"></p><p>Inspect values from steps in the method’s execution for
+examination</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code> 
+        </dt>
+        <dd>Inspect the return value of a method</dd>
       </dl></div><div class="section level2">
       
       <h3 id="capture">Capture<a class="anchor" aria-label="anchor" href="#capture"></a></h3>
-      <p class="section-desc"></p><p>Return a snapshot of a ggproto method’s execution</p>
+      <p class="section-desc"></p><p>Capture a snapshot of a method’s execution state for dynamic
+evaluation</p>
 
       
     </div><div id="" class="section level2">
@@ -168,6 +188,23 @@ side-effects</p>
           <code><a href="ggtrace_capture_env.html">ggtrace_capture_env()</a></code> 
         </dt>
         <dd>Capture a snapshot of a ggproto method's execution environment</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="modify">Modify<a class="anchor" aria-label="anchor" href="#modify"></a></h3>
+      <p class="section-desc"></p><p>Modify the method’s behavior as it is executed and return the
+graphical output</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="ggtrace_modify_return.html">ggtrace_modify_return()</a></code> 
+        </dt>
+        <dd>Modify the return value of a method</dd>
       </dl></div><div class="section level2">
       <h2 id="one-offs">One-offs<a class="anchor" aria-label="anchor" href="#one-offs"></a></h2>
       

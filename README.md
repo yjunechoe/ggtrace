@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.4.7-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.4.8-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![](https://img.shields.io/badge/lifecycle-stable-gogreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 <!-- badges: end -->
 
@@ -46,7 +46,7 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.7
+    library(ggtrace) # v0.4.8
 
 ## **Example 1 - `compute_layer` method from `PositionJitter`**
 

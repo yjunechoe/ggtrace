@@ -1,4 +1,4 @@
-#' Isolate a ggtrace call for a single ggplot object
+#' Apply a ggtrace call to a single ggplot object
 #'
 #' `with_ggtrace()` provides a functional interface to `ggtrace()`. It takes a ggplot object
 #'  and parameters passed to `ggtrace()` and returns the immediate tracedump without side effects.

@@ -85,6 +85,12 @@
     <loc>/reference/ggtrace_capture_method.html</loc>
   </url>
   <url>
+    <loc>/reference/ggtrace_inspect_return.html</loc>
+  </url>
+  <url>
+    <loc>/reference/ggtrace_modify_return.html</loc>
+  </url>
+  <url>
     <loc>/reference/gguntrace.html</loc>
   </url>
   <url>
