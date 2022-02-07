@@ -25,7 +25,6 @@
 #'
 ggtrace_inspect_return <- function(x, method, cond = TRUE) {
 
-  ._return <- "ggtrace return placeholder"
   ._counter <- 0
 
   wrapper_env <- rlang::current_env()
@@ -51,9 +50,10 @@ ggtrace_inspect_return <- function(x, method, cond = TRUE) {
 
   if (.is_traced(what, where)) {
     suppressMessages(untrace(what = what, where = where))
-    rlang::abort(paste0("No returns detected from `", method_info$formatted_call, "` from the plot"))
+    rlang::abort(paste0("No return detected from `", method_info$formatted_call,
+                        "` during evaluation of the plot"))
+  } else {
+    ._return
   }
-
-  ._return
 
 }
