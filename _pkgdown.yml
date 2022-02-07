@@ -34,7 +34,7 @@ reference:
   - last_ggtrace
   - global_ggtrace
 
-- title: Workflows
+- title: Workflows (experimental; due for v0.5)
   desc: >
     These function takes a ggplot object and a ggproto method, tracing and triggering
     the method immediately without relying on side-effects. Most of these workflow
