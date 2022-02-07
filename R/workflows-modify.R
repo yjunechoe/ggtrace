@@ -11,16 +11,32 @@
 #'
 ggtrace_modify_return <- function(x, method, value, cond = TRUE, draw = TRUE) {
 
+  wrapper_env <- rlang::current_env()
+  ._counter <- 0
+
   method_quo <- rlang::enquo(method)
   method_info <- resolve_formatting(method_quo)
   what <- method_info$what
   where <- method_info$where
-  suppressMessages(trace(what = what, tracer = rlang::expr({
-    if (!!cond) {
-      # print(list(sys.calls(), sys.frames(), sys.calls()[[(sys.nframe() - 5L)]]))
-      rlang::eval_bare(rlang::expr(return(!!value)), sys.frames()[[(sys.nframe() - 5L)]])
+  suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({
+
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter") + 1L
+    rlang::env_bind(!!wrapper_env, ._counter = new_counter)
+
+    cur_env <- rlang::current_env()
+
+    cond <- rlang::eval_tidy(quote(!!cond), list(._counter = new_counter), cur_env)
+
+    if (rlang::is_true(cond)) {
+      frames <- sys.frames()
+      frame_matches <- which(sapply(frames, function(env) identical(env, cur_env)))
+      return_frame <- frames[[max(frame_matches[-length(frame_matches)]) - 1L]]
+      rlang::eval_bare(quote(return(!!value)), return_frame)
     }
-  }), print = FALSE, where = where))
+    if (!rlang::is_false(cond)) {
+      rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter == ", new_counter, "`"))
+    }
+  })))
 
   modified <- ggeval_silent(x)
 
