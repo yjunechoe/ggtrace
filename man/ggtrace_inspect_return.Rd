@@ -17,11 +17,28 @@ The ggproto method may be specified using any of the following forms:
 \item \code{namespace:::ggproto$method}
 }}
 
-\item{cond}{When the return value should be replaced}
+\item{cond}{When the return value should be replaced. Defaults to \code{TRUE}.
+Given that only one value is returned by \code{ggtrace_inspect_return}, the default
+value is the return value from the first time the method runs.}
 }
 \value{
-If nothing is returned, \code{NULL}
+The return value from \code{method} when it is first called.
 }
 \description{
 Inspect the return value of a method
+}
+\details{
+The value to \code{cond} can be a quoted expression, which gets evaluated every
+time the method is called during the evaluation of \code{x}. If \code{cond} evaluates to \code{TRUE}
+multiple times (such as in the default case when \code{cond} is simply \code{TRUE}), the function
+gives the return value from the first time the method runs.
+
+The \code{cond} expression is evaluated inside the method's current execution environment, with
+the addition of a data-masked variable \code{._counter} (or \code{.data$._counter}), which internally
+tracks the current index of the method. For example, \code{._counter == 3} targets the third time
+the method is called.
+
+Additionally, when quoted and passed to \code{cond}, the function \code{returnValue()} accesses the
+current return value of the method. For example, \code{unique(returnValue()$PANEL) == 2} for
+\code{Stat$compute_group} targets the method when it's processing data for the second PANEL.
 }
