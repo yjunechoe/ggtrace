@@ -34,8 +34,8 @@ multiple times (such as in the default case when \code{cond} is simply \code{TRU
 gives the return value from the first time the method runs.
 
 The \code{cond} expression is evaluated inside the method's current execution environment, with
-the addition of a data-masked variable \code{._counter} (or \code{.data$._counter}), which internally
-tracks the current index of the method. For example, \code{._counter == 3} targets the third time
+the addition of a data-masked variable \code{._counter_} (or \code{.data$._counter_}), which internally
+tracks the current index of the method. For example, \code{._counter_ == 3} targets the third time
 the method is called.
 
 Additionally, when quoted and passed to \code{cond}, the function \code{returnValue()} accesses the

@@ -12,8 +12,8 @@
 #'   gives the return value from the first time the method runs.
 #'
 #'   The `cond` expression is evaluated inside the method's current execution environment, with
-#'   the addition of a data-masked variable `._counter` (or `.data$._counter`), which internally
-#'   tracks the current index of the method. For example, `._counter == 3` targets the third time
+#'   the addition of a data-masked variable `._counter_` (or `.data$._counter_`), which internally
+#'   tracks the current index of the method. For example, `._counter_ == 3` targets the third time
 #'   the method is called.
 #'
 #'   Additionally, when quoted and passed to `cond`, the function `returnValue()` accesses the
@@ -26,7 +26,7 @@
 ggtrace_inspect_return <- function(x, method, cond = TRUE) {
 
   wrapper_env <- rlang::current_env()
-  ._counter <- 0
+  ._counter_ <- 0
   ._return <- NULL
 
   method_quo <- rlang::enquo(method)
@@ -34,10 +34,10 @@ ggtrace_inspect_return <- function(x, method, cond = TRUE) {
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({
-    rlang::env_bind(!!wrapper_env, ._counter = rlang::env_get(!!wrapper_env, "._counter") + 1)
+    rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1)
     cond <- rlang::eval_tidy(
       quote(!!cond),
-      list(._counter = rlang::env_get(!!wrapper_env, "._counter")),
+      list(._counter_ = rlang::env_get(!!wrapper_env, "._counter_")),
       rlang::current_env()
     )
     if (cond) {

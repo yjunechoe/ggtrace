@@ -1,5 +1,8 @@
 # ggtrace (development version)
 
+- `ggtrace_capture_env()` default value of `at` is changed to `-1L`, which captures a snapshot of the runtime environment right before the method returns.
+- `ggtrace_modify_return()` exposes `._counter_` in the `value` argument
+
 # ggtrace 0.4.8
 
 ### New Features

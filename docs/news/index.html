@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +63,14 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggtrace-development-version">ggtrace (development version)<a class="anchor" aria-label="anchor" href="#ggtrace-development-version"></a></h2>
-</div>
+<ul><li>
+<code><a href="../reference/ggtrace_capture_env.html">ggtrace_capture_env()</a></code> default value of <code>at</code>
+is changed to <code>-1L</code>, which captures a snapshot of the runtime
+environment right before the method returns.</li>
+<li>
+<code><a href="../reference/ggtrace_modify_return.html">ggtrace_modify_return()</a></code> exposes <code>._counter_</code>
+in the <code>value</code> argument</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.8" id="ggtrace-048">ggtrace 0.4.8<a class="anchor" aria-label="anchor" href="#ggtrace-048"></a></h2>
 <div class="section level4">

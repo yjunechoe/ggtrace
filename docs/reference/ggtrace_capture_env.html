@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,7 +68,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggtrace_capture_env</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, at <span class="op">=</span> <span class="fl">1L</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggtrace_capture_env</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, at <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -79,7 +79,7 @@
 <dd><p>Passed to <code><a href="ggtrace.html">ggtrace()</a></code>. The <code>method</code> to capture should be specified here.</p></dd>
 <dt>at</dt>
 <dd><p>The position in the method body when the environment should be captured.
-Defaults to <code>1L</code>, which is at the start of the method's execution.</p></dd>
+Defaults to <code>-1L</code>, which is right before the method returns.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
