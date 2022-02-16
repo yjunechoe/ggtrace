@@ -25,9 +25,9 @@
 #'
 ggtrace_inspect_return <- function(x, method, cond = TRUE) {
 
-  ._counter <- 0
-
   wrapper_env <- rlang::current_env()
+  ._counter <- 0
+  ._return <- NULL
 
   method_quo <- rlang::enquo(method)
   method_info <- resolve_formatting(method_quo)

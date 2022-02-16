@@ -119,7 +119,7 @@ ggtrace_capture_fn <- function(x, ...) {
 #' @param x A ggplot object
 #' @param ... Passed to `ggtrace()`. The `method` to capture should be specified here.
 #' @param at The position in the method body when the environment should be captured.
-#'   Defaults to `1L`, which is at the start of the method's execution.
+#'   Defaults to `-1L`, which is right before the method returns.
 #'
 #' @return An environment
 #' @export
@@ -163,7 +163,7 @@ ggtrace_capture_fn <- function(x, ...) {
 #'     select(any_of(c("colour", "fill")))
 #' )
 #'
-ggtrace_capture_env <- function(x, ..., at = 1L) {
+ggtrace_capture_env <- function(x, ..., at = -1L) {
   out <- with_ggtrace(
     x = x,
     ...,

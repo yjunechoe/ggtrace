@@ -31,7 +31,11 @@ ggtrace_modify_return <- function(x, method, value, cond = TRUE, draw = TRUE) {
       frames <- sys.frames()
       frame_matches <- which(sapply(frames, function(env) identical(env, cur_env)))
       return_frame <- frames[[max(frame_matches[-length(frame_matches)]) - 1L]]
-      rlang::eval_bare(quote(return(!!value)), return_frame)
+
+      return_value <- rlang::eval_tidy(quote(!!value), list(._counter = new_counter), cur_env)
+      return_expr <- rlang::call2(quote(return), return_value)
+
+      rlang::eval_bare(return_expr, return_frame)
     }
     if (!rlang::is_false(cond)) {
       rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter == ", new_counter, "`"))

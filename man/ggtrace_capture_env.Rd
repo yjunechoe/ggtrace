@@ -4,7 +4,7 @@
 \alias{ggtrace_capture_env}
 \title{Capture a snapshot of a ggproto method's execution environment}
 \usage{
-ggtrace_capture_env(x, ..., at = 1L)
+ggtrace_capture_env(x, ..., at = -1L)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -12,7 +12,7 @@ ggtrace_capture_env(x, ..., at = 1L)
 \item{...}{Passed to \code{ggtrace()}. The \code{method} to capture should be specified here.}
 
 \item{at}{The position in the method body when the environment should be captured.
-Defaults to \code{1L}, which is at the start of the method's execution.}
+Defaults to \code{-1L}, which is right before the method returns.}
 }
 \value{
 An environment
