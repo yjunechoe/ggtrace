@@ -4,7 +4,7 @@
 \alias{with_ggtrace}
 \title{Apply a ggtrace call to a single ggplot object}
 \usage{
-with_ggtrace(x, ...)
+with_ggtrace(x, ..., return_value = c("tracedump", "gtable", "both"))
 }
 \arguments{
 \item{x}{A ggplot object whose evaluation triggers the trace as specified by the \code{...}}
@@ -35,9 +35,14 @@ The ggproto method may be specified using any of the following forms:
 \item \code{namespace:::ggproto$method}
 }}
   }}
+
+\item{return_value}{Whether the function should return the output of triggered traces
+("tracedump"), or the resulting graphical object from evaluating the ggplot ("gtable"),
+or "both", which returns the tracedump but also renders the resulting plot as a
+side effect. Defaults to "tracedump".}
 }
 \value{
-A list
+A list or gtable object of class \verb{<ggtrace_highjacked>}
 }
 \description{
 \code{with_ggtrace()} provides a functional interface to \code{ggtrace()}. It takes a ggplot object

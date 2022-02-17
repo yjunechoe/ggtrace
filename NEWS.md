@@ -8,6 +8,11 @@
 ### New Features
 
 - `ggtrace_highjack_return()` exposes `._counter_` in the `value` argument
+- `with_ggtrace()` gets a `return_value` argument which can take 1 of three options:
+
+    - "tracedump" (default): returns the local tracedump from triggering traces on the `method` as the ggplot `x` is evaluated
+    - "gtable": Invisibly returns the `<gtable>` grob after evaluating `x` with injected expressions in `method`.
+    - "both": returns the tracedump while rendering the gtable (with `grid::grid.draw()`) as a side effect.
 
 # ggtrace 0.4.8
 

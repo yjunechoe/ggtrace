@@ -74,9 +74,20 @@ they always return the graphical output (gtable grob) (<a href="https://github.c
 </ul></div>
 <div class="section level4">
 <h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
-<ul><li>
-<code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes
-<code>._counter_</code> in the <code>value</code> argument</li>
+<ul><li><p><code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes
+<code>._counter_</code> in the <code>value</code> argument</p></li>
+<li>
+<p><code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> gets a <code>return_value</code>
+argument which can take 1 of three options:</p>
+<ul><li>“tracedump” (default): returns the local tracedump from triggering
+traces on the <code>method</code> as the ggplot <code>x</code> is
+evaluated</li>
+<li>“gtable”: Invisibly returns the <code>&lt;gtable&gt;</code> grob
+after evaluating <code>x</code> with injected expressions in
+<code>method</code>.</li>
+<li>“both”: returns the tracedump while rendering the gtable (with
+<code><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid::grid.draw()</a></code>) as a side effect.</li>
+</ul></li>
 </ul></div>
 </div>
     <div class="section level2">
