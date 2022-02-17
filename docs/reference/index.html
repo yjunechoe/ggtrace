@@ -61,10 +61,19 @@
     </div>
 
     <div class="section level2">
-      <h2 id="trace">Trace<a class="anchor" aria-label="anchor" href="#trace"></a></h2>
+      <h2 id="workflows-experimental-due-for-v-">Workflows (experimental; due for v0.5)<a class="anchor" aria-label="anchor" href="#workflows-experimental-due-for-v-"></a></h2>
       
-      <p class="section-desc"></p><p>Programmatically inspect, debug, and manipulate functions and
-methods</p>
+      <p class="section-desc"></p><p>These high-level functions take a ggplot object and a ggproto method
+and allows interactions with the ggplot’s build pipeline as it is
+evaluated. Functions are grouped into four “workflows”: Inspect,
+Capture, Highjack, and Edit.</p>
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="inspect">Inspect<a class="anchor" aria-label="anchor" href="#inspect"></a></h3>
+      <p class="section-desc"></p><p>Return values from a method’s execution environment for inspection
+and wrangling</p>
 
       
     </div><div id="" class="section level2">
@@ -74,23 +83,69 @@ methods</p>
 
       <dl><dt>
           
-          <code><a href="ggtrace.html">ggtrace()</a></code> 
+          <code><a href="ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code> 
         </dt>
-        <dd>Insert traces for delayed evaluation</dd>
+        <dd>Inspect the return value of a method</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="capture">Capture<a class="anchor" aria-label="anchor" href="#capture"></a></h3>
+      <p class="section-desc"></p><p>Take a snapshot of a method’s execution state, exposing it as a
+function/environment</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code> 
+        </dt>
+        <dd>Capture a snapshot of a method as a pre-filled function</dd>
       </dl><dl><dt>
+          
+          <code><a href="ggtrace_capture_env.html">ggtrace_capture_env()</a></code> 
+        </dt>
+        <dd>Capture a snapshot of a method's execution environment</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="highjack">Highjack<a class="anchor" aria-label="anchor" href="#highjack"></a></h3>
+      <p class="section-desc"></p><p>Manipulate a method’s behavior as it runs and return the resulting
+the graphical output</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> 
+        </dt>
+        <dd>Highjack the return value of a method</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="edit">Edit<a class="anchor" aria-label="anchor" href="#edit"></a></h3>
+      <p class="section-desc"></p><p>Interactively edit a method’s code in a text editor
+(non-programmtic)</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
           
           <code><a href="ggedit.html">ggedit()</a></code> 
         </dt>
-        <dd>Interactively edit the source code</dd>
-      </dl><dl><dt>
-          
-          <code><a href="gguntrace.html">gguntrace()</a></code> 
-        </dt>
-        <dd>Remove any existing traces</dd>
+        <dd>Interactively edit a masking copy of the source code</dd>
       </dl></div><div class="section level2">
       <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
       
-      <p class="section-desc"></p><p>Helpers for ggtrace workflows</p>
+      <p class="section-desc"></p><p>Helpers for working with ggtrace</p>
 
       
     </div><div id="" class="section level2">
@@ -109,9 +164,50 @@ methods</p>
         </dt>
         <dd>Check if a method is being traced</dd>
       </dl></div><div class="section level2">
-      <h2 id="tracedumps">Tracedumps<a class="anchor" aria-label="anchor" href="#tracedumps"></a></h2>
+      <h2 id="extending-base-trace-">Extending base::trace()<a class="anchor" aria-label="anchor" href="#extending-base-trace-"></a></h2>
       
-      <p class="section-desc"></p><p>Log and interact with the output of injected expressions</p>
+      <p class="section-desc"></p><p>The low-level function <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and the wrapper
+function <code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> extend <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code>
+by managing the <strong>state</strong> of trace expressions, which allow
+for contiguity over multiple injections and the inspection of
+tracedumps. Unlike the high-level workflow functions,
+<code><a href="../reference/ggtrace.html">ggtrace()</a></code> relies on the “side effect” of methods of
+functions and methods being traced, which must be explicitly reverted
+with <code><a href="../reference/gguntrace.html">gguntrace()</a></code>.</p>
+
+      
+    </div><div class="section level2">
+      
+      <h3 id="trace">Trace<a class="anchor" aria-label="anchor" href="#trace"></a></h3>
+      <p class="section-desc"></p><p>Lower-level functions for finer control over injecting expressions
+with trace</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="ggtrace.html">ggtrace()</a></code> 
+        </dt>
+        <dd>Insert traces for delayed evaluation</dd>
+      </dl><dl><dt>
+          
+          <code><a href="gguntrace.html">gguntrace()</a></code> 
+        </dt>
+        <dd>Remove any existing traces</dd>
+      </dl><dl><dt>
+          
+          <code><a href="with_ggtrace.html">with_ggtrace()</a></code> 
+        </dt>
+        <dd>Apply a ggtrace call to a single ggplot object</dd>
+      </dl></div><div class="section level2">
+      
+      <h3 id="tracedumps">Tracedumps<a class="anchor" aria-label="anchor" href="#tracedumps"></a></h3>
+      <p class="section-desc"></p><p>Log and interact with the output of expressions injected with
+trace</p>
 
       
     </div><div id="" class="section level2">
@@ -129,82 +225,6 @@ methods</p>
           <code><a href="global_ggtrace.html">global_ggtrace()</a></code> <code><a href="global_ggtrace.html">set_global_ggtrace()</a></code> <code><a href="global_ggtrace.html">clear_global_ggtrace()</a></code> <code><a href="global_ggtrace.html">global_ggtrace_state()</a></code> <code><a href="global_ggtrace.html">global_ggtrace_on()</a></code> <code><a href="global_ggtrace.html">global_ggtrace_off()</a></code> 
         </dt>
         <dd>Retrieve all tracedumps created by <code><a href="../reference/ggtrace.html">ggtrace()</a></code></dd>
-      </dl></div><div class="section level2">
-      <h2 id="workflows-experimental-due-for-v-">Workflows (experimental; due for v0.5)<a class="anchor" aria-label="anchor" href="#workflows-experimental-due-for-v-"></a></h2>
-      
-      <p class="section-desc"></p><p>These function takes a ggplot object and a ggproto method, tracing
-and triggering the method immediately without relying on side-effects.
-Most of these workflow functions wraps around the lower-level function
-<code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code>, a functional complement to
-<code><a href="../reference/ggtrace.html">ggtrace()</a></code></p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="with_ggtrace.html">with_ggtrace()</a></code> 
-        </dt>
-        <dd>Apply a ggtrace call to a single ggplot object</dd>
-      </dl></div><div class="section level2">
-      
-      <h3 id="inspect">Inspect<a class="anchor" aria-label="anchor" href="#inspect"></a></h3>
-      <p class="section-desc"></p><p>Inspect values from steps in the method’s execution for
-examination</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code> 
-        </dt>
-        <dd>Inspect the return value of a method</dd>
-      </dl></div><div class="section level2">
-      
-      <h3 id="capture">Capture<a class="anchor" aria-label="anchor" href="#capture"></a></h3>
-      <p class="section-desc"></p><p>Capture a snapshot of a method’s execution state for dynamic
-evaluation</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code> 
-        </dt>
-        <dd>Capture a snapshot of a ggproto method as a pre-filled function</dd>
-      </dl><dl><dt>
-          
-          <code><a href="ggtrace_capture_env.html">ggtrace_capture_env()</a></code> 
-        </dt>
-        <dd>Capture a snapshot of a ggproto method's execution environment</dd>
-      </dl></div><div class="section level2">
-      
-      <h3 id="modify">Modify<a class="anchor" aria-label="anchor" href="#modify"></a></h3>
-      <p class="section-desc"></p><p>Modify the method’s behavior as it is executed and return the
-graphical output</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="ggtrace_modify_return.html">ggtrace_modify_return()</a></code> 
-        </dt>
-        <dd>Modify the return value of a method</dd>
       </dl></div><div class="section level2">
       <h2 id="one-offs">One-offs<a class="anchor" aria-label="anchor" href="#one-offs"></a></h2>
       

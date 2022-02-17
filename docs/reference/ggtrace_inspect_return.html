@@ -97,8 +97,8 @@ time the method is called during the evaluation of <code>x</code>. If <code>cond
 multiple times (such as in the default case when <code>cond</code> is simply <code>TRUE</code>), the function
 gives the return value from the first time the method runs.</p>
 <p>The <code>cond</code> expression is evaluated inside the method's current execution environment, with
-the addition of a data-masked variable <code>._counter</code> (or <code>.data$._counter</code>), which internally
-tracks the current index of the method. For example, <code>._counter == 3</code> targets the third time
+the addition of a data-masked variable <code>._counter_</code> (or <code>.data$._counter_</code>), which internally
+tracks the current index of the method. For example, <code>._counter_ == 3</code> targets the third time
 the method is called.</p>
 <p>Additionally, when quoted and passed to <code>cond</code>, the function <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> accesses the
 current return value of the method. For example, <code>unique(returnValue()$PANEL) == 2</code> for

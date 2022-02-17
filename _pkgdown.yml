@@ -13,60 +13,74 @@ template:
     base_font: {google: "Atkinson Hyperlegible"}
 
 reference:
-- title: Trace
-  desc: Programmatically inspect, debug, and manipulate functions and methods
+
+- title: Workflows (experimental; due for v0.5)
+  desc: >
+    These high-level functions take a ggplot object and a ggproto method and allows
+    interactions with the ggplot's build pipeline as it is evaluated. Functions are
+    grouped into four "workflows": Inspect, Capture, Highjack, and Edit.
+
+
+- subtitle: Inspect
+  desc: >
+    Return values from a method's execution environment for inspection and wrangling
   contents:
-  - ggtrace
+  - ggtrace_inspect_return
+
+- subtitle: Capture
+  desc: >
+    Take a snapshot of a method's execution state, exposing it as a function/environment
+  contents:
+  - ggtrace_capture_fn
+  - ggtrace_capture_env
+
+- subtitle: Highjack
+  desc: >
+    Manipulate a method's behavior as it runs and return the resulting the graphical output
+  contents:
+  - ggtrace_highjack_return
+
+- subtitle: Edit
+  desc: >
+    Interactively edit a method's code in a text editor (non-programmtic)
+  contents:
   - ggedit
-  - gguntrace
 
 - title: Helpers
-  desc: Helpers for ggtrace workflows
+  desc: Helpers for working with ggtrace
   contents:
   - get_method
   - ggbody
   - ggformals
   - is_traced
 
-- title: Tracedumps
-  desc: Log and interact with the output of injected expressions
+- title: Extending base::trace()
+  desc: >
+    The low-level function `ggtrace()` and the wrapper function `with_ggtrace()` extend
+    `base::trace()` by managing the **state** of trace expressions, which allow for
+    contiguity over multiple injections and the inspection of tracedumps. Unlike the
+    high-level workflow functions, `ggtrace()` relies on the "side effect" of methods
+    of functions and methods being traced, which must be explicitly reverted with `gguntrace()`.
+
+- subtitle: Trace
+  desc: >
+    Lower-level functions for finer control over injecting expressions with trace
+  contents:
+  - ggtrace
+  - gguntrace
+  - with_ggtrace
+
+- subtitle: Tracedumps
+  desc: >
+    Log and interact with the output of expressions injected with trace
   contents:
   - last_ggtrace
   - global_ggtrace
-
-- title: Workflows (experimental; due for v0.5)
-  desc: >
-    These function takes a ggplot object and a ggproto method, tracing and triggering
-    the method immediately without relying on side-effects. Most of these workflow
-    functions wraps around the lower-level function `with_ggtrace()`, a functional
-    complement to `ggtrace()`
-  contents:
-  - with_ggtrace
-
-- subtitle: Inspect
-  desc: >
-    Inspect values from steps in the method's execution for examination
-  contents:
-  - ggtrace_inspect_return
-
-- subtitle: Capture
-  desc: >
-    Capture a snapshot of a method's execution state for dynamic evaluation
-  contents:
-  - ggtrace_capture_fn
-  - ggtrace_capture_env
-
-- subtitle: Modify
-  desc: >
-    Modify the method's behavior as it is executed and return the graphical output
-  contents:
-  - ggtrace_modify_return
 
 - title: One-offs
   desc: Convenient shortcuts to common workflows without side effects
   contents:
   - ggdebugonce
-  # - ggtraceback
 
 
 articles:

@@ -1,7 +1,13 @@
 # ggtrace (development version)
 
+### Breaking Changes
+
 - `ggtrace_capture_env()` default value of `at` is changed to `-1L`, which captures a snapshot of the runtime environment right before the method returns.
-- `ggtrace_modify_return()` exposes `._counter_` in the `value` argument
+- "modify" workflows renames to "highjack" to reflect the fact that they always return the graphical output (gtable grob) (#78)
+
+### New Features
+
+- `ggtrace_highjack_return()` exposes `._counter_` in the `value` argument
 
 # ggtrace 0.4.8
 

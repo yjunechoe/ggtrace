@@ -1,4 +1,4 @@
-#' Interactively edit the source code
+#' Interactively edit a masking copy of the source code
 #'
 #' @inheritParams ggtrace
 #' @param remove_trace Whether to edit from a clean slate. Defaults to `FALSE`.

@@ -1,4 +1,4 @@
-#' Capture a snapshot of a ggproto method as a pre-filled function
+#' Capture a snapshot of a method as a pre-filled function
 #'
 #' Returns a ggproto method as a function with arguments pre-filled to their values when it was first called
 #'
@@ -114,7 +114,7 @@ ggtrace_capture_fn <- function(x, ...) {
   out[[1]]
 }
 
-#' Capture a snapshot of a ggproto method's execution environment
+#' Capture a snapshot of a method's execution environment
 #'
 #' @param x A ggplot object
 #' @param ... Passed to `ggtrace()`. The `method` to capture should be specified here.

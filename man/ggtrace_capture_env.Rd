@@ -2,7 +2,7 @@
 % Please edit documentation in R/workflows-capture.R
 \name{ggtrace_capture_env}
 \alias{ggtrace_capture_env}
-\title{Capture a snapshot of a ggproto method's execution environment}
+\title{Capture a snapshot of a method's execution environment}
 \usage{
 ggtrace_capture_env(x, ..., at = -1L)
 }
@@ -18,7 +18,7 @@ Defaults to \code{-1L}, which is right before the method returns.}
 An environment
 }
 \description{
-Capture a snapshot of a ggproto method's execution environment
+Capture a snapshot of a method's execution environment
 }
 \examples{
 library(ggplot2)

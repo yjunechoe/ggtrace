@@ -2,7 +2,7 @@
 % Please edit documentation in R/workflows-capture.R
 \name{ggtrace_capture_fn}
 \alias{ggtrace_capture_fn}
-\title{Capture a snapshot of a ggproto method as a pre-filled function}
+\title{Capture a snapshot of a method as a pre-filled function}
 \usage{
 ggtrace_capture_fn(x, ...)
 }

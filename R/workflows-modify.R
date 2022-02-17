@@ -1,4 +1,4 @@
-#' Modify the return value of a method
+#' Highjack the return value of a method
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
@@ -6,10 +6,10 @@
 #' @param cond When the return value should be replaced
 #' @param draw Whether to draw the modified plot
 #'
-#' @return A gtable object with class `<ggtrace_modified>`
+#' @return A gtable object with class `<ggtrace_highjacked>`
 #' @export
 #'
-ggtrace_modify_return <- function(x, method, value, cond = TRUE, draw = TRUE) {
+ggtrace_highjack_return <- function(x, method, value, cond = TRUE, draw = TRUE) {
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0
@@ -46,7 +46,7 @@ ggtrace_modify_return <- function(x, method, value, cond = TRUE, draw = TRUE) {
 
   suppressMessages(untrace(what = what, where = where))
 
-  class(modified) <- c("ggtrace_modified", class(modified))
+  class(modified) <- c("ggtrace_highjacked", class(modified))
   modified
 
 }

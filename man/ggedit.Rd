@@ -2,7 +2,7 @@
 % Please edit documentation in R/ggedit.R
 \name{ggedit}
 \alias{ggedit}
-\title{Interactively edit the source code}
+\title{Interactively edit a masking copy of the source code}
 \usage{
 ggedit(method, remove_trace = FALSE, ...)
 }
@@ -20,7 +20,7 @@ The ggproto method may be specified using any of the following forms:
 \item{...}{Unused, for extensibility.}
 }
 \description{
-Interactively edit the source code
+Interactively edit a masking copy of the source code
 }
 \details{
 Like \code{base::trace()}, the edit is in effect until \code{gguntrace()} is called.
