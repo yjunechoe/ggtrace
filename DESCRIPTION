@@ -30,7 +30,7 @@ Collate:
   'workflows-utils.R'
   'workflows-inspect.R'
   'workflows-capture.R'
-  'workflows-modify.R'
+  'workflows-highjack.R'
   'zzz.R'
 Imports: 
     rlang (>= 0.4.10)

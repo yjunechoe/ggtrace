@@ -20,7 +20,7 @@ ggdraw_silent <- function(x) {
 }
 
 #' @export
-print.ggtrace_modified <- function(x, ...) {
+print.ggtrace_highjacked <- function(x, ...) {
   ggdraw_silent(x)
   invisible(x)
 }

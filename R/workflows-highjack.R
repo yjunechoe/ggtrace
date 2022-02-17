@@ -2,7 +2,7 @@
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param value Value for the method to return when it is called
+#' @param value Value for the method to return instead when it is called
 #' @param cond When the return value should be replaced
 #' @param draw Whether to draw the modified plot
 #'
