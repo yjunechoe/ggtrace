@@ -2,9 +2,12 @@
 % Please edit documentation in R/workflows-utils.R
 \name{ggeval_silent}
 \alias{ggeval_silent}
-\title{Simulate printing of a ggplot object without side effects}
+\alias{ggdraw_silent}
+\title{Simple evaluation and printing of a ggplot object}
 \usage{
 ggeval_silent(x)
+
+ggdraw_silent(x)
 }
 \arguments{
 \item{x}{A ggplot}
@@ -13,12 +16,7 @@ ggeval_silent(x)
 A gtable
 }
 \description{
-Calls \code{ggplot_gtable(ggplot_build(x))}, which executes all the instructions for plotting \code{x} without
-the side-effects from \code{ggplot2:::print.ggplot}, namely:
-}
-\details{
-\itemize{
-\item \code{last_plot()} is not overriden
-\item \code{grid.draw()} is not called (= nothing gets rendered/drawn)
-}
+\code{ggeval_silent()} evaluates the ggplot object into a \verb{<gtable>} grob and \code{ggdraw_silent()}
+renders the grob with \code{{grid}}. Combined, these two functions simulate \code{ggplot2:::print.ggplot}
+without overriding \code{last_plot()}.
 }
