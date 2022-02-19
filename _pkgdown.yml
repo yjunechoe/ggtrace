@@ -23,7 +23,7 @@ reference:
 
 - subtitle: Inspect
   desc: >
-    Return values from a method's execution environment for inspection and wrangling
+    Return values from or information about a method's execution environment for inspection
   contents:
   - ggtrace_inspect_n
   - ggtrace_inspect_return
@@ -37,7 +37,7 @@ reference:
 
 - subtitle: Highjack
   desc: >
-    Manipulate a method's behavior as it runs and return the resulting the graphical output
+    Manipulate a method's behavior as it runs and return the resulting graphical output
   contents:
   - ggtrace_highjack_return
 
