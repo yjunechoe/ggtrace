@@ -13,7 +13,7 @@
 ggtrace_highjack_return <- function(x, method, cond = quote(._counter_ == 1), value = quote(returnValue()), draw = TRUE) {
 
   wrapper_env <- rlang::current_env()
-  ._counter_ <- 0
+  ._counter_ <- 0L
 
   method_quo <- rlang::enquo(method)
   method_info <- resolve_formatting(method_quo)

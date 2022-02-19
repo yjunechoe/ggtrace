@@ -4,7 +4,7 @@
 \alias{ggtrace_capture_fn}
 \title{Capture a snapshot of a method as a pre-filled function}
 \usage{
-ggtrace_capture_fn(x, method, cond = quote(._counter_ == 1))
+ggtrace_capture_fn(x, method, cond = quote(._counter_ == 1L))
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -35,8 +35,8 @@ promoted to function arguments. The captured values are available for inspection
 library(ggplot2)
 
 set.seed(47)
-df <- as.data.frame(matrix(sample(5, 50, TRUE), ncol = 2))
-df
+df <- as.data.frame(matrix(sample(5, 1000, TRUE), ncol = 2))
+table(df)
 
 base <- ggplot(df, aes(x = V1, y = V2))
 

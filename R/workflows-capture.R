@@ -18,8 +18,8 @@
 #' library(ggplot2)
 #'
 #' set.seed(47)
-#' df <- as.data.frame(matrix(sample(5, 50, TRUE), ncol = 2))
-#' df
+#' df <- as.data.frame(matrix(sample(5, 1000, TRUE), ncol = 2))
+#' table(df)
 #'
 #' base <- ggplot(df, aes(x = V1, y = V2))
 #'
@@ -75,10 +75,10 @@
 #'
 #' # Interactively explore with `debugonce(attr(p3_compute_panel, "inner"))`
 #'
-ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1)) {
+ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1L)) {
 
   wrapper_env <- rlang::current_env()
-  ._counter_ <- 0
+  ._counter_ <- 0L
   captured <- NULL
 
   method_quo <- rlang::enquo(method)
@@ -103,7 +103,7 @@ ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1)) {
         args_pairs <- as.list(mget(args[args != "..."]))
 
         # define inner function
-        args_inner <- replicate(length(args_pairs) + 1, rlang::expr())
+        args_inner <- replicate(length(args_pairs) + 1L, rlang::expr())
         names(args_inner) <- c(names(args_pairs), "...")
         inner <- rlang::new_function(args_inner, body(cur_fn))
 
@@ -197,7 +197,7 @@ ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1)) {
 ggtrace_capture_env <- function(x, method, cond = quote(._counter_ == 1), at = -1L) {
 
   wrapper_env <- rlang::current_env()
-  ._counter_ <- 0
+  ._counter_ <- 0L
   captured <- NULL
 
   method_quo <- rlang::enquo(method)
@@ -205,7 +205,7 @@ ggtrace_capture_env <- function(x, method, cond = quote(._counter_ == 1), at = -
   what <- method_info$what
   where <- method_info$where
 
-  if (at < 0) { at <- length(method_info$method_body) + 1L + at }
+  if (at < 0L) { at <- length(method_info$method_body) + 1L + at }
   if (at > length(method_info$method_body)) { rlang::abort("`at` out of range") }
 
   suppressMessages(trace(what = what, where = where, print = FALSE, at = at, tracer = rlang::expr({

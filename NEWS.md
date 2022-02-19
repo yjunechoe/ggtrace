@@ -7,6 +7,7 @@
 
 ### New Features
 
+- `ggtrace_inspect_n()` to get the number of times a method was called in the evaluation of a ggplot
 - `ggtrace_highjack_return()` exposes `._counter_` in the `value` argument
 - `with_ggtrace()` gets a `return_value` argument which can take 1 of three options:
 

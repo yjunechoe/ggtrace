@@ -4,7 +4,7 @@
 \alias{ggtrace_inspect_return}
 \title{Inspect the return value of a method}
 \usage{
-ggtrace_inspect_return(x, method, cond = quote(._counter_ == 1))
+ggtrace_inspect_return(x, method, cond = quote(._counter_ == 1L))
 }
 \arguments{
 \item{x}{A ggplot object}

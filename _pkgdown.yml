@@ -25,6 +25,7 @@ reference:
   desc: >
     Return values from a method's execution environment for inspection and wrangling
   contents:
+  - ggtrace_inspect_n
   - ggtrace_inspect_return
 
 - subtitle: Capture
@@ -42,7 +43,7 @@ reference:
 
 - subtitle: Edit
   desc: >
-    Interactively edit a method's code in a text editor (non-programmtic)
+    Interactively edit a method's code in a text editor (non-programmatic)
   contents:
   - ggedit
 

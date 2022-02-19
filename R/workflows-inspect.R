@@ -1,3 +1,72 @@
+#' Inspect how many times a method was called
+#'
+#' @param x A ggplot object
+#' @inheritParams get_method
+#'
+#' @return Integer
+#' @export
+#'
+#' @examples
+#'
+#' library(ggplot2)
+#'
+#' p1 <- ggplot(diamonds, aes(cut)) +
+#'   geom_bar() +
+#'   facet_wrap(~ clarity)
+#'
+#' p1
+#'
+#' # 1 call to Stat$compute_layer
+#' ggtrace_inspect_n(p1, Stat$compute_layer)
+#'
+#' # 8 calls to Stat$compute_panel
+#' ggtrace_inspect_n(p1, Stat$compute_panel)
+#'
+#' # Note that there are 0 calls to Stat$compute_group ...
+#' ggtrace_inspect_n(p1, Stat$compute_group)
+#'
+#' # because StatCount has its own "compute_group" method defined
+#' ggtrace_inspect_n(p1, StatCount$compute_group)
+#'
+#' # How about if we add a second layer that uses StatCount?
+#' p2 <- p1 + geom_text(
+#'   aes(label = after_stat(count)),
+#'   stat = StatCount, position = position_nudge(y = 500)
+#' )
+#'
+#' p2
+#'
+#' # Now there are double the calls to Stat/StatCount methods
+#' ggtrace_inspect_n(p2, Stat$compute_layer)
+#' ggtrace_inspect_n(p2, Stat$compute_panel)
+#' ggtrace_inspect_n(p2, StatCount$compute_group)
+#'
+#' # But separate calls to each layer's respective Geoms
+#' # (note that Bar and Text are vectorized at the panel level)
+#' ggtrace_inspect_n(p2, GeomBar$draw_panel)
+#' ggtrace_inspect_n(p2, GeomText$draw_panel)
+#'
+ggtrace_inspect_n <- function(x, method) {
+
+  wrapper_env <- rlang::current_env()
+  ._counter_ <- 0L
+
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+  suppressMessages(trace(what = what, where = where, print = FALSE, tracer = rlang::expr({
+    rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1L)
+  })))
+
+  ggeval_silent(x)
+  suppressMessages(untrace(what = what, where = where))
+
+  ._counter_
+
+}
+
+
 #' Inspect the return value of a method
 #'
 #' @param x A ggplot object
@@ -23,10 +92,10 @@
 #' @return The return value from `method` when it is first called.
 #' @export
 #'
-ggtrace_inspect_return <- function(x, method, cond = quote(._counter_ == 1)) {
+ggtrace_inspect_return <- function(x, method, cond = quote(._counter_ == 1L)) {
 
   wrapper_env <- rlang::current_env()
-  ._counter_ <- 0
+  ._counter_ <- 0L
   ._return <- NULL
 
   method_quo <- rlang::enquo(method)
@@ -34,7 +103,7 @@ ggtrace_inspect_return <- function(x, method, cond = quote(._counter_ == 1)) {
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({
-    rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1)
+    rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1L)
     cond <- rlang::eval_tidy(
       quote(!!cond),
       list(._counter_ = rlang::env_get(!!wrapper_env, "._counter_")),
