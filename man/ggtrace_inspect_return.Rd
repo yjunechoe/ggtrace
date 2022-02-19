@@ -17,9 +17,7 @@ The ggproto method may be specified using any of the following forms:
 \item \code{namespace:::ggproto$method}
 }}
 
-\item{cond}{When the return value should be replaced. Defaults to \code{TRUE}.
-Given that only one value is returned by \code{ggtrace_inspect_return}, the default
-value is the return value from the first time the method runs.}
+\item{cond}{When the return value should be inspected. Defaults to \code{quote(._counter_ == 1L)}.}
 }
 \value{
 The return value from \code{method} when it is first called.
@@ -27,18 +25,24 @@ The return value from \code{method} when it is first called.
 \description{
 Inspect the return value of a method
 }
-\details{
-The value to \code{cond} can be a quoted expression, which gets evaluated every
-time the method is called during the evaluation of \code{x}. If \code{cond} evaluates to \code{TRUE}
-multiple times (such as in the default case when \code{cond} is simply \code{TRUE}), the function
-gives the return value from the first time the method runs.
+\section{Tracing context}{
 
-The \code{cond} expression is evaluated inside the method's current execution environment, with
-the addition of a data-masked variable \code{._counter_} (or \code{.data$._counter_}), which internally
-tracks the current index of the method. For example, \code{._counter_ == 3} targets the third time
-the method is called.
+When quoted expressions are passed to the \code{cond} or \code{value} argument of
+workflow functions (in the form of \verb{ggtrace_\{action\}_\{value\}()}), they are
+evaluated in a special environment (which we call the "tracing context").
 
-Additionally, when quoted and passed to \code{cond}, the function \code{returnValue()} accesses the
-current return value of the method. For example, \code{unique(returnValue()$PANEL) == 2} for
-\code{Stat$compute_group} targets the method when it's processing data for the second PANEL.
+The tracing context is "data-masked" (via \code{rlang::eval_tidy()}), exposing
+an internal variable called \code{._counter_} which tracks how many times a
+function/method has been called in the evaluation of a ggplot supplied to
+the \code{x} argument of workflow functions. For example, \code{cond = quote(._counter_ == 1)}
+is evaluated as \code{TRUE} when the method is called for the first time, and
+this is the default value of \code{cond} for workflow functions that only return
+one value (e.g., \code{ggtrace_capture_fn()}).
+
+For highjack functions like \code{ggtrace_highjack_return()}, the value about to
+be returned by the function/method can be accessed with \code{returnValue()} in the
+\code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
+simply returns the return value, but directly computing on \code{returnValue()} to
+derive a different return value for the function/method is also possible.
 }
+

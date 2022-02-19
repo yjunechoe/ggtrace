@@ -2,10 +2,12 @@
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the return value should be replaced.
-#' @param value What the method should return instead
+#' @param cond When the return value should be replaced. Defaults to `quote(._counter_ == 1L)`.
+#' @param value What the method should return instead. Defaults to `quote(returnValue())`.
 #' @param draw Whether to draw the modified graphical output from evaluating `x`.
 #'   Defaults to `TRUE`.
+#'
+#' @inheritSection topic-tracing-context Tracing context
 #'
 #' @return A gtable object with class `<ggtrace_highjacked>`
 #' @export

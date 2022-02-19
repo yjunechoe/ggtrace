@@ -4,12 +4,12 @@
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the method should be captured and returned as function. Defaults to `TRUE`.
-#'   Given that only one value is returned by `ggtrace_capture_fn`, the default
-#'   value is the return value from the first time the method runs.
+#' @param cond When the method function should be captured. Defaults to `quote(._counter_ == 1L)`.
 #'
 #' @note For functions and methods that take `...`, arguments passed to `...` are captured and
 #'   promoted to function arguments. The captured values are available for inspection via `formals()`.
+#'
+#' @inheritSection topic-tracing-context Tracing context
 #'
 #' @return A function
 #' @export
@@ -147,10 +147,11 @@ ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1L)) {
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the method should be captured and returned as function. Defaults to `TRUE`.
-#'   Given that only one value is returned by `ggtrace_capture_fn`, the default
-#'   value is the return value from the first time the method runs.
-#' @param at Which step of the method body the environment should be captured. See `ggbody()`.
+#' @param cond When the method environment should be captured. Defaults to `quote(._counter_ == 1L)`.
+#' @param at Which step of the method body the environment should be captured.
+#'   See `ggbody()` for a list of expressions/steps in the method body.
+#'
+#' @inheritSection topic-tracing-context Tracing context
 #'
 #' @return An environment
 #' @export
