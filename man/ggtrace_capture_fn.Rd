@@ -4,12 +4,22 @@
 \alias{ggtrace_capture_fn}
 \title{Capture a snapshot of a method as a pre-filled function}
 \usage{
-ggtrace_capture_fn(x, ...)
+ggtrace_capture_fn(x, method, cond = quote(._counter_ == 1))
 }
 \arguments{
 \item{x}{A ggplot object}
 
-\item{...}{Passed to \code{ggtrace()}. The \code{method} to capture should be specified here.}
+\item{method}{A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:
+\itemize{
+\item \code{ggproto$method}
+\item \code{namespace::ggproto$method}
+\item \code{namespace:::ggproto$method}
+}}
+
+\item{cond}{When the method should be captured and returned as function. Defaults to \code{TRUE}.
+Given that only one value is returned by \code{ggtrace_capture_fn}, the default
+value is the return value from the first time the method runs.}
 }
 \value{
 A function
@@ -18,7 +28,7 @@ A function
 Returns a ggproto method as a function with arguments pre-filled to their values when it was first called
 }
 \note{
-For methods that take \code{...}, if arguments are passed to \code{...} in runtime, they're captured and
+For functions and methods that take \code{...}, arguments passed to \code{...} are captured and
 promoted to function arguments. The captured values are available for inspection via \code{formals()}.
 }
 \examples{
@@ -49,7 +59,7 @@ p1_compute_panel()
 # For example, see what happens when aes is flipped via `orientation = "y"`
 p1_compute_panel(flipped_aes = TRUE)
 
-# We confirm this output to be true when `orientation = "y"`
+# We confirm this output to be true when `orientation = "y"` in `stat_summary()`
 p2 <- base + stat_summary(orientation = "y")
 p2_compute_panel <- ggtrace_capture_fn(p2, method = StatSummary$compute_panel)
 

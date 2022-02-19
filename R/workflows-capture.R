@@ -3,9 +3,12 @@
 #' Returns a ggproto method as a function with arguments pre-filled to their values when it was first called
 #'
 #' @param x A ggplot object
-#' @param ... Passed to `ggtrace()`. The `method` to capture should be specified here.
+#' @inheritParams get_method
+#' @param cond When the method should be captured and returned as function. Defaults to `TRUE`.
+#'   Given that only one value is returned by `ggtrace_capture_fn`, the default
+#'   value is the return value from the first time the method runs.
 #'
-#' @note For methods that take `...`, if arguments are passed to `...` in runtime, they're captured and
+#' @note For functions and methods that take `...`, arguments passed to `...` are captured and
 #'   promoted to function arguments. The captured values are available for inspection via `formals()`.
 #'
 #' @return A function
@@ -39,7 +42,7 @@
 #' # For example, see what happens when aes is flipped via `orientation = "y"`
 #' p1_compute_panel(flipped_aes = TRUE)
 #'
-#' # We confirm this output to be true when `orientation = "y"`
+#' # We confirm this output to be true when `orientation = "y"` in `stat_summary()`
 #' p2 <- base + stat_summary(orientation = "y")
 #' p2_compute_panel <- ggtrace_capture_fn(p2, method = StatSummary$compute_panel)
 #'
@@ -72,16 +75,27 @@
 #'
 #' # Interactively explore with `debugonce(attr(p3_compute_panel, "inner"))`
 #'
-ggtrace_capture_fn <- function(x, ...) {
+ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1)) {
 
-  # Local binding shenanigans to pass check
-  modify_list <- .dots_captured <- NULL
+  wrapper_env <- rlang::current_env()
+  ._counter_ <- 0
+  captured <- NULL
 
-  out <- with_ggtrace(
-    x = x,
-    ...,
-    trace_steps = 1,
-    trace_exprs = rlang::expr({
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+  suppressMessages(trace(what = what, where = where, print = FALSE, at = 1L, tracer = rlang::expr({
+
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
+    rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
+
+    cur_env <- rlang::current_env()
+
+    cond <- rlang::eval_tidy(quote(!!cond), list(._counter_ = new_counter), cur_env)
+
+    if (rlang::is_true(cond)) {
+
       cur_fn <- attr(rlang::current_fn(), "original")
       args <- names(formals(cur_fn))
       if ("..." %in% args) {
@@ -100,26 +114,43 @@ ggtrace_capture_fn <- function(x, ...) {
           specs <- names(cur_args) %in% names(formals(inner))
           do.call(inner, c(cur_args[specs], cur_args[!specs]))
         }))
-
         attr(outer, "inner") <- inner
-        outer
+
+        rlang::env_bind(!!wrapper_env, captured = outer)
 
       } else {
         args_pairs <- mget(args)
         args_pairlist <- do.call(rlang::pairlist2, args_pairs)
-        rlang::new_function(args_pairlist, body(cur_fn))
+        captured_fn <- rlang::new_function(args_pairlist, body(cur_fn))
+        rlang::env_bind(!!wrapper_env, captured = captured_fn)
       }
-    })
-  )
-  out[[1]]
+
+      suppressMessages(untrace(what = !!what, where = !!where))
+
+    } else if (!rlang::is_false(cond)) {
+      rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter_ == ", new_counter, "`"))
+    }
+  })))
+
+  ggeval_silent(x)
+
+  if (.is_traced(what, where)) {
+    suppressMessages(untrace(what = what, where = where))
+    rlang::abort(paste0("`", method_info$formatted_call, "` was not called during evaluation of the plot"))
+  } else {
+    captured
+  }
+
 }
 
 #' Capture a snapshot of a method's execution environment
 #'
 #' @param x A ggplot object
-#' @param ... Passed to `ggtrace()`. The `method` to capture should be specified here.
-#' @param at The position in the method body when the environment should be captured.
-#'   Defaults to `-1L`, which is right before the method returns.
+#' @inheritParams get_method
+#' @param cond When the method should be captured and returned as function. Defaults to `TRUE`.
+#'   Given that only one value is returned by `ggtrace_capture_fn`, the default
+#'   value is the return value from the first time the method runs.
+#' @param at Which step of the method body the environment should be captured. See `ggbody()`.
 #'
 #' @return An environment
 #' @export
@@ -163,14 +194,49 @@ ggtrace_capture_fn <- function(x, ...) {
 #'     select(any_of(c("colour", "fill")))
 #' )
 #'
-ggtrace_capture_env <- function(x, ..., at = -1L) {
-  out <- with_ggtrace(
-    x = x,
-    ...,
-    trace_steps = at,
-    trace_exprs = rlang::expr(rlang::env_clone(rlang::current_env()))
-  )
-  out[[1]]
+ggtrace_capture_env <- function(x, method, cond = quote(._counter_ == 1), at = -1L) {
+
+  wrapper_env <- rlang::current_env()
+  ._counter_ <- 0
+  captured <- NULL
+
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+
+  if (at < 0) { at <- length(method_info$method_body) + 1L + at }
+  if (at > length(method_info$method_body)) { rlang::abort("`at` out of range") }
+
+  suppressMessages(trace(what = what, where = where, print = FALSE, at = at, tracer = rlang::expr({
+
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
+    rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
+
+    cur_env <- rlang::current_env()
+
+    cond <- rlang::eval_tidy(quote(!!cond), list(._counter_ = new_counter), cur_env)
+
+    if (rlang::is_true(cond)) {
+
+      captured_env <- rlang::env_clone(rlang::current_env())
+      rlang::env_bind(!!wrapper_env, captured = captured_env)
+      suppressMessages(untrace(what = !!what, where = !!where))
+
+    } else if (!rlang::is_false(cond)) {
+      rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter_ == ", new_counter, "`"))
+    }
+  })))
+
+  ggeval_silent(x)
+
+  if (.is_traced(what, where)) {
+    suppressMessages(untrace(what = what, where = where))
+    rlang::abort(paste0("`", method_info$formatted_call, "` was not called during evaluation of the plot"))
+  } else {
+    captured
+  }
+
 }
 
 # ggtrace_capture_frame ...

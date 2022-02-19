@@ -23,7 +23,7 @@
 #' @return The return value from `method` when it is first called.
 #' @export
 #'
-ggtrace_inspect_return <- function(x, method, cond = TRUE) {
+ggtrace_inspect_return <- function(x, method, cond = quote(._counter_ == 1)) {
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0

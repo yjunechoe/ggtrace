@@ -68,15 +68,23 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">x</span>, <span class="va">method</span>, cond <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">._counter_</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>A ggplot object</p></dd>
-<dt>...</dt>
-<dd><p>Passed to <code><a href="ggtrace.html">ggtrace()</a></code>. The <code>method</code> to capture should be specified here.</p></dd>
+<dt>method</dt>
+<dd><p>A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:</p><ul><li><p><code>ggproto$method</code></p></li>
+<li><p><code>namespace::ggproto$method</code></p></li>
+<li><p><code>namespace:::ggproto$method</code></p></li>
+</ul></dd>
+<dt>cond</dt>
+<dd><p>When the method should be captured and returned as function. Defaults to <code>TRUE</code>.
+Given that only one value is returned by <code>ggtrace_capture_fn</code>, the default
+value is the return value from the first time the method runs.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -84,7 +92,7 @@
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>For methods that take <code>...</code>, if arguments are passed to <code>...</code> in runtime, they're captured and
+    <p>For functions and methods that take <code>...</code>, arguments passed to <code>...</code> are captured and
 promoted to function arguments. The captured values are available for inspection via <code><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals()</a></code>.</p>
     </div>
 
@@ -130,6 +138,7 @@ promoted to function arguments. The captured values are available for inspection
 <span class="r-plt img"><img src="ggtrace_capture_fn-1.png" alt="" width="1094" height="676"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">p1_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">p1</span>, method <span class="op">=</span> <span class="va">StatSummary</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># `p1_compute_panel` is a copy of the ggproto method</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/body.html" class="external-link">body</a></span><span class="op">(</span><span class="va">p1_compute_panel</span><span class="op">)</span></span>
@@ -236,9 +245,10 @@ promoted to function arguments. The captured values are available for inspection
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 4    -1 2.000000       NA       NA     1        TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 5    -1 2.333333 1.892375 2.774292     1        TRUE</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># We confirm this output to be true when `orientation = "y"`</span></span>
+<span class="r-in"><span class="co"># We confirm this output to be true when `orientation = "y"` in `stat_summary()`</span></span>
 <span class="r-in"><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">base</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span>orientation <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">p2_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">p2</span>, method <span class="op">=</span> <span class="va">StatSummary</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Removed 1 rows containing missing values (geom_segment).</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">p1_compute_panel</span><span class="op">(</span>flipped_aes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fu">p2_compute_panel</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
@@ -256,6 +266,7 @@ promoted to function arguments. The captured values are available for inspection
 <span class="r-plt img"><img src="ggtrace_capture_fn-2.png" alt="" width="1094" height="676"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">p3_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">p3</span>, method <span class="op">=</span> <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula 'y ~ x'</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># For one, the body is different</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/body.html" class="external-link">body</a></span><span class="op">(</span><span class="va">p3_compute_panel</span><span class="op">)</span></span>
@@ -284,7 +295,7 @@ promoted to function arguments. The captured values are available for inspection
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }, stats, groups, SIMPLIFY = FALSE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rbind_dfs(stats)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000000004e75b7d8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000000004bc4d150&gt;</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Captured argument defaults are again available for inspection via `formals()`</span></span>
 <span class="r-in"><span class="co"># Note that arguments passed to the `...` are promoted to function arguments</span></span>

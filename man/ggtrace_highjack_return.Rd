@@ -2,9 +2,15 @@
 % Please edit documentation in R/workflows-highjack.R
 \name{ggtrace_highjack_return}
 \alias{ggtrace_highjack_return}
-\title{Highjack the return value of a method}
+\title{Highjack a method's execution and make it return a user-supplied value}
 \usage{
-ggtrace_highjack_return(x, method, value, cond = TRUE, draw = TRUE)
+ggtrace_highjack_return(
+  x,
+  method,
+  cond = quote(._counter_ == 1),
+  value = quote(returnValue()),
+  draw = TRUE
+)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -17,15 +23,16 @@ The ggproto method may be specified using any of the following forms:
 \item \code{namespace:::ggproto$method}
 }}
 
-\item{value}{Value for the method to return instead when it is called}
+\item{cond}{When the return value should be replaced.}
 
-\item{cond}{When the return value should be replaced}
+\item{value}{What the method should return instead}
 
-\item{draw}{Whether to draw the modified plot}
+\item{draw}{Whether to draw the modified graphical output from evaluating \code{x}.
+Defaults to \code{TRUE}.}
 }
 \value{
 A gtable object with class \verb{<ggtrace_highjacked>}
 }
 \description{
-Highjack the return value of a method
+Highjack a method's execution and make it return a user-supplied value
 }

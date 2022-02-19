@@ -68,18 +68,25 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggtrace_capture_env</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span>, at <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">ggtrace_capture_env</span><span class="op">(</span><span class="va">x</span>, <span class="va">method</span>, cond <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">._counter_</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>, at <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>A ggplot object</p></dd>
-<dt>...</dt>
-<dd><p>Passed to <code><a href="ggtrace.html">ggtrace()</a></code>. The <code>method</code> to capture should be specified here.</p></dd>
+<dt>method</dt>
+<dd><p>A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:</p><ul><li><p><code>ggproto$method</code></p></li>
+<li><p><code>namespace::ggproto$method</code></p></li>
+<li><p><code>namespace:::ggproto$method</code></p></li>
+</ul></dd>
+<dt>cond</dt>
+<dd><p>When the method should be captured and returned as function. Defaults to <code>TRUE</code>.
+Given that only one value is returned by <code>ggtrace_capture_fn</code>, the default
+value is the return value from the first time the method runs.</p></dd>
 <dt>at</dt>
-<dd><p>The position in the method body when the environment should be captured.
-Defaults to <code>-1L</code>, which is right before the method returns.</p></dd>
+<dd><p>Which step of the method body the environment should be captured. See <code><a href="get_method.html">ggbody()</a></code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
