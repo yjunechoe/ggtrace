@@ -42,7 +42,32 @@ one value (e.g., \code{ggtrace_capture_fn()}).
 For highjack functions like \code{ggtrace_highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
-simply returns the return value, but directly computing on \code{returnValue()} to
+simply evaluates to the return value, but directly computing on \code{returnValue()} to
 derive a different return value for the function/method is also possible.
 }
 
+\examples{
+
+library(ggplot2)
+
+p1 <- ggplot(diamonds, aes(cut)) +
+  geom_bar(aes(fill = cut)) +
+  facet_wrap(~ clarity)
+
+p1
+
+# Return value of `Stat$compute_panel` for the
+# first panel `cond = quote(._counter_ == 1L)`
+ggtrace_inspect_return(x = p1, method = Stat$compute_panel)
+
+# Return value for 4th panel
+ggtrace_inspect_return(x = p1, method = Stat$compute_panel,
+                       cond = quote(._counter_ == 4L))
+
+# Return value for 4th panel, 2nd group (bar)
+ggtrace_inspect_return(
+  x = p1, method = StatCount$compute_group,
+  cond = quote(data$PANEL[1] == 4 && data$group == 2)
+)
+
+}

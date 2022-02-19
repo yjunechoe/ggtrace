@@ -115,6 +115,9 @@
     <loc>/reference/one-offs.html</loc>
   </url>
   <url>
+    <loc>/reference/topic-tracing-context.html</loc>
+  </url>
+  <url>
     <loc>/reference/with_ggtrace.html</loc>
   </url>
 </urlset>

@@ -18,7 +18,7 @@
 #' For highjack functions like `ggtrace_highjack_return()`, the value about to
 #' be returned by the function/method can be accessed with `returnValue()` in the
 #' `value` argument. By default, `value` is set to `quote(returnValue())` which
-#' simply returns the return value, but directly computing on `returnValue()` to
+#' simply evaluates to the return value, but directly computing on `returnValue()` to
 #' derive a different return value for the function/method is also possible.
 #'
 #' @keywords internal

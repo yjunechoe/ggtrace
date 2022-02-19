@@ -82,15 +82,34 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <li><p><code>namespace:::ggproto$method</code></p></li>
 </ul></dd>
 <dt>cond</dt>
-<dd><p>When the method should be captured and returned as function. Defaults to <code>TRUE</code>.
-Given that only one value is returned by <code>ggtrace_capture_fn</code>, the default
-value is the return value from the first time the method runs.</p></dd>
+<dd><p>When the method environment should be captured. Defaults to <code>quote(._counter_ == 1L)</code>.</p></dd>
 <dt>at</dt>
-<dd><p>Which step of the method body the environment should be captured. See <code><a href="get_method.html">ggbody()</a></code>.</p></dd>
+<dd><p>Which step of the method body the environment should be captured.
+See <code><a href="get_method.html">ggbody()</a></code> for a list of expressions/steps in the method body.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>An environment</p>
+    </div>
+    <div class="section level2">
+    <h2 id="tracing-context">Tracing context<a class="anchor" aria-label="anchor" href="#tracing-context"></a></h2>
+    
+
+<p>When quoted expressions are passed to the <code>cond</code> or <code>value</code> argument of
+workflow functions (in the form of <code>ggtrace_{action}_{value}()</code>), they are
+evaluated in a special environment (which we call the "tracing context").</p>
+<p>The tracing context is "data-masked" (via <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html" class="external-link">rlang::eval_tidy()</a></code>), exposing
+an internal variable called <code>._counter_</code> which tracks how many times a
+function/method has been called in the evaluation of a ggplot supplied to
+the <code>x</code> argument of workflow functions. For example, <code>cond = quote(._counter_ == 1)</code>
+is evaluated as <code>TRUE</code> when the method is called for the first time, and
+this is the default value of <code>cond</code> for workflow functions that only return
+one value (e.g., <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>).</p>
+<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, the value about to
+be returned by the function/method can be accessed with <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the
+<code>value</code> argument. By default, <code>value</code> is set to <code>quote(returnValue())</code> which
+simply evaluates to the return value, but directly computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to
+derive a different return value for the function/method is also possible.</p>
     </div>
 
     <div class="section level2">

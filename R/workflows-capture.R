@@ -33,7 +33,7 @@
 #' ggbody(StatSummary$compute_panel, as.list = FALSE)
 #'
 #' # Its arguments are pre-filled (captured at runtime)
-#' formals(p1_compute_panel)
+#' sapply(formals(p1_compute_panel), class)
 #'
 #' # Runs as it should
 #' p1_compute_panel()
@@ -57,10 +57,10 @@
 #'
 #' p3_compute_panel <- ggtrace_capture_fn(p3, method = Stat$compute_panel)
 #'
-#' # For one, the body is different
+#' # For one, the body is different - it's a "wrapper" around the captured method
 #' body(p3_compute_panel)
 #'
-#' # The captured method is called internally, stored in the `"inner"` attribute
+#' # The captured method is stored in the `"inner"` attribute
 #' attr(p3_compute_panel, "inner")
 #'
 #' # Captured argument defaults are again available for inspection via `formals()`

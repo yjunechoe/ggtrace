@@ -82,29 +82,75 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <li><p><code>namespace:::ggproto$method</code></p></li>
 </ul></dd>
 <dt>cond</dt>
-<dd><p>When the return value should be replaced. Defaults to <code>TRUE</code>.
-Given that only one value is returned by <code>ggtrace_inspect_return</code>, the default
-value is the return value from the first time the method runs.</p></dd>
+<dd><p>When the return value should be inspected. Defaults to <code>quote(._counter_ == 1L)</code>.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>The return value from <code>method</code> when it is first called.</p>
     </div>
     <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The value to <code>cond</code> can be a quoted expression, which gets evaluated every
-time the method is called during the evaluation of <code>x</code>. If <code>cond</code> evaluates to <code>TRUE</code>
-multiple times (such as in the default case when <code>cond</code> is simply <code>TRUE</code>), the function
-gives the return value from the first time the method runs.</p>
-<p>The <code>cond</code> expression is evaluated inside the method's current execution environment, with
-the addition of a data-masked variable <code>._counter_</code> (or <code>.data$._counter_</code>), which internally
-tracks the current index of the method. For example, <code>._counter_ == 3</code> targets the third time
-the method is called.</p>
-<p>Additionally, when quoted and passed to <code>cond</code>, the function <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> accesses the
-current return value of the method. For example, <code>unique(returnValue()$PANEL) == 2</code> for
-<code>Stat$compute_group</code> targets the method when it's processing data for the second PANEL.</p>
+    <h2 id="tracing-context">Tracing context<a class="anchor" aria-label="anchor" href="#tracing-context"></a></h2>
+    
+
+<p>When quoted expressions are passed to the <code>cond</code> or <code>value</code> argument of
+workflow functions (in the form of <code>ggtrace_{action}_{value}()</code>), they are
+evaluated in a special environment (which we call the "tracing context").</p>
+<p>The tracing context is "data-masked" (via <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html" class="external-link">rlang::eval_tidy()</a></code>), exposing
+an internal variable called <code>._counter_</code> which tracks how many times a
+function/method has been called in the evaluation of a ggplot supplied to
+the <code>x</code> argument of workflow functions. For example, <code>cond = quote(._counter_ == 1)</code>
+is evaluated as <code>TRUE</code> when the method is called for the first time, and
+this is the default value of <code>cond</code> for workflow functions that only return
+one value (e.g., <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>).</p>
+<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, the value about to
+be returned by the function/method can be accessed with <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the
+<code>value</code> argument. By default, <code>value</code> is set to <code>quote(returnValue())</code> which
+simply evaluates to the return value, but directly computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to
+derive a different return value for the function/method is also possible.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">diamonds</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">cut</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">cut</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span class="r-in">  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span> <span class="va">clarity</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">p1</span></span>
+<span class="r-plt img"><img src="ggtrace_inspect_return-1.png" alt="" width="1094" height="676"></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Return value of `Stat$compute_panel` for the</span></span>
+<span class="r-in"><span class="co"># first panel `cond = quote(._counter_ == 1L)`</span></span>
+<span class="r-in"><span class="fu">ggtrace_inspect_return</span><span class="op">(</span>x <span class="op">=</span> <span class="va">p1</span>, method <span class="op">=</span> <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   count prop x width flipped_aes      fill PANEL group</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   210    1 1   0.9       FALSE      Fair     1     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    96    1 2   0.9       FALSE      Good     1     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    84    1 3   0.9       FALSE Very Good     1     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   205    1 4   0.9       FALSE   Premium     1     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   146    1 5   0.9       FALSE     Ideal     1     5</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Return value for 4th panel</span></span>
+<span class="r-in"><span class="fu">ggtrace_inspect_return</span><span class="op">(</span>x <span class="op">=</span> <span class="va">p1</span>, method <span class="op">=</span> <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span>,</span>
+<span class="r-in">                       cond <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">._counter_</span> <span class="op">==</span> <span class="fl">4L</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   count prop x width flipped_aes      fill PANEL group</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   261    1 1   0.9       FALSE      Fair     4     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   978    1 2   0.9       FALSE      Good     4     2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  2591    1 3   0.9       FALSE Very Good     4     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  3357    1 4   0.9       FALSE   Premium     4     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  5071    1 5   0.9       FALSE     Ideal     4     5</span>
+<span class="r-in"></span>
+<span class="r-in"><span class="co"># Return value for 4th panel, 2nd group (bar)</span></span>
+<span class="r-in"><span class="fu">ggtrace_inspect_return</span><span class="op">(</span></span>
+<span class="r-in">  x <span class="op">=</span> <span class="va">p1</span>, method <span class="op">=</span> <span class="va">StatCount</span><span class="op">$</span><span class="va">compute_group</span>,</span>
+<span class="r-in">  cond <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">PANEL</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">4</span> <span class="op">&amp;&amp;</span> <span class="va">data</span><span class="op">$</span><span class="va">group</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   count prop x width flipped_aes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   978    1 2   0.9       FALSE</span>
+<span class="r-in"></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

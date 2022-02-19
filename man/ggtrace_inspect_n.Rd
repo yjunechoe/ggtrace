@@ -28,7 +28,7 @@ Inspect how many times a method was called
 library(ggplot2)
 
 p1 <- ggplot(diamonds, aes(cut)) +
-  geom_bar() +
+  geom_bar(aes(fill = cut)) +
   facet_wrap(~ clarity)
 
 p1

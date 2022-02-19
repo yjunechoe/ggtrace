@@ -46,7 +46,7 @@ one value (e.g., \code{ggtrace_capture_fn()}).
 For highjack functions like \code{ggtrace_highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
-simply returns the return value, but directly computing on \code{returnValue()} to
+simply evaluates to the return value, but directly computing on \code{returnValue()} to
 derive a different return value for the function/method is also possible.
 }
 
@@ -69,7 +69,7 @@ body(p1_compute_panel)
 ggbody(StatSummary$compute_panel, as.list = FALSE)
 
 # Its arguments are pre-filled (captured at runtime)
-formals(p1_compute_panel)
+sapply(formals(p1_compute_panel), class)
 
 # Runs as it should
 p1_compute_panel()
@@ -93,10 +93,10 @@ p3
 
 p3_compute_panel <- ggtrace_capture_fn(p3, method = Stat$compute_panel)
 
-# For one, the body is different
+# For one, the body is different - it's a "wrapper" around the captured method
 body(p3_compute_panel)
 
-# The captured method is called internally, stored in the `"inner"` attribute
+# The captured method is stored in the `"inner"` attribute
 attr(p3_compute_panel, "inner")
 
 # Captured argument defaults are again available for inspection via `formals()`

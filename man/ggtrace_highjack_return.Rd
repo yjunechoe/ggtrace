@@ -53,7 +53,53 @@ one value (e.g., \code{ggtrace_capture_fn()}).
 For highjack functions like \code{ggtrace_highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
-simply returns the return value, but directly computing on \code{returnValue()} to
+simply evaluates to the return value, but directly computing on \code{returnValue()} to
 derive a different return value for the function/method is also possible.
 }
 
+\examples{
+
+set.seed(1116)
+library(ggplot2)
+library(dplyr)
+
+
+p1 <- ggplot(diamonds, aes(cut)) +
+  geom_bar(aes(fill = cut)) +
+  facet_wrap(~ clarity)
+
+p1
+
+# Highjack `Stat$compute_panel` at the first panel `cond = quote(._counter_ == 1L)`
+# to return higher values for `count`
+ggtrace_highjack_return(
+  x = p1, method = Stat$compute_panel,
+  value = quote({
+    returnValue() \%>\%
+      mutate(count = count * 100)
+  })
+)
+
+# Highjack `Stat$compute_panel` at the fourth panel
+# to shuffle bars in the x-axis
+ggtrace_highjack_return(
+  x = p1, method = Stat$compute_panel,
+  cond = quote(data$PANEL[1] == 4),
+  value = quote({
+    returnValue() \%>\%
+      mutate(x = sample(x))
+  })
+)
+
+# Bars get a black outline and get darker from left-to-right, but only for second panel
+ggtrace_highjack_return(
+  x = p1, method = GeomBar$draw_panel,
+  cond = quote(data$PANEL[1] == 2),
+  value = quote({
+    editGrob(returnValue(), gp = gpar(
+      col = "black", alpha = seq(0.2, 1, length.out = nrow(data)
+    )))
+  })
+)
+
+}

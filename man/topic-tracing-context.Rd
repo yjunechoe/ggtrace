@@ -23,7 +23,7 @@ one value (e.g., \code{ggtrace_capture_fn()}).
 For highjack functions like \code{ggtrace_highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
-simply returns the return value, but directly computing on \code{returnValue()} to
+simply evaluates to the return value, but directly computing on \code{returnValue()} to
 derive a different return value for the function/method is also possible.
 }
 

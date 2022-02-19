@@ -12,6 +12,51 @@
 #' @return A gtable object with class `<ggtrace_highjacked>`
 #' @export
 #'
+#' @examples
+#'
+#' set.seed(1116)
+#' library(ggplot2)
+#' library(dplyr)
+#'
+#'
+#' p1 <- ggplot(diamonds, aes(cut)) +
+#'   geom_bar(aes(fill = cut)) +
+#'   facet_wrap(~ clarity)
+#'
+#' p1
+#'
+#' # Highjack `Stat$compute_panel` at the first panel `cond = quote(._counter_ == 1L)`
+#' # to return higher values for `count`
+#' ggtrace_highjack_return(
+#'   x = p1, method = Stat$compute_panel,
+#'   value = quote({
+#'     returnValue() %>%
+#'       mutate(count = count * 100)
+#'   })
+#' )
+#'
+#' # Highjack `Stat$compute_panel` at the fourth panel
+#' # to shuffle bars in the x-axis
+#' ggtrace_highjack_return(
+#'   x = p1, method = Stat$compute_panel,
+#'   cond = quote(data$PANEL[1] == 4),
+#'   value = quote({
+#'     returnValue() %>%
+#'       mutate(x = sample(x))
+#'   })
+#' )
+#'
+#' # Bars get a black outline and get darker from left-to-right, but only for second panel
+#' ggtrace_highjack_return(
+#'   x = p1, method = GeomBar$draw_panel,
+#'   cond = quote(data$PANEL[1] == 2),
+#'   value = quote({
+#'     editGrob(returnValue(), gp = gpar(
+#'       col = "black", alpha = seq(0.2, 1, length.out = nrow(data)
+#'     )))
+#'   })
+#' )
+#'
 ggtrace_highjack_return <- function(x, method, cond = quote(._counter_ == 1), value = quote(returnValue()), draw = TRUE) {
 
   wrapper_env <- rlang::current_env()

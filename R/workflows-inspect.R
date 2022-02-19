@@ -11,7 +11,7 @@
 #' library(ggplot2)
 #'
 #' p1 <- ggplot(diamonds, aes(cut)) +
-#'   geom_bar() +
+#'   geom_bar(aes(fill = cut)) +
 #'   facet_wrap(~ clarity)
 #'
 #' p1
@@ -78,6 +78,30 @@ ggtrace_inspect_n <- function(x, method) {
 #' @return The return value from `method` when it is first called.
 #' @export
 #'
+#' @examples
+#'
+#' library(ggplot2)
+#'
+#' p1 <- ggplot(diamonds, aes(cut)) +
+#'   geom_bar(aes(fill = cut)) +
+#'   facet_wrap(~ clarity)
+#'
+#' p1
+#'
+#' # Return value of `Stat$compute_panel` for the
+#' # first panel `cond = quote(._counter_ == 1L)`
+#' ggtrace_inspect_return(x = p1, method = Stat$compute_panel)
+#'
+#' # Return value for 4th panel
+#' ggtrace_inspect_return(x = p1, method = Stat$compute_panel,
+#'                        cond = quote(._counter_ == 4L))
+#'
+#' # Return value for 4th panel, 2nd group (bar)
+#' ggtrace_inspect_return(
+#'   x = p1, method = StatCount$compute_group,
+#'   cond = quote(data$PANEL[1] == 4 && data$group == 2)
+#' )
+#'
 ggtrace_inspect_return <- function(x, method, cond = quote(._counter_ == 1L)) {
 
   wrapper_env <- rlang::current_env()
@@ -89,10 +113,11 @@ ggtrace_inspect_return <- function(x, method, cond = quote(._counter_ == 1L)) {
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({
-    rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1L)
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
+    rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
     cond <- rlang::eval_tidy(
       quote(!!cond),
-      list(._counter_ = rlang::env_get(!!wrapper_env, "._counter_")),
+      list(._counter_ = new_counter),
       rlang::current_env()
     )
     if (cond) {
