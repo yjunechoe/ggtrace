@@ -47,14 +47,6 @@ reference:
   contents:
   - ggedit
 
-- title: Helpers
-  desc: Helpers for working with ggtrace
-  contents:
-  - get_method
-  - ggbody
-  - ggformals
-  - is_traced
-
 - title: Extending base::trace()
   desc: >
     The low-level function `ggtrace()` and the wrapper function `with_ggtrace()` extend
@@ -78,10 +70,18 @@ reference:
   - last_ggtrace
   - global_ggtrace
 
-- title: One-offs
-  desc: Convenient shortcuts to common workflows without side effects
+- title: Helpers
+  desc: Helpers for working with ggtrace
   contents:
-  - ggdebugonce
+  - get_method
+  - ggbody
+  - ggformals
+  - is_traced
+
+- title: Misc
+  desc: Extending other debugging tools for compatibility with ggproto
+  contents:
+  - ggdebug
 
 
 articles:

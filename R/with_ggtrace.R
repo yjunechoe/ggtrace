@@ -7,10 +7,11 @@
 #'
 #' @param x A ggplot object whose evaluation triggers the trace as specified by the `...`
 #' @inheritDotParams ggtrace
-#' @param return_value Whether the function should return the output of triggered traces
+#' @param out Whether the function should return the output of triggered traces
 #'   ("tracedump"), or the resulting graphical object from evaluating the ggplot ("gtable"),
 #'   or "both", which returns the tracedump but also renders the resulting plot as a
-#'   side effect. Defaults to "tracedump".
+#'   side effect. Partial matching is supported, so these options could also be specified as
+#'   "t", "g", or "b". Defaults to "tracedump".
 #'
 #' @note To force evaluation of `x`, `ggeval_silent(x)` is called internally.
 #'
@@ -40,7 +41,31 @@
 #'
 #' identical(first_tracedump, second_tracedump)
 #'
-with_ggtrace <- function(x, ..., return_value = c("tracedump", "gtable", "both")) {
+#'
+#' # An example with `out = "gtable"` (or `"g"`)
+#' grid_plot <- ggplot(mtcars, aes(mpg, hp)) +
+#'   geom_point() +
+#'   facet_grid(am ~ cyl)
+#' grid_plot
+#'
+#' outline <- grid::rectGrob(
+#'   x = 0.5, y = 0.5, width = 1, height = 1,
+#'   gp = grid::gpar(col = "red", lwd = 5, fill = NA)
+#' )
+#'
+#' with_ggtrace(
+#'   x = grid_plot,
+#'   method = Layout$render,
+#'   trace_steps = 5,
+#'   trace_exprs = rlang::expr({
+#'     panels[c(3, 5)] <- lapply(panels[c(3, 5)], function(panel) {
+#'       gTree(children = gList(panel, !!outline))
+#'     })
+#'   }),
+#'   out = "gtable" # or "g"
+#' )
+#'
+with_ggtrace <- function(x, ..., out = c("tracedump", "gtable", "both")) {
   if (!inherits(x, "ggplot")) { rlang::abort("`x` must be a ggplot object") }
   suppressMessages({
     prev_silent_opt <- getOption("ggtrace.suppressMessages")
@@ -53,6 +78,7 @@ with_ggtrace <- function(x, ..., return_value = c("tracedump", "gtable", "both")
 
     ggtrace(...)
     fig <- ggeval_silent(x)
+    class(fig) <- c("ggtrace_highjacked", class(fig))
     gguntrace(...)
 
     dump <- global_ggtrace()
@@ -68,9 +94,9 @@ with_ggtrace <- function(x, ..., return_value = c("tracedump", "gtable", "both")
   }
 
   switch(
-    match.arg(return_value),
+    match.arg(out),
     "tracedump" = dump,
-    "gtable"    = invisible(fig),
+    "gtable"    = fig,
     "both" = {
       ggdraw_silent(fig)
       dump

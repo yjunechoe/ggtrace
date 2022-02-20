@@ -99,10 +99,10 @@ promoted to function arguments. The captured values are available for inspection
 
 <p>When quoted expressions are passed to the <code>cond</code> or <code>value</code> argument of
 workflow functions (in the form of <code>ggtrace_{action}_{value}()</code>), they are
-evaluated in a special environment (which we call the "tracing context").</p>
-<p>The tracing context is "data-masked" (via <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html" class="external-link">rlang::eval_tidy()</a></code>), exposing
-an internal variable called <code>._counter_</code> which tracks how many times a
-function/method has been called in the evaluation of a ggplot supplied to
+evaluated in a special environment which we call the "tracing context".</p>
+<p>The tracing context is "data-masked" (see <code><a href="https://rlang.r-lib.org/reference/eval_tidy.html" class="external-link">rlang::eval_tidy()</a></code>), and exposes
+an internal variable called <code>._counter_</code> (<code>.data$._counter_</code>) which tracks how
+many times a function/method has been called by the ggplot object supplied to
 the <code>x</code> argument of workflow functions. For example, <code>cond = quote(._counter_ == 1)</code>
 is evaluated as <code>TRUE</code> when the method is called for the first time, and
 this is the default value of <code>cond</code> for workflow functions that only return
@@ -236,7 +236,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     }, stats, groups, SIMPLIFY = FALSE)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     rbind_dfs(stats)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000000004bd58db0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000000004bd96a08&gt;</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Captured argument defaults are again available for inspection via `formals()`</span></span>
 <span class="r-in"><span class="co"># Note that arguments passed to the `...` are promoted to function arguments</span></span>

@@ -32,11 +32,11 @@ Capture a snapshot of a method's execution environment
 
 When quoted expressions are passed to the \code{cond} or \code{value} argument of
 workflow functions (in the form of \verb{ggtrace_\{action\}_\{value\}()}), they are
-evaluated in a special environment (which we call the "tracing context").
+evaluated in a special environment which we call the "tracing context".
 
-The tracing context is "data-masked" (via \code{rlang::eval_tidy()}), exposing
-an internal variable called \code{._counter_} which tracks how many times a
-function/method has been called in the evaluation of a ggplot supplied to
+The tracing context is "data-masked" (see \code{rlang::eval_tidy()}), and exposes
+an internal variable called \code{._counter_} (\code{.data$._counter_}) which tracks how
+many times a function/method has been called by the ggplot object supplied to
 the \code{x} argument of workflow functions. For example, \code{cond = quote(._counter_ == 1)}
 is evaluated as \code{TRUE} when the method is called for the first time, and
 this is the default value of \code{cond} for workflow functions that only return

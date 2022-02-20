@@ -4,7 +4,7 @@
 \alias{with_ggtrace}
 \title{Apply a ggtrace call to a single ggplot object}
 \usage{
-with_ggtrace(x, ..., return_value = c("tracedump", "gtable", "both"))
+with_ggtrace(x, ..., out = c("tracedump", "gtable", "both"))
 }
 \arguments{
 \item{x}{A ggplot object whose evaluation triggers the trace as specified by the \code{...}}
@@ -36,10 +36,11 @@ The ggproto method may be specified using any of the following forms:
 }}
   }}
 
-\item{return_value}{Whether the function should return the output of triggered traces
+\item{out}{Whether the function should return the output of triggered traces
 ("tracedump"), or the resulting graphical object from evaluating the ggplot ("gtable"),
 or "both", which returns the tracedump but also renders the resulting plot as a
-side effect. Defaults to "tracedump".}
+side effect. Partial matching is supported, so these options could also be specified as
+"t", "g", or "b". Defaults to "tracedump".}
 }
 \value{
 A list or gtable object of class \verb{<ggtrace_highjacked>}
@@ -74,6 +75,30 @@ second_tracedump <- with_ggtrace(
 )
 
 identical(first_tracedump, second_tracedump)
+
+
+# An example with `out = "gtable"` (or `"g"`)
+grid_plot <- ggplot(mtcars, aes(mpg, hp)) +
+  geom_point() +
+  facet_grid(am ~ cyl)
+grid_plot
+
+outline <- grid::rectGrob(
+  x = 0.5, y = 0.5, width = 1, height = 1,
+  gp = grid::gpar(col = "red", lwd = 5, fill = NA)
+)
+
+with_ggtrace(
+  x = grid_plot,
+  method = Layout$render,
+  trace_steps = 5,
+  trace_exprs = rlang::expr({
+    panels[c(3, 5)] <- lapply(panels[c(3, 5)], function(panel) {
+      gTree(children = gList(panel, !!outline))
+    })
+  }),
+  out = "gtable" # or "g"
+)
 
 }
 \seealso{

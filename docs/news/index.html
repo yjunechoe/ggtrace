@@ -79,16 +79,16 @@ method was called in the evaluation of a ggplot</p></li>
 <li><p><code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes
 <code>._counter_</code> in the <code>value</code> argument</p></li>
 <li>
-<p><code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> gets a <code>return_value</code>
-argument which can take 1 of three options:</p>
-<ul><li>“tracedump” (default): returns the local tracedump from triggering
-traces on the <code>method</code> as the ggplot <code>x</code> is
-evaluated</li>
-<li>“gtable”: Invisibly returns the <code>&lt;gtable&gt;</code> grob
-after evaluating <code>x</code> with injected expressions in
+<p><code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> gets a <code>out</code> argument
+which can take 1 of three options:</p>
+<ul><li>“t” or “tracedump” (default): returns the local tracedump from
+triggering traces on the <code>method</code> as the ggplot
+<code>x</code> is evaluated</li>
+<li>“g” or “gtable”: Invisibly returns the <code>&lt;gtable&gt;</code>
+grob after evaluating <code>x</code> with injected expressions in
 <code>method</code>.</li>
-<li>“both”: returns the tracedump while rendering the gtable (with
-<code><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid::grid.draw()</a></code>) as a side effect.</li>
+<li>“b” or “both”: returns the tracedump while rendering the gtable
+(with <code><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid::grid.draw()</a></code>) as a side effect.</li>
 </ul></li>
 </ul></div>
 </div>
@@ -135,7 +135,7 @@ control whether output of <code><a href="https://rdrr.io/r/base/body.html" class
 <h4 id="new-features-0-4-6">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-4-6"></a></h4>
 <ul><li>Added <code><a href="../reference/get_method.html">get_method()</a></code> which returns ggproto methods as
 functions</li>
-<li>Added wrappers for one-off workflows <code><a href="../reference/ggdebugonce.html">ggdebugonce()</a></code> and
+<li>Added wrappers for one-off workflows <code><a href="../reference/ggdebug.html">ggdebugonce()</a></code> and
 <code><a href="../reference/ggtraceback.html">ggtraceback()</a></code>
 </li>
 </ul></div>

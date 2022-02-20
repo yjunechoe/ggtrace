@@ -5,11 +5,11 @@
 #' @section Tracing context:
 #' When quoted expressions are passed to the `cond` or `value` argument of
 #' workflow functions (in the form of `ggtrace_{action}_{value}()`), they are
-#' evaluated in a special environment (which we call the "tracing context").
+#' evaluated in a special environment which we call the "tracing context".
 #'
-#' The tracing context is "data-masked" (via `rlang::eval_tidy()`), exposing
-#' an internal variable called `._counter_` which tracks how many times a
-#' function/method has been called in the evaluation of a ggplot supplied to
+#' The tracing context is "data-masked" (see `rlang::eval_tidy()`), and exposes
+#' an internal variable called `._counter_` (`.data$._counter_`) which tracks how
+#' many times a function/method has been called by the ggplot object supplied to
 #' the `x` argument of workflow functions. For example, `cond = quote(._counter_ == 1)`
 #' is evaluated as `TRUE` when the method is called for the first time, and
 #' this is the default value of `cond` for workflow functions that only return
