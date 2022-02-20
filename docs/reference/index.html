@@ -65,11 +65,21 @@
       
       <p class="section-desc"></p><p>These high-level functions take a ggplot object and a ggproto method
 and allows interactions with the ggplot’s build pipeline as it is
-evaluated. Functions are grouped into four “workflows”: Inspect,
-Capture, Highjack, and Edit.</p>
+evaluated. Functions are grouped into three “workflows”: Inspect,
+Capture, and Highjack.</p>
 
       
-    </div><div class="section level2">
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="with_ggtrace.html">with_ggtrace()</a></code> 
+        </dt>
+        <dd>Generic workflow function which localizes a ggtrace call to a single ggplot object</dd>
+      </dl></div><div class="section level2">
       
       <h3 id="inspect">Inspect<a class="anchor" aria-label="anchor" href="#inspect"></a></h3>
       <p class="section-desc"></p><p>Return values from or information about a method’s execution
@@ -131,23 +141,6 @@ graphical output</p>
         </dt>
         <dd>Highjack a method's execution and make it return a user-supplied value</dd>
       </dl></div><div class="section level2">
-      
-      <h3 id="edit">Edit<a class="anchor" aria-label="anchor" href="#edit"></a></h3>
-      <p class="section-desc"></p><p>Interactively edit a method’s code in a text editor
-(non-programmatic)</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="ggedit.html">ggedit()</a></code> 
-        </dt>
-        <dd>Interactively edit a masking copy of the source code</dd>
-      </dl></div><div class="section level2">
       <h2 id="extending-base-trace-">Extending base::trace()<a class="anchor" aria-label="anchor" href="#extending-base-trace-"></a></h2>
       
       <p class="section-desc"></p><p>The low-level function <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and the wrapper
@@ -179,14 +172,14 @@ with trace</p>
         <dd>Insert traces for delayed evaluation</dd>
       </dl><dl><dt>
           
+          <code><a href="ggedit.html">ggedit()</a></code> 
+        </dt>
+        <dd>Interactively edit a masking copy of the source code</dd>
+      </dl><dl><dt>
+          
           <code><a href="gguntrace.html">gguntrace()</a></code> 
         </dt>
         <dd>Remove any existing traces</dd>
-      </dl><dl><dt>
-          
-          <code><a href="with_ggtrace.html">with_ggtrace()</a></code> 
-        </dt>
-        <dd>Apply a ggtrace call to a single ggplot object</dd>
       </dl></div><div class="section level2">
       
       <h3 id="tracedumps">Tracedumps<a class="anchor" aria-label="anchor" href="#tracedumps"></a></h3>

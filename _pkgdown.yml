@@ -18,8 +18,9 @@ reference:
   desc: >
     These high-level functions take a ggplot object and a ggproto method and allows
     interactions with the ggplot's build pipeline as it is evaluated. Functions are
-    grouped into four "workflows": Inspect, Capture, Highjack, and Edit.
-
+    grouped into three "workflows": Inspect, Capture, and Highjack.
+  contents:
+  - with_ggtrace
 
 - subtitle: Inspect
   desc: >
@@ -41,11 +42,6 @@ reference:
   contents:
   - ggtrace_highjack_return
 
-- subtitle: Edit
-  desc: >
-    Interactively edit a method's code in a text editor (non-programmatic)
-  contents:
-  - ggedit
 
 - title: Extending base::trace()
   desc: >
@@ -60,8 +56,8 @@ reference:
     Lower-level functions for finer control over injecting expressions with trace
   contents:
   - ggtrace
+  - ggedit
   - gguntrace
-  - with_ggtrace
 
 - subtitle: Tracedumps
   desc: >
