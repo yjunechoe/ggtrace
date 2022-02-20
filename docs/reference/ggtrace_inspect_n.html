@@ -84,7 +84,7 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Integer</p>
+    <p>The number of times <code>method</code> was called in the evaluation of <code>x</code></p>
     </div>
 
     <div class="section level2">
@@ -133,7 +133,6 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 80</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># But separate calls to each layer's respective Geoms</span></span>
-<span class="r-in"><span class="co"># (note that Bar and Text are vectorized at the panel level)</span></span>
 <span class="r-in"><span class="fu">ggtrace_inspect_n</span><span class="op">(</span><span class="va">p2</span>, <span class="va">GeomBar</span><span class="op">$</span><span class="va">draw_panel</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 8</span>
 <span class="r-in"><span class="fu">ggtrace_inspect_n</span><span class="op">(</span><span class="va">p2</span>, <span class="va">GeomText</span><span class="op">$</span><span class="va">draw_panel</span><span class="op">)</span></span>
