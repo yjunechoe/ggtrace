@@ -18,7 +18,7 @@ The ggproto method may be specified using any of the following forms:
 }}
 }
 \value{
-Integer
+The number of times \code{method} was called in the evaluation of \code{x}
 }
 \description{
 Inspect how many times a method was called
@@ -59,7 +59,6 @@ ggtrace_inspect_n(p2, Stat$compute_panel)
 ggtrace_inspect_n(p2, StatCount$compute_group)
 
 # But separate calls to each layer's respective Geoms
-# (note that Bar and Text are vectorized at the panel level)
 ggtrace_inspect_n(p2, GeomBar$draw_panel)
 ggtrace_inspect_n(p2, GeomText$draw_panel)
 

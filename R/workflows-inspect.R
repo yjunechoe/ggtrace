@@ -3,7 +3,7 @@
 #' @param x A ggplot object
 #' @inheritParams get_method
 #'
-#' @return Integer
+#' @return The number of times `method` was called in the evaluation of `x`
 #' @export
 #'
 #' @examples
@@ -42,7 +42,6 @@
 #' ggtrace_inspect_n(p2, StatCount$compute_group)
 #'
 #' # But separate calls to each layer's respective Geoms
-#' # (note that Bar and Text are vectorized at the panel level)
 #' ggtrace_inspect_n(p2, GeomBar$draw_panel)
 #' ggtrace_inspect_n(p2, GeomText$draw_panel)
 #'
@@ -63,6 +62,74 @@ ggtrace_inspect_n <- function(x, method) {
   suppressMessages(untrace(what = what, where = where))
 
   ._counter_
+
+}
+
+
+#' Inspect which calls to a ggproto method met a particular condition
+#'
+#' @param x A ggplot object
+#' @inheritParams get_method
+#' @param cond Expression evaluating to a logical inside `method` when `x` is evaluated.
+#'
+#' @inheritSection topic-tracing-context Tracing context
+#'
+#' @return The values of the tracing context variable `._counter_` when `cond` is evaluated as `TRUE`.
+#' @export
+#'
+#' @examples
+#'
+#' library(ggplot2)
+#'
+#' p1 <- ggplot(diamonds, aes(cut)) +
+#'   geom_bar(aes(fill = cut)) +
+#'   facet_wrap(~ clarity)
+#' p1
+#'
+#'
+#' # Values of `._counter_` when `compute_group` is called for groups in the second panel:
+#' ggtrace_inspect_which(p1, StatCount$compute_group, quote(data$PANEL[1] == 2))
+#'
+#'
+#' # How about if we add a second layer that uses StatCount?
+#' p2 <- p1 + geom_text(
+#'   aes(label = after_stat(count)),
+#'   stat = StatCount, position = position_nudge(y = 500)
+#' )
+#' p2
+#'
+#' ggtrace_inspect_which(p2, StatCount$compute_group, quote(data$PANEL[1] == 2))
+#'
+#'
+#' # Behaves like `base::which()` and returns `integer(0)` when no matches are found
+#' ggtrace_inspect_which(p2, StatBoxplot$compute_group, quote(data$PANEL[1] == 2))
+#'
+ggtrace_inspect_which <- function(x, method, cond) {
+  wrapper_env <- rlang::current_env()
+  ._counter_ <- 0L
+  indices <- integer(0)
+
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+  suppressMessages(trace(what = what, where = where, print = FALSE, tracer = rlang::expr({
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
+    rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
+    cond <- rlang::eval_tidy(
+      quote(!!cond),
+      list(._counter_ = new_counter),
+      rlang::current_env()
+    )
+    if (cond) {
+      rlang::env_bind(!!wrapper_env, indices = c(rlang::env_get(!!wrapper_env, "indices"), new_counter))
+    }
+  })))
+
+  ggeval_silent(x)
+  suppressMessages(untrace(what = what, where = where))
+
+  indices
 
 }
 

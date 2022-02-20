@@ -27,6 +27,7 @@ reference:
     Return values from or information about a method's execution environment for inspection
   contents:
   - ggtrace_inspect_n
+  - ggtrace_inspect_which
   - ggtrace_inspect_return
 
 - subtitle: Capture
