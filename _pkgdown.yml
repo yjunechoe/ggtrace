@@ -32,7 +32,7 @@ reference:
 
 - subtitle: Capture
   desc: >
-    Take a snapshot of a method's execution state, exposing it as a function/environment
+    Take a snapshot of a method's execution state, returning it as a function or environment
   contents:
   - ggtrace_capture_fn
   - ggtrace_capture_env
@@ -46,11 +46,11 @@ reference:
 
 - title: Extending base::trace()
   desc: >
-    The low-level function `ggtrace()` and the wrapper function `with_ggtrace()` extend
-    `base::trace()` by managing the **state** of trace expressions, which allow for
-    contiguity over multiple injections and the inspection of tracedumps. Unlike the
-    high-level workflow functions, `ggtrace()` relies on the "side effect" of methods
-    of functions and methods being traced, which must be explicitly reverted with `gguntrace()`.
+    The low-level function `ggtrace()` extends `base::trace()` by managing the **state** of
+    injected expressions (traces), which allows for contiguity across multiple traces and
+    the inspection of evaluated expressions logged to the tracedump, via `last_ggtrace()` and
+    `global_ggtrace()`. Unlike the high-level workflow functions, `ggtrace()` relies on the
+    "side effect" of functions and methods being traced, which can be restored with `gguntrace()`.
 
 - subtitle: Trace
   desc: >
