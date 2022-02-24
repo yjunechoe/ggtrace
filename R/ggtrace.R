@@ -1,6 +1,10 @@
 #' Insert traces for delayed evaluation
 #'
-#' @inheritParams get_method
+#' @param method A function or a ggproto method.
+#'   The ggproto method may be specified using any of the following forms:
+#'   - `ggproto$method`
+#'   - `namespace::ggproto$method`
+#'   - `namespace:::ggproto$method`
 #' @param trace_steps A sorted numeric vector of positions in the method's body to trace. Negative indices
 #'   reference steps from the last, where `-1` references the last step in the body.
 #' @param trace_exprs A list of expressions to evaluate at each position specified
@@ -159,6 +163,9 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
+  if (rlang::is_quosure(method)) {
+    method_quo <- method
+  }
 
   # Resolve formatting and dump vars
   method_info <- resolve_formatting(method_quo, remove_trace = TRUE)

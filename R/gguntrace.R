@@ -39,6 +39,9 @@ gguntrace <- function(method, ...) {
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
+  if (rlang::is_quosure(method)) {
+    method_quo <- method
+  }
 
   # Resolve formatting and dump vars
   method_info <- resolve_formatting(method_quo, remove_trace = FALSE)

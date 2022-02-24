@@ -4,10 +4,18 @@
 \alias{with_ggtrace}
 \title{Generic workflow function which localizes a ggtrace call to a single ggplot object}
 \usage{
-with_ggtrace(x, ..., out = c("tracedump", "gtable", "both"))
+with_ggtrace(x, method, ..., out = c("tracedump", "gtable", "both"))
 }
 \arguments{
 \item{x}{A ggplot object whose evaluation triggers the trace as specified by the \code{...}}
+
+\item{method}{A function or a ggproto method.
+The ggproto method may be specified using any of the following forms:
+\itemize{
+\item \code{ggproto$method}
+\item \code{namespace::ggproto$method}
+\item \code{namespace:::ggproto$method}
+}}
 
 \item{...}{
   Arguments passed on to \code{\link[=ggtrace]{ggtrace}}
@@ -27,13 +35,6 @@ active until \code{gguntrace()} is called on the method. Defaults to \code{TRUE}
     \item{\code{verbose}}{Whether logs should be printed when trace is triggered. Encompasses \code{print_output},
 meaning that \code{verbose = FALSE} also triggers the effect of \code{print_output = FALSE} by consequence.
 Defaults to \code{FALSE}.}
-    \item{\code{method}}{A function or a ggproto method.
-The ggproto method may be specified using any of the following forms:
-\itemize{
-\item \code{ggproto$method}
-\item \code{namespace::ggproto$method}
-\item \code{namespace:::ggproto$method}
-}}
   }}
 
 \item{out}{Whether the function should return the output of triggered traces

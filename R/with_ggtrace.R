@@ -6,6 +6,7 @@
 #'  It is the lower-level function that powers all workflow functions in `{ggtrace}`.
 #'
 #' @param x A ggplot object whose evaluation triggers the trace as specified by the `...`
+#' @inheritParams get_method
 #' @inheritDotParams ggtrace
 #' @param out Whether the function should return the output of triggered traces
 #'   ("tracedump"), or the resulting graphical object from evaluating the ggplot ("gtable"),
@@ -65,7 +66,13 @@
 #'   out = "gtable" # or "g"
 #' )
 #'
-with_ggtrace <- function(x, ..., out = c("tracedump", "gtable", "both")) {
+with_ggtrace <- function(x, method, ..., out = c("tracedump", "gtable", "both")) {
+
+  method_quo <- rlang::enquo(method)
+  if (rlang::is_quosure(method)) {
+    method_quo <- method
+  }
+
   if (!inherits(x, "ggplot")) { rlang::abort("`x` must be a ggplot object") }
   suppressMessages({
     prev_silent_opt <- getOption("ggtrace.suppressMessages")
@@ -76,10 +83,10 @@ with_ggtrace <- function(x, ..., out = c("tracedump", "gtable", "both")) {
     global_ggtrace_on()
     clear_global_ggtrace()
 
-    ggtrace(...)
+    ggtrace(method = method_quo, ...)
     fig <- ggeval_silent(x)
     class(fig) <- c("ggtrace_highjacked", class(fig))
-    gguntrace(...)
+    gguntrace(method_quo)
 
     dump <- global_ggtrace()
     if (length(dump) == 1L) { dump <- dump[[1]] }
