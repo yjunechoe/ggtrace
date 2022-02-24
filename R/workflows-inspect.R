@@ -134,6 +134,7 @@ ggtrace_inspect_which <- function(x, method, cond) {
 }
 
 
+
 #' Inspect the return value of a method
 #'
 #' @param x A ggplot object

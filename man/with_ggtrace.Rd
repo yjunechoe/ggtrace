@@ -48,13 +48,11 @@ A list or gtable object of class \verb{<ggtrace_highjacked>}
 }
 \description{
 \code{with_ggtrace()} provides a functional interface to \code{ggtrace()}. It takes a ggplot object
-and parameters passed to \code{ggtrace()} and returns the immediate tracedump without side effects.
-}
-\details{
-It is the lower-level function that powers all workflow functions in \code{{ggtrace}}.
+and parameters passed to \code{ggtrace()} and returns the immediate tracedump and/or graphical
+output without side effects.
 }
 \note{
-To force evaluation of \code{x}, \code{ggeval_silent(x)} is called internally.
+To trigger evaluation of \code{x}, the function \code{ggeval_silent(x)} is called internally.
 }
 \examples{
 library(ggplot2)
@@ -99,6 +97,31 @@ with_ggtrace(
     })
   }),
   out = "gtable" # or "g"
+)
+
+
+# With `once = FALSE` for persistent tracing (still cleaned up after)
+lm_plot <- ggplot(mpg, aes(displ, hwy, color = drv)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+lm_plot
+
+with_ggtrace(
+  x = lm_plot,
+  method = StatSmooth$compute_group,
+  trace_steps = c(1, 11),
+  trace_exprs = list(
+    group = quote(data$group[1]),
+    coef = quote(model$coef)
+  )
+)
+
+with_ggtrace(
+  x = lm_plot,
+  method = StatSmooth$compute_group,
+  trace_steps = 1,
+  trace_exprs = quote(method <- c("loess", "lm", "loess")[data$group[1]]),
+  out = "g" # or "gtable"
 )
 
 }

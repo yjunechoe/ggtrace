@@ -1,9 +1,9 @@
 #' Generic workflow function which localizes a ggtrace call to a single ggplot object
 #'
 #' `with_ggtrace()` provides a functional interface to `ggtrace()`. It takes a ggplot object
-#'  and parameters passed to `ggtrace()` and returns the immediate tracedump without side effects.
+#'  and parameters passed to `ggtrace()` and returns the immediate tracedump and/or graphical
+#'  output without side effects.
 #'
-#'  It is the lower-level function that powers all workflow functions in `{ggtrace}`.
 #'
 #' @param x A ggplot object whose evaluation triggers the trace as specified by the `...`
 #' @inheritParams get_method
@@ -14,7 +14,7 @@
 #'   side effect. Partial matching is supported, so these options could also be specified as
 #'   "t", "g", or "b". Defaults to "tracedump".
 #'
-#' @note To force evaluation of `x`, `ggeval_silent(x)` is called internally.
+#' @note To trigger evaluation of `x`, the function `ggeval_silent(x)` is called internally.
 #'
 #' @seealso [ggtrace()], [ggeval_silent()]
 #'
@@ -64,6 +64,31 @@
 #'     })
 #'   }),
 #'   out = "gtable" # or "g"
+#' )
+#'
+#'
+#' # With `once = FALSE` for persistent tracing (still cleaned up after)
+#' lm_plot <- ggplot(mpg, aes(displ, hwy, color = drv)) +
+#'   geom_point() +
+#'   geom_smooth(method = "lm")
+#' lm_plot
+#'
+#' with_ggtrace(
+#'   x = lm_plot,
+#'   method = StatSmooth$compute_group,
+#'   trace_steps = c(1, 11),
+#'   trace_exprs = list(
+#'     group = quote(data$group[1]),
+#'     coef = quote(model$coef)
+#'   )
+#' )
+#'
+#' with_ggtrace(
+#'   x = lm_plot,
+#'   method = StatSmooth$compute_group,
+#'   trace_steps = 1,
+#'   trace_exprs = quote(method <- c("loess", "lm", "loess")[data$group[1]]),
+#'   out = "g" # or "gtable"
 #' )
 #'
 with_ggtrace <- function(x, method, ..., out = c("tracedump", "gtable", "both")) {
