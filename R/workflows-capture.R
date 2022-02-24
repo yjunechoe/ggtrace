@@ -195,6 +195,25 @@ ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1L)) {
 #'     select(any_of(c("colour", "fill")))
 #' )
 #'
+#'
+#' # Using the captured environment for further evaluation
+#' ggbody(Geom$draw_panel)
+#'
+#' by_group_drawing_code <- rlang::call_args(ggbody(Geom$draw_panel)[[3]])[[2]]
+#' by_group_drawing_code
+#'
+#' draw_panel_env <- ggtrace_capture_env(
+#'   x = after_scale_plot,
+#'   method = Geom$draw_panel
+#' )
+#' draw_panel_env
+#'
+#' boxes <- eval(by_group_drawing_code, draw_panel_env)
+#'
+#' library(grid)
+#' grid.newpage()
+#' grid.draw(editGrob(boxes[[1]], vp = viewport()))
+#'
 ggtrace_capture_env <- function(x, method, cond = quote(._counter_ == 1), at = -1L) {
 
   wrapper_env <- rlang::current_env()
