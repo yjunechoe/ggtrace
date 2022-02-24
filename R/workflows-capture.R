@@ -225,6 +225,10 @@ ggtrace_capture_env <- function(x, method, cond = quote(._counter_ == 1), at = -
   what <- method_info$what
   where <- method_info$where
 
+  if (length(at) > 1L) {
+    rlang::warn("`at` is length > 1 and only the first element will be used")
+    at <- at[1]
+  }
   if (at < 0L) { at <- length(method_info$method_body) + 1L + at }
   if (at > length(method_info$method_body)) { rlang::abort("`at` out of range") }
 

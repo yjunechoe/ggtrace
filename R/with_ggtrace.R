@@ -4,7 +4,6 @@
 #'  and parameters passed to `ggtrace()` and returns the immediate tracedump and/or graphical
 #'  output without side effects.
 #'
-#'
 #' @param x A ggplot object whose evaluation triggers the trace as specified by the `...`
 #' @inheritParams get_method
 #' @inheritDotParams ggtrace
@@ -92,7 +91,9 @@
 #' )
 #'
 #'
-#' # Doing calculations that are parasitic on a plot's execution environment
+#' # `with_ggtrace()` is useful for making calculations that are parasitic
+#' on a plot's execution environment.
+#'
 #' library(grid)
 #'
 #' square_plot <- ggplot(mtcars, aes(mpg, hp, color = factor(cyl))) +
