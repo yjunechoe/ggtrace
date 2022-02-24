@@ -91,6 +91,26 @@
 #'   out = "g" # or "gtable"
 #' )
 #'
+#'
+#' # Doing calculations that are parasitic on a plot's execution environment
+#' p <- ggplot(mtcars, aes(mpg, hp, color = factor(cyl))) +
+#'   geom_point() +
+#'   theme(aspect.ratio = 1)
+#'
+#' parasitic_evaluations <- with_ggtrace(
+#'   x = p,
+#'   method = ggplot2:::ggplot_gtable.ggplot_built,
+#'   trace_steps = c(9, 13, -1),
+#'   trace_exprs = rlang::exprs(
+#'     plot_tbl = .plot_table <- editGrob(plot_table, vp = viewport(width = .7, height = .7, angle = 45)),
+#'     legend   = .legend <- editGrob(legend_box, vp = viewport(x = 0.15, y = 0.8)),
+#'     modified = gTree(children = gList(.plot_table, .legend))
+#'   )
+#' )
+#'
+#' grid.newpage()
+#' grid.draw(parasitic_evaluations$modified)
+#'
 with_ggtrace <- function(x, method, ..., out = c("tracedump", "gtable", "both")) {
 
   method_quo <- rlang::enquo(method)
