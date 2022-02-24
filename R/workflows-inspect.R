@@ -133,6 +133,70 @@ ggtrace_inspect_which <- function(x, method, cond) {
 
 }
 
+# # TODO
+# ggtrace_inspect_vars <- function(x, method, vars, cond = quote(._counter_ == 1L), at = -1L) {
+#
+#   wrapper_env <- rlang::current_env()
+#   ._counter_ <- 1L
+#
+#   # variables for managing state
+#   .across <- NULL
+#   .within <- NULL
+#
+#   method_quo <- rlang::enquo(method)
+#   method_info <- resolve_formatting(method_quo)
+#   what <- method_info$what
+#   where <- method_info$where
+#
+#   if (at < 0L) { at <- length(method_info$method_body) + 1L + at }
+#   if (at > length(method_info$method_body)) { rlang::abort("`at` out of range") }
+#
+#   suppressMessages(
+#     trace(what = what, where = where, print = FALSE, at = at,
+#           tracer = rlang::expr({
+#
+#             cur_env <- rlang::current_env()
+#             cond <- rlang::eval_tidy(
+#               quote(!!cond),
+#               list(._counter_ = rlang::env_get(!!wrapper_env, "._counter_")),
+#               cur_env
+#             )
+#
+#             if (rlang::is_true(cond)) {
+#
+#               bindings <- rlang::env_get_list(cur_env, !!vars)
+#
+#               rlang::env_bind(!!wrapper_env,
+#                               .within = c(rlang::env_get(!!wrapper_env, ".within"), list(bindings)))
+#
+#             } else if (!rlang::is_false(cond)) {
+#               rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter_ == ",
+#                                  rlang::env_get(!!wrapper_env, "._counter_"), "`"))
+#             }
+#
+#           }),
+#           exit = rlang::expr({
+#             cur_counter <- rlang::env_get(!!wrapper_env, "._counter_")
+#             rlang::env_bind(
+#               !!wrapper_env,
+#               ._counter_ = cur_counter + 1L,
+#               .across = c(
+#                 rlang::env_get(!!wrapper_env, ".across"),
+#                 setNames(rlang::env_get(!!wrapper_env, ".within"),
+#                          paste0("._counter_==", cur_counter))
+#               ),
+#               .within = NULL
+#             )
+#           })
+#     )
+#   )
+#
+#   ggeval_silent(x)
+#   suppressMessages(untrace(what = what, where = where))
+#
+#   .across
+#
+# }
 
 
 #' Inspect the return value of a method
