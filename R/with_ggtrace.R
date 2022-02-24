@@ -93,16 +93,21 @@
 #'
 #'
 #' # Doing calculations that are parasitic on a plot's execution environment
-#' p <- ggplot(mtcars, aes(mpg, hp, color = factor(cyl))) +
+#' library(grid)
+#'
+#' square_plot <- ggplot(mtcars, aes(mpg, hp, color = factor(cyl))) +
 #'   geom_point() +
 #'   theme(aspect.ratio = 1)
+#' square_plot
+#'
+#' rotation_vp <- viewport(width = .7, height = .7, angle = 45)
 #'
 #' parasitic_evaluations <- with_ggtrace(
-#'   x = p,
+#'   x = square_plot,
 #'   method = ggplot2:::ggplot_gtable.ggplot_built,
 #'   trace_steps = c(9, 13, -1),
 #'   trace_exprs = rlang::exprs(
-#'     plot_tbl = .plot_table <- editGrob(plot_table, vp = viewport(width = .7, height = .7, angle = 45)),
+#'     plot_tbl = .plot_table <- editGrob(plot_table, vp = !!rotation_vp),
 #'     legend   = .legend <- editGrob(legend_box, vp = viewport(x = 0.15, y = 0.8)),
 #'     modified = gTree(children = gList(.plot_table, .legend))
 #'   )
