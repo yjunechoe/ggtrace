@@ -92,7 +92,7 @@
 #'
 #'
 #' # `with_ggtrace()` is useful for making calculations that are parasitic
-#' on a plot's execution environment.
+#' # on a plot's execution environment.
 #'
 #' library(grid)
 #'

@@ -2,8 +2,8 @@
 
 ### Breaking Changes
 
-- `ggtrace_capture_env()` default value of `at` is changed to `-1L`, which captures a snapshot of the runtime environment right before the method returns.
-- "modify" workflows renames to "highjack" to reflect the fact that they always return the graphical output (gtable grob) (#78)
+- `ggtrace_capture_env()` default value of `at` is changed to `-1L`, which captures a snapshot of the runtime environment right before the method returns. Only the first element is used if `at` is length > 1
+- "modify" workflows are renamed to "highjack" to reflect the fact that they always return the graphical output (gtable grob) (#78)
 
 ### New Features
 
@@ -15,6 +15,8 @@
     - "t" or "tracedump" (default): returns the local tracedump from triggering traces on the `method` as the ggplot `x` is evaluated
     - "g" or "gtable": Invisibly returns the `<gtable>` grob after evaluating `x` with injected expressions in `method`.
     - "b" or "both": returns the tracedump while rendering the gtable (with `grid::grid.draw()`) as a side effect.
+
+- Low-level functions `ggtrace()` and wrapper `with_ggtrace()` can now take quosures in the `method` argument, which allows them to be used more programmatically.
 
 # ggtrace 0.4.8
 

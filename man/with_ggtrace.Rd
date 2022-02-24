@@ -125,7 +125,9 @@ with_ggtrace(
 )
 
 
-# Doing calculations that are parasitic on a plot's execution environment
+# `with_ggtrace()` is useful for making calculations that are parasitic
+# on a plot's execution environment.
+
 library(grid)
 
 square_plot <- ggplot(mtcars, aes(mpg, hp, color = factor(cyl))) +

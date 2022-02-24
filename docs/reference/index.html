@@ -109,8 +109,8 @@ environment for inspection</p>
       </dl></div><div class="section level2">
       
       <h3 id="capture">Capture<a class="anchor" aria-label="anchor" href="#capture"></a></h3>
-      <p class="section-desc"></p><p>Take a snapshot of a method’s execution state, exposing it as a
-function/environment</p>
+      <p class="section-desc"></p><p>Take a snapshot of a method’s execution state, returning it as a
+function or environment</p>
 
       
     </div><div id="" class="section level2">
@@ -148,14 +148,15 @@ graphical output</p>
       </dl></div><div class="section level2">
       <h2 id="extending-base-trace-">Extending base::trace()<a class="anchor" aria-label="anchor" href="#extending-base-trace-"></a></h2>
       
-      <p class="section-desc"></p><p>The low-level function <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and the wrapper
-function <code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> extend <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code>
-by managing the <strong>state</strong> of trace expressions, which allow
-for contiguity over multiple injections and the inspection of
-tracedumps. Unlike the high-level workflow functions,
-<code><a href="../reference/ggtrace.html">ggtrace()</a></code> relies on the “side effect” of methods of
-functions and methods being traced, which must be explicitly reverted
-with <code><a href="../reference/gguntrace.html">gguntrace()</a></code>.</p>
+      <p class="section-desc"></p><p>The low-level function <code><a href="../reference/ggtrace.html">ggtrace()</a></code> extends
+<code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code> by managing the <strong>state</strong> of
+injected expressions (traces), which allows for contiguity across
+multiple traces and the inspection of evaluated expressions logged to
+the tracedump, via <code><a href="../reference/last_ggtrace.html">last_ggtrace()</a></code> and
+<code><a href="../reference/global_ggtrace.html">global_ggtrace()</a></code>. Unlike the high-level workflow functions,
+<code><a href="../reference/ggtrace.html">ggtrace()</a></code> relies on the “side effect” of functions and
+methods being traced, which can be restored with
+<code><a href="../reference/gguntrace.html">gguntrace()</a></code>.</p>
 
       
     </div><div class="section level2">
