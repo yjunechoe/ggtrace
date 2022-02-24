@@ -427,7 +427,7 @@ looks like the following:</p>
 <span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     prediction$flipped_aes &lt;- flipped_aes</span></span>
 <span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     flip_data(prediction, flipped_aes)</span></span>
 <span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x00000000183fb508&gt;</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x00000000183fb518&gt;</span></span>
 <span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -555,13 +555,13 @@ can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="exte
 <span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $scales</span></span>
 <span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $scales$x</span></span>
 <span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;ScaleContinuousPosition&gt;</span></span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Range:  1.56 -- 7.01</span></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Limits: 1.56 -- 7.01</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Range:  1.56 --    7</span></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Limits: 1.56 --    7</span></span>
 <span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $scales$y</span></span>
 <span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;ScaleContinuousPosition&gt;</span></span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Range:  10.4 --   44</span></span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Limits: 10.4 --   44</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Range:  10.4 -- 43.9</span></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  Limits: 10.4 -- 43.9</span></span>
 <span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $method</span></span>
@@ -657,7 +657,7 @@ conveniently give us information about the panel and group that the
 <strong>Highjack</strong><a class="anchor" aria-label="anchor" href="#highjack"></a>
 </h3>
 <p>Once we’re satisfied about our understanding of how
-<code>StatSmooth$compute_group</code> works, we want to test some
+<code>StatSmooth$compute_group</code> works, we may want to test some
 hypotheses about what would happen if the <code>compute_group</code>
 method returned something else.</p>
 <p>Let’s revisit our examples from the Capture workflow. What if the
@@ -733,11 +733,12 @@ heteroskedasticity:</p>
 </h2>
 <p>So far we’ve seen the low-level function <code><a href="reference/ggtrace.html">ggtrace()</a></code> and
 the high-level family of workflow functions
-<code>ggtrace_{action}_{value}()</code>. But you get more familiar with
-ggplot internals more and start using <code><a href="reference/ggtrace.html">ggtrace()</a></code> to “hack
-into” the internals (moving from <em>learner</em> to <em>developer</em>,
-in a sense), you might want both exploit both the power and convenience
-that <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> provides across these two designs.</p>
+<code>ggtrace_{action}_{value}()</code>. But once you get more familiar
+with ggplot internals more and start using <code><a href="reference/ggtrace.html">ggtrace()</a></code> to
+“hack into” the internals (moving from <em>learner</em> to
+<em>developer</em>, in a sense), you might want both exploit both the
+power and convenience that <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> provides across these
+two designs.</p>
 <p>For that we provide <code><a href="reference/with_ggtrace.html">with_ggtrace()</a></code>, which wraps around
 <code><a href="reference/ggtrace.html">ggtrace()</a></code> to give you access to its full power, while
 keeping its effects localized (e.g., no side-effects) and therefore more

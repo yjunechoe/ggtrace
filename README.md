@@ -372,7 +372,7 @@ following:
     #>     prediction$flipped_aes <- flipped_aes
     #>     flip_data(prediction, flipped_aes)
     #> }
-    #> <bytecode: 0x00000000183fb508>
+    #> <bytecode: 0x00000000183fb518>
     #> <environment: namespace:ggplot2>
 
 ### **Inspect**
@@ -508,13 +508,13 @@ can inspect with `formals()`:
     #> $scales
     #> $scales$x
     #> <ScaleContinuousPosition>
-    #>  Range:  1.56 -- 7.01
-    #>  Limits: 1.56 -- 7.01
+    #>  Range:  1.56 --    7
+    #>  Limits: 1.56 --    7
     #> 
     #> $scales$y
     #> <ScaleContinuousPosition>
-    #>  Range:  10.4 --   44
-    #>  Limits: 10.4 --   44
+    #>  Range:  10.4 -- 43.9
+    #>  Limits: 10.4 -- 43.9
     #> 
     #> 
     #> $method
@@ -616,8 +616,9 @@ for.
 ### **Highjack**
 
 Once we’re satisfied about our understanding of how
-`StatSmooth$compute_group` works, we want to test some hypotheses about
-what would happen if the `compute_group` method returned something else.
+`StatSmooth$compute_group` works, we may want to test some hypotheses
+about what would happen if the `compute_group` method returned something
+else.
 
 Let’s revisit our examples from the Capture workflow. What if the third
 group of the second panel was calculating a more conservative confidence
@@ -697,9 +698,9 @@ heteroskedasticity:
 ## **Middle ground approach `with_ggtrace()`**
 
 So far we’ve seen the low-level function `ggtrace()` and the high-level
-family of workflow functions `ggtrace_{action}_{value}()`. But you get
-more familiar with ggplot internals more and start using `ggtrace()` to
-“hack into” the internals (moving from *learner* to *developer*, in a
+family of workflow functions `ggtrace_{action}_{value}()`. But once you
+get more familiar with ggplot internals more and start using `ggtrace()`
+to “hack into” the internals (moving from *learner* to *developer*, in a
 sense), you might want both exploit both the power and convenience that
 `{ggtrace}` provides across these two designs.
 
