@@ -2,43 +2,14 @@
 
 # **{ggtrace}**
 
+#### **Programmatically explore, debug, and manipulate ggplot internals**
+
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.4.8-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
-[![](https://img.shields.io/badge/lifecycle-stable-gogreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
+[![](https://img.shields.io/badge/devel%20version-0.4.8.9000-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
-#### **Programmatically inspect, debug, and manipulate ggplot internals**
-
--   **Lightweight** ⚡
-    -   The only dependency is `{rlang}` - not even `{ggplot2}`!
-    -   Not a lot of code - most of the heavy lifting is done by
-        `base::trace()`
--   **User-friendly** ❤
-    -   Everything happens in your local session - no need to fork a
-        repo to inspect the internals!
-    -   The output is available for inspection outside of the debugging
-        context with `last_ggtrace()` and `global_ggtrace()`
-    -   Untraces on exit by default, like `debugonce()`
--   **Flexible** 🛠
-    -   Works on any functions and object methods, not just ggproto!
-    -   You can *programmatically* debug with `ggtrace()` or
-        *interactively* debug with `ggedit()`
-    -   Since `ggtrace()` doesn’t rely on interactivity, it can be used
-        in `{reprex}`-es
-    -   Plays nice with existing debugging tools (ex: you can insert
-        `browser()` calls deep inside the body with `ggedit()`)
--   **Powerful** 💪
-    -   Return the execution environment with `ggtrace()` for further
-        inspection
-    -   Modify the execution environment by passing assignment
-        expressions to `ggtrace()`
-    -   Change the source code with `ggedit()`, which is restored upon
-        `gguntrace()`
-
-More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
-
-## **Installation**
+### **Installation**
 
 You can install the development version from
 [GitHub](https://github.com/yjunechoe/ggtrace/) with:
@@ -46,564 +17,854 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.8
+    library(ggtrace) # v0.4.8.9000
 
-## **Example 1 - `compute_layer` method from `PositionJitter`**
+More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
-### **Step 1. Make plot**
+## **Extending `base::trace()` with `ggtrace()`**
 
-    library(ggplot2) # v3.3.5
+The low-level function `ggtrace()` is designed for interacting with
+functions and ggproto methods in the `{ggplot2}` ecosystem, from the
+“outside”.
 
-    jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
-      geom_point(position = position_jitter(width = 0.2, seed = 2021))
-    jitter_plot
+Formally put, `ggtrace()` allows the user to inject arbitrary
+expressions (called **traces**) to functions and methods that are
+evaluated over the execution of a ggplot. When “triggered” by the
+evaluation of the ggplot, these traces may modify the resulting
+graphical output, or they may simply log their values to the “tracedump”
+for further inspection by the user. Check out the [FAQ
+vignette](https://yjunechoe.github.io/ggtrace/articles/FAQ.html) for
+more details.
 
-<img src="man/figures/README-ex-1-setup-1.png" width="100%" />
+Briefly, there are three key arguments to `ggtrace()`: - `method`: what
+function/method to trace - `trace_steps`: where in the method body to
+inject expressions - `trace_exprs` what expressions to inject in which
+step
 
-### **Step 2. Inspect body of the ggproto method**
+A simple example:
 
-    ggbody(PositionJitter$compute_layer)
+    dummy_fn <- function(x = 1, y = 2) {
+      z <- x + y
+      x <- 10
+      return(z)
+    }
+    dummy_fn()
+    #> [1] 3
+
+Essentially, `ggtrace()` allows you to inject code into a function and
+safely/temporarily change its execution behavior.
+
+The following code injects the code `z <- z * 10` right as `dummy_fn`
+enters the third “step” in the body. Note that the value of
+`trace_exprs` must be of type “language”, which we’re simply calling
+“code” here. The idea is to give `ggtrace()` code for it to evaluate
+inside the function when it is ran later. Most often, typing out the
+actual code and wrapping it in `quote()` suffices, but for more complex
+injections see the [Expressions chapter of Advanced
+R](https://adv-r.hadley.nz/expressions.html)
+
+    ggtrace(
+      method = dummy_fn,
+      trace_steps = 3,
+      trace_exprs = quote(z <- z * 10)
+    )
+    #> `dummy_fn` now being traced.
+
+After this `ggtrace()` call, the next time `dummy_fn` is called it is
+run with this injected code.
+
+    dummy_fn()
+    #> Triggering trace on `dummy_fn`
+    #> Untracing `dummy_fn` on exit.
+    #> [1] 30
+
+Essentially, `dummy_fn` ran with this following modified code just now:
+
+    dummy_fn_TRACED1 <- function(x = 1, y = 2) {
+      z <- x + y
+      z <- z * 10 #< Look here!
+      x <- 10
+      return(z)
+    }
+    dummy_fn_TRACED1()
+    #> [1] 30
+
+But how do we know that’s the line targeted by `trace_steps = 3` in our
+`ggtrace()` call?
+
+The function `ggbody()` returns the body of a function/method as a list,
+which allows you to inspect what expressions in the body are evaluated
+at which step. `ggtrace()` injects the expression right before entering
+the step specified in `trace_steps`, so by setting that value to `3` we
+tell it to inject `z <- z * 10` right before `ggbody(dummy_fn)[[3]]` is
+evaluated.
+
+    ggbody(dummy_fn)
     #> [[1]]
     #> `{`
     #> 
     #> [[2]]
-    #> trans_x <- if (params$width > 0) function(x) jitter(x, amount = params$width)
+    #> z <- x + y
     #> 
     #> [[3]]
-    #> trans_y <- if (params$height > 0) function(x) jitter(x, amount = params$height)
+    #> x <- 10
     #> 
     #> [[4]]
-    #> x_aes <- intersect(ggplot_global$x_aes, names(data))
-    #> 
-    #> [[5]]
-    #> x <- if (length(x_aes) == 0) 0 else data[[x_aes[1]]]
-    #> 
-    #> [[6]]
-    #> y_aes <- intersect(ggplot_global$y_aes, names(data))
-    #> 
-    #> [[7]]
-    #> y <- if (length(y_aes) == 0) 0 else data[[y_aes[1]]]
-    #> 
-    #> [[8]]
-    #> dummy_data <- new_data_frame(list(x = x, y = y), nrow(data))
-    #> 
-    #> [[9]]
-    #> fixed_jitter <- with_seed_null(params$seed, transform_position(dummy_data, 
-    #>     trans_x, trans_y))
-    #> 
-    #> [[10]]
-    #> x_jit <- fixed_jitter$x - x
-    #> 
-    #> [[11]]
-    #> y_jit <- fixed_jitter$y - y
-    #> 
-    #> [[12]]
-    #> transform_position(data, function(x) x + x_jit, function(x) x + 
-    #>     y_jit)
+    #> return(z)
 
-### **Step 3. `ggtrace()` - including the last line with keyword `~step`**
+    ggbody(dummy_fn)[[3]]
+    #> x <- 10
+
+Note that once a trace placed by `ggtrace()` is triggered, the original
+function/method is restored (i.e., the trace is removed). You can also
+check whether a function is currently being traced with `is_traced()`.
+
+    dummy_fn()
+    #> [1] 3
+    is_traced(dummy_fn)
+    #> [1] FALSE
+
+To not have a trace clean up after itself, you can set `once = FALSE`
+which makes a trace **persistent**, meaning that it will be there until
+explicitly removed with `gguntrace()`
 
     ggtrace(
-      method = PositionJitter$compute_layer,
-      trace_steps = c(1, 1, 9, 12),
-      trace_exprs = rlang::exprs(
-        data,            # What does the data passed in look like?
-        params,          # What do the initial parameters look like?
-        dummy_data,      # What is `dummy_data` defined at Step 8?
-        ~step            # What does the last line evaluate to?
-                         # - i.e., what is returned by the method?
-      ),
-      print_output = FALSE   # Don't print evaluated expressions to console
+      method = dummy_fn,
+      trace_steps = 3,
+      trace_exprs = quote(z <- z * 10),
+      once = FALSE #< here!
     )
-    #> `PositionJitter$compute_layer` now being traced.
+    #> `dummy_fn` now being traced.
+    #> Creating a persistent trace. Remember to `gguntrace(dummy_fn)`!
 
-    # plot not printed to save space
-    jitter_plot
-    #> Triggering trace on `PositionJitter$compute_layer`
-    #> Untracing `PositionJitter$compute_layer` on exit.
+    dummy_fn()
+    #> Triggering persistent trace on `dummy_fn`
+    #> [1] 30
+    dummy_fn()
+    #> Triggering persistent trace on `dummy_fn`
+    #> [1] 30
 
-### **Step 4. Inspect trace dump**
+    is_traced(dummy_fn)
+    #> [1] TRUE
 
-    jitter_tracedump <- last_ggtrace()
+    gguntrace(dummy_fn)
+    #> `dummy_fn` no longer being traced.
+    is_traced(dummy_fn)
+    #> [1] FALSE
 
-    jitter_tracedump[[2]]
-    #> $width
-    #> [1] 0.2
-    #> 
-    #> $height
-    #> [1] 0.04
-    #> 
-    #> $seed
-    #> [1] 2021
+Beyond these basic capabilities, `ggtrace()` offers two more features:
 
-    lapply(jitter_tracedump[-2], nrow)
-    #> [[1]]
-    #> [1] 1000
-    #> 
-    #> [[2]]
-    #> [1] 1000
-    #> 
-    #> [[3]]
-    #> [1] 1000
+### **1. Shared state across trace expressions**
 
-    lapply(jitter_tracedump[-2], head, 3)
-    #> [[1]]
-    #>   x    y PANEL group
-    #> 1 5 61.5     1     5
-    #> 2 4 59.8     1     4
-    #> 3 2 56.9     1     2
-    #> 
-    #> [[2]]
-    #>   x    y
-    #> 1 5 61.5
-    #> 2 4 59.8
-    #> 3 2 56.9
-    #> 
-    #> [[3]]
-    #>          x        y PANEL group
-    #> 1 4.980507 61.50684     1     5
-    #> 2 4.113512 59.77872     1     4
-    #> 3 2.083873 56.86655     1     2
+The values of `trace_steps` and `trace_exprs` can be of length &gt; 1
 
-## **Example 2 - `draw_group` method from `GeomSmooth`**
-
-### **Step 1. Make plot**
-
-    smooth_plot <- ggplot(mtcars, aes(mpg, hp)) +
-      geom_point() +
-      stat_smooth(method = "loess", formula = y ~ x)
-    smooth_plot
-
-<img src="man/figures/README-ex-2-setup-1.png" width="100%" />
-
-### **Step 2. Inspect body of the ggproto method**
-
-    ggbody(GeomSmooth$draw_group)
-    #> [[1]]
-    #> `{`
-    #> 
-    #> [[2]]
-    #> ribbon <- transform(data, colour = NA)
-    #> 
-    #> [[3]]
-    #> path <- transform(data, alpha = NA)
-    #> 
-    #> [[4]]
-    #> ymin = flipped_names(flipped_aes)$ymin
-    #> 
-    #> [[5]]
-    #> ymax = flipped_names(flipped_aes)$ymax
-    #> 
-    #> [[6]]
-    #> has_ribbon <- se && !is.null(data[[ymax]]) && !is.null(data[[ymin]])
-    #> 
-    #> [[7]]
-    #> gList(if (has_ribbon) GeomRibbon$draw_group(ribbon, panel_params, 
-    #>     coord, flipped_aes = flipped_aes), GeomLine$draw_panel(path, 
-    #>     panel_params, coord))
-
-### **Step 3. `ggtrace()` - get the `gList()`**
+Here, we multiply `z` by 10 right as `dummy_fn` enters Steps 3 and 4
 
     ggtrace(
-      method = GeomSmooth$draw_group,
-      trace_steps = -1,           # Trace the last line
-      trace_exprs = quote(~step), # Grab the gList() object it returns
-      print_output = FALSE
+      method = dummy_fn,
+      trace_steps = c(3, 4),
+      trace_exprs = quote(z <- z * 10)
     )
-    #> `GeomSmooth$draw_group` now being traced.
+    #> `dummy_fn` now being traced.
+    dummy_fn()
+    #> Triggering trace on `dummy_fn`
+    #> Untracing `dummy_fn` on exit.
+    #> [1] 300
 
-    # plot not printed to save space
-    smooth_plot
-    #> Triggering trace on `GeomSmooth$draw_group`
-    #> Untracing `GeomSmooth$draw_group` on exit.
+The function just ran with the following modified code:
 
-### **Step 4. Inspect trace dump**
+    dummy_fn_TRACED2 <- function(x = 1, y = 2) {
+      z <- x + y
+      z <- z * 10 #< Look here!
+      x <- 10
+      z <- z * 10 #< Look here!
+      return(z)
+    }
+    dummy_fn_TRACED2()
+    #> [1] 300
 
-Get grobs in the gList and do some weird stuff with it.
-
-This is nice because you don’t have to navigate the whole list of
-`ggplotGrob(smooth_plot)[["grobs"]]`.
-
-    smooth_tracedump <- last_ggtrace()
-
-    smooth_gList <- smooth_tracedump[[1]]
-
-    smooth_gList
-    #> (gTree[geom_ribbon.gTree.132], polyline[GRID.polyline.133])
-
-    library(grid)
-
-    grid.ls(smooth_gList)
-    #> geom_ribbon.gTree.132
-    #>   GRID.polygon.129
-    #>   GRID.polyline.130
-    #> GRID.polyline.133
-
-    grid.newpage()
-    grid.draw(gTree(children = smooth_gList, vp = viewport()))
-
-<img src="man/figures/README-ex-2-last-a-1.png" width="20%" />
-
-
-    # The weird stuff
-
-    smooth_ribbon_polygon <- editGrob(
-      smooth_gList[1][[1]],
-      "polygon",
-      grep = TRUE,
-      gp = gpar(fill = "#b742ce", alpha = 0.7, lwd = 3, col = "black")
-    )
-    smooth_ribbon_gTree <- gTree(
-      children = gList(
-        smooth_ribbon_polygon,
-        textGrob("Weee", x = .7, gp = gpar(col = "red", fontsize = unit(10, "pt")))
-      ),
-      vp = viewport(width = 1, height = 1, default.units = "in", angle = 30)
-    )
-
-    grid.newpage()
-    grid.draw(smooth_ribbon_gTree)
-
-<img src="man/figures/README-ex-2-last-a-2.png" width="20%" />
-
-You might use this for some fancy *data-driven legends* or something,
-though it’s meant to be exploratory not practical.
-
-    library(patchwork)
-    smooth_plot +
-      inset_element(
-        wrap_elements(full = smooth_ribbon_gTree) +
-          theme(plot.background = element_rect(fill = NA, color = NA)),
-        left = 0.5, bottom = 0.5, right = 0.8, top = 0.8
-      )
-
-<img src="man/figures/README-ex-2-last-b-1.png" width="100%" />
-
-## **Example 3 - `compute_panel` method from `StatBoxplot`**
-
-### **Step 1. Make plot**
-
-    boxplot_plot <- ggplot(diamonds[1:500,], aes(cut, depth)) +
-      geom_boxplot()
-    boxplot_plot
-
-<img src="man/figures/README-ex-3-setup-1.png" width="100%" />
-
-### **Step 2. Inspect body of the ggproto method**
-
-Actually, `"compute_panel"` method is not defined for `StatBoxplot`.
-`ggbody()` gives you a hint that it may be inherited.
-
-    ggbody(StatBoxplot$compute_panel)
-    #> Error:
-    #> ! Method 'compute_panel' is not defined for `StatBoxplot`
-    #> Check inheritance with `get_method(StatBoxplot$compute_panel, inherit = TRUE)`
-
-`StatBoxplot` is a child of the parent ggproto `Stat`, and the
-`"compute_panel"` method is inherited from `Stat` as well, so that’s
-what we want to trace instead:
-
-    class(StatBoxplot)
-    #> [1] "StatBoxplot" "Stat"        "ggproto"     "gg"
-
-With `inherit = TRUE`, `ggbody()` returns the method as defined in the
-closest parent, and the corresponding code to get it. We confirm that we
-should be passing `Stat$compute_panel` to the `method` argument for
+Thus, even though we injected multiple expressions, they are evaluated
+in the same environment and thus are part of a single trace created by
 `ggtrace()`.
 
-    ggbody(StatBoxplot$compute_panel, inherit = TRUE)
-    #> Method inherited from `Stat$compute_panel`
+Also, note that `trace_exprs` was recycled here to meet the length of
+`trace_steps`. An explicit spellout would look like the following:
+
+    ggtrace(
+      method = dummy_fn,
+      trace_steps = c(3, 4),
+      trace_exprs = list(
+        quote(z <- z * 10),
+        quote(z <- z * 10)
+      )
+    )
+
+### **2. Logging of evaluated trace expressions**
+
+The output of injected expressions are logged to “tracedumps”, of which
+there are two.
+
+First, `last_ggtrace()` stores the output of the last trace. Here, we
+evaluate `x` upon entering `dummy_fn` (Step 1), and right before it
+returns (Step 4). Note that we can target the last step with negative
+indices like `-1`, which count backwards from the last step.
+
+    ggtrace(
+      method = dummy_fn,
+      trace_steps = c(1, -1),
+      trace_exprs = quote(x),
+    )
+    #> `dummy_fn` now being traced.
+    dummy_fn()
+    #> Triggering trace on `dummy_fn`
+    #> Untracing `dummy_fn` on exit.
+    #> [1] 3
+
+Of course the return value has not changed, but we can inspect the
+output of evaluating `x` in these two places with `last_ggtrace()`:
+
+    last_ggtrace()
     #> [[1]]
-    #> `{`
+    #> [1] 1
     #> 
     #> [[2]]
-    #> if (empty(data)) return(new_data_frame())
+    #> [1] 10
+
+If `trace_exprs` is a named list of expressions, the tracedump will
+carry those names as well
+
+    ggtrace(
+      method = dummy_fn,
+      trace_steps = c(1, -1),
+      trace_exprs = list(
+        "x_after_begin" = quote(x),
+        "x_before_end"  = quote(x)
+      ),
+    )
+    #> `dummy_fn` now being traced.
+    dummy_fn()
+    #> Triggering trace on `dummy_fn`
+    #> Untracing `dummy_fn` on exit.
+    #> [1] 3
+
+    last_ggtrace()
+    #> $x_after_begin
+    #> [1] 1
     #> 
-    #> [[3]]
-    #> groups <- split(data, data$group)
-    #> 
-    #> [[4]]
-    #> stats <- lapply(groups, function(group) {
-    #>     self$compute_group(data = group, scales = scales, ...)
-    #> })
-    #> 
-    #> [[5]]
-    #> stats <- mapply(function(new, old) {
-    #>     if (empty(new)) 
+    #> $x_before_end
+    #> [1] 10
+
+Second, `global_ggtrace()` stores the output of all traces. This is
+particularly useful in conjunction with `once = FALSE` or when you want
+to inspect multiple `ggtrace()`s at once. For most usecases you don’t
+need to go this far, but should you need it the [documentation
+page](https://yjunechoe.github.io/ggtrace/reference/global_ggtrace.html)
+has more information.
+
+## **Workflows for interacting with ggplot internals**
+
+    library(ggplot2)
+
+Admittedly, `ggtrace()` is a bit too clunky for interactive explorations
+of ggplot internals. To address this, we offer “workflow” functions in
+the form of `ggtrace_{action}_{value}()`. These are grouped into three
+workflows: Inspect, Capture, and Highjack.
+
+**NOTE**: Making the most out of these workflow functions requires a
+hint of knowledge about ggplot internals, namely the fact that ggproto
+objects like
+[Stat](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#stats)
+and
+[Geom](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#geoms)
+exists, and that these [ggprotos have
+methods](https://ggplot2-book.org/spring1.html#methods) that step in at
+different parts of the ggplot build/render pipeline to modify the data.
+If you are completely new to these concepts, you should at least watch
+[Thomas Lin Pedersen](https://twitter.com/thomasp85)’s talk on
+[Extending your ability to extend
+ggplot2](https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/)
+before proceeding.
+
+### **Walkthrough with `geom_smooth()`**
+
+Say we want to learn more about how `geom_smooth()` layer works, exactly
+
+    class(geom_smooth())
+    #> [1] "LayerInstance" "Layer"         "ggproto"       "gg"
+
+    geom_smooth()
+    #> geom_smooth: na.rm = FALSE, orientation = NA, se = TRUE
+    #> stat_smooth: na.rm = FALSE, orientation = NA, se = TRUE
+    #> position_identity
+
+To do this, we’re going to borrow the example from the [ggplot2
+internals chapter of the ggplot
+book](https://ggplot2-book.org/internals.html)
+
+    p <- ggplot(mpg, aes(displ, hwy, color = drv)) + 
+      geom_point(position = "jitter") +
+      geom_smooth(method = "lm", formula = y ~ x) + 
+      facet_wrap(vars(year)) + 
+      ggtitle("A plot for expository purposes")
+    p
+
+<img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
+
+Let’s start with the Stat ggproto. We see that `geom_smooth()` uses the
+`StatSmooth` ggproto
+
+    class(geom_smooth()$stat)
+    #> [1] "StatSmooth" "Stat"       "ggproto"    "gg"
+    identical(StatSmooth, geom_smooth()$stat)
+    #> [1] TRUE
+
+The bulk of the work by a Stat is done in the `compute_*` family of
+methods. We’ll focus on `compute_group` here, which looks like the
+following:
+
+    get_method(StatSmooth$compute_group)
+    #> function (data, scales, method = NULL, formula = NULL, se = TRUE, 
+    #>     n = 80, span = 0.75, fullrange = FALSE, xseq = NULL, level = 0.95, 
+    #>     method.args = list(), na.rm = FALSE, flipped_aes = NA) 
+    #> {
+    #>     data <- flip_data(data, flipped_aes)
+    #>     if (length(unique(data$x)) < 2) {
     #>         return(new_data_frame())
-    #>     unique <- uniquecols(old)
-    #>     missing <- !(names(unique) %in% names(new))
-    #>     cbind(new, unique[rep(1, nrow(new)), missing, drop = FALSE])
-    #> }, stats, groups, SIMPLIFY = FALSE)
-    #> 
-    #> [[6]]
-    #> rbind_dfs(stats)
-
-### **Step 3. `ggtrace()` - retrieve the parent environment**
-
-`Stat$compute_panel` does split-apply-combine (Steps 3, 4-5, 6).
-
-Let’s return the split and the combine:
-
-    ggtrace(
-      Stat$compute_panel,
-      trace_steps = c(3, 6, 6),
-      trace_exprs = rlang::exprs(
-        splits      = ~step,         # What are the splits?
-        combined    = ~step,         # What does the combined result look like?
-        runtime_env = environment()  # Grab the method's execution environment
-      ),
-      use_names = TRUE,       # Use names of `trace_exprs` for names of the tracedump (default)
-      verbose = FALSE         # Suppress all printing (except `message()`s)
-                              # This entails the effects of `print_output = FALSE`
-    )
-    #> `Stat$compute_panel` now being traced.
-
-    # plot not printed to save space
-    boxplot_plot
-    #> Triggering trace on `Stat$compute_panel`
-    #> Untracing `Stat$compute_panel` on exit.
-
-### **Step 4. Inspect trace dump**
-
-    boxplot_tracedump <- last_ggtrace()
-
-    # Trace dump is named after `trace_exprs`
-    names(boxplot_tracedump)
-    #> [1] "splits"      "combined"    "runtime_env"
-
-    # Inspect the splits
-    sapply(boxplot_tracedump[["splits"]], nrow)
-    #>   1   2   3   4   5 
-    #>  26  51 127 144 152
-    lapply(boxplot_tracedump$splits, head, 3)
-    #> $`1`
-    #>    x    y PANEL group
-    #> 9  1 65.1     1     1
-    #> 92 1 55.1     1     1
-    #> 98 1 66.3     1     1
-    #> 
-    #> $`2`
-    #>    x    y PANEL group
-    #> 3  2 56.9     1     2
-    #> 5  2 63.3     1     2
-    #> 11 2 64.0     1     2
-    #> 
-    #> $`3`
-    #>   x    y PANEL group
-    #> 6 3 62.8     1     3
-    #> 7 3 62.3     1     3
-    #> 8 3 61.9     1     3
-    #> 
-    #> $`4`
-    #>    x    y PANEL group
-    #> 2  4 59.8     1     4
-    #> 4  4 62.4     1     4
-    #> 13 4 60.4     1     4
-    #> 
-    #> $`5`
-    #>    x    y PANEL group
-    #> 1  5 61.5     1     5
-    #> 12 5 62.8     1     5
-    #> 14 5 62.2     1     5
-
-    # Manually calculating some boxplot parameters
-    lapply(boxplot_tracedump[["splits"]], function(group) {
-      quantile(group$y, c(0, 0.25, 0.5, 0.75, 1))
-    })
-    #> $`1`
-    #>     0%    25%    50%    75%   100% 
-    #> 53.100 58.850 64.800 65.775 68.100 
-    #> 
-    #> $`2`
-    #>    0%   25%   50%   75%  100% 
-    #> 56.90 60.20 63.30 63.95 65.20 
-    #> 
-    #> $`3`
-    #>   0%  25%  50%  75% 100% 
-    #> 57.5 60.7 62.0 63.1 64.0 
-    #> 
-    #> $`4`
-    #>     0%    25%    50%    75%   100% 
-    #> 58.000 60.700 61.500 62.325 63.000 
-    #> 
-    #> $`5`
-    #>    0%   25%   50%   75%  100% 
-    #> 58.80 61.30 61.75 62.20 62.90
-
-    # The combined result
-    boxplot_tracedump[["combined"]]
-    #>   ymin lower middle  upper ymax               outliers notchupper notchlower x
-    #> 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1
-    #> 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2
-    #> 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3
-    #> 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4
-    #> 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5
-    #>   width relvarwidth flipped_aes PANEL group
-    #> 1  0.75    5.099020       FALSE     1     1
-    #> 2  0.75    7.141428       FALSE     1     2
-    #> 3  0.75   11.269428       FALSE     1     3
-    #> 4  0.75   12.000000       FALSE     1     4
-    #> 5  0.75   12.328828       FALSE     1     5
-
-Using the returned environment opens up more powerful manipulations:
-
-    # What was inside the method environment?
-    ls(envir = boxplot_tracedump[["runtime_env"]])
-    #> [1] "data"   "groups" "scales" "self"   "stats"
-
-    # Evaluate the expression in Step 6 with the method's runtime environment
-    eval(
-      ggbody(Stat$compute_panel)[[6]],
-      envir = boxplot_tracedump[["runtime_env"]]
-    )
-    #>   ymin lower middle  upper ymax               outliers notchupper notchlower x
-    #> 1 53.1 58.85  64.80 65.775 68.1                          66.94580   62.65420 1
-    #> 2 56.9 60.20  63.30 63.950 65.2                          64.12967   62.47033 2
-    #> 3 57.5 60.70  62.00 63.100 64.0                          62.33649   61.66351 3
-    #> 4 58.3 60.70  61.50 62.325 63.0 58.0, 58.0, 58.2, 58.0   61.71396   61.28604 4
-    #> 5 60.1 61.30  61.75 62.200 62.9       58.8, 59.9, 59.9   61.86534   61.63466 5
-    #>   width relvarwidth flipped_aes PANEL group
-    #> 1  0.75    5.099020       FALSE     1     1
-    #> 2  0.75    7.141428       FALSE     1     2
-    #> 3  0.75   11.269428       FALSE     1     3
-    #> 4  0.75   12.000000       FALSE     1     4
-    #> 5  0.75   12.328828       FALSE     1     5
-
-    # Manually call the compute_group method from StatBoxplot to apply
-    # transformation to the third group using the method environment
-    eval(
-      quote(StatBoxplot$compute_group(groups[[3]], scales, ...)),
-      envir = boxplot_tracedump[["runtime_env"]]
-    )
-    #>   ymin lower middle upper ymax outliers notchupper notchlower x width
-    #> 1 57.5  60.7     62  63.1   64            62.33649   61.66351 3  0.75
-    #>   relvarwidth flipped_aes
-    #> 1    11.26943       FALSE
-
-## **Example 4 - `compute_group` method from `StatSina` {ggforce}**
-
-### **Step 1. Make plot**
-
-    library(ggforce) # v.0.3.3
-
-    sina_plot <- ggplot(diamonds[diamonds$cut == "Ideal",][1:50,], aes(cut, depth)) +
-      geom_violin() +
-      geom_sina(seed = 2021) +
-      ggtitle("Original")
-    sina_plot
-
-<img src="man/figures/README-ex-4-setup-1.png" width="100%" />
-
-### **Step 2. Inspect body of the ggproto method**
-
-    ggbody(StatSina$compute_group)
-    #> [[1]]
-    #> `{`
-    #> 
-    #> [[2]]
-    #> if (nrow(data) == 0) return(NULL)
-    #> 
-    #> [[3]]
-    #> if (nrow(data) < 3) {
-    #>     data$density <- 0
-    #>     data$scaled <- 1
-    #> } else if (method == "density") {
-    #>     range <- range(data$y, na.rm = TRUE)
-    #>     bw <- calc_bw(data$y, bw)
-    #>     dens <- compute_density(data$y, data$w, from = range[1], 
-    #>         to = range[2], bw = bw, adjust = adjust, kernel = kernel)
-    #>     densf <- stats::approxfun(dens$x, dens$density, rule = 2)
-    #>     data$density <- densf(data$y)
-    #>     data$scaled <- data$density/max(dens$density)
-    #>     data
-    #> } else {
-    #>     bin_index <- cut(data$y, bins, include.lowest = TRUE, labels = FALSE)
-    #>     data$density <- tapply(bin_index, bin_index, length)[as.character(bin_index)]
-    #>     data$density[data$density <= bin_limit] <- 0
-    #>     data$scaled <- data$density/max(data$density)
+    #>     }
+    #>     if (is.null(data$weight)) 
+    #>         data$weight <- 1
+    #>     if (is.null(xseq)) {
+    #>         if (is.integer(data$x)) {
+    #>             if (fullrange) {
+    #>                 xseq <- scales$x$dimension()
+    #>             }
+    #>             else {
+    #>                 xseq <- sort(unique(data$x))
+    #>             }
+    #>         }
+    #>         else {
+    #>             if (fullrange) {
+    #>                 range <- scales$x$dimension()
+    #>             }
+    #>             else {
+    #>                 range <- range(data$x, na.rm = TRUE)
+    #>             }
+    #>             xseq <- seq(range[1], range[2], length.out = n)
+    #>         }
+    #>     }
+    #>     if (identical(method, "loess")) {
+    #>         method.args$span <- span
+    #>     }
+    #>     if (is.character(method)) {
+    #>         if (identical(method, "gam")) {
+    #>             method <- mgcv::gam
+    #>         }
+    #>         else {
+    #>             method <- match.fun(method)
+    #>         }
+    #>     }
+    #>     if (identical(method, mgcv::gam) && is.null(method.args$method)) {
+    #>         method.args$method <- "REML"
+    #>     }
+    #>     base.args <- list(quote(formula), data = quote(data), weights = quote(weight))
+    #>     model <- do.call(method, c(base.args, method.args))
+    #>     prediction <- predictdf(model, xseq, se, level)
+    #>     prediction$flipped_aes <- flipped_aes
+    #>     flip_data(prediction, flipped_aes)
     #> }
-    #> 
-    #> [[4]]
-    #> if (length(unique(data$x)) > 1) {
-    #>     width <- diff(range(data$x)) * maxwidth
-    #> } else {
-    #>     width <- maxwidth
-    #> }
-    #> 
-    #> [[5]]
-    #> data$width <- width
-    #> 
-    #> [[6]]
-    #> data$n <- nrow(data)
-    #> 
-    #> [[7]]
-    #> data$x <- mean(range(data$x))
-    #> 
-    #> [[8]]
-    #> data
+    #> <bytecode: 0x00000000183fb508>
+    #> <environment: namespace:ggplot2>
 
-### **Step 3. `ggtrace()` - inject code that modifies method env**
+### **Inspect**
 
-    ggtrace(
-      method = StatSina$compute_group,
-      trace_steps = c(1, 1, 8),
-      trace_exprs = rlang::exprs(
-        data,                      # 1. What does the data passed in look like at the start?
-        data <- dplyr::mutate(     # 2. Modify data in-place in the method environment
-          data,         
-          y = y + 1,                 # Shift the points up
-          x = x - .2                 # Shift the points left
-        ),
-        data                       # 3. What do the stat transformations on the
-                                   #    manipulated data look like at the end?
-      ),
-      verbose = FALSE
+Here we introduce our first workflow function `ggtrace_inspect_n`, which
+takes a ggplot as the first argument and a ggproto method as the second
+argument, returning the number of times the ggproto method has been
+called in the ggplot’s evaluation:
+
+    ggtrace_inspect_n(x = p, method = StatSmooth$compute_group)
+    #> [1] 6
+
+As we might have guessed, `StatSmooth$compute_group` is called for each
+fitted line (each group) in the plot
+
+As we can saw from `get_method()`, the `compute_group` is just a good
+ol’ function. But what does this function actually return?
+
+We can answer that with another workflow function
+`ggtrace_inspect_return()`, which shares a similar syntax:
+
+    return_val <- ggtrace_inspect_return(x = p, method = StatSmooth$compute_group)
+    nrow(return_val)
+    #> [1] 80
+    head(return_val)
+    #>          x        y     ymin     ymax        se flipped_aes
+    #> 1 1.800000 24.33592 23.07845 25.59339 0.6250675       FALSE
+    #> 2 1.859494 24.17860 22.94830 25.40890 0.6115600       FALSE
+    #> 3 1.918987 24.02127 22.81795 25.22460 0.5981528       FALSE
+    #> 4 1.978481 23.86395 22.68738 25.04052 0.5848527       FALSE
+    #> 5 2.037975 23.70663 22.55658 24.85668 0.5716673       FALSE
+    #> 6 2.097468 23.54931 22.42554 24.67307 0.5586045       FALSE
+
+Note that `ggtrace_inspect_return()` only gave us 1 dataframe,
+corresponding to the return value of `StatSmooth$compute_group` the
+*first time* it was called. This comes from the default value of the
+third argument `cond` being set to `quote(._counter_ == 1)`.
+
+As you might have guessed, `._counter_` is an internal variable that
+keeps track of how many times the method has been called. In this case,
+`ggtrace_inspect_return()` is giving us the return value from the method
+when it was first run, i.e., in the first group of the first panel.
+
+If we instead wanted to get the return value of
+`StatSmooth$compute_group` for the third group of the second panel, for
+example, we can do so in one of two ways:
+
+1.  Set the value of `cond` to an expression that evaluates to true for
+    that panel and group:
+
+<!-- -->
+
+    return_val_2_3_A <- ggtrace_inspect_return(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
     )
-    #> `StatSina$compute_group` now being traced.
 
-    sina_plot_modified <- ggplotGrob(sina_plot + ggtitle("Modified"))
-    #> Triggering trace on `StatSina$compute_group`
-    #> Untracing `StatSina$compute_group` on exit.
-    grid.draw(sina_plot_modified)
+1.  Find the counter value when that condition is satisfied with
+    `ggtrace_inspect_which()`, and then simply check for the value of
+    `._counter_` back in `ggtrace_inspect_return()`:
 
-<img src="man/figures/README-ex-4-ggtrace-1.png" width="100%" />
+<!-- -->
 
-This effect is ephemeral with the `once = TRUE` default in `ggtrace()`,
-meaning that only this last plot saved to `sina_plot_modified` is
-rendered with the modifications.
+    ggtrace_inspect_which(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+    )
+    #> [1] 6
 
-Here we confirm that the method is restored on exit:
+    return_val_2_3_B <- ggtrace_inspect_return(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(._counter_ == 6)
+    )
 
-    sina_plot
+These two approaches work the same:
 
-<img src="man/figures/README-ex-4-ggtrace-restored-1.png" width="100%" />
+    identical(return_val_2_3_A, return_val_2_3_B)
+    #> [1] TRUE
 
+### **Capture**
 
-    sina_plot + patchwork::wrap_ggplot_grob(sina_plot_modified)
+Okay, so we know what `StatSmooth$compute_group` returns, but how does
+this return value change with different input? More generally put, how
+does `StatSmooth$compute_group` behave under different contexts?
 
-<img src="man/figures/README-ex-4-ggtrace-restored-2.png" width="100%" />
+We *could* answer this by making a bunch of different plots using
+`geom_smooth()` and repeating the inspection workflow. Alternatively, we
+can capture a call to `StatSmooth$compute_group` and extract it as a
+function with `ggtrace_capture_fn()`:
 
-### **Step 4. Inspect trace dump**
+    captured_fn_2_3 <- ggtrace_capture_fn(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+    )
 
-    sina_tracedump <- last_ggtrace()
+`captured_fn_2_3` is essentially a snapshot of the `compute_group` when
+it is called for the third group of the second panel. Simply calling
+`captured_fn_2_2` gives us the expected return value:
 
-    # StatSina did calculations on the modified data in the last `ggtrace()`
-    lapply(sina_tracedump, head, 3)
-    #> [[1]]
-    #>   x    y PANEL group
-    #> 1 1 61.5     1     1
-    #> 2 1 62.8     1     1
-    #> 3 1 62.2     1     1
+    identical(return_val_2_3_A, captured_fn_2_3())
+    #> [1] TRUE
+
+But the true power of the “capture” workflow functions lies in the
+ability to interact with what has been captured. In the case of
+`ggtrace_capture_fn()`, the returned function has all of the arguments
+passed to it at its execution stored in the formals.
+
+In other words, it is “pre-filled” with its original values, which we
+can inspect with `formals()`:
+
+    formals(captured_fn_2_3)
+    #> $data
+    #>      x  y colour PANEL group
+    #> 10 5.3 20      r     2     3
+    #> 11 5.3 15      r     2     3
+    #> 12 5.3 20      r     2     3
+    #> 13 6.0 17      r     2     3
+    #> 14 6.2 26      r     2     3
+    #> 15 6.2 25      r     2     3
+    #> 16 7.0 24      r     2     3
+    #> 43 5.4 18      r     2     3
+    #> 48 4.0 26      r     2     3
+    #> 49 4.0 24      r     2     3
+    #> 50 4.6 23      r     2     3
+    #> 51 4.6 22      r     2     3
+    #> 52 5.4 20      r     2     3
+    #> 73 5.4 18      r     2     3
     #> 
-    #> [[2]]
-    #>     x    y PANEL group
-    #> 1 0.8 62.5     1     1
-    #> 2 0.8 63.8     1     1
-    #> 3 0.8 63.2     1     1
+    #> $scales
+    #> $scales$x
+    #> <ScaleContinuousPosition>
+    #>  Range:  1.56 -- 7.01
+    #>  Limits: 1.56 -- 7.01
     #> 
-    #> [[3]]
-    #>     x    y PANEL group   density    scaled width  n
-    #> 1 0.8 62.5     1     1 0.4632389 0.8454705   0.9 50
-    #> 2 0.8 63.8     1     1 0.2134967 0.3896590   0.9 50
-    #> 3 0.8 63.2     1     1 0.4973098 0.9076543   0.9 50
+    #> $scales$y
+    #> <ScaleContinuousPosition>
+    #>  Range:  10.4 --   44
+    #>  Limits: 10.4 --   44
+    #> 
+    #> 
+    #> $method
+    #> [1] "lm"
+    #> 
+    #> $formula
+    #> y ~ x
+    #> <environment: 0x00000000198bca40>
+    #> 
+    #> $se
+    #> [1] TRUE
+    #> 
+    #> $n
+    #> [1] 80
+    #> 
+    #> $span
+    #> [1] 0.75
+    #> 
+    #> $fullrange
+    #> [1] FALSE
+    #> 
+    #> $xseq
+    #> NULL
+    #> 
+    #> $level
+    #> [1] 0.95
+    #> 
+    #> $method.args
+    #> list()
+    #> 
+    #> $na.rm
+    #> [1] FALSE
+    #> 
+    #> $flipped_aes
+    #> [1] FALSE
+
+This makes it very convenient for us to explore its behavior with
+different arguments passed to it.
+
+For example, when `flipped_aes = TRUE`, we get `xmin` and `xmax` columns
+replacing `ymin` and `ymax`:
+
+    head(captured_fn_2_3(flipped_aes = TRUE))
+    #>          y        x     xmin     xmax        se flipped_aes
+    #> 1 15.00000 5.450710 4.369619 6.531802 0.4961840        TRUE
+    #> 2 15.13924 5.448163 4.385577 6.510749 0.4876904        TRUE
+    #> 3 15.27848 5.445616 4.401438 6.489794 0.4792416        TRUE
+    #> 4 15.41772 5.443068 4.417196 6.468941 0.4708400        TRUE
+    #> 5 15.55696 5.440521 4.432846 6.448196 0.4624882        TRUE
+    #> 6 15.69620 5.437974 4.448381 6.427566 0.4541888        TRUE
+
+In this sense, we can effectively simulate what happens in
+`geom_smooth(orientation = "y")` without needing to construct an
+entirely different ggplot.
+
+For another example, when we set the confidence interval to 10% with
+`level = 0.1`, the `ymin` and `ymax` values deviate less from the `y`
+value:
+
+    head(captured_fn_2_3(level = 0.1))
+    #>          x        y     ymin     ymax       se flipped_aes
+    #> 1 4.000000 21.70513 21.46539 21.94487 1.867921       FALSE
+    #> 2 4.037975 21.69321 21.45840 21.92801 1.829458       FALSE
+    #> 3 4.075949 21.68128 21.45137 21.91119 1.791313       FALSE
+    #> 4 4.113924 21.66936 21.44430 21.89442 1.753509       FALSE
+    #> 5 4.151899 21.65743 21.43718 21.87769 1.716067       FALSE
+    #> 6 4.189873 21.64551 21.43001 21.86101 1.679011       FALSE
+
+Lastly, let’s talk about the `data` variable we’ve been using inside the
+`cond` argument of some of these workflow functions. What is
+`data$group` and `data$PANEL`? How do you know what `data` looks like?
+
+The answer is actually simple: it’s an argument passed to
+`StatSmooth$compute_group`. We already saw it above but to make pull it
+out more explicitly, `data` looks like this for the third group of the
+second group:
+
+    formals(captured_fn_2_3)$data
+    #>      x  y colour PANEL group
+    #> 10 5.3 20      r     2     3
+    #> 11 5.3 15      r     2     3
+    #> 12 5.3 20      r     2     3
+    #> 13 6.0 17      r     2     3
+    #> 14 6.2 26      r     2     3
+    #> 15 6.2 25      r     2     3
+    #> 16 7.0 24      r     2     3
+    #> 43 5.4 18      r     2     3
+    #> 48 4.0 26      r     2     3
+    #> 49 4.0 24      r     2     3
+    #> 50 4.6 23      r     2     3
+    #> 51 4.6 22      r     2     3
+    #> 52 5.4 20      r     2     3
+    #> 73 5.4 18      r     2     3
+
+We see that `PANEL` and `group` columns conveniently give us information
+about the panel and group that the `compute_group` is doing calculations
+for.
+
+### **Highjack**
+
+Once we’re satisfied about our understanding of how
+`StatSmooth$compute_group` works, we want to test some hypotheses about
+what would happen if the `compute_group` method returned something else.
+
+Let’s revisit our examples from the Capture workflow. What if the third
+group of the second panel was calculating a more conservative confidence
+interval (`level = 0.1`)? What is this effect on the graphical output?
+
+To answer this question, we use `ggtrace_highjack_return()` to have a
+method return an entirely different value, with help of `{rlang}`.
+
+First we store the modified return value in some variable:
+
+    modified_return_smooth <- captured_fn_2_3(level = 0.1)
+
+Then we target the same group inside `cond` and pass the modified values
+to the `value` argument using `!!` and `rlang::expr()`
+
+    ggtrace_highjack_return(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
+      value = rlang::expr(!!modified_return_smooth)
+    )
+
+<img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />
+
+The confidence band is nearly invisible for that fitted line!
+
+Here’s another example where we make the method fit predictions from a
+loess regression instead. This time, we in-line the calculation of the
+new return value:
+
+    ggtrace_highjack_return(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
+      value = rlang::expr(!!captured_fn_2_3(method = "loess"))
+    )
+
+<img src="man/figures/README-unnamed-chunk-33-1.png" width="100%" />
+
+But that’s not all! The `value` argument of `ggtrace_highjack_return()`
+exposes an internal function called `returnValue()` which simply returns
+the original return value. Computing on it allows on-the-fly
+modifications the graphical output.
+
+For example, we can “intercept” the dataframe output, do data wrangling
+on it, and have the method return that instead. Here, we hack the data
+for the group to make it look like there’s an absurd degree of
+heteroskedasticity:
+
+    library(dplyr)
+    #> 
+    #> Attaching package: 'dplyr'
+    #> The following objects are masked from 'package:stats':
+    #> 
+    #>     filter, lag
+    #> The following objects are masked from 'package:base':
+    #> 
+    #>     intersect, setdiff, setequal, union
+    ggtrace_highjack_return(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
+      value = quote({
+        
+        spread_seq <- seq(0, 10, length.out = nrow(returnValue()))
+        returnValue() %>% 
+          mutate(
+            ymin = y - se * spread_seq[row_number()],
+            ymax = y + se * spread_seq[row_number()]
+          )
+        
+      })
+    )
+
+<img src="man/figures/README-unnamed-chunk-34-1.png" width="100%" />
+
+## **Middle ground approach `with_ggtrace()`**
+
+So far we’ve seen the low-level function `ggtrace()` and the high-level
+family of workflow functions `ggtrace_{action}_{value}()`. But you get
+more familiar with ggplot internals more and start using `ggtrace()` to
+“hack into” the internals (moving from *learner* to *developer*, in a
+sense), you might want both exploit both the power and convenience that
+`{ggtrace}` provides across these two designs.
+
+For that we provide `with_ggtrace()`, which wraps around `ggtrace()` to
+give you access to its full power, while keeping its effects localized
+(e.g., no side-effects) and therefore more fitting for a functional
+programming workflow.
+
+Like `ggtrace()`, you inject code into different steps of a method *as
+it runs*:
+
+    with_ggtrace(
+      x = p + facet_grid(year ~ drv),
+      method = Layout$render,
+      trace_steps = c(5, 8),
+      trace_exprs = rlang::exprs(
+        
+        {
+          # First, turn all panels except the 4th semi-transparent
+          panels[-4] <- lapply(panels[-4], function(panel) {
+            editGrob(panel, gp = gpar(alpha = .4))
+          })
+          # Second, give red outline and fill to 4th panel
+          panels[[4]] <- gTree(children = gList(panels[[4]],
+            rectGrob(x = 0.5, y = 0.5, width = 1, height = 1,
+                     gp = gpar(col = "red", lwd = 5, fill = "red", alpha = 0.1))
+          ))
+        },
+        
+        {
+          # Third, give it some emphasis by connecting to facet strips
+          outline_rect <- rectGrob(
+            x = 0.5, y = 0.5, width = 1, height = 1,
+            gp = gpar(col = "red", lwd = 2, fill = NA)
+          )
+          plot_table <- gtable_add_grob(
+            plot_table, outline_rect,
+            t = 1, l = 2, b = 5, r = 2, z = Inf
+          )
+          plot_table <- gtable_add_grob(
+            plot_table, outline_rect,
+            t = 5, l = 2, b = 5, r = 7, z = Inf
+          )
+        }
+        
+      ),
+      out = "g"
+    )
+
+<img src="man/figures/README-unnamed-chunk-35-1.png" width="100%" />
+
+And like the workflow functions, you can have conditional traces that
+only evaluate when a condition is met, using `if` statements inside
+`trace_exprs` with `once = FALSE`.
+
+    with_ggtrace(
+      p,
+      GeomRibbon$draw_group,
+      trace_steps = -1,
+      trace_exprs = quote({
+        # Give gradient fill to the confidence bands for group 3
+        if (data$group[1] == 3) {
+          g_poly <- editGrob(
+            g_poly,
+            gp = gpar(fill = linearGradient(
+              colours = c("purple", "skyblue", "pink"),
+              stops = c(0, 0.5, 1),
+              x1 = 0, x2 = 1, y1 = 0, y2 = 0
+            ))
+          )
+        }
+      }),
+      once = FALSE,
+      out = "g"
+    )
+
+<img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
+
+And of course, all of this is not limited to objects from the
+`{ggplot2}` package itself. You can have fun hacking extension packages
+as well!
+
+    library(ggh4x)
+
+    # Example from - https://teunbrand.github.io/ggh4x/articles/Facets.html ----
+
+    ## Base plot ====
+    p <- ggplot(mpg, aes(displ, hwy, colour = as.factor(cyl))) + geom_point() +
+      labs(x = "Engine displacement", y = "Highway miles per gallon") +
+      guides(colour = "none")
+
+    ## Fixed-aspect plot with free & independent scales using `ggh4x::facet_grid2()` ====
+    p2 <- p +
+      ggh4x::facet_grid2(vars(year), vars(drv), scales = "free", independent = "all") +
+      theme_grey(base_size = 9) +
+      theme(aspect.ratio = 1)
+
+    # Highjacking the plot's execution using `ggtrace::with_ggtrace()` ----
+    with_ggtrace(
+      
+      ## Argument 1: The ggplot to interact with durings its execution ====
+      x = p2,
+      
+      ## Argument 2: The method to inject code into ====
+      method = FacetGrid2$draw_panels,
+      
+      ## Argument 3: The step in the method right before `panels` and `axes` ====
+      ## are merged into the `panel_table` <gtable> and shipped off
+      trace_steps = 13, # See `ggbody(FacetGrid2$draw_panels)`
+      
+      ## Argument 4: The code injection to rotate the 2nd panel (1st row, 2nd column) ====
+      trace_exprs = quote({
+        
+        ### FIRST, specify row/column of panel to target ####
+        row <- 1
+        col <- 2
+        target_panel <- layout[layout$ROW == row & layout$COL == col, ]$PANEL
+        left_axis    <- axes$left[[row, col]]
+        bottom_axis  <- axes$bottom[[row, col]]
+        
+        ### SECOND, replace target panelwith a version of itself ####
+        ### that has its axes attached to itself, using `grid::gTree()`
+        panels[[target_panel]] <- gTree(
+          
+          ##### Argument `children`: a list (`grid::gTree()`) of three grobs:
+          children = gList(
+            
+            ###### 1. The original panel itself
+            panels[[target_panel]],
+            
+            ###### 2. Resized/reoriented left y-axis for that panel
+            editGrob(
+              left_axis,
+              vp = viewport(
+                x = unit(0.5, "npc") - grobWidth(left_axis) / 2,
+                just = c("right")
+              )
+            ),
+            
+            ###### 3. Resized/repositioned bottom x-axis for that panel
+            editGrob(
+              bottom_axis,
+              vp = viewport(
+                y = unit(0.5, "npc") - grobHeight(bottom_axis) / 2,
+                just = c("top")
+              )
+            )
+            
+          ),
+          
+          ##### Argument `vp`: Rotation for this combination of three grobs
+          vp = viewport(width = .7, height = .7, angle = 45)
+          
+        )
+        
+        ### THIRD, "remove" the original axes for that panel ####
+        axes$left[[row, col]]    <- zeroGrob() 
+        axes$bottom[[row, col]]  <- zeroGrob()
+        
+      }),
+      
+      ## Argument `out`: The return value for `with_ggtrace()` ====
+      ## "gtable" returns the graphical output after injecting the code
+      out = "gtable" # you can also use the "g" shorthand
+      
+    )
+
+<img src="man/figures/README-unnamed-chunk-37-1.png" width="100%" />

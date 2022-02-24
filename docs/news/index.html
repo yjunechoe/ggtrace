@@ -68,9 +68,10 @@
 <ul><li>
 <code><a href="../reference/ggtrace_capture_env.html">ggtrace_capture_env()</a></code> default value of <code>at</code>
 is changed to <code>-1L</code>, which captures a snapshot of the runtime
-environment right before the method returns.</li>
-<li>“modify” workflows renames to “highjack” to reflect the fact that
-they always return the graphical output (gtable grob) (<a href="https://github.com/yjunechoe/ggtrace/issues/78" class="external-link">#78</a>)</li>
+environment right before the method returns. Only the first element is
+used if <code>at</code> is length &gt; 1</li>
+<li>“modify” workflows are renamed to “highjack” to reflect the fact
+that they always return the graphical output (gtable grob) (<a href="https://github.com/yjunechoe/ggtrace/issues/78" class="external-link">#78</a>)</li>
 </ul></div>
 <div class="section level4">
 <h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
@@ -94,6 +95,10 @@ grob after evaluating <code>x</code> with injected expressions in
 <li>“b” or “both”: returns the tracedump while rendering the gtable
 (with <code><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid::grid.draw()</a></code>) as a side effect.</li>
 </ul></li>
+<li><p>Low-level functions <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and wrapper
+<code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> can now take quosures in the
+<code>method</code> argument, which allows them to be used more
+programmatically.</p></li>
 </ul></div>
 </div>
     <div class="section level2">

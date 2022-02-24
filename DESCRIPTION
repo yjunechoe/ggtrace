@@ -40,6 +40,7 @@ Suggests:
     dplyr,
     grid,
     ggforce,
+    ggh4x,
     patchwork,
     R6,
     rmarkdown,
