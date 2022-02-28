@@ -251,7 +251,7 @@ p <- ggplot(mpg, aes(displ, hwy, color = drv)) +
 p
 ```
 
-Let's start with the Stat ggproto. We see that `geom_smooth()` uses the `StatSmooth` ggproto
+Let's focus on the Stat ggproto. We see that `geom_smooth()` uses the `StatSmooth` ggproto
 
 ```{r}
 class(geom_smooth()$stat)
@@ -266,7 +266,7 @@ get_method(StatSmooth$compute_group)
 
 ### **Inspect**
 
-Here we introduce our first workflow function `ggtrace_inspect_n`, which takes a ggplot as the first argument and a ggproto method as the second argument, returning the number of times the ggproto method has been called in the ggplot's evaluation:
+Here we introduce our first workflow function `ggtrace_inspect_n()`, which takes a ggplot as the first argument and a ggproto method as the second argument, returning the number of times the ggproto method has been called in the ggplot's evaluation:
 
 ```{r}
 ggtrace_inspect_n(x = p, method = StatSmooth$compute_group)
@@ -290,31 +290,31 @@ As you might have guessed, `._counter_` is an internal variable that keeps track
 
 If we instead wanted to get the return value of `StatSmooth$compute_group` for the third group of the second panel, for example, we can do so in one of two ways:
 
-1) Set the value of `cond` to an expression that evaluates to true for that panel and group:
+  1) Set the value of `cond` to an expression that evaluates to true for that panel and group:
 
-```{r}
-return_val_2_3_A <- ggtrace_inspect_return(
-  x = p,
-  method = StatSmooth$compute_group,
-  cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
-)
-```
+  ```{r}
+  return_val_2_3_A <- ggtrace_inspect_return(
+    x = p,
+    method = StatSmooth$compute_group,
+    cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+  )
+  ```
 
-2) Find the counter value when that condition is satisfied with `ggtrace_inspect_which()`, and then simply check for the value of `._counter_` back in `ggtrace_inspect_return()`:
+  2) Find the counter value when that condition is satisfied with `ggtrace_inspect_which()`, and then simply check for the value of `._counter_` back in `ggtrace_inspect_return()`:
 
-```{r}
-ggtrace_inspect_which(
-  x = p,
-  method = StatSmooth$compute_group,
-  cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
-)
-
-return_val_2_3_B <- ggtrace_inspect_return(
-  x = p,
-  method = StatSmooth$compute_group,
-  cond = quote(._counter_ == 6)
-)
-```
+  ```{r}
+  ggtrace_inspect_which(
+    x = p,
+    method = StatSmooth$compute_group,
+    cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+  )
+  
+  return_val_2_3_B <- ggtrace_inspect_return(
+    x = p,
+    method = StatSmooth$compute_group,
+    cond = quote(._counter_ == 6)
+  )
+  ```
 
 These two approaches work the same:
 
@@ -369,22 +369,32 @@ head(captured_fn_2_3(level = 0.1))
 
 Lastly, let's talk about the `data` variable we've been using inside the `cond` argument of some of these workflow functions. What is `data$group` and `data$PANEL`? How do you know what `data` looks like?
 
-The answer is actually simple: it's an argument passed to `StatSmooth$compute_group`. We already saw it above but to make pull it out more explicitly, `data` looks like this for the third group of the second group:
+The answer is actually simple: it's an argument passed to `StatSmooth$compute_group`. We already saw its value briefly from `formals(captured_fn_2_3)`, but to target it explcitly we can also use `ggtrace_inspect_vars()`:
 
 ```{r}
+# Get value of `data` at the start of the method `at = 1L`" 
+ggtrace_inspect_vars(
+  x = p,
+  method = StatSmooth$compute_group,
+  cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
+  at = 1L,
+  vars = "data"
+)
+
+# Alternatively, `formals(captured_fn_2_3)$data` also works in this case
 formals(captured_fn_2_3)$data
 ```
 
-We see that `PANEL` and `group` columns conveniently give us information about the panel and group that the `compute_group` is doing calculations for.
+We see that `PANEL` and `group` columns conveniently give us information about the panel and group that the `compute_group` is doing calculations over.
 
 
 ### **Highjack**
 
-Once we're satisfied about our understanding of how `StatSmooth$compute_group` works, we may want to test some hypotheses about what would happen if the `compute_group` method returned something else.
+Once we have some understanding of how `StatSmooth$compute_group` works, we may want to test some hypotheses about what would happen if the method returned something else.
 
-Let's revisit our examples from the Capture workflow. What if the third group of the second panel was calculating a more conservative confidence interval (`level = 0.1`)? What is this effect on the graphical output?
+Let's revisit our examples from the Capture workflow. What if the third group of the second panel calculated a more conservative confidence interval (`level = 0.1`)? What is this effect on the graphical output?
 
-To answer this question, we use `ggtrace_highjack_return()` to have a method return an entirely different value, with help of `{rlang}`.
+To answer this question, we use `ggtrace_highjack_return()` to have a method return an entirely different value, with help of the `{rlang}` package.
 
 First we store the modified return value in some variable:
 
@@ -392,7 +402,7 @@ First we store the modified return value in some variable:
 modified_return_smooth <- captured_fn_2_3(level = 0.1)
 ```
 
-Then we target the same group inside `cond` and pass the modified values to the `value` argument using `!!` and `rlang::expr()`
+Then we target the same group inside `cond` and pass the modified values to the `value` argument using [`!!`](https://rlang.r-lib.org/reference/topic-defuse.html) and `rlang::expr()`
 
 ```{r}
 ggtrace_highjack_return(
@@ -403,9 +413,9 @@ ggtrace_highjack_return(
 )
 ```
 
-The confidence band is nearly invisible for that fitted line!
+The confidence band is nearly invisible for that fitted line because it's only capturing a 10% confidence interval!
 
-Here's another example where we make the method fit predictions from a loess regression instead. This time, we in-line the calculation of the new return value:
+Here's another example where we make the method fit predictions from a loess regression instead. This time, we in-line the calculation of the new return value using our captured function:
 
 ```{r}
 ggtrace_highjack_return(
@@ -416,7 +426,7 @@ ggtrace_highjack_return(
 )
 ```
 
-But that's not all! The `value` argument of `ggtrace_highjack_return()` exposes an internal function called `returnValue()` which simply returns the original return value. Computing on it allows on-the-fly modifications the graphical output.
+But that's not all! The `value` argument of `ggtrace_highjack_return()` exposes an internal function called `returnValue()` which simply returns the original return value. Computing on it allows on-the-fly modifications to the graphical output.
 
 For example, we can "intercept" the dataframe output, do data wrangling on it, and have the method return that instead. Here, we hack the data for the group to make it look like there's an absurd degree of heteroskedasticity:
 
@@ -440,13 +450,13 @@ ggtrace_highjack_return(
 ```
 
 
-## **Middle ground approach `with_ggtrace()`**
+## **Middle-ground approach `with_ggtrace()`**
 
-So far we've seen the low-level function `ggtrace()` and the high-level family of workflow functions `ggtrace_{action}_{value}()`. But once you get more familiar with ggplot internals more and start using `ggtrace()` to "hack into" the internals (moving from _learner_ to _developer_, in a sense), you might want both exploit both the power and convenience that `{ggtrace}` provides across these two designs.
+So far we've seen the low-level function `ggtrace()` and the high-level family of workflow functions `ggtrace_{action}_{value}()`. But once you get more familiar with ggplot internals and start using `ggtrace()` to "hack into" the internals (moving from _learner_ to _developer_, in a sense), you might want both exploit both the power and convenience that `{ggtrace}` provides across these two designs.
 
-For that we provide `with_ggtrace()`, which wraps around `ggtrace()` to give you access to its full power, while keeping its effects localized (e.g., no side-effects) and therefore more fitting for a functional programming workflow.
+For that we provide `with_ggtrace()`, which wraps around `ggtrace()` to give you access to its full power, while keeping its effects localized (e.g., no side-effects) and therefore making it more fitting for a functional programming workflow.
 
-Like `ggtrace()`, you inject code into different steps of a method _as it runs_:
+Like `ggtrace()`, you can inject code into different steps of a method _as it runs_:
 
 ```{r}
 with_ggtrace(

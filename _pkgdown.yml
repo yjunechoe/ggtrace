@@ -28,6 +28,7 @@ reference:
   contents:
   - ggtrace_inspect_n
   - ggtrace_inspect_which
+  - ggtrace_inspect_vars
   - ggtrace_inspect_return
 
 - subtitle: Capture

@@ -310,7 +310,7 @@ book](https://ggplot2-book.org/internals.html)
 
 <img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
 
-Let’s start with the Stat ggproto. We see that `geom_smooth()` uses the
+Let’s focus on the Stat ggproto. We see that `geom_smooth()` uses the
 `StatSmooth` ggproto
 
     class(geom_smooth()$stat)
@@ -372,15 +372,15 @@ following:
     #>     prediction$flipped_aes <- flipped_aes
     #>     flip_data(prediction, flipped_aes)
     #> }
-    #> <bytecode: 0x00000000183fb518>
+    #> <bytecode: 0x000000001981e908>
     #> <environment: namespace:ggplot2>
 
 ### **Inspect**
 
-Here we introduce our first workflow function `ggtrace_inspect_n`, which
-takes a ggplot as the first argument and a ggproto method as the second
-argument, returning the number of times the ggproto method has been
-called in the ggplot’s evaluation:
+Here we introduce our first workflow function `ggtrace_inspect_n()`,
+which takes a ggplot as the first argument and a ggproto method as the
+second argument, returning the number of times the ggproto method has
+been called in the ggplot’s evaluation:
 
     ggtrace_inspect_n(x = p, method = StatSmooth$compute_group)
     #> [1] 6
@@ -508,13 +508,13 @@ can inspect with `formals()`:
     #> $scales
     #> $scales$x
     #> <ScaleContinuousPosition>
-    #>  Range:  1.56 --    7
-    #>  Limits: 1.56 --    7
+    #>  Range:  1.57 --    7
+    #>  Limits: 1.57 --    7
     #> 
     #> $scales$y
     #> <ScaleContinuousPosition>
-    #>  Range:  10.4 -- 43.9
-    #>  Limits: 10.4 -- 43.9
+    #>  Range:  10.4 -- 44.1
+    #>  Limits: 10.4 -- 44.1
     #> 
     #> 
     #> $method
@@ -522,7 +522,7 @@ can inspect with `formals()`:
     #> 
     #> $formula
     #> y ~ x
-    #> <environment: 0x00000000198bca40>
+    #> <environment: 0x000000001ac3ca40>
     #> 
     #> $se
     #> [1] TRUE
@@ -588,10 +588,36 @@ Lastly, let’s talk about the `data` variable we’ve been using inside the
 `data$group` and `data$PANEL`? How do you know what `data` looks like?
 
 The answer is actually simple: it’s an argument passed to
-`StatSmooth$compute_group`. We already saw it above but to make pull it
-out more explicitly, `data` looks like this for the third group of the
-second group:
+`StatSmooth$compute_group`. We already saw its value briefly from
+`formals(captured_fn_2_3)`, but to target it explcitly we can also use
+`ggtrace_inspect_vars()`:
 
+    # Get value of `data` at the start of the method `at = 1L`" 
+    ggtrace_inspect_vars(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
+      at = 1L,
+      vars = "data"
+    )
+    #> $Step1
+    #>      x  y colour PANEL group
+    #> 10 5.3 20      r     2     3
+    #> 11 5.3 15      r     2     3
+    #> 12 5.3 20      r     2     3
+    #> 13 6.0 17      r     2     3
+    #> 14 6.2 26      r     2     3
+    #> 15 6.2 25      r     2     3
+    #> 16 7.0 24      r     2     3
+    #> 43 5.4 18      r     2     3
+    #> 48 4.0 26      r     2     3
+    #> 49 4.0 24      r     2     3
+    #> 50 4.6 23      r     2     3
+    #> 51 4.6 22      r     2     3
+    #> 52 5.4 20      r     2     3
+    #> 73 5.4 18      r     2     3
+
+    # Alternatively, `formals(captured_fn_2_3)$data` also works in this case
     formals(captured_fn_2_3)$data
     #>      x  y colour PANEL group
     #> 10 5.3 20      r     2     3
@@ -611,28 +637,30 @@ second group:
 
 We see that `PANEL` and `group` columns conveniently give us information
 about the panel and group that the `compute_group` is doing calculations
-for.
+over.
 
 ### **Highjack**
 
-Once we’re satisfied about our understanding of how
-`StatSmooth$compute_group` works, we may want to test some hypotheses
-about what would happen if the `compute_group` method returned something
-else.
+Once we have some understanding of how `StatSmooth$compute_group` works,
+we may want to test some hypotheses about what would happen if the
+method returned something else.
 
 Let’s revisit our examples from the Capture workflow. What if the third
-group of the second panel was calculating a more conservative confidence
+group of the second panel calculated a more conservative confidence
 interval (`level = 0.1`)? What is this effect on the graphical output?
 
 To answer this question, we use `ggtrace_highjack_return()` to have a
-method return an entirely different value, with help of `{rlang}`.
+method return an entirely different value, with help of the `{rlang}`
+package.
 
 First we store the modified return value in some variable:
 
     modified_return_smooth <- captured_fn_2_3(level = 0.1)
 
 Then we target the same group inside `cond` and pass the modified values
-to the `value` argument using `!!` and `rlang::expr()`
+to the `value` argument using
+[`!!`](https://rlang.r-lib.org/reference/topic-defuse.html) and
+`rlang::expr()`
 
     ggtrace_highjack_return(
       x = p,
@@ -643,11 +671,12 @@ to the `value` argument using `!!` and `rlang::expr()`
 
 <img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />
 
-The confidence band is nearly invisible for that fitted line!
+The confidence band is nearly invisible for that fitted line because
+it’s only capturing a 10% confidence interval!
 
 Here’s another example where we make the method fit predictions from a
 loess regression instead. This time, we in-line the calculation of the
-new return value:
+new return value using our captured function:
 
     ggtrace_highjack_return(
       x = p,
@@ -661,7 +690,7 @@ new return value:
 But that’s not all! The `value` argument of `ggtrace_highjack_return()`
 exposes an internal function called `returnValue()` which simply returns
 the original return value. Computing on it allows on-the-fly
-modifications the graphical output.
+modifications to the graphical output.
 
 For example, we can “intercept” the dataframe output, do data wrangling
 on it, and have the method return that instead. Here, we hack the data
@@ -669,6 +698,7 @@ for the group to make it look like there’s an absurd degree of
 heteroskedasticity:
 
     library(dplyr)
+    #> Warning: package 'dplyr' was built under R version 4.1.2
     #> 
     #> Attaching package: 'dplyr'
     #> The following objects are masked from 'package:stats':
@@ -695,22 +725,22 @@ heteroskedasticity:
 
 <img src="man/figures/README-unnamed-chunk-34-1.png" width="100%" />
 
-## **Middle ground approach `with_ggtrace()`**
+## **Middle-ground approach `with_ggtrace()`**
 
 So far we’ve seen the low-level function `ggtrace()` and the high-level
 family of workflow functions `ggtrace_{action}_{value}()`. But once you
-get more familiar with ggplot internals more and start using `ggtrace()`
-to “hack into” the internals (moving from *learner* to *developer*, in a
+get more familiar with ggplot internals and start using `ggtrace()` to
+“hack into” the internals (moving from *learner* to *developer*, in a
 sense), you might want both exploit both the power and convenience that
 `{ggtrace}` provides across these two designs.
 
 For that we provide `with_ggtrace()`, which wraps around `ggtrace()` to
 give you access to its full power, while keeping its effects localized
-(e.g., no side-effects) and therefore more fitting for a functional
-programming workflow.
+(e.g., no side-effects) and therefore making it more fitting for a
+functional programming workflow.
 
-Like `ggtrace()`, you inject code into different steps of a method *as
-it runs*:
+Like `ggtrace()`, you can inject code into different steps of a method
+*as it runs*:
 
     with_ggtrace(
       x = p + facet_grid(year ~ drv),

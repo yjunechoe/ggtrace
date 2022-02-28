@@ -133,70 +133,160 @@ ggtrace_inspect_which <- function(x, method, cond) {
 
 }
 
-# # TODO
-# ggtrace_inspect_vars <- function(x, method, vars, cond = quote(._counter_ == 1L), at = -1L) {
-#
-#   wrapper_env <- rlang::current_env()
-#   ._counter_ <- 1L
-#
-#   # variables for managing state
-#   .across <- NULL
-#   .within <- NULL
-#
-#   method_quo <- rlang::enquo(method)
-#   method_info <- resolve_formatting(method_quo)
-#   what <- method_info$what
-#   where <- method_info$where
-#
-#   if (at < 0L) { at <- length(method_info$method_body) + 1L + at }
-#   if (at > length(method_info$method_body)) { rlang::abort("`at` out of range") }
-#
-#   suppressMessages(
-#     trace(what = what, where = where, print = FALSE, at = at,
-#           tracer = rlang::expr({
-#
-#             cur_env <- rlang::current_env()
-#             cond <- rlang::eval_tidy(
-#               quote(!!cond),
-#               list(._counter_ = rlang::env_get(!!wrapper_env, "._counter_")),
-#               cur_env
-#             )
-#
-#             if (rlang::is_true(cond)) {
-#
-#               bindings <- rlang::env_get_list(cur_env, !!vars)
-#
-#               rlang::env_bind(!!wrapper_env,
-#                               .within = c(rlang::env_get(!!wrapper_env, ".within"), list(bindings)))
-#
-#             } else if (!rlang::is_false(cond)) {
-#               rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter_ == ",
-#                                  rlang::env_get(!!wrapper_env, "._counter_"), "`"))
-#             }
-#
-#           }),
-#           exit = rlang::expr({
-#             cur_counter <- rlang::env_get(!!wrapper_env, "._counter_")
-#             rlang::env_bind(
-#               !!wrapper_env,
-#               ._counter_ = cur_counter + 1L,
-#               .across = c(
-#                 rlang::env_get(!!wrapper_env, ".across"),
-#                 setNames(rlang::env_get(!!wrapper_env, ".within"),
-#                          paste0("._counter_==", cur_counter))
-#               ),
-#               .within = NULL
-#             )
-#           })
-#     )
-#   )
-#
-#   ggeval_silent(x)
-#   suppressMessages(untrace(what = what, where = where))
-#
-#   .across
-#
-# }
+
+#' Inspect the value of variables from a method
+#'
+#' @param x A ggplot object
+#' @inheritParams get_method
+#' @param cond When the return value should be inspected. Defaults to `quote(._counter_ == 1L)`.
+#' @param at Which steps in the method body the values of `vars` should be retrieved.
+#'   Defaults to a special value `all` which is evaluated to all steps in the method body.
+#' @param vars A character vector of variable names
+#' @param by_var Boolean that controls the format of the output:
+#'   - `TRUE` (default): returns a list of variables, with their values at each step. This
+#'     also drops steps within a variable where the variable value has not changed from a previous
+#'     step specified by `at`.
+#'   - `FALSE`: returns a list of steps, where each element holds the value of `vars`
+#'     at each step of `at`. Unchanged variable values are not dropped.
+#'
+#' @inheritSection topic-tracing-context Tracing context
+#'
+#' @return A list
+#' @export
+#'
+#' @examples
+#'
+#' library(ggplot2)
+#'
+#' p1 <- ggplot(mtcars[1:10,], aes(mpg, hp)) +
+#'   geom_smooth()
+#' p1
+#'
+#' # The `data` variable is bound to two unique values in `compute_group` method:
+#' ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data")
+#'
+#' # Note that elements of this list capture the method's state upon entering a step,
+#' # so "Step1" and "Step5" should be interpreted as the value of `data` at the start
+#' # the method's execution (before "Step1") and its value as a result of running Step4
+#' # (before "Step5"). Indeed, we see that the `weight` column is defined in Step4, so
+#' # the data is flagged as changed at the start of Step5
+#' ggbody(StatSmooth$compute_group)[[4]]
+#'
+#'
+#' # Comparing the "Steps" themselves can be useful
+#' p2 <- p1 +
+#'   scale_x_continuous(trans = "log") +
+#'   scale_y_continuous(trans = "log")
+#' p2
+#'
+#' # Comparing the original plot to one with log-transformed scales reveals a change
+#' # in data detected at the beginning of Step 14
+#' names(ggtrace_inspect_vars(p1, ggplot2:::ggplot_build.ggplot, vars = "data"))
+#' names(ggtrace_inspect_vars(p2, ggplot2:::ggplot_build.ggplot, vars = "data"))
+#'
+#' # We can pinpoint the calculation of scale transformations to Step 13:
+#' ggbody(ggplot2:::ggplot_build.ggplot)[[13]]
+#'
+#'
+#' # With `by_vars = FALSE`, elements of the returned list are steps instead of values.
+#' # Note that this does not drop unchanged values:
+#' ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
+#'
+#'
+ggtrace_inspect_vars <- function(x, method, cond = quote(._counter_ == 1L), at = "all", vars, by_var = TRUE) {
+
+  wrapper_env <- rlang::current_env()
+  ._counter_ <- 1L
+
+  .values <- NULL
+
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+
+  if (at[1] == "all") {
+    at <- seq_len(length(method_info$method_body))
+  } else {
+    at <- replace(at, at < 0L, length(method_info$method_body) + 1L + at[at < 0L])
+    if (any(at > length(method_info$method_body))) { rlang::abort("Argument `at` is out of range") }
+    at <- sort(at)
+  }
+
+  suppressMessages(
+    trace(what = what, where = where, print = FALSE, at = at,
+          tracer = rlang::expr({
+
+            cur_env <- rlang::current_env()
+            cond <- rlang::eval_tidy(
+              quote(!!cond),
+              list(._counter_ = rlang::env_get(!!wrapper_env, "._counter_")),
+              cur_env
+            )
+
+            if (rlang::is_true(cond)) {
+
+              bindings <- rlang::env_get_list(cur_env, !!vars, default = ".ggtrace_missing")
+
+              rlang::env_bind(!!wrapper_env,
+                              .values = c(rlang::env_get(!!wrapper_env, ".values"), list(bindings)))
+
+            } else if (!rlang::is_false(cond)) {
+              rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter_ == ",
+                                 rlang::env_get(!!wrapper_env, "._counter_"), "`"))
+            }
+
+          }),
+          exit = rlang::expr({
+            rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1L)
+            if (!is.null(rlang::env_get(!!wrapper_env, ".values"))) {
+              suppressMessages(untrace(what = !!what, where = !!where))
+            }
+          })
+    )
+  )
+
+  ggeval_silent(x)
+
+  if (.is_traced(what, where)) {
+    suppressMessages(untrace(what = what, where = where))
+    rlang::abort(paste0("No values detected from `", method_info$formatted_call,
+                        "` during evaluation of the plot"))
+  }
+
+  .values <- stats::setNames(.values, paste0("Step", at))
+  .values <- lapply(.values, function(x) x[x != ".ggtrace_missing"])
+  present_vars <- unique(unlist(lapply(.values, names), use.names = FALSE))
+
+  if (!all(vars %in% present_vars)) {
+    rlang::warn("Bindings missing for some elements of `vars`")
+    logged_vars <- vars[vars %in% present_vars]
+  } else {
+    logged_vars <- vars
+  }
+
+  if (by_var) {
+    vars_uniques <- lapply(logged_vars, function(v) {
+      which_defined <- vapply(.values, function(x) {
+        ( v %in% names(x) ) && ( !identical(x[[v]], ".ggtrace_missing") )
+      }, logical(1))
+      v_defined <- lapply(.values[which_defined], `[[`, v)
+      v_pairs <- matrix(c(1L, seq_len(length(v_defined) - 1L), seq_along(v_defined)), nrow = 2, byrow = TRUE)
+      which_unchanged <- apply(v_pairs, 2, function(p) identical(v_defined[[p[1]]], v_defined[[p[2]]]))
+      which_unchanged[1] <- FALSE
+      v_defined[!which_unchanged]
+    })
+    names(vars_uniques) <- logged_vars
+    .values <- vars_uniques
+  }
+
+  if (length(.values) == 1) {
+    .values[[1]]
+  } else {
+    .values
+  }
+
+}
 
 
 #' Inspect the return value of a method
