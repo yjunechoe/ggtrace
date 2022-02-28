@@ -81,6 +81,8 @@ functions that are compatible with ggproto methods -
 <code><a href="../reference/ggdebug.html">ggundebug()</a></code></p></li>
 <li><p><code><a href="../reference/ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code> to get the number of times a
 method was called in the evaluation of a ggplot</p></li>
+<li><p><code><a href="../reference/ggtrace_inspect_vars.html">ggtrace_inspect_vars()</a></code> to get the value of variables
+at specified steps of a method’s execution</p></li>
 <li><p><code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes
 <code>._counter_</code> in the <code>value</code> argument</p></li>
 <li>
@@ -95,7 +97,8 @@ grob after evaluating <code>x</code> with injected expressions in
 <li>“b” or “both”: returns the tracedump while rendering the gtable
 (with <code><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid::grid.draw()</a></code>) as a side effect.</li>
 </ul></li>
-<li><p>Low-level functions <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and wrapper
+<li><p>Low-level functions
+<code><a href="../reference/ggtrace.html">ggtrace()</a></code>/<code><a href="../reference/gguntrace.html">gguntrace()</a></code> and wrapper
 <code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> can now take quosures in the
 <code>method</code> argument, which allows them to be used more
 programmatically.</p></li>

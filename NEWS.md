@@ -9,6 +9,7 @@
 
 - Added complements to the `base::debug()` family of functions that are compatible with ggproto methods - `ggdebug()`, `ggdebugonce()`, `ggundebug()`
 - `ggtrace_inspect_n()` to get the number of times a method was called in the evaluation of a ggplot
+- `ggtrace_inspect_vars()` to get the value of variables at specified steps of a method's execution
 - `ggtrace_highjack_return()` exposes `._counter_` in the `value` argument
 - `with_ggtrace()` gets a `out` argument which can take 1 of three options:
 
@@ -16,7 +17,7 @@
     - "g" or "gtable": Invisibly returns the `<gtable>` grob after evaluating `x` with injected expressions in `method`.
     - "b" or "both": returns the tracedump while rendering the gtable (with `grid::grid.draw()`) as a side effect.
 
-- Low-level functions `ggtrace()` and wrapper `with_ggtrace()` can now take quosures in the `method` argument, which allows them to be used more programmatically.
+- Low-level functions `ggtrace()`/`gguntrace()` and wrapper `with_ggtrace()` can now take quosures in the `method` argument, which allows them to be used more programmatically.
 
 # ggtrace 0.4.8
 
