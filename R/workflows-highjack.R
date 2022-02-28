@@ -1,3 +1,120 @@
+#' Highjack a method's execution and modify its argument values
+#'
+#' @param x A ggplot object
+#' @inheritParams get_method
+#' @param cond When the return value should be replaced. Defaults to `quote(._counter_ == 1L)`.
+#' @param values A named list of variable-value pairings.
+#'   When values are expressions, they are evaluated in the formals.
+#' @param draw Whether to draw the modified graphical output from evaluating `x`.
+#'   Defaults to `TRUE`.
+#'
+#' @inheritSection topic-tracing-context Tracing context
+#'
+#' @return A gtable object with class `<ggtrace_highjacked>`
+#' @export
+#'
+#' @examples
+#'
+#' set.seed(1116)
+#' library(ggplot2)
+#' library(dplyr)
+#'
+#'
+#' p <- ggplot(mtcars, aes(mpg, hp, color = factor(cyl))) +
+#'   geom_point() +
+#'   geom_smooth(method = "lm")
+#' p
+#'
+#' # Fit predictions from loess regression just for second group
+#' ggtrace_highjack_args(
+#'   x = p,
+#'   method = StatSmooth$compute_group,
+#'   cond = quote(data$group[1] == 2),
+#'   values = list(method = "loess")
+#' )
+#'
+#' # If value is an expression, it's evaluated in the Tracing Context
+#' ggtrace_highjack_args(
+#'   x = p,
+#'   method = StatSmooth$compute_group,
+#'   cond = TRUE,
+#'   values = rlang::exprs(
+#'
+#'     # Every time the method is called, call it with a bigger CI
+#'     level = ._counter_ * 0.3,
+#'
+#'     # Fit models to just a random sample of the data
+#'     data = data %>%
+#'       slice_sample(prop = .8)
+#'
+#'   )
+#' )
+#'
+#'
+ggtrace_highjack_args <- function(x, method, cond = quote(._counter_ == 1L), values, draw = TRUE) {
+
+  wrapper_env <- rlang::current_env()
+  ._counter_ <- 0L
+
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+  suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({
+
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
+    rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
+
+    cur_env <- rlang::current_env()
+
+    cond <- rlang::eval_tidy(quote(!!cond), list(._counter_ = new_counter), cur_env)
+
+    if (rlang::is_true(cond)) {
+      cur_fn <- rlang::frame_fn(frame = cur_env)
+      method_args <- names(formals(cur_fn))
+
+      if ("..." %in% method_args) {
+        method_args <- method_args[method_args != "..."]
+        args_vals <- c(mget(method_args, cur_env), list(...))
+      } else {
+        args_vals <- mget(method_args, cur_env)
+      }
+
+      values <- lapply(
+        quote(!!values), rlang::eval_tidy,
+        data = list(._counter_ = new_counter),
+        env = rlang::as_environment(args_vals, rlang::global_env())
+      )
+
+      if (!all(names(values) %in% names(args_vals))) {
+        rlang::abort("Attempted to change the value of a non-existent argument")
+      }
+
+      frames <- sys.frames()
+      frame_matches <- which(sapply(frames, function(env) identical(env, cur_env)))
+      return_frame <- frames[[max(frame_matches[-length(frame_matches)]) - 1L]]
+
+      return_value <- do.call(attr(cur_fn, "original"), modify_list(args_vals, values))
+      return_expr <- rlang::call2(quote(return), return_value)
+
+      rlang::eval_bare(return_expr, return_frame)
+
+    } else if (!rlang::is_false(cond)) {
+      rlang::warn(paste0("`cond` did not evaluate to TRUE or FALSE at `._counter_ == ", new_counter, "`"))
+    }
+
+  })))
+
+  modified <- ggeval_silent(x)
+
+  suppressMessages(untrace(what = what, where = where))
+
+  class(modified) <- c("ggtrace_highjacked", class(modified))
+  modified
+
+}
+
+
 #' Highjack a method's execution and make it return a user-supplied value
 #'
 #' @param x A ggplot object
@@ -57,7 +174,7 @@
 #'   })
 #' )
 #'
-ggtrace_highjack_return <- function(x, method, cond = quote(._counter_ == 1), value = quote(returnValue()), draw = TRUE) {
+ggtrace_highjack_return <- function(x, method, cond = quote(._counter_ == 1L), value = quote(returnValue()), draw = TRUE) {
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
