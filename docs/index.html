@@ -427,7 +427,7 @@ looks like the following:</p>
 <span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     prediction$flipped_aes &lt;- flipped_aes</span></span>
 <span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     flip_data(prediction, flipped_aes)</span></span>
 <span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x000000001863b490&gt;</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x00000000184a1e48&gt;</span></span>
 <span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -569,7 +569,7 @@ can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="exte
 <span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $formula</span></span>
 <span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; y ~ x</span></span>
-<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x00000000198cca40&gt;</span></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x00000000198be960&gt;</span></span>
 <span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $se</span></span>
 <span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
@@ -657,23 +657,7 @@ we can also use <code><a href="reference/ggtrace_inspect_vars.html">ggtrace_insp
 <span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 52 5.4 20      r     2     3</span></span>
 <span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 73 5.4 18      r     2     3</span></span>
 <span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, `formals(captured_fn_2_3)$data` also works in this case</span></span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="fu">formals</span>(captured_fn_2_3)<span class="sc">$</span>data</span>
-<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;      x  y colour PANEL group</span></span>
-<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 5.3 20      r     2     3</span></span>
-<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 11 5.3 15      r     2     3</span></span>
-<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 12 5.3 20      r     2     3</span></span>
-<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 13 6.0 17      r     2     3</span></span>
-<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 14 6.2 26      r     2     3</span></span>
-<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 15 6.2 25      r     2     3</span></span>
-<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 16 7.0 24      r     2     3</span></span>
-<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 43 5.4 18      r     2     3</span></span>
-<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 48 4.0 26      r     2     3</span></span>
-<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 49 4.0 24      r     2     3</span></span>
-<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 50 4.6 23      r     2     3</span></span>
-<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 51 4.6 22      r     2     3</span></span>
-<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 52 5.4 20      r     2     3</span></span>
-<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 73 5.4 18      r     2     3</span></span></code></pre></div>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternatively, `formals(captured_fn_2_3)$data` also works in this case</span></span></code></pre></div>
 <p>We see that <code>PANEL</code> and <code>group</code> columns
 conveniently give us information about the panel and group that the
 <code>compute_group</code> is doing calculations over.</p>
@@ -712,23 +696,18 @@ it’s only capturing a 10% confidence interval!</p>
 a loess regression instead. We could again use
 <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> and in-line the calculation of
 the new return value using our captured function
-<code>captured_fn_2_3()</code>:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<code>captured_fn_2_3()</code> (as in <code>value =
+rlang::expr(!!captured_fn_2_3(method = "loess"))</code>).</p>
+<p>But to achieve this directly, we can use
+<code><a href="reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> and set the <code>values</code> to
+<code>list(method = "loess")</code>:</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_args</span>(</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">quote</span>(data<span class="sc">$</span>PANEL[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>),</span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> rlang<span class="sc">::</span><span class="fu">expr</span>(<span class="sc">!!</span><span class="fu">captured_fn_2_3</span>(<span class="at">method =</span> <span class="st">"loess"</span>))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-33-1.png" width="100%"></p>
-<p>But you can also use <code><a href="reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> to achieve
-the same without capturing the method as function first:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_args</span>(</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">quote</span>(data<span class="sc">$</span>PANEL[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>),</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-34-1.png" width="100%"></p>
 <p>Lastly, the <code>value</code> argument of
 <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal function
 called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> which simply returns the original
@@ -738,32 +717,32 @@ graphical output.</p>
 wrangling on it, and have the method return that instead. Here, we hack
 the data for the group to make it look like there’s an absurd degree of
 heteroskedasticity:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.1.2</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
-<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
-<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">quote</span>(data<span class="sc">$</span>PANEL[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>),</span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
-<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    spread_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="fu">nrow</span>(<span class="fu">returnValue</span>()))</span>
-<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">returnValue</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
-<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">ymin =</span> y <span class="sc">-</span> se <span class="sc">*</span> spread_seq[<span class="fu">row_number</span>()],</span>
-<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">ymax =</span> y <span class="sc">+</span> se <span class="sc">*</span> spread_seq[<span class="fu">row_number</span>()]</span>
-<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-35-1.png" width="100%"></p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: package 'dplyr' was built under R version 4.1.2</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Attaching package: 'dplyr'</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from 'package:stats':</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     filter, lag</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from 'package:base':</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     intersect, setdiff, setequal, union</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">quote</span>(data<span class="sc">$</span>PANEL[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>),</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    spread_seq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">length.out =</span> <span class="fu">nrow</span>(<span class="fu">returnValue</span>()))</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">returnValue</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">ymin =</span> y <span class="sc">-</span> se <span class="sc">*</span> spread_seq[<span class="fu">row_number</span>()],</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">ymax =</span> y <span class="sc">+</span> se <span class="sc">*</span> spread_seq[<span class="fu">row_number</span>()]</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-34-1.png" width="100%"></p>
 </div>
 </div>
 <div class="section level2">
@@ -784,156 +763,156 @@ keeping its effects localized (e.g., no side-effects) and therefore
 making it more fitting for a functional programming workflow.</p>
 <p>Like <code><a href="reference/ggtrace.html">ggtrace()</a></code>, you can inject code into different steps
 of a method <em>as it runs</em>:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p <span class="sc">+</span> <span class="fu">facet_grid</span>(year <span class="sc">~</span> drv),</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> Layout<span class="sc">$</span>render,</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">8</span>),</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> rlang<span class="sc">::</span><span class="fu">exprs</span>(</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>      <span class="co"># First, turn all panels except the 4th semi-transparent</span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      panels[<span class="sc">-</span><span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(panels[<span class="sc">-</span><span class="dv">4</span>], <span class="cf">function</span>(panel) {</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">editGrob</span>(panel, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">alpha =</span> .<span class="dv">4</span>))</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>      })</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Second, give red outline and fill to 4th panel</span></span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>      panels[[<span class="dv">4</span>]] <span class="ot">&lt;-</span> <span class="fu">gTree</span>(<span class="at">children =</span> <span class="fu">gList</span>(panels[[<span class="dv">4</span>]],</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">rectGrob</span>(<span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="dv">1</span>,</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>                 <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">5</span>, <span class="at">fill =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>      ))</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    },</span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    {</span>
-<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Third, give it some emphasis by connecting to facet strips</span></span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>      outline_rect <span class="ot">&lt;-</span> <span class="fu">rectGrob</span>(</span>
-<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="dv">1</span>,</span>
-<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">fill =</span> <span class="cn">NA</span>)</span>
-<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>      plot_table <span class="ot">&lt;-</span> <span class="fu">gtable_add_grob</span>(</span>
-<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>        plot_table, outline_rect,</span>
-<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">t =</span> <span class="dv">1</span>, <span class="at">l =</span> <span class="dv">2</span>, <span class="at">b =</span> <span class="dv">5</span>, <span class="at">r =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="cn">Inf</span></span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>      plot_table <span class="ot">&lt;-</span> <span class="fu">gtable_add_grob</span>(</span>
-<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>        plot_table, outline_rect,</span>
-<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">t =</span> <span class="dv">5</span>, <span class="at">l =</span> <span class="dv">2</span>, <span class="at">b =</span> <span class="dv">5</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">z =</span> <span class="cn">Inf</span></span>
-<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
-<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-36-1.png" width="100%"></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p <span class="sc">+</span> <span class="fu">facet_grid</span>(year <span class="sc">~</span> drv),</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> Layout<span class="sc">$</span>render,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">8</span>),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> rlang<span class="sc">::</span><span class="fu">exprs</span>(</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>      <span class="co"># First, turn all panels except the 4th semi-transparent</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>      panels[<span class="sc">-</span><span class="dv">4</span>] <span class="ot">&lt;-</span> <span class="fu">lapply</span>(panels[<span class="sc">-</span><span class="dv">4</span>], <span class="cf">function</span>(panel) {</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>        <span class="fu">editGrob</span>(panel, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">alpha =</span> .<span class="dv">4</span>))</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>      })</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Second, give red outline and fill to 4th panel</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>      panels[[<span class="dv">4</span>]] <span class="ot">&lt;-</span> <span class="fu">gTree</span>(<span class="at">children =</span> <span class="fu">gList</span>(panels[[<span class="dv">4</span>]],</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>        <span class="fu">rectGrob</span>(<span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="dv">1</span>,</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>                 <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">5</span>, <span class="at">fill =</span> <span class="st">"red"</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>))</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>      ))</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Third, give it some emphasis by connecting to facet strips</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>      outline_rect <span class="ot">&lt;-</span> <span class="fu">rectGrob</span>(</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.5</span>, <span class="at">width =</span> <span class="dv">1</span>, <span class="at">height =</span> <span class="dv">1</span>,</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">fill =</span> <span class="cn">NA</span>)</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>      plot_table <span class="ot">&lt;-</span> <span class="fu">gtable_add_grob</span>(</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>        plot_table, outline_rect,</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">t =</span> <span class="dv">1</span>, <span class="at">l =</span> <span class="dv">2</span>, <span class="at">b =</span> <span class="dv">5</span>, <span class="at">r =</span> <span class="dv">2</span>, <span class="at">z =</span> <span class="cn">Inf</span></span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a>      plot_table <span class="ot">&lt;-</span> <span class="fu">gtable_add_grob</span>(</span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a>        plot_table, outline_rect,</span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">t =</span> <span class="dv">5</span>, <span class="at">l =</span> <span class="dv">2</span>, <span class="at">b =</span> <span class="dv">5</span>, <span class="at">r =</span> <span class="dv">7</span>, <span class="at">z =</span> <span class="cn">Inf</span></span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb35-36"><a href="#cb35-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
+<span id="cb35-37"><a href="#cb35-37" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-35-1.png" width="100%"></p>
 <p>And like the workflow functions, you can have conditional traces that
 only evaluate when a condition is met, using <code>if</code> statements
 inside <code>trace_exprs</code> with <code>once = FALSE</code>.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  p,</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  GeomRibbon<span class="sc">$</span>draw_group,</span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>({</span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Give gradient fill to the confidence bands for group 3</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>) {</span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>      g_poly <span class="ot">&lt;-</span> <span class="fu">editGrob</span>(</span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>        g_poly,</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="fu">linearGradient</span>(</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">"purple"</span>, <span class="st">"skyblue"</span>, <span class="st">"pink"</span>),</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">stops =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>),</span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">x1 =</span> <span class="dv">0</span>, <span class="at">x2 =</span> <span class="dv">1</span>, <span class="at">y1 =</span> <span class="dv">0</span>, <span class="at">y2 =</span> <span class="dv">0</span></span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>        ))</span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  }),</span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">once =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-37-1.png" width="100%"></p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  p,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  GeomRibbon<span class="sc">$</span>draw_group,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>({</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Give gradient fill to the confidence bands for group 3</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>) {</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>      g_poly <span class="ot">&lt;-</span> <span class="fu">editGrob</span>(</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>        g_poly,</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="fu">linearGradient</span>(</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">colours =</span> <span class="fu">c</span>(<span class="st">"purple"</span>, <span class="st">"skyblue"</span>, <span class="st">"pink"</span>),</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>          <span class="at">stops =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">1</span>),</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">x1 =</span> <span class="dv">0</span>, <span class="at">x2 =</span> <span class="dv">1</span>, <span class="at">y1 =</span> <span class="dv">0</span>, <span class="at">y2 =</span> <span class="dv">0</span></span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>        ))</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  }),</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">once =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-36-1.png" width="100%"></p>
 <p>And of course, all of this is not limited to objects from the
 <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> package itself. You can have fun hacking
 extension packages as well!</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggh4x)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Example from - https://teunbrand.github.io/ggh4x/articles/Facets.html ----</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Base plot ====</span></span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(displ, hwy, <span class="at">colour =</span> <span class="fu">as.factor</span>(cyl))) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Engine displacement"</span>, <span class="at">y =</span> <span class="st">"Highway miles per gallon"</span>) <span class="sc">+</span></span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="st">"none"</span>)</span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Fixed-aspect plot with free &amp; independent scales using `ggh4x::facet_grid2()` ====</span></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  ggh4x<span class="sc">::</span><span class="fu">facet_grid2</span>(<span class="fu">vars</span>(year), <span class="fu">vars</span>(drv), <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">independent =</span> <span class="st">"all"</span>) <span class="sc">+</span></span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_grey</span>(<span class="at">base_size =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
-<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
-<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Highjacking the plot's execution using `ggtrace::with_ggtrace()` ----</span></span>
-<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
-<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 1: The ggplot to interact with durings its execution ====</span></span>
-<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p2,</span>
-<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 2: The method to inject code into ====</span></span>
-<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> FacetGrid2<span class="sc">$</span>draw_panels,</span>
-<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 3: The step in the method right before `panels` and `axes` ====</span></span>
-<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  <span class="do">## are merged into the `panel_table` &lt;gtable&gt; and shipped off</span></span>
-<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="dv">13</span>, <span class="co"># See `ggbody(FacetGrid2$draw_panels)`</span></span>
-<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 4: The code injection to rotate the 2nd panel (1st row, 2nd column) ====</span></span>
-<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>({</span>
-<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>    <span class="do">### FIRST, specify row/column of panel to target ####</span></span>
-<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>    row <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>    col <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>    target_panel <span class="ot">&lt;-</span> layout[layout<span class="sc">$</span>ROW <span class="sc">==</span> row <span class="sc">&amp;</span> layout<span class="sc">$</span>COL <span class="sc">==</span> col, ]<span class="sc">$</span>PANEL</span>
-<span id="cb38-36"><a href="#cb38-36" aria-hidden="true" tabindex="-1"></a>    left_axis    <span class="ot">&lt;-</span> axes<span class="sc">$</span>left[[row, col]]</span>
-<span id="cb38-37"><a href="#cb38-37" aria-hidden="true" tabindex="-1"></a>    bottom_axis  <span class="ot">&lt;-</span> axes<span class="sc">$</span>bottom[[row, col]]</span>
-<span id="cb38-38"><a href="#cb38-38" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-39"><a href="#cb38-39" aria-hidden="true" tabindex="-1"></a>    <span class="do">### SECOND, replace target panelwith a version of itself ####</span></span>
-<span id="cb38-40"><a href="#cb38-40" aria-hidden="true" tabindex="-1"></a>    <span class="do">### that has its axes attached to itself, using `grid::gTree()`</span></span>
-<span id="cb38-41"><a href="#cb38-41" aria-hidden="true" tabindex="-1"></a>    panels[[target_panel]] <span class="ot">&lt;-</span> <span class="fu">gTree</span>(</span>
-<span id="cb38-42"><a href="#cb38-42" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb38-43"><a href="#cb38-43" aria-hidden="true" tabindex="-1"></a>      <span class="do">##### Argument `children`: a list (`grid::gTree()`) of three grobs:</span></span>
-<span id="cb38-44"><a href="#cb38-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">children =</span> <span class="fu">gList</span>(</span>
-<span id="cb38-45"><a href="#cb38-45" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb38-46"><a href="#cb38-46" aria-hidden="true" tabindex="-1"></a>        <span class="do">###### 1. The original panel itself</span></span>
-<span id="cb38-47"><a href="#cb38-47" aria-hidden="true" tabindex="-1"></a>        panels[[target_panel]],</span>
-<span id="cb38-48"><a href="#cb38-48" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb38-49"><a href="#cb38-49" aria-hidden="true" tabindex="-1"></a>        <span class="do">###### 2. Resized/reoriented left y-axis for that panel</span></span>
-<span id="cb38-50"><a href="#cb38-50" aria-hidden="true" tabindex="-1"></a>        <span class="fu">editGrob</span>(</span>
-<span id="cb38-51"><a href="#cb38-51" aria-hidden="true" tabindex="-1"></a>          left_axis,</span>
-<span id="cb38-52"><a href="#cb38-52" aria-hidden="true" tabindex="-1"></a>          <span class="at">vp =</span> <span class="fu">viewport</span>(</span>
-<span id="cb38-53"><a href="#cb38-53" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"npc"</span>) <span class="sc">-</span> <span class="fu">grobWidth</span>(left_axis) <span class="sc">/</span> <span class="dv">2</span>,</span>
-<span id="cb38-54"><a href="#cb38-54" aria-hidden="true" tabindex="-1"></a>            <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>)</span>
-<span id="cb38-55"><a href="#cb38-55" aria-hidden="true" tabindex="-1"></a>          )</span>
-<span id="cb38-56"><a href="#cb38-56" aria-hidden="true" tabindex="-1"></a>        ),</span>
-<span id="cb38-57"><a href="#cb38-57" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb38-58"><a href="#cb38-58" aria-hidden="true" tabindex="-1"></a>        <span class="do">###### 3. Resized/repositioned bottom x-axis for that panel</span></span>
-<span id="cb38-59"><a href="#cb38-59" aria-hidden="true" tabindex="-1"></a>        <span class="fu">editGrob</span>(</span>
-<span id="cb38-60"><a href="#cb38-60" aria-hidden="true" tabindex="-1"></a>          bottom_axis,</span>
-<span id="cb38-61"><a href="#cb38-61" aria-hidden="true" tabindex="-1"></a>          <span class="at">vp =</span> <span class="fu">viewport</span>(</span>
-<span id="cb38-62"><a href="#cb38-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"npc"</span>) <span class="sc">-</span> <span class="fu">grobHeight</span>(bottom_axis) <span class="sc">/</span> <span class="dv">2</span>,</span>
-<span id="cb38-63"><a href="#cb38-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"top"</span>)</span>
-<span id="cb38-64"><a href="#cb38-64" aria-hidden="true" tabindex="-1"></a>          )</span>
-<span id="cb38-65"><a href="#cb38-65" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb38-66"><a href="#cb38-66" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb38-67"><a href="#cb38-67" aria-hidden="true" tabindex="-1"></a>      ),</span>
-<span id="cb38-68"><a href="#cb38-68" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb38-69"><a href="#cb38-69" aria-hidden="true" tabindex="-1"></a>      <span class="do">##### Argument `vp`: Rotation for this combination of three grobs</span></span>
-<span id="cb38-70"><a href="#cb38-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">width =</span> .<span class="dv">7</span>, <span class="at">height =</span> .<span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">45</span>)</span>
-<span id="cb38-71"><a href="#cb38-71" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb38-72"><a href="#cb38-72" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb38-73"><a href="#cb38-73" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-74"><a href="#cb38-74" aria-hidden="true" tabindex="-1"></a>    <span class="do">### THIRD, "remove" the original axes for that panel ####</span></span>
-<span id="cb38-75"><a href="#cb38-75" aria-hidden="true" tabindex="-1"></a>    axes<span class="sc">$</span>left[[row, col]]    <span class="ot">&lt;-</span> <span class="fu">zeroGrob</span>() </span>
-<span id="cb38-76"><a href="#cb38-76" aria-hidden="true" tabindex="-1"></a>    axes<span class="sc">$</span>bottom[[row, col]]  <span class="ot">&lt;-</span> <span class="fu">zeroGrob</span>()</span>
-<span id="cb38-77"><a href="#cb38-77" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb38-78"><a href="#cb38-78" aria-hidden="true" tabindex="-1"></a>  }),</span>
-<span id="cb38-79"><a href="#cb38-79" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-80"><a href="#cb38-80" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument `out`: The return value for `with_ggtrace()` ====</span></span>
-<span id="cb38-81"><a href="#cb38-81" aria-hidden="true" tabindex="-1"></a>  <span class="do">## "gtable" returns the graphical output after injecting the code</span></span>
-<span id="cb38-82"><a href="#cb38-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"gtable"</span> <span class="co"># you can also use the "g" shorthand</span></span>
-<span id="cb38-83"><a href="#cb38-83" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb38-84"><a href="#cb38-84" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-38-1.png" width="100%"></p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggh4x)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Example from - https://teunbrand.github.io/ggh4x/articles/Facets.html ----</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Base plot ====</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(displ, hwy, <span class="at">colour =</span> <span class="fu">as.factor</span>(cyl))) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Engine displacement"</span>, <span class="at">y =</span> <span class="st">"Highway miles per gallon"</span>) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="st">"none"</span>)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Fixed-aspect plot with free &amp; independent scales using `ggh4x::facet_grid2()` ====</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>  ggh4x<span class="sc">::</span><span class="fu">facet_grid2</span>(<span class="fu">vars</span>(year), <span class="fu">vars</span>(drv), <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">independent =</span> <span class="st">"all"</span>) <span class="sc">+</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_grey</span>(<span class="at">base_size =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>)</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Highjacking the plot's execution using `ggtrace::with_ggtrace()` ----</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 1: The ggplot to interact with durings its execution ====</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p2,</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 2: The method to inject code into ====</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> FacetGrid2<span class="sc">$</span>draw_panels,</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 3: The step in the method right before `panels` and `axes` ====</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>  <span class="do">## are merged into the `panel_table` &lt;gtable&gt; and shipped off</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="dv">13</span>, <span class="co"># See `ggbody(FacetGrid2$draw_panels)`</span></span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 4: The code injection to rotate the 2nd panel (1st row, 2nd column) ====</span></span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>({</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>    <span class="do">### FIRST, specify row/column of panel to target ####</span></span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>    row <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>    col <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a>    target_panel <span class="ot">&lt;-</span> layout[layout<span class="sc">$</span>ROW <span class="sc">==</span> row <span class="sc">&amp;</span> layout<span class="sc">$</span>COL <span class="sc">==</span> col, ]<span class="sc">$</span>PANEL</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>    left_axis    <span class="ot">&lt;-</span> axes<span class="sc">$</span>left[[row, col]]</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>    bottom_axis  <span class="ot">&lt;-</span> axes<span class="sc">$</span>bottom[[row, col]]</span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>    <span class="do">### SECOND, replace target panelwith a version of itself ####</span></span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>    <span class="do">### that has its axes attached to itself, using `grid::gTree()`</span></span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>    panels[[target_panel]] <span class="ot">&lt;-</span> <span class="fu">gTree</span>(</span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>      <span class="do">##### Argument `children`: a list (`grid::gTree()`) of three grobs:</span></span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">children =</span> <span class="fu">gList</span>(</span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a>        <span class="do">###### 1. The original panel itself</span></span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>        panels[[target_panel]],</span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>        <span class="do">###### 2. Resized/reoriented left y-axis for that panel</span></span>
+<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a>        <span class="fu">editGrob</span>(</span>
+<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a>          left_axis,</span>
+<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>          <span class="at">vp =</span> <span class="fu">viewport</span>(</span>
+<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a>            <span class="at">x =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"npc"</span>) <span class="sc">-</span> <span class="fu">grobWidth</span>(left_axis) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>            <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"right"</span>)</span>
+<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a>        <span class="do">###### 3. Resized/repositioned bottom x-axis for that panel</span></span>
+<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a>        <span class="fu">editGrob</span>(</span>
+<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a>          bottom_axis,</span>
+<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a>          <span class="at">vp =</span> <span class="fu">viewport</span>(</span>
+<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a>            <span class="at">y =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">"npc"</span>) <span class="sc">-</span> <span class="fu">grobHeight</span>(bottom_axis) <span class="sc">/</span> <span class="dv">2</span>,</span>
+<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a>            <span class="at">just =</span> <span class="fu">c</span>(<span class="st">"top"</span>)</span>
+<span id="cb37-64"><a href="#cb37-64" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb37-65"><a href="#cb37-65" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb37-66"><a href="#cb37-66" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb37-67"><a href="#cb37-67" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb37-68"><a href="#cb37-68" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb37-69"><a href="#cb37-69" aria-hidden="true" tabindex="-1"></a>      <span class="do">##### Argument `vp`: Rotation for this combination of three grobs</span></span>
+<span id="cb37-70"><a href="#cb37-70" aria-hidden="true" tabindex="-1"></a>      <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">width =</span> .<span class="dv">7</span>, <span class="at">height =</span> .<span class="dv">7</span>, <span class="at">angle =</span> <span class="dv">45</span>)</span>
+<span id="cb37-71"><a href="#cb37-71" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb37-72"><a href="#cb37-72" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a>    <span class="do">### THIRD, "remove" the original axes for that panel ####</span></span>
+<span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a>    axes<span class="sc">$</span>left[[row, col]]    <span class="ot">&lt;-</span> <span class="fu">zeroGrob</span>() </span>
+<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a>    axes<span class="sc">$</span>bottom[[row, col]]  <span class="ot">&lt;-</span> <span class="fu">zeroGrob</span>()</span>
+<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a>  }),</span>
+<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument `out`: The return value for `with_ggtrace()` ====</span></span>
+<span id="cb37-81"><a href="#cb37-81" aria-hidden="true" tabindex="-1"></a>  <span class="do">## "gtable" returns the graphical output after injecting the code</span></span>
+<span id="cb37-82"><a href="#cb37-82" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"gtable"</span> <span class="co"># you can also use the "g" shorthand</span></span>
+<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb37-84"><a href="#cb37-84" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-37-1.png" width="100%"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

@@ -371,7 +371,7 @@ following:
     #>     prediction$flipped_aes <- flipped_aes
     #>     flip_data(prediction, flipped_aes)
     #> }
-    #> <bytecode: 0x000000001863b490>
+    #> <bytecode: 0x00000000184a1e48>
     #> <environment: namespace:ggplot2>
 
 ### **Inspect**
@@ -521,7 +521,7 @@ can inspect with `formals()`:
     #> 
     #> $formula
     #> y ~ x
-    #> <environment: 0x00000000198cca40>
+    #> <environment: 0x00000000198be960>
     #> 
     #> $se
     #> [1] TRUE
@@ -617,22 +617,6 @@ The answer is actually simple: it’s an argument passed to
     #> 73 5.4 18      r     2     3
 
     # Alternatively, `formals(captured_fn_2_3)$data` also works in this case
-    formals(captured_fn_2_3)$data
-    #>      x  y colour PANEL group
-    #> 10 5.3 20      r     2     3
-    #> 11 5.3 15      r     2     3
-    #> 12 5.3 20      r     2     3
-    #> 13 6.0 17      r     2     3
-    #> 14 6.2 26      r     2     3
-    #> 15 6.2 25      r     2     3
-    #> 16 7.0 24      r     2     3
-    #> 43 5.4 18      r     2     3
-    #> 48 4.0 26      r     2     3
-    #> 49 4.0 24      r     2     3
-    #> 50 4.6 23      r     2     3
-    #> 51 4.6 22      r     2     3
-    #> 52 5.4 20      r     2     3
-    #> 73 5.4 18      r     2     3
 
 We see that `PANEL` and `group` columns conveniently give us information
 about the panel and group that the `compute_group` is doing calculations
@@ -676,19 +660,11 @@ it’s only capturing a 10% confidence interval!
 Here’s another example where we make the method fit predictions from a
 loess regression instead. We could again use `ggtrace_highjack_return()`
 and in-line the calculation of the new return value using our captured
-function `captured_fn_2_3()`:
+function `captured_fn_2_3()` (as in
+`value = rlang::expr(!!captured_fn_2_3(method = "loess"))`).
 
-    ggtrace_highjack_return(
-      x = p,
-      method = StatSmooth$compute_group,
-      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
-      value = rlang::expr(!!captured_fn_2_3(method = "loess"))
-    )
-
-<img src="man/figures/README-unnamed-chunk-33-1.png" width="100%" />
-
-But you can also use `ggtrace_highjack_args()` to achieve the same
-without capturing the method as function first:
+But to achieve this directly, we can use `ggtrace_highjack_args()` and
+set the `values` to `list(method = "loess")`:
 
     ggtrace_highjack_args(
       x = p,
@@ -697,7 +673,7 @@ without capturing the method as function first:
       values = list(method = "loess")
     )
 
-<img src="man/figures/README-unnamed-chunk-34-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-33-1.png" width="100%" />
 
 Lastly, the `value` argument of `ggtrace_highjack_return()` exposes an
 internal function called `returnValue()` which simply returns the
@@ -735,7 +711,7 @@ heteroskedasticity:
       })
     )
 
-<img src="man/figures/README-unnamed-chunk-35-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-34-1.png" width="100%" />
 
 ## **Middle-ground approach `with_ggtrace()`**
 
@@ -792,7 +768,7 @@ Like `ggtrace()`, you can inject code into different steps of a method
       out = "g"
     )
 
-<img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-35-1.png" width="100%" />
 
 And like the workflow functions, you can have conditional traces that
 only evaluate when a condition is met, using `if` statements inside
@@ -819,7 +795,7 @@ only evaluate when a condition is met, using `if` statements inside
       out = "g"
     )
 
-<img src="man/figures/README-unnamed-chunk-37-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
 
 And of course, all of this is not limited to objects from the
 `{ggplot2}` package itself. You can have fun hacking extension packages
@@ -910,4 +886,4 @@ as well!
       
     )
 
-<img src="man/figures/README-unnamed-chunk-38-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-37-1.png" width="100%" />
