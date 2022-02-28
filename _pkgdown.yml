@@ -42,6 +42,7 @@ reference:
   desc: >
     Manipulate a method's behavior as it runs and return the resulting graphical output
   contents:
+  - ggtrace_highjack_args
   - ggtrace_highjack_return
 
 
