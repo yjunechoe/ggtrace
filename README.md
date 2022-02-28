@@ -297,12 +297,11 @@ Say we want to learn more about how `geom_smooth()` layer works, exactly
     #> stat_smooth: na.rm = FALSE, orientation = NA, se = TRUE
     #> position_identity
 
-To do this, we’re going to borrow the example from the [ggplot2
-internals chapter of the ggplot
-book](https://ggplot2-book.org/internals.html)
+To do this, we’re going to adopt the example from the [ggplot2 internals
+chapter of the ggplot book](https://ggplot2-book.org/internals.html)
 
     p <- ggplot(mpg, aes(displ, hwy, color = drv)) + 
-      geom_point(position = "jitter") +
+      geom_point(position = position_jitter(seed = 1116)) +
       geom_smooth(method = "lm", formula = y ~ x) + 
       facet_wrap(vars(year)) + 
       ggtitle("A plot for expository purposes")
@@ -372,7 +371,7 @@ following:
     #>     prediction$flipped_aes <- flipped_aes
     #>     flip_data(prediction, flipped_aes)
     #> }
-    #> <bytecode: 0x000000001981e908>
+    #> <bytecode: 0x000000001863b490>
     #> <environment: namespace:ggplot2>
 
 ### **Inspect**
@@ -508,13 +507,13 @@ can inspect with `formals()`:
     #> $scales
     #> $scales$x
     #> <ScaleContinuousPosition>
-    #>  Range:  1.57 --    7
-    #>  Limits: 1.57 --    7
+    #>  Range:  1.56 -- 7.02
+    #>  Limits: 1.56 -- 7.02
     #> 
     #> $scales$y
     #> <ScaleContinuousPosition>
-    #>  Range:  10.4 -- 44.1
-    #>  Limits: 10.4 -- 44.1
+    #>  Range:  10.4 -- 44.2
+    #>  Limits: 10.4 -- 44.2
     #> 
     #> 
     #> $method
@@ -522,7 +521,7 @@ can inspect with `formals()`:
     #> 
     #> $formula
     #> y ~ x
-    #> <environment: 0x000000001ac3ca40>
+    #> <environment: 0x00000000198cca40>
     #> 
     #> $se
     #> [1] TRUE
@@ -675,8 +674,9 @@ The confidence band is nearly invisible for that fitted line because
 it’s only capturing a 10% confidence interval!
 
 Here’s another example where we make the method fit predictions from a
-loess regression instead. This time, we in-line the calculation of the
-new return value using our captured function:
+loess regression instead. We could again use `ggtrace_highjack_return()`
+and in-line the calculation of the new return value using our captured
+function `captured_fn_2_3()`:
 
     ggtrace_highjack_return(
       x = p,
@@ -687,10 +687,22 @@ new return value using our captured function:
 
 <img src="man/figures/README-unnamed-chunk-33-1.png" width="100%" />
 
-But that’s not all! The `value` argument of `ggtrace_highjack_return()`
-exposes an internal function called `returnValue()` which simply returns
-the original return value. Computing on it allows on-the-fly
-modifications to the graphical output.
+But you can also use `ggtrace_highjack_args()` to achieve the same
+without capturing the method as function first:
+
+    ggtrace_highjack_args(
+      x = p,
+      method = StatSmooth$compute_group,
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
+      values = list(method = "loess")
+    )
+
+<img src="man/figures/README-unnamed-chunk-34-1.png" width="100%" />
+
+Lastly, the `value` argument of `ggtrace_highjack_return()` exposes an
+internal function called `returnValue()` which simply returns the
+original return value. Computing on it allows on-the-fly modifications
+to the graphical output.
 
 For example, we can “intercept” the dataframe output, do data wrangling
 on it, and have the method return that instead. Here, we hack the data
@@ -723,7 +735,7 @@ heteroskedasticity:
       })
     )
 
-<img src="man/figures/README-unnamed-chunk-34-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-35-1.png" width="100%" />
 
 ## **Middle-ground approach `with_ggtrace()`**
 
@@ -780,7 +792,7 @@ Like `ggtrace()`, you can inject code into different steps of a method
       out = "g"
     )
 
-<img src="man/figures/README-unnamed-chunk-35-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
 
 And like the workflow functions, you can have conditional traces that
 only evaluate when a condition is met, using `if` statements inside
@@ -807,7 +819,7 @@ only evaluate when a condition is met, using `if` statements inside
       out = "g"
     )
 
-<img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-37-1.png" width="100%" />
 
 And of course, all of this is not limited to objects from the
 `{ggplot2}` package itself. You can have fun hacking extension packages
@@ -898,4 +910,4 @@ as well!
       
     )
 
-<img src="man/figures/README-unnamed-chunk-37-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-38-1.png" width="100%" />

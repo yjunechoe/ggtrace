@@ -240,11 +240,11 @@ class(geom_smooth())
 geom_smooth()
 ```
 
-To do this, we're going to borrow the example from the [ggplot2 internals chapter of the ggplot book](https://ggplot2-book.org/internals.html)
+To do this, we're going to adopt the example from the [ggplot2 internals chapter of the ggplot book](https://ggplot2-book.org/internals.html)
 
 ```{r}
 p <- ggplot(mpg, aes(displ, hwy, color = drv)) + 
-  geom_point(position = "jitter") +
+  geom_point(position = position_jitter(seed = 1116)) +
   geom_smooth(method = "lm", formula = y ~ x) + 
   facet_wrap(vars(year)) + 
   ggtitle("A plot for expository purposes")
@@ -415,7 +415,7 @@ ggtrace_highjack_return(
 
 The confidence band is nearly invisible for that fitted line because it's only capturing a 10% confidence interval!
 
-Here's another example where we make the method fit predictions from a loess regression instead. This time, we in-line the calculation of the new return value using our captured function:
+Here's another example where we make the method fit predictions from a loess regression instead. We could again use `ggtrace_highjack_return()` and in-line the calculation of the new return value using our captured function `captured_fn_2_3()`:
 
 ```{r}
 ggtrace_highjack_return(
@@ -426,7 +426,19 @@ ggtrace_highjack_return(
 )
 ```
 
-But that's not all! The `value` argument of `ggtrace_highjack_return()` exposes an internal function called `returnValue()` which simply returns the original return value. Computing on it allows on-the-fly modifications to the graphical output.
+But you can also use `ggtrace_highjack_args()` to achieve the same without capturing the method as function first:
+
+```{r}
+ggtrace_highjack_args(
+  x = p,
+  method = StatSmooth$compute_group,
+  cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
+  values = list(method = "loess")
+)
+```
+
+
+Lastly, the `value` argument of `ggtrace_highjack_return()` exposes an internal function called `returnValue()` which simply returns the original return value. Computing on it allows on-the-fly modifications to the graphical output.
 
 For example, we can "intercept" the dataframe output, do data wrangling on it, and have the method return that instead. Here, we hack the data for the group to make it look like there's an absurd degree of heteroskedasticity:
 
