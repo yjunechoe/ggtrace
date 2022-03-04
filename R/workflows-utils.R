@@ -9,7 +9,7 @@
 #' @return A gtable
 #' @export
 ggeval_silent <- function(x) {
-  asNamespace("ggplot2")$ggplot_gtable(asNamespace("ggplot2")$ggplot_build(x))
+  asNamespace("ggplot2")$ggplotGrob(x)
 }
 
 #' @export
@@ -23,5 +23,4 @@ ggdraw_silent <- function(x) {
 #' @export
 print.ggtrace_highjacked <- function(x, ...) {
   ggdraw_silent(x)
-  invisible(x)
 }
