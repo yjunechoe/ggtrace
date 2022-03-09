@@ -4,13 +4,16 @@
 \alias{get_method}
 \alias{ggbody}
 \alias{ggformals}
-\title{Get ggproto methods}
+\alias{get_method_inheritance}
+\title{Get information about ggproto methods}
 \usage{
 get_method(method, inherit = FALSE)
 
 ggbody(method, inherit = FALSE, as.list = TRUE)
 
 ggformals(method, inherit = FALSE)
+
+get_method_inheritance(obj, trim_overriden = TRUE)
 }
 \arguments{
 \item{method}{A function or a ggproto method.
@@ -25,16 +28,21 @@ The ggproto method may be specified using any of the following forms:
 If \code{TRUE}, returns the parent's method and the corresponding \code{ggbody()} code as a message.}
 
 \item{as.list}{Whether \code{ggbody()} should return the body of the method as a list. Defaults to \code{TRUE}.}
+
+\item{obj}{A ggproto object}
+
+\item{trim_overriden}{Whether \code{get_method_inheritance} should recursively hide methods defined by a parent.}
 }
 \value{
 A list
 }
 \description{
-Get ggproto methods
+Get information about ggproto methods
 }
 \details{
 \itemize{
 \item \code{get_method()} returns the method.
+\item \code{get_method_inheritance()} lists available methods from self and parent ggprotos.
 \item \code{ggbody()} returns the body of the method.
 \item \code{ggformals()} returns the formals of the method.
 }
@@ -100,6 +108,10 @@ invisible(ggbody(GeomArcBar$default_aes, inherit = TRUE)) # self
 invisible(ggbody(GeomArcBar$draw_panel, inherit = TRUE))  # parent
 invisible(ggbody(GeomArcBar$draw_key, inherit = TRUE))    # grandparent
 invisible(ggbody(GeomArcBar$draw_group, inherit = TRUE))  # top-level
+
+# Getting information about method inheritance all at once
+# - default `trim_overriden = TRUE` hides redundant methods defined in parent
+get_method_inheritance(GeomArcBar, trim_overriden = TRUE)
 
 # Works for custom ggproto
 # - Example from {ggplot2} "Extending ggplot2" vignette

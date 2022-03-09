@@ -1,4 +1,4 @@
-#' Get ggproto methods
+#' Get information about ggproto methods
 #'
 #' @param method A function or a ggproto method.
 #'   The ggproto method may be specified using any of the following forms:
@@ -11,9 +11,13 @@
 #'
 #' @param as.list Whether `ggbody()` should return the body of the method as a list. Defaults to `TRUE`.
 #'
+#' @param obj A ggproto object
+#' @param trim_overriden Whether `get_method_inheritance` should recursively hide methods defined by a parent.
+#'
 #' @details
 #'
 #'   - `get_method()` returns the method.
+#'   - `get_method_inheritance()` lists available methods from self and parent ggprotos.
 #'   - `ggbody()` returns the body of the method.
 #'   - `ggformals()` returns the formals of the method.
 #'
@@ -75,6 +79,10 @@
 #' invisible(ggbody(GeomArcBar$draw_panel, inherit = TRUE))  # parent
 #' invisible(ggbody(GeomArcBar$draw_key, inherit = TRUE))    # grandparent
 #' invisible(ggbody(GeomArcBar$draw_group, inherit = TRUE))  # top-level
+#'
+#' # Getting information about method inheritance all at once
+#' # - default `trim_overriden = TRUE` hides redundant methods defined in parent
+#' get_method_inheritance(GeomArcBar, trim_overriden = TRUE)
 #'
 #' # Works for custom ggproto
 #' # - Example from {ggplot2} "Extending ggplot2" vignette
@@ -139,4 +147,36 @@ ggformals <- function(method, inherit = FALSE) {
   } else {
     rlang::abort("Cannot retrieve the formals of a non-function")
   }
+}
+
+#' @export
+#' @rdname get_method
+get_method_inheritance <- function(obj, trim_overriden = TRUE) {
+
+  if (!inherits(obj, "ggproto")) {
+    rlang::abort("`obj` must be a ggproto object")
+  }
+
+  ggprotos <- class(obj)[seq_len(which(class(obj) == "ggproto") - 1L)]
+  n_parents <- length(ggprotos) - 1L
+  all_ggprotos <- Reduce(
+    function(x, y) x$super(),
+    seq_len(n_parents),
+    init = obj,
+    accumulate = TRUE
+  )
+
+  all_methods <- lapply(all_ggprotos, function(x) ls(envir = x))
+
+  if (trim_overriden) {
+    all_methods <- Reduce(
+      function(child, parent) setdiff(parent, c(child, "super")),
+      all_methods,
+      init = "",
+      accumulate = TRUE)[-1L]
+  }
+
+  names(all_methods) <- ggprotos
+  rev(all_methods)
+
 }

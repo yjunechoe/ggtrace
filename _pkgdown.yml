@@ -73,6 +73,7 @@ reference:
   desc: Helpers for working with ggtrace
   contents:
   - get_method
+  - get_method_inheritance
   - ggbody
   - ggformals
   - is_traced

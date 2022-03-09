@@ -124,9 +124,9 @@ check whether a function is currently being traced with `is_traced()`.
     is_traced(dummy_fn)
     #> [1] FALSE
 
-To not have a trace clean up after itself, you can set `once = FALSE`
-which makes a trace **persistent**, meaning that it will be there until
-explicitly removed with `gguntrace()`
+To prevent a trace from removing itself on exit, you can set
+`once = FALSE` which makes a trace **persistent**, meaning that it will
+be there until explicitly removed with `gguntrace()`
 
     ggtrace(
       method = dummy_fn,
@@ -371,7 +371,7 @@ following:
     #>     prediction$flipped_aes <- flipped_aes
     #>     flip_data(prediction, flipped_aes)
     #> }
-    #> <bytecode: 0x00000000184a1e48>
+    #> <bytecode: 0x000000001980c200>
     #> <environment: namespace:ggplot2>
 
 ### **Inspect**
@@ -521,7 +521,7 @@ can inspect with `formals()`:
     #> 
     #> $formula
     #> y ~ x
-    #> <environment: 0x00000000198be960>
+    #> <environment: 0x000000001ac2ca40>
     #> 
     #> $se
     #> [1] TRUE

@@ -115,7 +115,7 @@ dummy_fn()
 is_traced(dummy_fn)
 ```
 
-To not have a trace clean up after itself, you can set `once = FALSE` which makes a trace **persistent**, meaning that it will be there until explicitly removed with `gguntrace()`
+To prevent a trace from removing itself on exit, you can set `once = FALSE` which makes a trace **persistent**, meaning that it will be there until explicitly removed with `gguntrace()`
 
 ```{r}
 ggtrace(
