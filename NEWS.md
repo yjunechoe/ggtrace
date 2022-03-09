@@ -8,6 +8,7 @@
 ### New Features
 
 - Added complements to the `base::debug()` family of functions that are compatible with ggproto methods - `ggdebug()`, `ggdebugonce()`, `ggundebug()`
+- `get_method_inheritance` to get the list of methods from self and parent ggprotos
 - `ggtrace_inspect_n()` to get the number of times a method was called in the evaluation of a ggplot
 - `ggtrace_inspect_vars()` to get the value of variables at specified steps of a method's execution
 - `ggtrace_highjack_args()` to modify formals of a method at its execution

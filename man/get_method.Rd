@@ -2,18 +2,18 @@
 % Please edit documentation in R/get_method.R
 \name{get_method}
 \alias{get_method}
+\alias{get_method_inheritance}
 \alias{ggbody}
 \alias{ggformals}
-\alias{get_method_inheritance}
 \title{Get information about ggproto methods}
 \usage{
 get_method(method, inherit = FALSE)
 
+get_method_inheritance(obj, trim_overriden = TRUE)
+
 ggbody(method, inherit = FALSE, as.list = TRUE)
 
 ggformals(method, inherit = FALSE)
-
-get_method_inheritance(obj, trim_overriden = TRUE)
 }
 \arguments{
 \item{method}{A function or a ggproto method.
@@ -27,11 +27,11 @@ The ggproto method may be specified using any of the following forms:
 \item{inherit}{Whether the method should be searched from its closest parent. Defaults to \code{FALSE}.
 If \code{TRUE}, returns the parent's method and the corresponding \code{ggbody()} code as a message.}
 
-\item{as.list}{Whether \code{ggbody()} should return the body of the method as a list. Defaults to \code{TRUE}.}
-
 \item{obj}{A ggproto object}
 
 \item{trim_overriden}{Whether \code{get_method_inheritance} should recursively hide methods defined by a parent.}
+
+\item{as.list}{Whether \code{ggbody()} should return the body of the method as a list. Defaults to \code{TRUE}.}
 }
 \value{
 A list

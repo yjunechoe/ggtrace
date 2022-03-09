@@ -123,31 +123,6 @@ get_method <- function(method, inherit = FALSE) {
   .get_method(rlang::enquo(method), inherit = inherit)
 }
 
-#' @export
-#' @rdname get_method
-ggbody <- function(method, inherit = FALSE, as.list = TRUE) {
-  got <- .get_method(rlang::enquo(method), inherit = inherit)
-  if (rlang::is_function(got)) {
-    if (as.list) {
-      as.list(body(got))
-    } else {
-      body(got)
-    }
-  } else {
-    got
-  }
-}
-
-#' @export
-#' @rdname get_method
-ggformals <- function(method, inherit = FALSE) {
-  got <- .get_method(rlang::enquo(method), inherit = inherit)
-  if (rlang::is_function(got)) {
-    formals(got)
-  } else {
-    rlang::abort("Cannot retrieve the formals of a non-function")
-  }
-}
 
 #' @export
 #' @rdname get_method
@@ -180,3 +155,32 @@ get_method_inheritance <- function(obj, trim_overriden = TRUE) {
   rev(all_methods)
 
 }
+
+
+#' @export
+#' @rdname get_method
+ggbody <- function(method, inherit = FALSE, as.list = TRUE) {
+  got <- .get_method(rlang::enquo(method), inherit = inherit)
+  if (rlang::is_function(got)) {
+    if (as.list) {
+      as.list(body(got))
+    } else {
+      body(got)
+    }
+  } else {
+    got
+  }
+}
+
+
+#' @export
+#' @rdname get_method
+ggformals <- function(method, inherit = FALSE) {
+  got <- .get_method(rlang::enquo(method), inherit = inherit)
+  if (rlang::is_function(got)) {
+    formals(got)
+  } else {
+    rlang::abort("Cannot retrieve the formals of a non-function")
+  }
+}
+
