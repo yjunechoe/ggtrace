@@ -51,4 +51,30 @@ test_that("loops through `trace_exprs` correctly with persistent trace", {
 
 })
 
+test_that("copy of traced function have same `once` behavior", {
+
+  ellipse_plot <- ggplot(mtcars, aes(mpg, hp)) +
+    stat_ellipse(
+      aes(color = as.factor(cyl), fill = after_scale(alpha(color, 0.5))),
+      geom = "polygon"
+    ) +
+    geom_point()
+
+  ggtrace(GeomPolygon$draw_key, -1, verbose = FALSE)
+  invisible(ggplotGrob(ellipse_plot))
+
+  expect_equal(last_ggtrace()[[1]]$gp$fill, layer_data(ellipse_plot, 1)$fill[1])
+  expect_true(!is_traced(GeomPolygon$draw_key))
+
+  clear_global_ggtrace()
+
+  ggtrace(GeomPolygon$draw_key, -1, verbose = FALSE, once = FALSE)
+  invisible(ggplotGrob(ellipse_plot))
+  gguntrace(GeomPolygon$draw_key)
+
+  expect_equal(length(global_ggtrace()), nlevels(as.factor(mtcars$cyl)))
+  expect_equal(rev(global_ggtrace())[[1]][[1]]$gp$fill, rev(layer_data(ellipse_plot, 1)$fill)[1])
+
+})
+
 global_ggtrace_state(FALSE)

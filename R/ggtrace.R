@@ -253,6 +253,10 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
       at = trace_steps,
       tracer = function() {
 
+        # Check if original is traced (serves as a stable reference in case of copy)
+        if (!inherits(get(what, envir = where), "functionWithTrace")) { return(NULL) }
+
+        # Messages
         if (trace_idx == 1 && !silent) {
           message("Triggering ", if (!once) "persistent ", "trace on `", formatted_call, "`")
         }
@@ -301,28 +305,31 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
       },
       print = FALSE,
       exit = rlang::expr({
-        ## Check if number of actual and expected traced steps match with delayed eval
-        if (rlang::env_get(!!wrapper_env, "trace_idx") - 1 < !!n_steps) {
-          rlang::warn(local({
-            actual_trace_n <- rlang::env_get(!!wrapper_env, "trace_idx") - 1
-            incomplete_trace_dump <- rlang::env_get(!!wrapper_env, "trace_dump")[seq_len(actual_trace_n)]
-            if (length(seq_len(actual_trace_n)) == 0) { incomplete_trace_dump <- NULL }
-            incomplete_trace_dump_lst <- list(incomplete_trace_dump)
-            names(incomplete_trace_dump_lst) <- paste(!!formatted_call, "INCOMPLETE", sep = "-")
-            rlang::exec(!!set_last_ggtrace, incomplete_trace_dump)
-            rlang::exec(!!add_global_ggtrace, incomplete_trace_dump_lst)
-            ## Return warning message
-            paste("Trace incomplete [", "Actual:", actual_trace_n, "| Expected:", !!n_steps, "]",
-                  "- Did the method return or break early?")
-          }))
-        }
-        ## Reset idx in the closure in case of persistent trace
-        rlang::env_bind(!!wrapper_env, trace_idx = 1)
-        ## Messages
-        if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
-        if (!!once) {
-          suppressMessages(untrace(what = !!what, where = !!where))
-          if (isFALSE(!!silent)) { message("Untracing `", !!formatted_call, "` on exit.") }
+        # Check if original is traced (serves as a stable reference in case of copy)
+        if (inherits(get(!!what, envir = !!where), "functionWithTrace")) {
+          ## Check if number of actual and expected traced steps match with delayed eval
+          if (rlang::env_get(!!wrapper_env, "trace_idx") - 1 < !!n_steps) {
+            rlang::warn(local({
+              actual_trace_n <- rlang::env_get(!!wrapper_env, "trace_idx") - 1
+              incomplete_trace_dump <- rlang::env_get(!!wrapper_env, "trace_dump")[seq_len(actual_trace_n)]
+              if (length(seq_len(actual_trace_n)) == 0) { incomplete_trace_dump <- NULL }
+              incomplete_trace_dump_lst <- list(incomplete_trace_dump)
+              names(incomplete_trace_dump_lst) <- paste(!!formatted_call, "INCOMPLETE", sep = "-")
+              rlang::exec(!!set_last_ggtrace, incomplete_trace_dump)
+              rlang::exec(!!add_global_ggtrace, incomplete_trace_dump_lst)
+              ## Return warning message
+              paste("Trace incomplete [", "Actual:", actual_trace_n, "| Expected:", !!n_steps, "]",
+                    "- Did the method return or break early?")
+            }))
+          }
+          ## Reset idx in the closure in case of persistent trace
+          rlang::env_bind(!!wrapper_env, trace_idx = 1)
+          ## Messages
+          if (!!verbose) { cat("\nCall `last_ggtrace()` to get the trace dump.\n") }
+          if (!!once) {
+            suppressMessages(untrace(what = !!what, where = !!where))
+            if (isFALSE(!!silent)) { message("Untracing `", !!formatted_call, "` on exit.") }
+          }
         }
       })
     )

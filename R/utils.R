@@ -28,7 +28,7 @@ split_ggproto_method <- function(method) {
 }
 
 .is_traced <- function(method_name, obj) {
-  "functionWithTrace" %in% class(get(method_name, obj))
+  inherits(get(method_name, obj), "functionWithTrace")
 }
 
 resolve_method <- function(got) {
