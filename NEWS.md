@@ -1,9 +1,6 @@
 # ggtrace (development version)
 
-### Breaking Changes
-
-- `ggtrace_capture_env()` default value of `at` is changed to `-1L`, which captures a snapshot of the runtime environment right before the method returns. Only the first element is used if `at` is length > 1
-- "modify" workflows are renamed to "highjack" to reflect the fact that they always return the graphical output (gtable grob) (#78)
+## ggtrace 0.5.0
 
 ### New Features
 
@@ -21,7 +18,18 @@
 
 - Low-level functions `ggtrace()`/`gguntrace()` and wrapper `with_ggtrace()` can now take quosures in the `method` argument, which allows them to be used more programmatically.
 
-# ggtrace 0.4.8
+### Breaking Changes
+
+- `ggtrace_capture_env()` default value of `at` is changed to `-1L`, which captures a snapshot of the runtime environment right before the method returns. Only the first element is used if `at` is length > 1
+- "modify" workflows are renamed to "highjack" to reflect the fact that they always return the graphical output (gtable grob) (#78)
+
+### Bug Fixes
+
+- Fixed an issue where a trace would fail to remove itself with `ggtrace(once = TRUE)` if it was triggered by a copy of the traced function (#59)
+
+# ggtrace 0.4.x
+
+## ggtrace 0.4.8
 
 ### New Features
 
@@ -33,7 +41,7 @@
 
 - Added workflows section to docs/references
 
-# ggtrace 0.4.7
+## ggtrace 0.4.7
 
 ### New Features
 
@@ -45,7 +53,7 @@
 
 - Fixed compatibility issues with {rlang} v1.0.0 new changes to the _call_ and _expression_ API
 
-# ggtrace 0.4.6
+## ggtrace 0.4.6
 
 ### New Features
 

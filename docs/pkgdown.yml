@@ -1,4 +1,4 @@
-pandoc: 2.17.0.1
+pandoc: 2.17.1.1
 pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
@@ -10,5 +10,5 @@ articles:
   showcase-aes_evaluation: showcase-aes_evaluation.html
   showcase-ggplot_build: showcase-ggplot_build.html
   technical-details: technical-details.html
-last_built: 2022-03-09T02:38Z
+last_built: 2022-03-13T05:13Z
 

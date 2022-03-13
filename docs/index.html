@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,7 +98,7 @@ internals</strong><a class="anchor" aria-label="anchor" href="#programmatically-
 <div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("remotes")</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"yjunechoe/ggtrace"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.4.8.9000</span></span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace) <span class="co"># v0.5.0</span></span></code></pre></div>
 <p>More on the 📦 package website: <a href="https://yjunechoe.github.io/ggtrace" class="external-link uri">https://yjunechoe.github.io/ggtrace</a></p>
 </div>
 <div class="section level2">
@@ -161,8 +161,8 @@ code just now:</p>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dummy_fn_TRACED1</span>()</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30</span></span></code></pre></div>
-<p>But how do we know that’s the line targeted by <code>trace_steps =
-3</code> in our <code><a href="reference/ggtrace.html">ggtrace()</a></code> call?</p>
+<p>But how do we know that’s the line targeted by
+<code>trace_steps = 3</code> in our <code><a href="reference/ggtrace.html">ggtrace()</a></code> call?</p>
 <p>The function <code><a href="reference/get_method.html">ggbody()</a></code> returns the body of a
 function/method as a list, which allows you to inspect what expressions
 in the body are evaluated at which step. <code><a href="reference/ggtrace.html">ggtrace()</a></code> injects
@@ -318,8 +318,8 @@ tracedump will carry those names as well</p>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x_before_end</span></span>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 10</span></span></code></pre></div>
 <p>Second, <code><a href="reference/global_ggtrace.html">global_ggtrace()</a></code> stores the output of all
-traces. This is particularly useful in conjunction with <code>once =
-FALSE</code> or when you want to inspect multiple
+traces. This is particularly useful in conjunction with
+<code>once = FALSE</code> or when you want to inspect multiple
 <code><a href="reference/ggtrace.html">ggtrace()</a></code>s at once. For most usecases you don’t need to go
 this far, but should you need it the <a href="https://yjunechoe.github.io/ggtrace/reference/global_ggtrace.html" class="external-link">documentation
 page</a> has more information.</p>
@@ -427,7 +427,7 @@ looks like the following:</p>
 <span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     prediction$flipped_aes &lt;- flipped_aes</span></span>
 <span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;     flip_data(prediction, flipped_aes)</span></span>
 <span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; }</span></span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x000000001980c200&gt;</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x0000000018ef18f8&gt;</span></span>
 <span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -569,7 +569,7 @@ can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="exte
 <span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $formula</span></span>
 <span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; y ~ x</span></span>
-<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x000000001ac2ca40&gt;</span></span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; &lt;environment: 0x000000001ac3e960&gt;</span></span>
 <span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $se</span></span>
 <span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span>
@@ -696,8 +696,8 @@ it’s only capturing a 10% confidence interval!</p>
 a loess regression instead. We could again use
 <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> and in-line the calculation of
 the new return value using our captured function
-<code>captured_fn_2_3()</code> (as in <code>value =
-rlang::expr(!!captured_fn_2_3(method = "loess"))</code>).</p>
+<code>captured_fn_2_3()</code> (as in
+<code>value = rlang::expr(!!captured_fn_2_3(method = "loess"))</code>).</p>
 <p>But to achieve this directly, we can use
 <code><a href="reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> and set the <code>values</code> to
 <code>list(method = "loess")</code>:</p>
@@ -950,7 +950,7 @@ extension packages as well!</p>
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.4.8.9000-gogreen.svg"></a></li>
+<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.5.0-gogreen.svg"></a></li>
 </ul>
 </div>
 

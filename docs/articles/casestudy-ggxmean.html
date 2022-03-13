@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.8.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -215,10 +215,10 @@ from the examples.</p>
   <span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-7-1.png" width="1093.75"></p>
 <p>We can pinpoint and formalize the issue with the help of
-<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data()</a></code>. We see that in both our expected <code>group
-= drv</code> and unexpected <code>fill = drv</code> cases, we end up
-with three unique groups (lines) as indicated by the values in the
-<code>group</code> column.</p>
+<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data()</a></code>. We see that in both our expected
+<code>group = drv</code> and unexpected <code>fill = drv</code> cases,
+we end up with three unique groups (lines) as indicated by the values in
+the <code>group</code> column.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">hwy</span><span class="op">)</span> <span class="op">+</span>
@@ -301,7 +301,7 @@ just need to know that its output is basically what’s returned by the
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     ggplot_build(plot)$data[[i]]</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x0000000033472cb0&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x0000000034b78fd0&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></code></pre></div>
 <p>We use <code><a href="../reference/get_method.html">ggbody()</a></code> function from {ggtrace} to grab the body
 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> as a list, and, with some metaprogramming
@@ -1354,12 +1354,12 @@ mapping to <code>color</code></p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-53-1.png" width="1093.75"></p>
-<p>This is because there’s one unique match between <code>fl ==
-"c"</code> and <code>drv== "f"</code>, but no unique value for
-<code>drv</code> for the other four <code>fl</code> categories. So the
-color scale assigns a color to one of the lines but then for the other
-four lines it just gives up and returns NAs (which are colored grey by
-default)</p>
+<p>This is because there’s one unique match between
+<code>fl == "c"</code> and <code>drv== "f"</code>, but no unique value
+for <code>drv</code> for the other four <code>fl</code> categories. So
+the color scale assigns a color to one of the lines but then for the
+other four lines it just gives up and returns NAs (which are colored
+grey by default)</p>
 <div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">mpg</span><span class="op">$</span><span class="va">drv</span>, <span class="va">mpg</span><span class="op">$</span><span class="va">fl</span><span class="op">)</span>
 <span class="co">#&gt;    </span>

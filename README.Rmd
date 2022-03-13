@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 #### **Programmatically explore, debug, and manipulate ggplot internals**
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/devel%20version-0.4.8.9000-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.5.0-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ### **Installation**
@@ -41,7 +41,7 @@ remotes::install_github("yjunechoe/ggtrace")
 ```
 
 ```{r setup}
-library(ggtrace) # v0.4.8.9000
+library(ggtrace) # v0.5.0
 ```
 
 More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://yjunechoe.github.io/ggtrace)

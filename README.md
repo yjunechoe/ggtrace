@@ -6,7 +6,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.4.8.9000-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.5.0-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ### **Installation**
@@ -17,7 +17,7 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.4.8.9000
+    library(ggtrace) # v0.5.0
 
 More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
@@ -371,7 +371,7 @@ following:
     #>     prediction$flipped_aes <- flipped_aes
     #>     flip_data(prediction, flipped_aes)
     #> }
-    #> <bytecode: 0x000000001980c200>
+    #> <bytecode: 0x0000000018ef18f8>
     #> <environment: namespace:ggplot2>
 
 ### **Inspect**
@@ -521,7 +521,7 @@ can inspect with `formals()`:
     #> 
     #> $formula
     #> y ~ x
-    #> <environment: 0x000000001ac2ca40>
+    #> <environment: 0x000000001ac3e960>
     #> 
     #> $se
     #> [1] TRUE
