@@ -63,9 +63,9 @@
     <div class="section level2">
       <h2 id="workflows-experimental-due-for-v-">Workflows (experimental; due for v0.5)<a class="anchor" aria-label="anchor" href="#workflows-experimental-due-for-v-"></a></h2>
       
-      <p class="section-desc"></p><p>These high-level functions take a ggplot object and a ggproto method
-and allows interactions with the ggplot’s build pipeline as it is
-evaluated. Functions are grouped into three “workflows”: Inspect,
+      <p class="section-desc"></p><p>These high-level functions take a ggplot object and a function or
+ggproto method, allowing interactions with the ggplot’s build pipeline
+as it is evaluated. Functions grouped into three “workflows”: Inspect,
 Capture, and Highjack.</p>
 
       
@@ -82,8 +82,8 @@ Capture, and Highjack.</p>
       </dl></div><div class="section level2">
       
       <h3 id="inspect">Inspect<a class="anchor" aria-label="anchor" href="#inspect"></a></h3>
-      <p class="section-desc"></p><p>Return values from or information about a method’s execution
-environment for inspection</p>
+      <p class="section-desc"></p><p>Return values from or information about a method’s execution state
+for inspection</p>
 
       
     </div><div id="" class="section level2">
@@ -106,6 +106,11 @@ environment for inspection</p>
           <code><a href="ggtrace_inspect_vars.html">ggtrace_inspect_vars()</a></code> 
         </dt>
         <dd>Inspect the value of variables from a method</dd>
+      </dl><dl><dt>
+          
+          <code><a href="ggtrace_inspect_args.html">ggtrace_inspect_args()</a></code> 
+        </dt>
+        <dd>Inspect the arguments passed into a method</dd>
       </dl><dl><dt>
           
           <code><a href="ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code> 
@@ -136,7 +141,7 @@ function or environment</p>
       </dl></div><div class="section level2">
       
       <h3 id="highjack">Highjack<a class="anchor" aria-label="anchor" href="#highjack"></a></h3>
-      <p class="section-desc"></p><p>Manipulate a method’s behavior as it runs and return the resulting
+      <p class="section-desc"></p><p>Manipulate a method’s behavior as it runs and return the modified
 graphical output</p>
 
       

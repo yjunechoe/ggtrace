@@ -71,16 +71,18 @@
 functions that are compatible with ggproto methods -
 <code><a href="../reference/ggdebug.html">ggdebug()</a></code>, <code><a href="../reference/ggdebug.html">ggdebugonce()</a></code>,
 <code><a href="../reference/ggdebug.html">ggundebug()</a></code></p></li>
-<li><p><code>get_method_inheritance</code> to get the list of methods
+<li><p><code><a href="../reference/get_method.html">get_method_inheritance()</a></code> to get the list of methods
 from self and parent ggprotos</p></li>
 <li><p><code><a href="../reference/ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code> to get the number of times a
 method was called in the evaluation of a ggplot</p></li>
+<li><p><code><a href="../reference/ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code> to get the indices when a
+condition <code>cond</code> evaluated to true inside a method</p></li>
 <li><p><code><a href="../reference/ggtrace_inspect_vars.html">ggtrace_inspect_vars()</a></code> to get the value of variables
 at specified steps of a method’s execution</p></li>
+<li><p><code><a href="../reference/ggtrace_inspect_args.html">ggtrace_inspect_args()</a></code> to get the value of arguments
+passed to a method</p></li>
 <li><p><code><a href="../reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> to modify formals of a
 method at its execution</p></li>
-<li><p><code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes
-<code>._counter_</code> in the <code>value</code> argument</p></li>
 <li>
 <p><code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code> gets a <code>out</code> argument
 which can take 1 of three options:</p>
@@ -106,8 +108,9 @@ programmatically.</p></li>
 is changed to <code>-1L</code>, which captures a snapshot of the runtime
 environment right before the method returns. Only the first element is
 used if <code>at</code> is length &gt; 1</li>
-<li>“modify” workflows are renamed to “highjack” to reflect the fact
-that they always return the graphical output (gtable grob) (<a href="https://github.com/yjunechoe/ggtrace/issues/78" class="external-link">#78</a>)</li>
+<li>“modify” workflows are renamed to “highjack” (starting with
+<code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>) to reflect the fact that they
+always return the graphical output (gtable grob) (<a href="https://github.com/yjunechoe/ggtrace/issues/78" class="external-link">#78</a>)</li>
 </ul></div>
 <div class="section level4">
 <h4 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h4>

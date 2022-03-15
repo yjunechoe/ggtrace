@@ -5,11 +5,12 @@
 ### New Features
 
 - Added complements to the `base::debug()` family of functions that are compatible with ggproto methods - `ggdebug()`, `ggdebugonce()`, `ggundebug()`
-- `get_method_inheritance` to get the list of methods from self and parent ggprotos
+- `get_method_inheritance()` to get the list of methods from self and parent ggprotos
 - `ggtrace_inspect_n()` to get the number of times a method was called in the evaluation of a ggplot
+- `ggtrace_inspect_which()` to get the indices when a condition `cond` evaluated to true inside a method
 - `ggtrace_inspect_vars()` to get the value of variables at specified steps of a method's execution
+- `ggtrace_inspect_args()` to get the value of arguments passed to a method
 - `ggtrace_highjack_args()` to modify formals of a method at its execution
-- `ggtrace_highjack_return()` exposes `._counter_` in the `value` argument
 - `with_ggtrace()` gets a `out` argument which can take 1 of three options:
 
     - "t" or "tracedump" (default): returns the local tracedump from triggering traces on the `method` as the ggplot `x` is evaluated
@@ -21,7 +22,7 @@
 ### Breaking Changes
 
 - `ggtrace_capture_env()` default value of `at` is changed to `-1L`, which captures a snapshot of the runtime environment right before the method returns. Only the first element is used if `at` is length > 1
-- "modify" workflows are renamed to "highjack" to reflect the fact that they always return the graphical output (gtable grob) (#78)
+- "modify" workflows are renamed to "highjack" (starting with `ggtrace_highjack_return()`) to reflect the fact that they always return the graphical output (gtable grob) (#78)
 
 ### Bug Fixes
 

@@ -289,6 +289,89 @@ ggtrace_inspect_vars <- function(x, method, cond = quote(._counter_ == 1L), at =
 }
 
 
+#' Inspect the arguments passed into a method
+#'
+#' @param x A ggplot object
+#' @inheritParams get_method
+#' @param cond When the arguments should be inspected. Defaults to `quote(._counter_ == 1L)`.
+#' @param hoist_dots Whether treat arguments passed to `...` like regular arguments. If `FALSE`,
+#'   the `...` is treated as an argument
+#'
+#' @inheritSection topic-tracing-context Tracing context
+#'
+#' @return A list of argument-value pairs from the `method` when it is called.
+#' @export
+#'
+#' @examples
+#'
+#' library(ggplot2)
+#'
+#' p1 <- ggplot(diamonds, aes(cut)) +
+#'   geom_bar(aes(fill = cut)) +
+#'   facet_wrap(~ clarity)
+#'
+#' p1
+#'
+#' # Argument value of `Stat$compute_panel` for the
+#' # first panel `cond = quote(._counter_ == 1L)`
+#' compute_panel_args_1 <- ggtrace_inspect_args(x = p1, method = Stat$compute_panel)
+#' names(ggformals(Stat$compute_panel))
+#' names(compute_panel_args_1)
+#' table(compute_panel_args_1$data$fill)
+#'
+#' # `hoist_dots` preserves information about which arguments were passed to `...`
+#' with_dots <- ggtrace_inspect_args(p1, Stat$compute_panel, hoist_dots = FALSE)
+#' names(with_dots)
+#' with_dots$`...`
+#'
+ggtrace_inspect_args <- function(x, method, cond = quote(._counter_ == 1L), hoist_dots = TRUE) {
+
+  wrapper_env <- rlang::current_env()
+  ._counter_ <- 0L
+  ._args <- NULL
+
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+  suppressMessages(trace(what = what, where = where, at = 1L, print = FALSE, tracer = rlang::expr({
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
+    rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
+    cond <- rlang::eval_tidy(
+      quote(!!cond),
+      list(._counter_ = new_counter),
+      rlang::current_env()
+    )
+    if (cond) {
+      cur_fn <- attr(rlang::current_fn(), "original")
+      args <- names(formals(cur_fn))
+      if ("..." %in% args) {
+        args_pairs <- c(as.list(mget(args[args != "..."])), list(`...` = list(...)))
+      } else {
+        args_pairs <- mget(args)
+      }
+      rlang::env_bind(!!wrapper_env, ._args = args_pairs)
+      suppressMessages(untrace(what = !!what, where = !!where))
+    }
+  })))
+
+  ggeval_silent(x)
+
+  if (.is_traced(what, where)) {
+    suppressMessages(untrace(what = what, where = where))
+    rlang::abort(paste0("No call to `", method_info$formatted_call,
+                        "` detected during evaluation of the plot"))
+  } else {
+    if (hoist_dots && "..." %in% names(._args)) {
+      c(._args[names(._args) != "..."], ._args$`...`)
+    } else {
+      ._args
+    }
+  }
+
+}
+
+
 #' Inspect the return value of a method
 #'
 #' @param x A ggplot object
@@ -297,7 +380,7 @@ ggtrace_inspect_vars <- function(x, method, cond = quote(._counter_ == 1L), at =
 #'
 #' @inheritSection topic-tracing-context Tracing context
 #'
-#' @return The return value from `method` when it is first called.
+#' @return The return value from `method` when it is called.
 #' @export
 #'
 #' @examples

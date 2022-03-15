@@ -16,19 +16,20 @@ reference:
 
 - title: Workflows (experimental; due for v0.5)
   desc: >
-    These high-level functions take a ggplot object and a ggproto method and allows
-    interactions with the ggplot's build pipeline as it is evaluated. Functions are
+    These high-level functions take a ggplot object and a function or ggproto method,
+    allowing interactions with the ggplot's build pipeline as it is evaluated. Functions
     grouped into three "workflows": Inspect, Capture, and Highjack.
   contents:
   - with_ggtrace
 
 - subtitle: Inspect
   desc: >
-    Return values from or information about a method's execution environment for inspection
+    Return values from or information about a method's execution state for inspection
   contents:
   - ggtrace_inspect_n
   - ggtrace_inspect_which
   - ggtrace_inspect_vars
+  - ggtrace_inspect_args
   - ggtrace_inspect_return
 
 - subtitle: Capture
@@ -40,7 +41,7 @@ reference:
 
 - subtitle: Highjack
   desc: >
-    Manipulate a method's behavior as it runs and return the resulting graphical output
+    Manipulate a method's behavior as it runs and return the modified graphical output
   contents:
   - ggtrace_highjack_args
   - ggtrace_highjack_return
