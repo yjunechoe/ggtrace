@@ -1,6 +1,6 @@
 Package: ggtrace
 Type: Package
-Title: Programmatically debug ggproto methods with trace
+Title: Programmatically explore, debug, and manipulate ggplot internals
 Version: 0.5.0
 Authors@R: c(
       person(given = "June",
@@ -8,8 +8,9 @@ Authors@R: c(
            role = c("aut", "cre"),
            email = "yjchoe@sas.upenn.edu",
            comment = c(ORCID = "0000-0002-0701-921X")))
-Description: Programmatically debug ggproto methods with trace. Evaluate arbitrary expressions at
-  any location in the method body and inspect the trace dump from outside of the debugging environment.
+Description: Programmatically explore, debug, and manipulate ggplot internals. Package
+  ggtrace offers a low-level interface that extends base R capabilities of trace, as well
+  as a family of workflow functions that make interactions with ggplot internals more accessible.
 URL: https://yjunechoe.github.io/ggtrace, https://github.com/yjunechoe/ggtrace
 BugReports: https://github.com/yjunechoe/ggtrace/issues
 Depends: R (>= 3.3.0)

@@ -36,10 +36,11 @@ for further inspection by the user. Check out the [FAQ
 vignette](https://yjunechoe.github.io/ggtrace/articles/FAQ.html) for
 more details.
 
-Briefly, there are three key arguments to `ggtrace()`: - `method`: what
-function/method to trace - `trace_steps`: where in the method body to
-inject expressions - `trace_exprs` what expressions to inject in which
-step
+Briefly, there are three key arguments to `ggtrace()`:
+
+-   `method`: what function/method to trace
+-   `trace_steps`: where in the method body to inject expressions
+-   `trace_exprs` what expressions to inject in which step
 
 A simple example:
 
@@ -55,12 +56,17 @@ Essentially, `ggtrace()` allows you to inject code into a function and
 safely/temporarily change its execution behavior.
 
 The following code injects the code `z <- z * 10` right as `dummy_fn`
-enters the third “step” in the body. Note that the value of
-`trace_exprs` must be of type “language”, which we’re simply calling
-“code” here. The idea is to give `ggtrace()` code for it to evaluate
-inside the function when it is ran later. Most often, typing out the
-actual code and wrapping it in `quote()` suffices, but for more complex
-injections see the [Expressions chapter of Advanced
+enters the third “step” in the body, *right before* the line `x <- 10`
+is ran.
+
+    ggbody(dummy_fn)[[3]]
+    #> x <- 10
+
+Note that the value of `trace_exprs` must be of type “language” (a
+quoted expression), the idea being that we are *injecting* code to be
+evaluate inside the function when it is called. Often, providing the
+code wrapped in `quote()` suffices. For more complex injections see the
+[Expressions chapter of Advanced
 R](https://adv-r.hadley.nz/expressions.html)
 
     ggtrace(
@@ -80,186 +86,36 @@ run with this injected code.
 
 Essentially, `dummy_fn` ran with this following modified code just now:
 
-    dummy_fn_TRACED1 <- function(x = 1, y = 2) {
+    dummy_fn_traced <- function(x = 1, y = 2) {
       z <- x + y
       z <- z * 10 #< Look here!
       x <- 10
       return(z)
     }
-    dummy_fn_TRACED1()
+    dummy_fn_traced()
     #> [1] 30
 
-But how do we know that’s the line targeted by `trace_steps = 3` in our
-`ggtrace()` call?
-
-The function `ggbody()` returns the body of a function/method as a list,
-which allows you to inspect what expressions in the body are evaluated
-at which step. `ggtrace()` injects the expression right before entering
-the step specified in `trace_steps`, so by setting that value to `3` we
-tell it to inject `z <- z * 10` right before `ggbody(dummy_fn)[[3]]` is
-evaluated.
-
-    ggbody(dummy_fn)
-    #> [[1]]
-    #> `{`
-    #> 
-    #> [[2]]
-    #> z <- x + y
-    #> 
-    #> [[3]]
-    #> x <- 10
-    #> 
-    #> [[4]]
-    #> return(z)
-
-    ggbody(dummy_fn)[[3]]
-    #> x <- 10
-
-Note that once a trace placed by `ggtrace()` is triggered, the original
-function/method is restored (i.e., the trace is removed). You can also
-check whether a function is currently being traced with `is_traced()`.
+By default, traces created by `{ggtrace}` functions delete themselves
+after being triggered. You can also check whether a function is
+currently being traced with `is_traced()`.
 
     dummy_fn()
     #> [1] 3
     is_traced(dummy_fn)
     #> [1] FALSE
 
-To prevent a trace from removing itself on exit, you can set
-`once = FALSE` which makes a trace **persistent**, meaning that it will
-be there until explicitly removed with `gguntrace()`
+`{ggtrace}` automatically logs the output of triggered trace to what we
+call **tracedumps**. For example, `last_ggtrace()` stores the output of
+the *last* trace created by `ggtrace()`:
 
-    ggtrace(
-      method = dummy_fn,
-      trace_steps = 3,
-      trace_exprs = quote(z <- z * 10),
-      once = FALSE #< here!
-    )
-    #> `dummy_fn` now being traced.
-    #> Creating a persistent trace. Remember to `gguntrace(dummy_fn)`!
-
-    dummy_fn()
-    #> Triggering persistent trace on `dummy_fn`
-    #> [1] 30
-    dummy_fn()
-    #> Triggering persistent trace on `dummy_fn`
-    #> [1] 30
-
-    is_traced(dummy_fn)
-    #> [1] TRUE
-
-    gguntrace(dummy_fn)
-    #> `dummy_fn` no longer being traced.
-    is_traced(dummy_fn)
-    #> [1] FALSE
-
-Beyond these basic capabilities, `ggtrace()` offers two more features:
-
-### **1. Shared state across trace expressions**
-
-The values of `trace_steps` and `trace_exprs` can be of length &gt; 1
-
-Here, we multiply `z` by 10 right as `dummy_fn` enters Steps 3 and 4
-
-    ggtrace(
-      method = dummy_fn,
-      trace_steps = c(3, 4),
-      trace_exprs = quote(z <- z * 10)
-    )
-    #> `dummy_fn` now being traced.
-    dummy_fn()
-    #> Triggering trace on `dummy_fn`
-    #> Untracing `dummy_fn` on exit.
-    #> [1] 300
-
-The function just ran with the following modified code:
-
-    dummy_fn_TRACED2 <- function(x = 1, y = 2) {
-      z <- x + y
-      z <- z * 10 #< Look here!
-      x <- 10
-      z <- z * 10 #< Look here!
-      return(z)
-    }
-    dummy_fn_TRACED2()
-    #> [1] 300
-
-Thus, even though we injected multiple expressions, they are evaluated
-in the same environment and thus are part of a single trace created by
-`ggtrace()`.
-
-Also, note that `trace_exprs` was recycled here to meet the length of
-`trace_steps`. An explicit spellout would look like the following:
-
-    ggtrace(
-      method = dummy_fn,
-      trace_steps = c(3, 4),
-      trace_exprs = list(
-        quote(z <- z * 10),
-        quote(z <- z * 10)
-      )
-    )
-
-### **2. Logging of evaluated trace expressions**
-
-The output of injected expressions are logged to “tracedumps”, of which
-there are two.
-
-First, `last_ggtrace()` stores the output of the last trace. Here, we
-evaluate `x` upon entering `dummy_fn` (Step 1), and right before it
-returns (Step 4). Note that we can target the last step with negative
-indices like `-1`, which count backwards from the last step.
-
-    ggtrace(
-      method = dummy_fn,
-      trace_steps = c(1, -1),
-      trace_exprs = quote(x),
-    )
-    #> `dummy_fn` now being traced.
-    dummy_fn()
-    #> Triggering trace on `dummy_fn`
-    #> Untracing `dummy_fn` on exit.
-    #> [1] 3
-
-Of course the return value has not changed, but we can inspect the
-output of evaluating `x` in these two places with `last_ggtrace()`:
-
-    last_ggtrace()
+    # The value of `(z <- z * 10)` when it was ran
+    last_ggtrace() # Note that this is a list of length `trace_steps`
     #> [[1]]
-    #> [1] 1
-    #> 
-    #> [[2]]
-    #> [1] 10
+    #> [1] 30
 
-If `trace_exprs` is a named list of expressions, the tracedump will
-carry those names as well
-
-    ggtrace(
-      method = dummy_fn,
-      trace_steps = c(1, -1),
-      trace_exprs = list(
-        "x_after_begin" = quote(x),
-        "x_before_end"  = quote(x)
-      ),
-    )
-    #> `dummy_fn` now being traced.
-    dummy_fn()
-    #> Triggering trace on `dummy_fn`
-    #> Untracing `dummy_fn` on exit.
-    #> [1] 3
-
-    last_ggtrace()
-    #> $x_after_begin
-    #> [1] 1
-    #> 
-    #> $x_before_end
-    #> [1] 10
-
-Second, `global_ggtrace()` stores the output of all traces. This is
-particularly useful in conjunction with `once = FALSE` or when you want
-to inspect multiple `ggtrace()`s at once. For most usecases you don’t
-need to go this far, but should you need it the [documentation
-page](https://yjunechoe.github.io/ggtrace/reference/global_ggtrace.html)
-has more information.
+See the references section [**Extending
+base::trace()**](https://yjunechoe.github.io/ggtrace/reference/index.html#extending-base-trace-)
+for more functionalities offered by `ggtrace()`.
 
 ## **Workflows for interacting with ggplot internals**
 
@@ -271,8 +127,8 @@ the form of `ggtrace_{action}_{value}()`. These are grouped into three
 workflows: Inspect, Capture, and Highjack.
 
 **NOTE**: Making the most out of these workflow functions requires a
-hint of knowledge about ggplot internals, namely the fact that ggproto
-objects like
+hint of knowledge about ggplot internals, namely the fact that **ggproto
+objects** like
 [Stat](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#stats)
 and
 [Geom](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#geoms)
@@ -291,7 +147,6 @@ Say we want to learn more about how `geom_smooth()` layer works, exactly
 
     class(geom_smooth())
     #> [1] "LayerInstance" "Layer"         "ggproto"       "gg"
-
     geom_smooth()
     #> geom_smooth: na.rm = FALSE, orientation = NA, se = TRUE
     #> stat_smooth: na.rm = FALSE, orientation = NA, se = TRUE
@@ -307,7 +162,7 @@ chapter of the ggplot book](https://ggplot2-book.org/internals.html)
       ggtitle("A plot for expository purposes")
     p
 
-<img src="man/figures/README-unnamed-chunk-17-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="100%" />
 
 Let’s focus on the Stat ggproto. We see that `geom_smooth()` uses the
 `StatSmooth` ggproto
@@ -318,61 +173,11 @@ Let’s focus on the Stat ggproto. We see that `geom_smooth()` uses the
     #> [1] TRUE
 
 The bulk of the work by a Stat is done in the `compute_*` family of
-methods. We’ll focus on `compute_group` here, which looks like the
-following:
+methods. We’ll focus on `compute_group` here, which you can look at with
+`get_method()`:
 
+    # Not run
     get_method(StatSmooth$compute_group)
-    #> function (data, scales, method = NULL, formula = NULL, se = TRUE, 
-    #>     n = 80, span = 0.75, fullrange = FALSE, xseq = NULL, level = 0.95, 
-    #>     method.args = list(), na.rm = FALSE, flipped_aes = NA) 
-    #> {
-    #>     data <- flip_data(data, flipped_aes)
-    #>     if (length(unique(data$x)) < 2) {
-    #>         return(new_data_frame())
-    #>     }
-    #>     if (is.null(data$weight)) 
-    #>         data$weight <- 1
-    #>     if (is.null(xseq)) {
-    #>         if (is.integer(data$x)) {
-    #>             if (fullrange) {
-    #>                 xseq <- scales$x$dimension()
-    #>             }
-    #>             else {
-    #>                 xseq <- sort(unique(data$x))
-    #>             }
-    #>         }
-    #>         else {
-    #>             if (fullrange) {
-    #>                 range <- scales$x$dimension()
-    #>             }
-    #>             else {
-    #>                 range <- range(data$x, na.rm = TRUE)
-    #>             }
-    #>             xseq <- seq(range[1], range[2], length.out = n)
-    #>         }
-    #>     }
-    #>     if (identical(method, "loess")) {
-    #>         method.args$span <- span
-    #>     }
-    #>     if (is.character(method)) {
-    #>         if (identical(method, "gam")) {
-    #>             method <- mgcv::gam
-    #>         }
-    #>         else {
-    #>             method <- match.fun(method)
-    #>         }
-    #>     }
-    #>     if (identical(method, mgcv::gam) && is.null(method.args$method)) {
-    #>         method.args$method <- "REML"
-    #>     }
-    #>     base.args <- list(quote(formula), data = quote(data), weights = quote(weight))
-    #>     model <- do.call(method, c(base.args, method.args))
-    #>     prediction <- predictdf(model, xseq, se, level)
-    #>     prediction$flipped_aes <- flipped_aes
-    #>     flip_data(prediction, flipped_aes)
-    #> }
-    #> <bytecode: 0x0000000018ef18f8>
-    #> <environment: namespace:ggplot2>
 
 ### **Inspect**
 
@@ -411,18 +216,16 @@ corresponding to the return value of `StatSmooth$compute_group` the
 third argument `cond` being set to `quote(._counter_ == 1)`.
 
 As you might have guessed, `._counter_` is an internal variable that
-keeps track of how many times the method has been called. In this case,
-`ggtrace_inspect_return()` is giving us the return value from the method
-when it was first run, i.e., in the first group of the first panel.
+keeps track of how many times the method has been called. It’s available
+for all workflow functions and you can read more in the [**Tracing
+context**](https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_return.html#tracing-context)
+section of the docs.
 
 If we instead wanted to get the return value of
 `StatSmooth$compute_group` for the third group of the second panel, for
 example, we can do so in one of two ways:
 
-1.  Set the value of `cond` to an expression that evaluates to true for
-    that panel and group:
-
-<!-- -->
+    1. Set the value of `cond` to an expression that evaluates to true for that panel and group:
 
     return_val_2_3_A <- ggtrace_inspect_return(
       x = p,
@@ -430,11 +233,7 @@ example, we can do so in one of two ways:
       cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
     )
 
-1.  Find the counter value when that condition is satisfied with
-    `ggtrace_inspect_which()`, and then simply check for the value of
-    `._counter_` back in `ggtrace_inspect_return()`:
-
-<!-- -->
+    2. Find the counter value when that condition is satisfied with `ggtrace_inspect_which()`, and then simply check for the value of `._counter_` back in `ggtrace_inspect_return()`:
 
     ggtrace_inspect_which(
       x = p,
@@ -521,7 +320,7 @@ can inspect with `formals()`:
     #> 
     #> $formula
     #> y ~ x
-    #> <environment: 0x000000001ac3e960>
+    #> <environment: 0x000000001ac3ca40>
     #> 
     #> $se
     #> [1] TRUE
@@ -588,18 +387,18 @@ Lastly, let’s talk about the `data` variable we’ve been using inside the
 
 The answer is actually simple: it’s an argument passed to
 `StatSmooth$compute_group`. We already saw its value briefly from
-`formals(captured_fn_2_3)`, but to target it explcitly we can also use
-`ggtrace_inspect_vars()`:
+`formals(captured_fn_2_3)`, but to target it explicitly we can also use
+`ggtrace_inspect_args()`:
 
-    # Get value of `data` at the start of the method `at = 1L`" 
-    ggtrace_inspect_vars(
+    args_2_3 <- ggtrace_inspect_args(
       x = p,
       method = StatSmooth$compute_group,
-      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
-      at = 1L,
-      vars = "data"
+      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
     )
-    #> $Step1
+    identical(names(args_2_3), names(formals(captured_fn_2_3)))
+    #> [1] TRUE
+
+    args_2_3$data
     #>      x  y colour PANEL group
     #> 10 5.3 20      r     2     3
     #> 11 5.3 15      r     2     3
@@ -616,8 +415,6 @@ The answer is actually simple: it’s an argument passed to
     #> 52 5.4 20      r     2     3
     #> 73 5.4 18      r     2     3
 
-    # Alternatively, `formals(captured_fn_2_3)$data` also works in this case
-
 We see that `PANEL` and `group` columns conveniently give us information
 about the panel and group that the `compute_group` is doing calculations
 over.
@@ -625,8 +422,8 @@ over.
 ### **Highjack**
 
 Once we have some understanding of how `StatSmooth$compute_group` works,
-we may want to test some hypotheses about what would happen if the
-method returned something else.
+we may want to test some hypotheses about what would happen to the
+resulting graphical output if the method returned something else.
 
 Let’s revisit our examples from the Capture workflow. What if the third
 group of the second panel calculated a more conservative confidence
@@ -652,19 +449,15 @@ to the `value` argument using
       value = rlang::expr(!!modified_return_smooth)
     )
 
-<img src="man/figures/README-unnamed-chunk-32-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-26-1.png" width="100%" />
 
 The confidence band is nearly invisible for that fitted line because
 it’s only capturing a 10% confidence interval!
 
 Here’s another example where we make the method fit predictions from a
-loess regression instead. We could again use `ggtrace_highjack_return()`
-and in-line the calculation of the new return value using our captured
-function `captured_fn_2_3()` (as in
-`value = rlang::expr(!!captured_fn_2_3(method = "loess"))`).
-
-But to achieve this directly, we can use `ggtrace_highjack_args()` and
-set the `values` to `list(method = "loess")`:
+loess regression instead. To achieve this directly, we use
+`ggtrace_highjack_args()` and set the `values` to
+`list(method = "loess")`:
 
     ggtrace_highjack_args(
       x = p,
@@ -673,10 +466,10 @@ set the `values` to `list(method = "loess")`:
       values = list(method = "loess")
     )
 
-<img src="man/figures/README-unnamed-chunk-33-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-27-1.png" width="100%" />
 
-Lastly, the `value` argument of `ggtrace_highjack_return()` exposes an
-internal function called `returnValue()` which simply returns the
+Lastly, `ggtrace_highjack_return()` exposes an internal function called
+`returnValue()` in the `value` argument, which simply returns the
 original return value. Computing on it allows on-the-fly modifications
 to the graphical output.
 
@@ -702,6 +495,7 @@ heteroskedasticity:
       value = quote({
         
         spread_seq <- seq(0, 10, length.out = nrow(returnValue()))
+        
         returnValue() %>% 
           mutate(
             ymin = y - se * spread_seq[row_number()],
@@ -711,7 +505,7 @@ heteroskedasticity:
       })
     )
 
-<img src="man/figures/README-unnamed-chunk-34-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-28-1.png" width="100%" />
 
 ## **Middle-ground approach `with_ggtrace()`**
 
@@ -768,7 +562,7 @@ Like `ggtrace()`, you can inject code into different steps of a method
       out = "g"
     )
 
-<img src="man/figures/README-unnamed-chunk-35-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-29-1.png" width="100%" />
 
 And like the workflow functions, you can have conditional traces that
 only evaluate when a condition is met, using `if` statements inside
@@ -795,7 +589,7 @@ only evaluate when a condition is met, using `if` statements inside
       out = "g"
     )
 
-<img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-30-1.png" width="100%" />
 
 And of course, all of this is not limited to objects from the
 `{ggplot2}` package itself. You can have fun hacking extension packages
@@ -886,4 +680,4 @@ as well!
       
     )
 
-<img src="man/figures/README-unnamed-chunk-37-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-31-1.png" width="100%" />
