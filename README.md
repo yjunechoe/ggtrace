@@ -225,28 +225,31 @@ If we instead wanted to get the return value of
 `StatSmooth$compute_group` for the third group of the second panel, for
 example, we can do so in one of two ways:
 
-    1. Set the value of `cond` to an expression that evaluates to true for that panel and group:
+1.  Set the value of `cond` to an expression that evaluates to true for
+    that panel and group:
 
-    return_val_2_3_A <- ggtrace_inspect_return(
-      x = p,
-      method = StatSmooth$compute_group,
-      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
-    )
+        return_val_2_3_A <- ggtrace_inspect_return(
+          x = p,
+          method = StatSmooth$compute_group,
+          cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+        )
 
-    2. Find the counter value when that condition is satisfied with `ggtrace_inspect_which()`, and then simply check for the value of `._counter_` back in `ggtrace_inspect_return()`:
+2.  Find the counter value when that condition is satisfied with
+    `ggtrace_inspect_which()`, and then simply check for the value of
+    `._counter_` back in `ggtrace_inspect_return()`:
 
-    ggtrace_inspect_which(
-      x = p,
-      method = StatSmooth$compute_group,
-      cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
-    )
-    #> [1] 6
+        ggtrace_inspect_which(
+          x = p,
+          method = StatSmooth$compute_group,
+          cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+        )
+        #> [1] 6
 
-    return_val_2_3_B <- ggtrace_inspect_return(
-      x = p,
-      method = StatSmooth$compute_group,
-      cond = quote(._counter_ == 6)
-    )
+        return_val_2_3_B <- ggtrace_inspect_return(
+          x = p,
+          method = StatSmooth$compute_group,
+          cond = quote(._counter_ == 6)
+        )
 
 These two approaches work the same:
 
@@ -320,7 +323,7 @@ can inspect with `formals()`:
     #> 
     #> $formula
     #> y ~ x
-    #> <environment: 0x000000001ac3ca40>
+    #> <environment: 0x000000001ac2e960>
     #> 
     #> $se
     #> [1] TRUE
@@ -479,15 +482,6 @@ for the group to make it look like there’s an absurd degree of
 heteroskedasticity:
 
     library(dplyr)
-    #> Warning: package 'dplyr' was built under R version 4.1.2
-    #> 
-    #> Attaching package: 'dplyr'
-    #> The following objects are masked from 'package:stats':
-    #> 
-    #>     filter, lag
-    #> The following objects are masked from 'package:base':
-    #> 
-    #>     intersect, setdiff, setequal, union
     ggtrace_highjack_return(
       x = p,
       method = StatSmooth$compute_group,

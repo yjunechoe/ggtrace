@@ -191,31 +191,31 @@ As you might have guessed, `._counter_` is an internal variable that keeps track
 
 If we instead wanted to get the return value of `StatSmooth$compute_group` for the third group of the second panel, for example, we can do so in one of two ways:
 
-    1. Set the value of `cond` to an expression that evaluates to true for that panel and group:
-
-  ```{r}
-  return_val_2_3_A <- ggtrace_inspect_return(
-    x = p,
-    method = StatSmooth$compute_group,
-    cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
-  )
-  ```
-
-    2. Find the counter value when that condition is satisfied with `ggtrace_inspect_which()`, and then simply check for the value of `._counter_` back in `ggtrace_inspect_return()`:
-
-  ```{r}
-  ggtrace_inspect_which(
-    x = p,
-    method = StatSmooth$compute_group,
-    cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
-  )
+  1. Set the value of `cond` to an expression that evaluates to true for that panel and group:
   
-  return_val_2_3_B <- ggtrace_inspect_return(
-    x = p,
-    method = StatSmooth$compute_group,
-    cond = quote(._counter_ == 6)
-  )
-  ```
+      ```{r}
+      return_val_2_3_A <- ggtrace_inspect_return(
+        x = p,
+        method = StatSmooth$compute_group,
+        cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+      )
+      ```
+
+  2. Find the counter value when that condition is satisfied with `ggtrace_inspect_which()`, and then simply check for the value of `._counter_` back in `ggtrace_inspect_return()`:
+  
+      ```{r}
+      ggtrace_inspect_which(
+        x = p,
+        method = StatSmooth$compute_group,
+        cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
+      )
+      
+      return_val_2_3_B <- ggtrace_inspect_return(
+        x = p,
+        method = StatSmooth$compute_group,
+        cond = quote(._counter_ == 6)
+      )
+      ```
 
 These two approaches work the same:
 
@@ -327,7 +327,7 @@ Lastly, `ggtrace_highjack_return()` exposes an internal function called `returnV
 
 For example, we can "intercept" the dataframe output, do data wrangling on it, and have the method return that instead. Here, we hack the data for the group to make it look like there's an absurd degree of heteroskedasticity:
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 library(dplyr)
 ggtrace_highjack_return(
   x = p,
