@@ -39,8 +39,8 @@ more details.
 Briefly, there are three key arguments to `ggtrace()`:
 
 -   `method`: what function/method to trace
--   `trace_steps`: where in the method body to inject expressions
--   `trace_exprs` what expressions to inject in which step
+-   `trace_steps`: where in the body to inject expressions
+-   `trace_exprs` what expressions to inject
 
 A simple example:
 
@@ -59,7 +59,7 @@ The following code injects the code `z <- z * 10` right as `dummy_fn`
 enters the third “step” in the body, *right before* the line `x <- 10`
 is ran.
 
-    ggbody(dummy_fn)[[3]]
+    body(dummy_fn)[[3]]
     #> x <- 10
 
 Note that the value of `trace_exprs` must be of type “language” (a
@@ -173,11 +173,15 @@ Let’s focus on the Stat ggproto. We see that `geom_smooth()` uses the
     #> [1] TRUE
 
 The bulk of the work by a Stat is done in the `compute_*` family of
-methods. We’ll focus on `compute_group` here, which you can look at with
-`get_method()`:
+methods, which are essentially just functions. We’ll focus on
+`compute_group` here:
 
-    # Not run
-    get_method(StatSmooth$compute_group)
+    # ggproto methods wrap over the actual function and print extra info
+    # - see `ggplot2:::format.ggproto_method` for details
+    class(StatSmooth$compute_group)
+
+    # Use `get_method` to pull out just the function component
+    class( get_method(StatSmooth$compute_group) )
 
 ### **Inspect**
 
@@ -190,10 +194,8 @@ been called in the ggplot’s evaluation:
     #> [1] 6
 
 As we might have guessed, `StatSmooth$compute_group` is called for each
-fitted line (each group) in the plot
-
-As we can saw from `get_method()`, the `compute_group` is just a good
-ol’ function. But what does this function actually return?
+fitted line (each group) in the plot. But if `StatSmooth$compute_group`
+is essentially a function, what does it return?
 
 We can answer that with another workflow function
 `ggtrace_inspect_return()`, which shares a similar syntax:
@@ -275,7 +277,7 @@ function with `ggtrace_capture_fn()`:
 
 `captured_fn_2_3` is essentially a snapshot of the `compute_group` when
 it is called for the third group of the second panel. Simply calling
-`captured_fn_2_2` gives us the expected return value:
+`captured_fn_2_3` gives us the expected return value:
 
     identical(return_val_2_3_A, captured_fn_2_3())
     #> [1] TRUE
@@ -288,69 +290,14 @@ passed to it at its execution stored in the formals.
 In other words, it is “pre-filled” with its original values, which we
 can inspect with `formals()`:
 
-    formals(captured_fn_2_3)
-    #> $data
-    #>      x  y colour PANEL group
-    #> 10 5.3 20      r     2     3
-    #> 11 5.3 15      r     2     3
-    #> 12 5.3 20      r     2     3
-    #> 13 6.0 17      r     2     3
-    #> 14 6.2 26      r     2     3
-    #> 15 6.2 25      r     2     3
-    #> 16 7.0 24      r     2     3
-    #> 43 5.4 18      r     2     3
-    #> 48 4.0 26      r     2     3
-    #> 49 4.0 24      r     2     3
-    #> 50 4.6 23      r     2     3
-    #> 51 4.6 22      r     2     3
-    #> 52 5.4 20      r     2     3
-    #> 73 5.4 18      r     2     3
-    #> 
-    #> $scales
-    #> $scales$x
-    #> <ScaleContinuousPosition>
-    #>  Range:  1.56 -- 7.02
-    #>  Limits: 1.56 -- 7.02
-    #> 
-    #> $scales$y
-    #> <ScaleContinuousPosition>
-    #>  Range:  10.4 -- 44.2
-    #>  Limits: 10.4 -- 44.2
-    #> 
-    #> 
-    #> $method
-    #> [1] "lm"
-    #> 
-    #> $formula
-    #> y ~ x
-    #> <environment: 0x000000001ac2e960>
-    #> 
-    #> $se
-    #> [1] TRUE
-    #> 
-    #> $n
-    #> [1] 80
-    #> 
-    #> $span
-    #> [1] 0.75
-    #> 
-    #> $fullrange
-    #> [1] FALSE
-    #> 
-    #> $xseq
-    #> NULL
-    #> 
-    #> $level
-    #> [1] 0.95
-    #> 
-    #> $method.args
-    #> list()
-    #> 
-    #> $na.rm
-    #> [1] FALSE
-    #> 
-    #> $flipped_aes
-    #> [1] FALSE
+    # Just showing their type/class for space
+    sapply( formals(captured_fn_2_3) , class)
+    #>         data       scales       method      formula           se 
+    #> "data.frame"       "list"  "character"    "formula"    "logical" 
+    #>            n         span    fullrange         xseq        level 
+    #>    "numeric"    "numeric"    "logical"       "NULL"    "numeric" 
+    #>  method.args        na.rm  flipped_aes 
+    #>       "list"    "logical"    "logical"
 
 This makes it very convenient for us to explore its behavior with
 different arguments passed to it.

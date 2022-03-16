@@ -55,8 +55,8 @@ Formally put, `ggtrace()` allows the user to inject arbitrary expressions (calle
 Briefly, there are three key arguments to `ggtrace()`:
 
 - `method`: what function/method to trace
-- `trace_steps`: where in the method body to inject expressions
-- `trace_exprs` what expressions to inject in which step
+- `trace_steps`: where in the body to inject expressions
+- `trace_exprs` what expressions to inject
 
 A simple example:
 
@@ -74,7 +74,7 @@ Essentially, `ggtrace()` allows you to inject code into a function and safely/te
 The following code injects the code `z <- z * 10` right as `dummy_fn` enters the third "step" in the body, _right before_ the line `x <- 10` is ran.
 
 ```{r}
-ggbody(dummy_fn)[[3]]
+body(dummy_fn)[[3]]
 ```
 
 Note that the value of `trace_exprs` must be of type "language" (a quoted expression), the idea being that we are _injecting_ code to be evaluate inside the function when it is called. Often, providing the code wrapped in `quote()` suffices. For more complex injections see the [Expressions chapter of Advanced R](https://adv-r.hadley.nz/expressions.html)
@@ -158,11 +158,15 @@ class(geom_smooth()$stat)
 identical(StatSmooth, geom_smooth()$stat)
 ```
 
-The bulk of the work by a Stat is done in the `compute_*` family of methods. We'll focus on `compute_group` here, which you can look at with `get_method()`:
+The bulk of the work by a Stat is done in the `compute_*` family of methods, which are essentially just functions. We'll focus on `compute_group` here:
 
 ```{r, eval = FALSE}
-# Not run
-get_method(StatSmooth$compute_group)
+# ggproto methods wrap over the actual function and print extra info
+# - see `ggplot2:::format.ggproto_method` for details
+class(StatSmooth$compute_group)
+
+# Use `get_method` to pull out just the function component
+class( get_method(StatSmooth$compute_group) )
 ```
 
 ### **Inspect**
@@ -173,9 +177,7 @@ Here we introduce our first workflow function `ggtrace_inspect_n()`, which takes
 ggtrace_inspect_n(x = p, method = StatSmooth$compute_group)
 ```
 
-As we might have guessed, `StatSmooth$compute_group` is called for each fitted line (each group) in the plot
-
-As we can saw from `get_method()`, the `compute_group` is just a good ol' function. But what does this function actually return?
+As we might have guessed, `StatSmooth$compute_group` is called for each fitted line (each group) in the plot. But if `StatSmooth$compute_group` is essentially a function, what does it return?
 
 We can answer that with another workflow function `ggtrace_inspect_return()`, which shares a similar syntax:
 
@@ -237,7 +239,7 @@ captured_fn_2_3 <- ggtrace_capture_fn(
 )
 ```
 
-`captured_fn_2_3` is essentially a snapshot of the `compute_group` when it is called for the third group of the second panel. Simply calling `captured_fn_2_2` gives us the expected return value:
+`captured_fn_2_3` is essentially a snapshot of the `compute_group` when it is called for the third group of the second panel. Simply calling `captured_fn_2_3` gives us the expected return value:
 
 ```{r}
 identical(return_val_2_3_A, captured_fn_2_3())
@@ -247,8 +249,9 @@ But the true power of the "capture" workflow functions lies in the ability to in
 
 In other words, it is "pre-filled" with its original values, which we can inspect with `formals()`:
 
-```{r}
-formals(captured_fn_2_3)
+```{r, R.options = list(width = 70)}
+# Just showing their type/class for space
+sapply( formals(captured_fn_2_3) , class)
 ```
 
 This makes it very convenient for us to explore its behavior with different arguments passed to it.
