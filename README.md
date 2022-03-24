@@ -46,7 +46,6 @@ A simple example:
 
     dummy_fn <- function(x = 1, y = 2) {
       z <- x + y
-      x <- 10
       return(z)
     }
     dummy_fn()
@@ -56,11 +55,11 @@ Essentially, `ggtrace()` allows you to inject code into a function and
 safely/temporarily change its execution behavior.
 
 The following code injects the code `z <- z * 10` right as `dummy_fn`
-enters the third “step” in the body, *right before* the line `x <- 10`
+enters the third “step” in the body, *right before* the line `return(z)`
 is ran.
 
     body(dummy_fn)[[3]]
-    #> x <- 10
+    #> return(z)
 
 Note that the value of `trace_exprs` must be of type “language” (a
 quoted expression), the idea being that we are *injecting* code to be
@@ -89,7 +88,6 @@ Essentially, `dummy_fn` ran with this following modified code just now:
     dummy_fn_traced <- function(x = 1, y = 2) {
       z <- x + y
       z <- z * 10 #< Look here!
-      x <- 10
       return(z)
     }
     dummy_fn_traced()
@@ -99,8 +97,6 @@ By default, traces created by `{ggtrace}` functions delete themselves
 after being triggered. You can also check whether a function is
 currently being traced with `is_traced()`.
 
-    dummy_fn()
-    #> [1] 3
     is_traced(dummy_fn)
     #> [1] FALSE
 
@@ -119,7 +115,7 @@ for more functionalities offered by `ggtrace()`.
 
 ## **Workflows for interacting with ggplot internals**
 
-    library(ggplot2)
+    library(ggplot2) # v3.3.5
 
 Admittedly, `ggtrace()` is a bit too clunky for interactive explorations
 of ggplot internals. To address this, we offer “workflow” functions in
@@ -145,8 +141,6 @@ before proceeding.
 
 Say we want to learn more about how `geom_smooth()` layer works, exactly
 
-    class(geom_smooth())
-    #> [1] "LayerInstance" "Layer"         "ggproto"       "gg"
     geom_smooth()
     #> geom_smooth: na.rm = FALSE, orientation = NA, se = TRUE
     #> stat_smooth: na.rm = FALSE, orientation = NA, se = TRUE
@@ -167,8 +161,9 @@ chapter of the ggplot book](https://ggplot2-book.org/internals.html)
 Let’s focus on the Stat ggproto. We see that `geom_smooth()` uses the
 `StatSmooth` ggproto
 
-    class(geom_smooth()$stat)
+    class( geom_smooth()$stat )
     #> [1] "StatSmooth" "Stat"       "ggproto"    "gg"
+
     identical(StatSmooth, geom_smooth()$stat)
     #> [1] TRUE
 
@@ -177,11 +172,22 @@ methods, which are essentially just functions. We’ll focus on
 `compute_group` here:
 
     # ggproto methods wrap over the actual function and print extra info
-    # - see `ggplot2:::format.ggproto_method` for details
-    class(StatSmooth$compute_group)
+    class( StatSmooth$compute_group )
+    #> [1] "ggproto_method"
 
     # Use `get_method` to pull out just the function component
     class( get_method(StatSmooth$compute_group) )
+    #> [1] "function"
+
+    # StatSmooth inherits `compute_layer`/`compute_panel` and defines `compute_group`
+    get_method_inheritance(StatSmooth)
+    #> $Stat
+    #>  [1] "aesthetics"      "compute_layer"   "compute_panel"   "default_aes"    
+    #>  [5] "finish_layer"    "non_missing_aes" "optional_aes"    "parameters"     
+    #>  [9] "retransform"     "setup_data"     
+    #> 
+    #> $StatSmooth
+    #> [1] "compute_group" "extra_params"  "required_aes"  "setup_params"
 
 ### **Inspect**
 
@@ -201,8 +207,10 @@ We can answer that with another workflow function
 `ggtrace_inspect_return()`, which shares a similar syntax:
 
     return_val <- ggtrace_inspect_return(x = p, method = StatSmooth$compute_group)
-    nrow(return_val)
-    #> [1] 80
+
+    dim(return_val)
+    #> [1] 80  6
+
     head(return_val)
     #>          x        y     ymin     ymax        se flipped_aes
     #> 1 1.800000 24.33592 23.07845 25.59339 0.6250675       FALSE
@@ -250,7 +258,7 @@ example, we can do so in one of two ways:
         return_val_2_3_B <- ggtrace_inspect_return(
           x = p,
           method = StatSmooth$compute_group,
-          cond = 6L # shorthand for quote(._counter_ == 6L)
+          cond = 6L # shorthand for `quote(._counter_ == 6L)`
         )
 
 These two approaches work the same:
@@ -305,7 +313,7 @@ different arguments passed to it.
 For example, when `flipped_aes = TRUE`, we get `xmin` and `xmax` columns
 replacing `ymin` and `ymax`:
 
-    head(captured_fn_2_3(flipped_aes = TRUE))
+    head( captured_fn_2_3(flipped_aes = TRUE) )
     #>          y        x     xmin     xmax        se flipped_aes
     #> 1 15.00000 5.450710 4.369619 6.531802 0.4961840        TRUE
     #> 2 15.13924 5.448163 4.385577 6.510749 0.4876904        TRUE
@@ -322,7 +330,7 @@ For another example, when we set the confidence interval to 10% with
 `level = 0.1`, the `ymin` and `ymax` values deviate less from the `y`
 value:
 
-    head(captured_fn_2_3(level = 0.1))
+    head( captured_fn_2_3(level = 0.1) )
     #>          x        y     ymin     ymax       se flipped_aes
     #> 1 4.000000 21.70513 21.46539 21.94487 1.867921       FALSE
     #> 2 4.037975 21.69321 21.45840 21.92801 1.829458       FALSE
@@ -345,6 +353,7 @@ The answer is actually simple: it’s an argument passed to
       method = StatSmooth$compute_group,
       cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
     )
+
     identical(names(args_2_3), names(formals(captured_fn_2_3)))
     #> [1] TRUE
 
@@ -366,7 +375,7 @@ The answer is actually simple: it’s an argument passed to
     #> 73 5.4 18      r     2     3
 
 We see that `PANEL` and `group` columns conveniently give us information
-about the panel and group that the `compute_group` is doing calculations
+about the panel and group that `compute_group` is doing calculations
 over.
 
 ### **Highjack**
@@ -428,7 +437,8 @@ on it, and have the method return that instead. Here, we hack the data
 for the group to make it look like there’s an absurd degree of
 heteroskedasticity:
 
-    library(dplyr)
+    library(dplyr) # v1.0.8
+
     ggtrace_highjack_return(
       x = p,
       method = StatSmooth$compute_group,
@@ -468,7 +478,7 @@ Like `ggtrace()`, you can inject code into different steps of a method
     with_ggtrace(
       x = p + facet_grid(year ~ drv),
       method = Layout$render,
-      trace_steps = c(5, 8),
+      trace_steps = c(5L, 8L),
       trace_exprs = rlang::exprs(
         
         {
@@ -512,7 +522,7 @@ only evaluate when a condition is met, using `if` statements inside
     with_ggtrace(
       p,
       GeomRibbon$draw_group,
-      trace_steps = -1,
+      trace_steps = -1L,
       trace_exprs = quote({
         # Give gradient fill to the confidence bands for group 3
         if (data$group[1] == 3) {
@@ -536,7 +546,7 @@ And of course, all of this is not limited to objects from the
 `{ggplot2}` package itself. You can have fun hacking extension packages
 as well!
 
-    library(ggh4x)
+    library(ggh4x) # v0.2.1
 
     # Example from - https://teunbrand.github.io/ggh4x/articles/Facets.html ----
 

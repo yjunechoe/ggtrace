@@ -63,7 +63,6 @@ A simple example:
 ```{r}
 dummy_fn <- function(x = 1, y = 2) {
   z <- x + y
-  x <- 10
   return(z)
 }
 dummy_fn()
@@ -71,7 +70,7 @@ dummy_fn()
 
 Essentially, `ggtrace()` allows you to inject code into a function and safely/temporarily change its execution behavior. 
 
-The following code injects the code `z <- z * 10` right as `dummy_fn` enters the third "step" in the body, _right before_ the line `x <- 10` is ran.
+The following code injects the code `z <- z * 10` right as `dummy_fn` enters the third "step" in the body, _right before_ the line `return(z)` is ran.
 
 ```{r}
 body(dummy_fn)[[3]]
@@ -99,7 +98,6 @@ Essentially, `dummy_fn` ran with this following modified code just now:
 dummy_fn_traced <- function(x = 1, y = 2) {
   z <- x + y
   z <- z * 10 #< Look here!
-  x <- 10
   return(z)
 }
 dummy_fn_traced()
@@ -108,7 +106,6 @@ dummy_fn_traced()
 By default, traces created by `{ggtrace}` functions delete themselves after being triggered. You can also check whether a function is currently being traced with `is_traced()`.
 
 ```{r}
-dummy_fn()
 is_traced(dummy_fn)
 ```
 
@@ -124,7 +121,7 @@ See the references section [**Extending base::trace()**](https://yjunechoe.githu
 ## **Workflows for interacting with ggplot internals**
 
 ```{r}
-library(ggplot2)
+library(ggplot2) # v3.3.5
 ```
 
 Admittedly, `ggtrace()` is a bit too clunky for interactive explorations of ggplot internals. To address this, we offer "workflow" functions in the form of `ggtrace_{action}_{value}()`. These are grouped into three workflows: Inspect, Capture, and Highjack.
@@ -136,7 +133,6 @@ Admittedly, `ggtrace()` is a bit too clunky for interactive explorations of ggpl
 Say we want to learn more about how `geom_smooth()` layer works, exactly
 
 ```{r}
-class(geom_smooth())
 geom_smooth()
 ```
 
@@ -154,19 +150,22 @@ p
 Let's focus on the Stat ggproto. We see that `geom_smooth()` uses the `StatSmooth` ggproto
 
 ```{r}
-class(geom_smooth()$stat)
+class( geom_smooth()$stat )
+
 identical(StatSmooth, geom_smooth()$stat)
 ```
 
 The bulk of the work by a Stat is done in the `compute_*` family of methods, which are essentially just functions. We'll focus on `compute_group` here:
 
-```{r, eval = FALSE}
+```{r}
 # ggproto methods wrap over the actual function and print extra info
-# - see `ggplot2:::format.ggproto_method` for details
-class(StatSmooth$compute_group)
+class( StatSmooth$compute_group )
 
 # Use `get_method` to pull out just the function component
 class( get_method(StatSmooth$compute_group) )
+
+# StatSmooth inherits `compute_layer`/`compute_panel` and defines `compute_group`
+get_method_inheritance(StatSmooth)
 ```
 
 ### **Inspect**
@@ -183,7 +182,9 @@ We can answer that with another workflow function `ggtrace_inspect_return()`, wh
 
 ```{r}
 return_val <- ggtrace_inspect_return(x = p, method = StatSmooth$compute_group)
-nrow(return_val)
+
+dim(return_val)
+
 head(return_val)
 ```
 
@@ -215,7 +216,7 @@ If we instead wanted to get the return value of `StatSmooth$compute_group` for t
       return_val_2_3_B <- ggtrace_inspect_return(
         x = p,
         method = StatSmooth$compute_group,
-        cond = 6L # shorthand for quote(._counter_ == 6L)
+        cond = 6L # shorthand for `quote(._counter_ == 6L)`
       )
       ```
 
@@ -259,7 +260,7 @@ This makes it very convenient for us to explore its behavior with different argu
 For example, when `flipped_aes = TRUE`, we get `xmin` and `xmax` columns replacing `ymin` and `ymax`:
 
 ```{r}
-head(captured_fn_2_3(flipped_aes = TRUE))
+head( captured_fn_2_3(flipped_aes = TRUE) )
 ```
 
 In this sense, we can effectively simulate what happens in `geom_smooth(orientation = "y")` without needing to construct an entirely different ggplot.
@@ -267,7 +268,7 @@ In this sense, we can effectively simulate what happens in `geom_smooth(orientat
 For another example, when we set the confidence interval to 10% with `level = 0.1`, the `ymin` and `ymax` values deviate less from the `y` value:
 
 ```{r}
-head(captured_fn_2_3(level = 0.1))
+head( captured_fn_2_3(level = 0.1) )
 ```
 
 Lastly, let's talk about the `data` variable we've been using inside the `cond` argument of some of these workflow functions. What is `data$group` and `data$PANEL`? How do you know what `data` looks like?
@@ -280,12 +281,13 @@ args_2_3 <- ggtrace_inspect_args(
   method = StatSmooth$compute_group,
   cond = quote(data$PANEL[1] == 2 && data$group[1] == 3)
 )
+
 identical(names(args_2_3), names(formals(captured_fn_2_3)))
 
 args_2_3$data
 ```
 
-We see that `PANEL` and `group` columns conveniently give us information about the panel and group that the `compute_group` is doing calculations over.
+We see that `PANEL` and `group` columns conveniently give us information about the panel and group that `compute_group` is doing calculations over.
 
 
 ### **Highjack**
@@ -331,7 +333,8 @@ Lastly, `ggtrace_highjack_return()` exposes an internal function called `returnV
 For example, we can "intercept" the dataframe output, do data wrangling on it, and have the method return that instead. Here, we hack the data for the group to make it look like there's an absurd degree of heteroskedasticity:
 
 ```{r, message=FALSE, warning=FALSE}
-library(dplyr)
+library(dplyr) # v1.0.8
+
 ggtrace_highjack_return(
   x = p,
   method = StatSmooth$compute_group,
@@ -363,7 +366,7 @@ Like `ggtrace()`, you can inject code into different steps of a method _as it ru
 with_ggtrace(
   x = p + facet_grid(year ~ drv),
   method = Layout$render,
-  trace_steps = c(5, 8),
+  trace_steps = c(5L, 8L),
   trace_exprs = rlang::exprs(
     
     {
@@ -405,7 +408,7 @@ And like the workflow functions, you can have conditional traces that only evalu
 with_ggtrace(
   p,
   GeomRibbon$draw_group,
-  trace_steps = -1,
+  trace_steps = -1L,
   trace_exprs = quote({
     # Give gradient fill to the confidence bands for group 3
     if (data$group[1] == 3) {
@@ -427,7 +430,7 @@ with_ggtrace(
 And of course, all of this is not limited to objects from the `{ggplot2}` package itself. You can have fun hacking extension packages as well!
 
 ```{r}
-library(ggh4x)
+library(ggh4x) # v0.2.1
 
 # Example from - https://teunbrand.github.io/ggh4x/articles/Facets.html ----
 
