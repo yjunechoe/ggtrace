@@ -138,7 +138,7 @@ ggtrace_inspect_which <- function(x, method, cond) {
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the return value should be inspected. Defaults to `quote(._counter_ == 1L)`.
+#' @param cond When the return value should be inspected. Defaults to `1L`.
 #' @param at Which steps in the method body the values of `vars` should be retrieved.
 #'   Defaults to a special value `all` which is evaluated to all steps in the method body.
 #' @param vars A character vector of variable names
@@ -193,7 +193,9 @@ ggtrace_inspect_which <- function(x, method, cond) {
 #' ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
 #'
 #'
-ggtrace_inspect_vars <- function(x, method, cond = quote(._counter_ == 1L), at = "all", vars, by_var = TRUE) {
+ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var = TRUE) {
+
+  cond <- resolve_cond(cond)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 1L
@@ -293,7 +295,7 @@ ggtrace_inspect_vars <- function(x, method, cond = quote(._counter_ == 1L), at =
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the arguments should be inspected. Defaults to `quote(._counter_ == 1L)`.
+#' @param cond When the arguments should be inspected. Defaults to `1L`.
 #' @param hoist_dots Whether treat arguments passed to `...` like regular arguments. If `FALSE`,
 #'   the `...` is treated as an argument
 #'
@@ -312,8 +314,7 @@ ggtrace_inspect_vars <- function(x, method, cond = quote(._counter_ == 1L), at =
 #'
 #' p1
 #'
-#' # Argument value of `Stat$compute_panel` for the
-#' # first panel `cond = quote(._counter_ == 1L)`
+#' # Argument value of `Stat$compute_panel` for the first panel
 #' compute_panel_args_1 <- ggtrace_inspect_args(x = p1, method = Stat$compute_panel)
 #' names(ggformals(Stat$compute_panel))
 #' names(compute_panel_args_1)
@@ -324,7 +325,9 @@ ggtrace_inspect_vars <- function(x, method, cond = quote(._counter_ == 1L), at =
 #' names(with_dots)
 #' with_dots$`...`
 #'
-ggtrace_inspect_args <- function(x, method, cond = quote(._counter_ == 1L), hoist_dots = TRUE) {
+ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE) {
+
+  cond <- resolve_cond(cond)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
@@ -376,7 +379,7 @@ ggtrace_inspect_args <- function(x, method, cond = quote(._counter_ == 1L), hois
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the return value should be inspected. Defaults to `quote(._counter_ == 1L)`.
+#' @param cond When the return value should be inspected. Defaults to `1L`.
 #'
 #' @inheritSection topic-tracing-context Tracing context
 #'
@@ -393,13 +396,12 @@ ggtrace_inspect_args <- function(x, method, cond = quote(._counter_ == 1L), hois
 #'
 #' p1
 #'
-#' # Return value of `Stat$compute_panel` for the
-#' # first panel `cond = quote(._counter_ == 1L)`
+#' # Return value of `Stat$compute_panel` for the first panel
 #' ggtrace_inspect_return(x = p1, method = Stat$compute_panel)
 #'
 #' # Return value for 4th panel
 #' ggtrace_inspect_return(x = p1, method = Stat$compute_panel,
-#'                        cond = quote(._counter_ == 4L))
+#'                        cond = 4L)
 #'
 #' # Return value for 4th panel, 2nd group (bar)
 #' ggtrace_inspect_return(
@@ -407,7 +409,9 @@ ggtrace_inspect_args <- function(x, method, cond = quote(._counter_ == 1L), hois
 #'   cond = quote(data$PANEL[1] == 4 && data$group == 2)
 #' )
 #'
-ggtrace_inspect_return <- function(x, method, cond = quote(._counter_ == 1L)) {
+ggtrace_inspect_return <- function(x, method, cond = 1L) {
+
+  cond <- resolve_cond(cond)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L

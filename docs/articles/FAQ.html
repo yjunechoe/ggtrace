@@ -28,7 +28,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,16 +53,12 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Usage</h6>
     <a class="dropdown-item" href="../articles/intro.html">Introduction to ggtrace()</a>
-    <a class="dropdown-item" href="../articles/showcase-ggplot_build.html">Showcase: ggplot build</a>
-    <a class="dropdown-item" href="../articles/showcase-aes_evaluation.html">Showcase: aes evaluation</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
     <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
-    <a class="dropdown-item" href="../articles/comparisons.html">Comparison of debugging methods</a>
-    <a class="dropdown-item" href="../articles/technical-details.html">Technical details</a>
   </div>
 </li>
 <li class="nav-item">
@@ -161,7 +157,7 @@ traced function</p>
 <span class="co">#&gt;     x[list] &lt;- values</span>
 <span class="co">#&gt;     x</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x0000000014b1f8f8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x0000000014f33760&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:base&gt;</span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a
 call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
@@ -294,24 +290,24 @@ untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code
 <span class="co">#&gt; `StatBoxplot$compute_group` no longer being traced.</span>
 
 <span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0x000000002465b890`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0x000000002465b890`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0x00000000248ce998`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0x00000000248ce998`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1    10.14889       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0x00000000243122c8`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0x00000000243122c8`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0x0000000024569620`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0x0000000024569620`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span>
 <span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span>
 <span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span>
 <span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0x000000002507d798`</span>
-<span class="co">#&gt; $`StatBoxplot$compute_group-0x000000002507d798`[[1]]</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0x0000000024da34a8`</span>
+<span class="co">#&gt; $`StatBoxplot$compute_group-0x0000000024da34a8`[[1]]</span>
 <span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span>
 <span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span>
 <span class="co">#&gt;   relvarwidth flipped_aes</span>

@@ -4,7 +4,7 @@
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the method function should be captured. Defaults to `quote(._counter_ == 1L)`.
+#' @param cond When the method function should be captured. Defaults to `1L`.
 #'
 #' @note For functions and methods that take `...`, arguments passed to `...` are captured and
 #'   promoted to function arguments. The captured values are available for inspection via `formals()`.
@@ -75,7 +75,9 @@
 #'
 #' # Interactively explore with `debugonce(attr(p3_compute_panel, "inner"))`
 #'
-ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1L)) {
+ggtrace_capture_fn <- function(x, method, cond = 1L) {
+
+  cond <- resolve_cond(cond)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
@@ -147,7 +149,7 @@ ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1L)) {
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the method environment should be captured. Defaults to `quote(._counter_ == 1L)`.
+#' @param cond When the method environment should be captured. Defaults to `1L`.
 #' @param at Which step of the method body the environment should be captured.
 #'   See `ggbody()` for a list of expressions/steps in the method body.
 #'
@@ -214,7 +216,9 @@ ggtrace_capture_fn <- function(x, method, cond = quote(._counter_ == 1L)) {
 #' grid.newpage()
 #' grid.draw(editGrob(boxes[[1]], vp = viewport()))
 #'
-ggtrace_capture_env <- function(x, method, cond = quote(._counter_ == 1), at = -1L) {
+ggtrace_capture_env <- function(x, method, cond = 1L, at = -1L) {
+
+  cond <- resolve_cond(cond)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L

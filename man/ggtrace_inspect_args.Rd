@@ -4,12 +4,7 @@
 \alias{ggtrace_inspect_args}
 \title{Inspect the arguments passed into a method}
 \usage{
-ggtrace_inspect_args(
-  x,
-  method,
-  cond = quote(._counter_ == 1L),
-  hoist_dots = TRUE
-)
+ggtrace_inspect_args(x, method, cond = 1L, hoist_dots = TRUE)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -22,7 +17,7 @@ The ggproto method may be specified using any of the following forms:
 \item \code{namespace:::ggproto$method}
 }}
 
-\item{cond}{When the arguments should be inspected. Defaults to \code{quote(._counter_ == 1L)}.}
+\item{cond}{When the arguments should be inspected. Defaults to \code{1L}.}
 
 \item{hoist_dots}{Whether treat arguments passed to \code{...} like regular arguments. If \code{FALSE},
 the \code{...} is treated as an argument}
@@ -36,16 +31,19 @@ Inspect the arguments passed into a method
 \section{Tracing context}{
 
 When quoted expressions are passed to the \code{cond} or \code{value} argument of
-workflow functions (in the form of \verb{ggtrace_\{action\}_\{value\}()}), they are
-evaluated in a special environment which we call the "tracing context".
+workflow functions they are evaluated in a special environment which
+we call the "tracing context".
 
 The tracing context is "data-masked" (see \code{rlang::eval_tidy()}), and exposes
-an internal variable called \code{._counter_} (\code{.data$._counter_}) which tracks how
-many times a function/method has been called by the ggplot object supplied to
-the \code{x} argument of workflow functions. For example, \code{cond = quote(._counter_ == 1)}
-is evaluated as \code{TRUE} when the method is called for the first time, and
-this is the default value of \code{cond} for workflow functions that only return
-one value (e.g., \code{ggtrace_capture_fn()}).
+an internal variable called \code{._counter_} which increments every time a
+function/method has been called by the ggplot object supplied to the \code{x}
+argument of workflow functions. For example, \code{cond = quote(._counter_ == 1L)}
+is evaluated as \code{TRUE} when the method is called for the first time. The
+\code{cond} argument also supports numeric shorthands like \code{cond = 1L} which evaluates to
+\code{quote(._counter_ == 1L)}, and this is the default value of \code{cond} for
+all workflow functions that only return one value (e.g., \code{ggtrace_capture_fn()}).
+It is recommended to consult the output of \code{ggtrace_inspect_n()} and
+\code{ggtrace_inspect_which()} to construct expressions that condition on \code{._counter_}.
 
 For highjack functions like \code{ggtrace_highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
@@ -64,8 +62,7 @@ p1 <- ggplot(diamonds, aes(cut)) +
 
 p1
 
-# Argument value of `Stat$compute_panel` for the
-# first panel `cond = quote(._counter_ == 1L)`
+# Argument value of `Stat$compute_panel` for the first panel
 compute_panel_args_1 <- ggtrace_inspect_args(x = p1, method = Stat$compute_panel)
 names(ggformals(Stat$compute_panel))
 names(compute_panel_args_1)

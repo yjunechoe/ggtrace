@@ -2,7 +2,7 @@
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the return value should be replaced. Defaults to `quote(._counter_ == 1L)`.
+#' @param cond When the return value should be replaced. Defaults to `1L`.
 #' @param values A named list of variable-value pairings.
 #'   When values are expressions, they are evaluated in the formals.
 #' @param draw Whether to draw the modified graphical output from evaluating `x`.
@@ -37,7 +37,6 @@
 #' ggtrace_highjack_args(
 #'   x = p,
 #'   method = StatSmooth$compute_group,
-#'   cond = TRUE,
 #'   values = rlang::exprs(
 #'
 #'     # Every time the method is called, call it with a bigger CI
@@ -51,7 +50,9 @@
 #' )
 #'
 #'
-ggtrace_highjack_args <- function(x, method, cond = quote(._counter_ == 1L), values, draw = TRUE) {
+ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
+
+  cond <- resolve_cond(cond)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
@@ -119,7 +120,7 @@ ggtrace_highjack_args <- function(x, method, cond = quote(._counter_ == 1L), val
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
-#' @param cond When the return value should be replaced. Defaults to `quote(._counter_ == 1L)`.
+#' @param cond When the return value should be replaced. Defaults to `1L`.
 #' @param value What the method should return instead. Defaults to `quote(returnValue())`.
 #' @param draw Whether to draw the modified graphical output from evaluating `x`.
 #'   Defaults to `TRUE`.
@@ -142,7 +143,7 @@ ggtrace_highjack_args <- function(x, method, cond = quote(._counter_ == 1L), val
 #'
 #' p1
 #'
-#' # Highjack `Stat$compute_panel` at the first panel `cond = quote(._counter_ == 1L)`
+#' # Highjack `Stat$compute_panel` at the first panel
 #' # to return higher values for `count`
 #' ggtrace_highjack_return(
 #'   x = p1, method = Stat$compute_panel,
@@ -174,7 +175,9 @@ ggtrace_highjack_args <- function(x, method, cond = quote(._counter_ == 1L), val
 #'   })
 #' )
 #'
-ggtrace_highjack_return <- function(x, method, cond = quote(._counter_ == 1L), value = quote(returnValue()), draw = TRUE) {
+ggtrace_highjack_return <- function(x, method, cond = 1L, value = quote(returnValue()), draw = TRUE) {
+
+  cond <- resolve_cond(cond)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L

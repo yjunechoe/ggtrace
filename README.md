@@ -250,7 +250,7 @@ example, we can do so in one of two ways:
         return_val_2_3_B <- ggtrace_inspect_return(
           x = p,
           method = StatSmooth$compute_group,
-          cond = quote(._counter_ == 6)
+          cond = 6L # shorthand for quote(._counter_ == 6L)
         )
 
 These two approaches work the same:

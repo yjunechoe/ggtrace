@@ -24,3 +24,14 @@ ggdraw_silent <- function(x) {
 print.ggtrace_highjacked <- function(x, ...) {
   ggdraw_silent(x)
 }
+
+resolve_cond <- function(x) {
+  if (is.numeric(x)) {
+    if (length(x) > 1L) {
+      rlang::warn("`cond` is length > 1 and only the first element will be used")
+      x <- x[1]
+    }
+    x <- rlang::expr(._counter_ == !!as.integer(x))
+  }
+  x
+}

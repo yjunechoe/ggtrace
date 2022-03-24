@@ -14,7 +14,7 @@ template:
 
 reference:
 
-- title: Workflows (experimental; due for v0.5)
+- title: Workflows
   desc: >
     These high-level functions take a ggplot object and a function or ggproto method,
     allowing interactions with the ggplot's build pipeline as it is evaluated. Functions
@@ -90,19 +90,19 @@ articles:
   navbar: Usage
   contents:
   - intro
-  - showcase-ggplot_build
-  - showcase-aes_evaluation
+  # - showcase-ggplot_build
+  # - showcase-aes_evaluation
 - title: Case Studies
   navbar: Case Studies
   contents:
-# - casestudy-after_scale
+  # - casestudy-after_scale
   - casestudy-ggxmean
 - title: Miscellaneous
   navbar: Miscellaneous
   contents:
   - FAQ
-  - comparisons
-  - technical-details
+  # - comparisons
+  # - technical-details
 
 navbar:
   structure:

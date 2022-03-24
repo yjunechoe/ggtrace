@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 #### **Programmatically explore, debug, and manipulate ggplot internals**
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/devel%20version-0.5.0-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.5.0.9000-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ### **Installation**
@@ -41,7 +41,7 @@ remotes::install_github("yjunechoe/ggtrace")
 ```
 
 ```{r setup}
-library(ggtrace) # v0.5.0
+library(ggtrace) # v0.5.0.9000
 ```
 
 More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://yjunechoe.github.io/ggtrace)
@@ -215,7 +215,7 @@ If we instead wanted to get the return value of `StatSmooth$compute_group` for t
       return_val_2_3_B <- ggtrace_inspect_return(
         x = p,
         method = StatSmooth$compute_group,
-        cond = quote(._counter_ == 6)
+        cond = 6L # shorthand for quote(._counter_ == 6L)
       )
       ```
 
