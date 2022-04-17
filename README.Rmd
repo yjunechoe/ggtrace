@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 #### **Programmatically explore, debug, and manipulate ggplot internals**
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/devel%20version-0.5.0.9000-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.5.1-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ### **Installation**
@@ -41,7 +41,7 @@ remotes::install_github("yjunechoe/ggtrace")
 ```
 
 ```{r setup}
-library(ggtrace) # v0.5.0.9000
+library(ggtrace) # v0.5.1
 ```
 
 More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://yjunechoe.github.io/ggtrace)
@@ -513,5 +513,68 @@ with_ggtrace(
   ## "gtable" returns the graphical output after injecting the code
   out = "gtable" # you can also use the "g" shorthand
   
+)
+```
+
+## **Case study: Data-driven legends**
+
+Suppose we want to change the fill legend key from squares to the actual violins drawn for each category:
+
+```{r}
+violin_plot <- dplyr::starwars %>% 
+  filter(species == "Human", !is.na(height)) %>% 
+  ggplot(aes(gender, height)) +
+  geom_violin(aes(fill = gender)) +
+  theme(
+    legend.key.size = unit(1, "in"),
+    legend.key = element_rect(color = "grey", fill = NA)
+  )
+
+violin_plot
+```
+
+We know that each violin is drawn by `GeomViolin$draw_group`, called for each group in the plot.
+
+```{r}
+ggtrace_inspect_n(violin_plot, GeomViolin$draw_group)
+```
+
+Let's grab the plotted violins with `ggtrace_inspect_return()`
+
+```{r}
+violins <- lapply(1:2, ggtrace_inspect_return, x = violin_plot, method = GeomViolin$draw_group)
+violins
+```
+
+Then, we can use `ggtrace_highjack_return()` to highjack the return value of the key drawing method `GeomViolin$draw_key` such that it returns the output from the `draw_group` method instead. We set `cond = 1:2` and value to `substitute(violins[[._counter_]])` so that the `draw_key` method returns the first violin as the first legend key, and the second violin as the second legend key.
+
+```{r}
+ggtrace_highjack_return(
+  violin_plot,
+  GeomViolin$draw_key,
+  cond = 1:2,
+  value = substitute(violins[[._counter_]])
+)
+```
+
+Note that violins are drawn with respect to the panel coordinate system, because that's how the `draw_group` method does things. We create and use the function `center_grob()` to center them before they're passed to the `value` argument of `ggtrace_highjack_return`.
+
+```{r}
+library(grid)
+center_grob <- function(grob) {
+  x_range <- range(unclass(grob$x))
+  y_range <- range(unclass(grob$y))
+  editGrob(grob, vp = viewport(
+    xscale = x_range, yscale = y_range,
+    width = diff(x_range), height = diff(y_range)
+  ))
+}
+violins_stretched <- lapply(violins, center_grob)
+
+ggtrace_highjack_return(
+  violin_plot,
+  GeomViolin$draw_key,
+  cond = 1:2,
+  value = substitute(violins_stretched[[._counter_]])
 )
 ```

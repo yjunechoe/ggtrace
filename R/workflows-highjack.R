@@ -52,7 +52,7 @@
 #'
 ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
 
-  cond <- resolve_cond(cond)
+  cond <- resolve_cond(cond, multiple = TRUE)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
@@ -177,7 +177,7 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
 #'
 ggtrace_highjack_return <- function(x, method, cond = 1L, value = quote(returnValue()), draw = TRUE) {
 
-  cond <- resolve_cond(cond)
+  cond <- resolve_cond(cond, multiple = TRUE)
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L

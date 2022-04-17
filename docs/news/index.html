@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,13 +59,16 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggtrace-development-version">ggtrace (development version)<a class="anchor" aria-label="anchor" href="#ggtrace-development-version"></a></h2>
+<div class="section level3">
+<h3 id="ggtrace-development-version-1">ggtrace 0.5.1<a class="anchor" aria-label="anchor" href="#ggtrace-development-version-1"></a></h3>
 <ul><li>
 <code>cond</code> argument of workflow functions now support integer
 shorthand for conditioning on the counter. E.g., <code>cond = 1L</code>
-is converted to <code>cond = quote(._counter_ == 1L)</code>
-</li>
-</ul><div class="section level3">
-<h3 id="ggtrace-development-version-1">ggtrace 0.5.0<a class="anchor" aria-label="anchor" href="#ggtrace-development-version-1"></a></h3>
+is converted to <code>cond = quote(._counter_ == 1L)</code>.
+Multi-length integer vector is supported for highjack workflows.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="ggtrace-development-version-2">ggtrace 0.5.0<a class="anchor" aria-label="anchor" href="#ggtrace-development-version-2"></a></h3>
 <div class="section level4">
 <h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
 <ul><li><p>Added complements to the <code><a href="https://rdrr.io/r/base/debug.html" class="external-link">base::debug()</a></code> family of

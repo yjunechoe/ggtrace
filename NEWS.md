@@ -1,6 +1,8 @@
 # ggtrace (development version)
 
-- `cond` argument of workflow functions now support integer shorthand for conditioning on the counter. E.g., `cond = 1L` is converted to `cond = quote(._counter_ == 1L)`
+## ggtrace 0.5.1
+
+- `cond` argument of workflow functions now support integer shorthand for conditioning on the counter. E.g., `cond = 1L` is converted to `cond = quote(._counter_ == 1L)`. Multi-length integer vector is supported for highjack workflows.
 
 ## ggtrace 0.5.0
 

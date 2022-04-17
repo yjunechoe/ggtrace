@@ -25,13 +25,13 @@ print.ggtrace_highjacked <- function(x, ...) {
   ggdraw_silent(x)
 }
 
-resolve_cond <- function(x) {
+resolve_cond <- function(x, multiple = FALSE) {
   if (is.numeric(x)) {
-    if (length(x) > 1L) {
-      rlang::warn("`cond` is length > 1 and only the first element will be used")
-      x <- x[1]
+    if (multiple && length(x) > 1L) {
+      x <- rlang::expr(._counter_ %in% !!as.integer(x))
+    } else {
+      x <- rlang::expr(._counter_ == !!as.integer(x))
     }
-    x <- rlang::expr(._counter_ == !!as.integer(x))
   }
   x
 }

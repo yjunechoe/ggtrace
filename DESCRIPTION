@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically explore, debug, and manipulate ggplot internals
-Version: 0.5.0.9000
+Version: 0.5.1
 Authors@R: c(
       person(given = "June",
            family = "Choe",
