@@ -59,18 +59,25 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggtrace-development-version">ggtrace (development version)<a class="anchor" aria-label="anchor" href="#ggtrace-development-version"></a></h2>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5" id="ggtrace-05x">ggtrace 0.5.x<a class="anchor" aria-label="anchor" href="#ggtrace-05x"></a></h2>
 <div class="section level3">
-<h3 id="ggtrace-development-version-1">ggtrace 0.5.1<a class="anchor" aria-label="anchor" href="#ggtrace-development-version-1"></a></h3>
+<h3 id="ggtrace-0-5">ggtrace 0.5.1<a class="anchor" aria-label="anchor" href="#ggtrace-0-5"></a></h3>
+<div class="section level4">
+<h4 id="new-features-0-5">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-5"></a></h4>
 <ul><li>
 <code>cond</code> argument of workflow functions now support integer
 shorthand for conditioning on the counter. E.g., <code>cond = 1L</code>
 is converted to <code>cond = quote(._counter_ == 1L)</code>.
-Multi-length integer vector is supported for highjack workflows.</li>
+Multi-length integer vector is supported for highjack workflows.
+(<a href="https://github.com/yjunechoe/ggtrace/issues/84" class="external-link">#84</a>)</li>
 </ul></div>
+</div>
 <div class="section level3">
-<h3 id="ggtrace-development-version-2">ggtrace 0.5.0<a class="anchor" aria-label="anchor" href="#ggtrace-development-version-2"></a></h3>
+<h3 id="ggtrace-0-5-1">ggtrace 0.5.0<a class="anchor" aria-label="anchor" href="#ggtrace-0-5-1"></a></h3>
 <div class="section level4">
-<h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
+<h4 id="new-features-0-5-1">New Features<a class="anchor" aria-label="anchor" href="#new-features-0-5-1"></a></h4>
 <ul><li><p>Added complements to the <code><a href="https://rdrr.io/r/base/debug.html" class="external-link">base::debug()</a></code> family of
 functions that are compatible with ggproto methods -
 <code><a href="../reference/ggdebug.html">ggdebug()</a></code>, <code><a href="../reference/ggdebug.html">ggdebugonce()</a></code>,
@@ -106,7 +113,7 @@ grob after evaluating <code>x</code> with injected expressions in
 programmatically.</p></li>
 </ul></div>
 <div class="section level4">
-<h4 id="breaking-changes-development-version">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-development-version"></a></h4>
+<h4 id="breaking-changes-0-5">Breaking Changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-5"></a></h4>
 <ul><li>
 <code><a href="../reference/ggtrace_capture_env.html">ggtrace_capture_env()</a></code> default value of <code>at</code>
 is changed to <code>-1L</code>, which captures a snapshot of the runtime
@@ -117,7 +124,7 @@ used if <code>at</code> is length &gt; 1</li>
 always return the graphical output (gtable grob) (<a href="https://github.com/yjunechoe/ggtrace/issues/78" class="external-link">#78</a>)</li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fixes-development-version">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h4>
+<h4 id="bug-fixes-0-5">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-5"></a></h4>
 <ul><li>Fixed an issue where a trace would fail to remove itself with
 <code>ggtrace(once = TRUE)</code> if it was triggered by a copy of the
 traced function (<a href="https://github.com/yjunechoe/ggtrace/issues/59" class="external-link">#59</a>)</li>
