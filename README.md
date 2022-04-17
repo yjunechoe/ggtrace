@@ -643,6 +643,7 @@ violins drawn for each category:
       ggplot(aes(gender, height)) +
       geom_violin(aes(fill = gender)) +
       theme(
+        aspect.ratio = 1,
         legend.key.size = unit(1, "in"),
         legend.key = element_rect(color = "grey", fill = NA)
       )
@@ -689,15 +690,18 @@ use the function `center_grob()` to center them before they’re passed to
 the `value` argument of `ggtrace_highjack_return`.
 
     library(grid)
-    center_grob <- function(grob) {
+    center_and_resize <- function(grob) {
       x_range <- range(unclass(grob$x))
       y_range <- range(unclass(grob$y))
+      width <- diff(x_range)
+      height <- diff(y_range)
+      resizing <- (1 - 0.2)/max(width, height)
       editGrob(grob, vp = viewport(
         xscale = x_range, yscale = y_range,
-        width = diff(x_range), height = diff(y_range)
+        width = width * resizing, height = height * resizing
       ))
     }
-    violins_stretched <- lapply(violins, center_grob)
+    violins_stretched <- lapply(violins, center_and_resize)
 
     ggtrace_highjack_return(
       violin_plot,
