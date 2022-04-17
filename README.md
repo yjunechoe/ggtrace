@@ -61,19 +61,19 @@ is ran.
     body(dummy_fn)[[3]]
     #> return(z)
 
+    ggtrace(
+      method = dummy_fn,
+      trace_steps = 3L, # Before `return(z)` is ran
+      trace_exprs = quote(z <- z * 10)
+    )
+    #> `dummy_fn` now being traced.
+
 Note that the value of `trace_exprs` must be of type “language” (a
 quoted expression), the idea being that we are *injecting* code to be
 evaluate inside the function when it is called. Often, providing the
 code wrapped in `quote()` suffices. For more complex injections see the
 [Expressions chapter of Advanced
 R](https://adv-r.hadley.nz/expressions.html)
-
-    ggtrace(
-      method = dummy_fn,
-      trace_steps = 3,
-      trace_exprs = quote(z <- z * 10)
-    )
-    #> `dummy_fn` now being traced.
 
 After this `ggtrace()` call, the next time `dummy_fn` is called it is
 run with this injected code.
