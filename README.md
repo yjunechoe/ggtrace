@@ -396,16 +396,15 @@ First we store the modified return value in some variable:
 
     modified_return_smooth <- captured_fn_2_3(level = 0.1)
 
-Then we target the same group inside `cond` and pass the modified values
-to the `value` argument using
-[`!!`](https://rlang.r-lib.org/reference/topic-defuse.html) and
-`rlang::expr()`
+Then we target the same group inside `cond` and pass the modified value
+`modified_return_smooth` to the `value` argument using `substitute()`:
 
     ggtrace_highjack_return(
       x = p,
       method = StatSmooth$compute_group,
       cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
-      value = rlang::expr(!!modified_return_smooth)
+      value = substitute(modified_return_smooth)
+              # or `rlang::expr(!!modified_return_smooth)`
     )
 
 <img src="man/figures/README-unnamed-chunk-26-1.png" width="100%" />
@@ -555,7 +554,7 @@ as well!
       labs(x = "Engine displacement", y = "Highway miles per gallon") +
       guides(colour = "none")
 
-    ## Fixed-aspect plot with free & independent scales using `ggh4x::facet_grid2()` ====
+    ## Fixed-aspect plot w/ independent scales using `ggh4x::facet_grid2()` ====
     p2 <- p +
       ggh4x::facet_grid2(vars(year), vars(drv), scales = "free", independent = "all") +
       theme_grey(base_size = 9) +
@@ -574,7 +573,7 @@ as well!
       ## are merged into the `panel_table` <gtable> and shipped off
       trace_steps = 13, # See `ggbody(FacetGrid2$draw_panels)`
       
-      ## Argument 4: The code injection to rotate the 2nd panel (1st row, 2nd column) ====
+      ## Argument 4: The code injection to rotate the 2nd panel ====
       trace_exprs = quote({
         
         ### FIRST, specify row/column of panel to target ####
@@ -588,7 +587,7 @@ as well!
         ### that has its axes attached to itself, using `grid::gTree()`
         panels[[target_panel]] <- gTree(
           
-          ##### Argument `children`: a list (`grid::gTree()`) of three grobs:
+          ##### Argument `children`: a list (`grid::gList()`) of three grobs:
           children = gList(
             
             ###### 1. The original panel itself
@@ -660,7 +659,8 @@ each group in the plot.
 
 Let’s grab the plotted violins with `ggtrace_inspect_return()`
 
-    violins <- lapply(1:2, ggtrace_inspect_return, x = violin_plot, method = GeomViolin$draw_group)
+    violins <- lapply(1:2, ggtrace_inspect_return,
+                      x = violin_plot, method = GeomViolin$draw_group)
     violins
     #> [[1]]
     #> polygon[geom_violin.polygon.2816] 
@@ -686,8 +686,8 @@ and the second violin as the second legend key.
 
 Note that violins are drawn with respect to the panel coordinate system,
 because that’s how the `draw_group` method does things. We create and
-use the function `center_grob()` to center them before they’re passed to
-the `value` argument of `ggtrace_highjack_return`.
+use the function `center_and_resize()` to edit the violins before
+they’re passed to the `value` argument of `ggtrace_highjack_return()`.
 
     library(grid)
     center_and_resize <- function(grob) {

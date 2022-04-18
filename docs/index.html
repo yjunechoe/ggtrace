@@ -447,14 +447,15 @@ package.</p>
 <p>First we store the modified return value in some variable:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modified_return_smooth <span class="ot">&lt;-</span> <span class="fu">captured_fn_2_3</span>(<span class="at">level =</span> <span class="fl">0.1</span>)</span></code></pre></div>
 <p>Then we target the same group inside <code>cond</code> and pass the
-modified values to the <code>value</code> argument using <a href="https://rlang.r-lib.org/reference/topic-defuse.html" class="external-link"><code>!!</code></a>
-and <code><a href="https://rlang.r-lib.org/reference/expr.html" class="external-link">rlang::expr()</a></code></p>
+modified value <code>modified_return_smooth</code> to the
+<code>value</code> argument using <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute()</a></code>:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">quote</span>(data<span class="sc">$</span>PANEL[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>),</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> rlang<span class="sc">::</span><span class="fu">expr</span>(<span class="sc">!!</span>modified_return_smooth)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">substitute</span>(modified_return_smooth)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>          <span class="co"># or `rlang::expr(!!modified_return_smooth)`</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-26-1.png" width="100%"></p>
 <p>The confidence band is nearly invisible for that fitted line because
 it’s only capturing a 10% confidence interval!</p>
@@ -590,7 +591,7 @@ extension packages as well!</p>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Engine displacement"</span>, <span class="at">y =</span> <span class="st">"Highway miles per gallon"</span>) <span class="sc">+</span></span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">colour =</span> <span class="st">"none"</span>)</span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Fixed-aspect plot with free &amp; independent scales using `ggh4x::facet_grid2()` ====</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="do">## Fixed-aspect plot w/ independent scales using `ggh4x::facet_grid2()` ====</span></span>
 <span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
 <span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  ggh4x<span class="sc">::</span><span class="fu">facet_grid2</span>(<span class="fu">vars</span>(year), <span class="fu">vars</span>(drv), <span class="at">scales =</span> <span class="st">"free"</span>, <span class="at">independent =</span> <span class="st">"all"</span>) <span class="sc">+</span></span>
 <span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_grey</span>(<span class="at">base_size =</span> <span class="dv">9</span>) <span class="sc">+</span></span>
@@ -609,7 +610,7 @@ extension packages as well!</p>
 <span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>  <span class="do">## are merged into the `panel_table` &lt;gtable&gt; and shipped off</span></span>
 <span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> <span class="dv">13</span>, <span class="co"># See `ggbody(FacetGrid2$draw_panels)`</span></span>
 <span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 4: The code injection to rotate the 2nd panel (1st row, 2nd column) ====</span></span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Argument 4: The code injection to rotate the 2nd panel ====</span></span>
 <span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>({</span>
 <span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>    <span class="do">### FIRST, specify row/column of panel to target ####</span></span>
@@ -623,7 +624,7 @@ extension packages as well!</p>
 <span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a>    <span class="do">### that has its axes attached to itself, using `grid::gTree()`</span></span>
 <span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a>    panels[[target_panel]] <span class="ot">&lt;-</span> <span class="fu">gTree</span>(</span>
 <span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>      <span class="do">##### Argument `children`: a list (`grid::gTree()`) of three grobs:</span></span>
+<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a>      <span class="do">##### Argument `children`: a list (`grid::gList()`) of three grobs:</span></span>
 <span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a>      <span class="at">children =</span> <span class="fu">gList</span>(</span>
 <span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>        <span class="do">###### 1. The original panel itself</span></span>
@@ -692,13 +693,14 @@ plot.</p>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div>
 <p>Let’s grab the plotted violins with
 <code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code></p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>violins <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ggtrace_inspect_return, <span class="at">x =</span> violin_plot, <span class="at">method =</span> GeomViolin<span class="sc">$</span>draw_group)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>violins</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; polygon[geom_violin.polygon.2816] </span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; polygon[geom_violin.polygon.2880]</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>violins <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ggtrace_inspect_return,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> violin_plot, <span class="at">method =</span> GeomViolin<span class="sc">$</span>draw_group)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>violins</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; polygon[geom_violin.polygon.2816] </span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; polygon[geom_violin.polygon.2880]</span></span></code></pre></div>
 <p>Then, we can use <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to highjack
 the return value of the key drawing method
 <code>GeomViolin$draw_key</code> such that it returns the output from
@@ -716,9 +718,9 @@ legend key, and the second violin as the second legend key.</p>
 <p><img src="reference/figures/README-unnamed-chunk-35-1.png" width="100%"></p>
 <p>Note that violins are drawn with respect to the panel coordinate
 system, because that’s how the <code>draw_group</code> method does
-things. We create and use the function <code>center_grob()</code> to
-center them before they’re passed to the <code>value</code> argument of
-<code>ggtrace_highjack_return</code>.</p>
+things. We create and use the function <code>center_and_resize()</code>
+to edit the violins before they’re passed to the <code>value</code>
+argument of <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>center_and_resize <span class="ot">&lt;-</span> <span class="cf">function</span>(grob) {</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  x_range <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">unclass</span>(grob<span class="sc">$</span>x))</span>
