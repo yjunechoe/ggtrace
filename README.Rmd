@@ -296,7 +296,7 @@ Once we have some understanding of how `StatSmooth$compute_group` works, we may 
 
 Let's revisit our examples from the Capture workflow. What if the third group of the second panel calculated a more conservative confidence interval (`level = 0.1`)? What is this effect on the graphical output?
 
-To answer this question, we use `ggtrace_highjack_return()` to have a method return an entirely different value, with help of the `{rlang}` package.
+To answer this question, we use `ggtrace_highjack_return()` to have a method return an entirely different value by supplying it an [expression](https://adv-r.hadley.nz/expressions.html).
 
 First we store the modified return value in some variable:
 
@@ -304,7 +304,7 @@ First we store the modified return value in some variable:
 modified_return_smooth <- captured_fn_2_3(level = 0.1)
 ```
 
-Then we target the same group inside `cond` and pass the modified value `modified_return_smooth` to the `value` argument using `substitute()`:
+Then we target the same group inside `cond` and pass `modified_return_smooth` to the `value` argument _as an expression_, using `substitute()`:
 
 ```{r}
 ggtrace_highjack_return(
@@ -316,7 +316,7 @@ ggtrace_highjack_return(
 )
 ```
 
-The confidence band is nearly invisible for that fitted line because it's only capturing a 10% confidence interval!
+The confidence band is now nearly invisible for that fitted line because it's only capturing a 10% confidence interval!
 
 Here's another example where we make the method fit predictions from a loess regression instead. To achieve this directly, we use `ggtrace_highjack_args()` and set the `values` to `list(method = "loess")`:
 
@@ -549,18 +549,18 @@ violins <- lapply(1:2, ggtrace_inspect_return,
 violins
 ```
 
-Then, we can use `ggtrace_highjack_return()` to highjack the return value of the key drawing method `GeomViolin$draw_key` such that it returns the output from the `draw_group` method instead. We set `cond = 1:2` and value to `substitute(violins[[._counter_]])` so that the `draw_key` method returns the first violin as the first legend key, and the second violin as the second legend key.
+Then, we can use `ggtrace_highjack_return()` to highjack the return value of the key drawing method `GeomViolin$draw_key` such that it returns the output from the `draw_group` method instead. We set `cond = 1:2` and `value = substitute(violins[[._counter_]])` so that the `draw_key` method returns the first violin as the first legend key, and the second violin as the second legend key.
 
 ```{r}
 ggtrace_highjack_return(
   violin_plot,
   GeomViolin$draw_key,
-  cond = 1:2,
+  cond = 1:2, # or `cond = TRUE` since method is called twice total
   value = substitute(violins[[._counter_]])
 )
 ```
 
-Note that violins are drawn with respect to the panel coordinate system, because that's how the `draw_group` method does things. We create and use the function `center_and_resize()` to edit the violins before they're passed to the `value` argument of `ggtrace_highjack_return()`.
+Note that violins in the legend are drawn with respect to the panel coordinate system, because that's how the `draw_group` method does things. For a cleaner look, we use the defined function `center_and_resize()` which modifies the violin grob using `grid::editGrob()` before passing them off to `ggtrace_highjack_return()`.
 
 ```{r}
 library(grid)

@@ -442,13 +442,12 @@ confidence interval (<code>level = 0.1</code>)? What is this effect on
 the graphical output?</p>
 <p>To answer this question, we use
 <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to have a method return an
-entirely different value, with help of the <a href="https://rlang.r-lib.org" class="external-link">rlang</a>
-package.</p>
+entirely different value by supplying it an <a href="https://adv-r.hadley.nz/expressions.html" class="external-link">expression</a>.</p>
 <p>First we store the modified return value in some variable:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modified_return_smooth <span class="ot">&lt;-</span> <span class="fu">captured_fn_2_3</span>(<span class="at">level =</span> <span class="fl">0.1</span>)</span></code></pre></div>
-<p>Then we target the same group inside <code>cond</code> and pass the
-modified value <code>modified_return_smooth</code> to the
-<code>value</code> argument using <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute()</a></code>:</p>
+<p>Then we target the same group inside <code>cond</code> and pass
+<code>modified_return_smooth</code> to the <code>value</code> argument
+<em>as an expression</em>, using <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute()</a></code>:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
@@ -457,8 +456,8 @@ modified value <code>modified_return_smooth</code> to the
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>          <span class="co"># or `rlang::expr(!!modified_return_smooth)`</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-26-1.png" width="100%"></p>
-<p>The confidence band is nearly invisible for that fitted line because
-it’s only capturing a 10% confidence interval!</p>
+<p>The confidence band is now nearly invisible for that fitted line
+because it’s only capturing a 10% confidence interval!</p>
 <p>Here’s another example where we make the method fit predictions from
 a loess regression instead. To achieve this directly, we use
 <code><a href="reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> and set the <code>values</code> to
@@ -705,22 +704,23 @@ plot.</p>
 the return value of the key drawing method
 <code>GeomViolin$draw_key</code> such that it returns the output from
 the <code>draw_group</code> method instead. We set
-<code>cond = 1:2</code> and value to
-<code>substitute(violins[[._counter_]])</code> so that the
+<code>cond = 1:2</code> and
+<code>value = substitute(violins[[._counter_]])</code> so that the
 <code>draw_key</code> method returns the first violin as the first
 legend key, and the second violin as the second legend key.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  violin_plot,</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  GeomViolin<span class="sc">$</span>draw_key,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="co"># or `cond = TRUE` since method is called twice total</span></span>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">substitute</span>(violins[[._counter_]])</span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-35-1.png" width="100%"></p>
-<p>Note that violins are drawn with respect to the panel coordinate
-system, because that’s how the <code>draw_group</code> method does
-things. We create and use the function <code>center_and_resize()</code>
-to edit the violins before they’re passed to the <code>value</code>
-argument of <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>.</p>
+<p>Note that violins in the legend are drawn with respect to the panel
+coordinate system, because that’s how the <code>draw_group</code> method
+does things. For a cleaner look, we use the defined function
+<code>center_and_resize()</code> which modifies the violin grob using
+<code><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">grid::editGrob()</a></code> before passing them off to
+<code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>center_and_resize <span class="ot">&lt;-</span> <span class="cf">function</span>(grob) {</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  x_range <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">unclass</span>(grob<span class="sc">$</span>x))</span>

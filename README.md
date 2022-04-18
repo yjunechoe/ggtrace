@@ -389,15 +389,16 @@ group of the second panel calculated a more conservative confidence
 interval (`level = 0.1`)? What is this effect on the graphical output?
 
 To answer this question, we use `ggtrace_highjack_return()` to have a
-method return an entirely different value, with help of the `{rlang}`
-package.
+method return an entirely different value by supplying it an
+[expression](https://adv-r.hadley.nz/expressions.html).
 
 First we store the modified return value in some variable:
 
     modified_return_smooth <- captured_fn_2_3(level = 0.1)
 
-Then we target the same group inside `cond` and pass the modified value
-`modified_return_smooth` to the `value` argument using `substitute()`:
+Then we target the same group inside `cond` and pass
+`modified_return_smooth` to the `value` argument *as an expression*,
+using `substitute()`:
 
     ggtrace_highjack_return(
       x = p,
@@ -409,7 +410,7 @@ Then we target the same group inside `cond` and pass the modified value
 
 <img src="man/figures/README-unnamed-chunk-26-1.png" width="100%" />
 
-The confidence band is nearly invisible for that fitted line because
+The confidence band is now nearly invisible for that fitted line because
 it’s only capturing a 10% confidence interval!
 
 Here’s another example where we make the method fit predictions from a
@@ -671,23 +672,25 @@ Let’s grab the plotted violins with `ggtrace_inspect_return()`
 Then, we can use `ggtrace_highjack_return()` to highjack the return
 value of the key drawing method `GeomViolin$draw_key` such that it
 returns the output from the `draw_group` method instead. We set
-`cond = 1:2` and value to `substitute(violins[[._counter_]])` so that
-the `draw_key` method returns the first violin as the first legend key,
-and the second violin as the second legend key.
+`cond = 1:2` and `value = substitute(violins[[._counter_]])` so that the
+`draw_key` method returns the first violin as the first legend key, and
+the second violin as the second legend key.
 
     ggtrace_highjack_return(
       violin_plot,
       GeomViolin$draw_key,
-      cond = 1:2,
+      cond = 1:2, # or `cond = TRUE` since method is called twice total
       value = substitute(violins[[._counter_]])
     )
 
 <img src="man/figures/README-unnamed-chunk-35-1.png" width="100%" />
 
-Note that violins are drawn with respect to the panel coordinate system,
-because that’s how the `draw_group` method does things. We create and
-use the function `center_and_resize()` to edit the violins before
-they’re passed to the `value` argument of `ggtrace_highjack_return()`.
+Note that violins in the legend are drawn with respect to the panel
+coordinate system, because that’s how the `draw_group` method does
+things. For a cleaner look, we use the defined function
+`center_and_resize()` which modifies the violin grob using
+`grid::editGrob()` before passing them off to
+`ggtrace_highjack_return()`.
 
     library(grid)
     center_and_resize <- function(grob) {
