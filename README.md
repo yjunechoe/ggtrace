@@ -78,6 +78,7 @@ R](https://adv-r.hadley.nz/expressions.html)
 After this `ggtrace()` call, the next time `dummy_fn` is called it is
 run with this injected code.
 
+    # Returns 30 instead of 3
     dummy_fn()
     #> Triggering trace on `dummy_fn`
     #> Untracing `dummy_fn` on exit.
@@ -87,7 +88,7 @@ Essentially, `dummy_fn` ran with this following modified code just now:
 
     dummy_fn_traced <- function(x = 1, y = 2) {
       z <- x + y
-      z <- z * 10 #< Look here!
+      z <- z * 10 #< injected code!
       return(z)
     }
     dummy_fn_traced()
@@ -225,9 +226,9 @@ corresponding to the return value of `StatSmooth$compute_group` the
 *first time* it was called. This comes from the default value of the
 third argument `cond` being set to `quote(._counter_ == 1)`.
 
-As you might have guessed, `._counter_` is an internal variable that
-keeps track of how many times the method has been called. It’s available
-for all workflow functions and you can read more in the [**Tracing
+Here, `._counter_` is an internal variable that keeps track of how many
+times the method has been called. It’s available for all workflow
+functions and you can read more in the [**Tracing
 context**](https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_return.html#tracing-context)
 section of the docs.
 
@@ -344,7 +345,7 @@ Lastly, let’s talk about the `data` variable we’ve been using inside the
 `data$group` and `data$PANEL`? How do you know what `data` looks like?
 
 The answer is actually simple: it’s an argument passed to
-`StatSmooth$compute_group`. We already saw its value briefly from
+`StatSmooth$compute_group`. We saw earlier that it’s stored in
 `formals(captured_fn_2_3)`, but to target it explicitly we can also use
 `ggtrace_inspect_args()`:
 
@@ -415,7 +416,7 @@ it’s only capturing a 10% confidence interval!
 
 Here’s another example where we make the method fit predictions from a
 loess regression instead. To achieve this directly, we use
-`ggtrace_highjack_args()` and set the `values` to
+`ggtrace_highjack_args()` here and set the `values` to
 `list(method = "loess")`:
 
     ggtrace_highjack_args(
@@ -445,12 +446,10 @@ heteroskedasticity:
       cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
       value = quote({
         
-        spread_seq <- seq(0, 10, length.out = nrow(returnValue()))
-        
         returnValue() %>% 
           mutate(
-            ymin = y - se * spread_seq[row_number()],
-            ymax = y + se * spread_seq[row_number()]
+            ymin = y - se * seq(0, 10, length.out = n()),
+            ymax = y + se * seq(0, 10, length.out = n())
           )
         
       })
@@ -524,7 +523,7 @@ only evaluate when a condition is met, using `if` statements inside
       GeomRibbon$draw_group,
       trace_steps = -1L,
       trace_exprs = quote({
-        # Give gradient fill to the confidence bands for group 3
+        # Give gradient fill to the confidence bands for third group
         if (data$group[1] == 3) {
           g_poly <- editGrob(
             g_poly,
@@ -536,7 +535,7 @@ only evaluate when a condition is met, using `if` statements inside
           )
         }
       }),
-      once = FALSE,
+      once = FALSE, # to test `if` for all calls to method
       out = "g"
     )
 
@@ -568,7 +567,7 @@ as well!
       x = p2,
       
       ## Argument 2: The method to inject code into ====
-      method = FacetGrid2$draw_panels,
+      method = ggh4x::FacetGrid2$draw_panels,
       
       ## Argument 3: The step in the method right before `panels` and `axes` ====
       ## are merged into the `panel_table` <gtable> and shipped off
@@ -584,8 +583,8 @@ as well!
         left_axis    <- axes$left[[row, col]]
         bottom_axis  <- axes$bottom[[row, col]]
         
-        ### SECOND, replace target panelwith a version of itself ####
-        ### that has its axes attached to itself, using `grid::gTree()`
+        ### SECOND, replace target panel with a version of itself ####
+        ### that has axes attached to it, using `grid::gTree()`
         panels[[target_panel]] <- gTree(
           
           ##### Argument `children`: a list (`grid::gList()`) of three grobs:
@@ -594,7 +593,7 @@ as well!
             ###### 1. The original panel itself
             panels[[target_panel]],
             
-            ###### 2. Resized/reoriented left y-axis for that panel
+            ###### 2. Resized/repositioned left y-axis for that panel
             editGrob(
               left_axis,
               vp = viewport(
@@ -704,13 +703,13 @@ things. For a cleaner look, we use the defined function
         width = width * resizing, height = height * resizing
       ))
     }
-    violins_stretched <- lapply(violins, center_and_resize)
+    violins_centered_resized <- lapply(violins, center_and_resize)
 
     ggtrace_highjack_return(
       violin_plot,
       GeomViolin$draw_key,
       cond = 1:2,
-      value = substitute(violins_stretched[[._counter_]])
+      value = substitute(violins_centered_resized[[._counter_]])
     )
 
 <img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
