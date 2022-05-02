@@ -51,8 +51,3 @@ details {
   outline: 2px solid #38566F;
   padding: 1rem 1rem 0.5rem 1rem;
 }
-
-details[open] {
-  width: 115%;
-  transform: translateX(-5%);
-}
