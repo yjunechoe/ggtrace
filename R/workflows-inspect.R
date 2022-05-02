@@ -151,7 +151,7 @@ ggtrace_inspect_which <- function(x, method, cond) {
 #'
 #' @inheritSection topic-tracing-context Tracing context
 #'
-#' @return A list
+#' @return A list of values of `vars` at each step `at`. Simplifies if `vars` and/or `at` is length-1.
 #' @export
 #'
 #' @examples
@@ -282,7 +282,9 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
     .values <- vars_uniques
   }
 
-  if (length(.values) == 1) {
+  if (length(at) == 1 && length(.values) == 1) {
+    .values[[1]][[1]]
+  } else if (length(.values) == 1) {
     .values[[1]]
   } else {
     .values

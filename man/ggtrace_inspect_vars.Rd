@@ -34,7 +34,7 @@ at each step of \code{at}. Unchanged variable values are not dropped.
 }}
 }
 \value{
-A list
+A list of values of \code{vars} at each step \code{at}. Simplifies if \code{vars} and/or \code{at} is length-1.
 }
 \description{
 Inspect the value of variables from a method
