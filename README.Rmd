@@ -576,10 +576,46 @@ center_and_resize <- function(grob) {
 }
 violins_centered_resized <- lapply(violins, center_and_resize)
 
-ggtrace_highjack_return(
+violin_plot_highjacked <- ggtrace_highjack_return(
   violin_plot,
   GeomViolin$draw_key,
   cond = 1:2,
   value = substitute(violins_centered_resized[[._counter_]])
 )
+violin_plot_highjacked
 ```
+
+To keep this effect while keeping the violin_plot a ggplot object, you can create a custom key glyph function that inspects the fill color of the original legend keys and returns the corresponding violin.
+
+```{r}
+names(violins_centered_resized) <- c("#F8766D", "#00BFC4")
+
+violin_plot_keyglyph <- dplyr::starwars %>% 
+  filter(species == "Human", !is.na(height)) %>% 
+  ggplot(aes(gender, height)) +
+  geom_violin(
+    aes(fill = gender),
+    key_glyph = function(data, params, size) {   #<
+      violins_centered_resized[[data$fill]]      #<  Custom `key_glyph` function
+    }                                            #<
+  ) +
+  theme(
+    aspect.ratio = 1,
+    legend.key.size = unit(1, "in"),
+    legend.key = element_rect(color = "grey", fill = NA)
+  )
+```
+
+Note the difference in output between the two methods. While highjack workflow functions offer a convenient way of modifying a ggplot, it forces the conversion of a ggplot object into a grob.
+
+```{r, error = TRUE}
+class(violin_plot_highjacked)
+violin_plot_highjacked +
+  labs(title = "Violin plot with data-driven legend key glyphs")
+
+class(violin_plot_keyglyph)
+violin_plot_keyglyph +
+  labs(title = "Violin plot with data-driven legend key glyphs")
+```
+
+The lesson here is that the highjack workflow (and the {ggtrace} package, more broadly) is the means, not the end. Users are encouraged to generalize solutions beyond one-off hacks using the toolkit of workflow functions to determine the appropriate point of extension.

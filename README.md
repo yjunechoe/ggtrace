@@ -705,11 +705,56 @@ things. For a cleaner look, we use the defined function
     }
     violins_centered_resized <- lapply(violins, center_and_resize)
 
-    ggtrace_highjack_return(
+    violin_plot_highjacked <- ggtrace_highjack_return(
       violin_plot,
       GeomViolin$draw_key,
       cond = 1:2,
       value = substitute(violins_centered_resized[[._counter_]])
     )
+    violin_plot_highjacked
 
 <img src="man/figures/README-unnamed-chunk-36-1.png" width="100%" />
+
+To keep this effect while keeping the violin\_plot a ggplot object, you
+can create a custom key glyph function that inspects the fill color of
+the original legend keys and returns the corresponding violin.
+
+    names(violins_centered_resized) <- c("#F8766D", "#00BFC4")
+
+    violin_plot_keyglyph <- dplyr::starwars %>% 
+      filter(species == "Human", !is.na(height)) %>% 
+      ggplot(aes(gender, height)) +
+      geom_violin(
+        aes(fill = gender),
+        key_glyph = function(data, params, size) {   #<
+          violins_centered_resized[[data$fill]]      #<  Custom `key_glyph` function
+        }                                            #<
+      ) +
+      theme(
+        aspect.ratio = 1,
+        legend.key.size = unit(1, "in"),
+        legend.key = element_rect(color = "grey", fill = NA)
+      )
+
+Note the difference in output between the two methods. While highjack
+workflow functions offer a convenient way of modifying a ggplot, it
+forces the conversion of a ggplot object into a grob.
+
+    class(violin_plot_highjacked)
+    #> [1] "ggtrace_highjacked" "gtable"             "gTree"             
+    #> [4] "grob"               "gDesc"
+    violin_plot_highjacked +
+      labs(title = "Violin plot with data-driven legend key glyphs")
+    #> Error in violin_plot_highjacked + labs(title = "Violin plot with data-driven legend key glyphs"): non-numeric argument to binary operator
+
+    class(violin_plot_keyglyph)
+    #> [1] "gg"     "ggplot"
+    violin_plot_keyglyph +
+      labs(title = "Violin plot with data-driven legend key glyphs")
+
+<img src="man/figures/README-unnamed-chunk-38-1.png" width="100%" />
+
+The lesson here is that the highjack workflow (and the {ggtrace}
+package, more broadly) is the means, not the end. Users are encouraged
+to generalize solutions beyond one-off hacks using the toolkit of
+workflow functions to determine the appropriate point of extension.

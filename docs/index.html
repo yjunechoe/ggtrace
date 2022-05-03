@@ -733,13 +733,52 @@ does things. For a cleaner look, we use the defined function
 <span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>violins_centered_resized <span class="ot">&lt;-</span> <span class="fu">lapply</span>(violins, center_and_resize)</span>
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>violin_plot_highjacked <span class="ot">&lt;-</span> <span class="fu">ggtrace_highjack_return</span>(</span>
 <span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  violin_plot,</span>
 <span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  GeomViolin<span class="sc">$</span>draw_key,</span>
 <span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,</span>
 <span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">substitute</span>(violins_centered_resized[[._counter_]])</span>
-<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>violin_plot_highjacked</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-36-1.png" width="100%"></p>
+<p>To keep this effect while keeping the violin_plot a ggplot object,
+you can create a custom key glyph function that inspects the fill color
+of the original legend keys and returns the corresponding violin.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(violins_centered_resized) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#00BFC4"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>violin_plot_keyglyph <span class="ot">&lt;-</span> dplyr<span class="sc">::</span>starwars <span class="sc">%&gt;%</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Human"</span>, <span class="sc">!</span><span class="fu">is.na</span>(height)) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(gender, height)) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">fill =</span> gender),</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">key_glyph =</span> <span class="cf">function</span>(data, params, size) {   <span class="co">#&lt;</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      violins_centered_resized[[data<span class="sc">$</span>fill]]      <span class="co">#&lt;  Custom `key_glyph` function</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    }                                            <span class="co">#&lt;</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">aspect.ratio =</span> <span class="dv">1</span>,</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"in"</span>),</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<p>Note the difference in output between the two methods. While highjack
+workflow functions offer a convenient way of modifying a ggplot, it
+forces the conversion of a ggplot object into a grob.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(violin_plot_highjacked)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "ggtrace_highjacked" "gtable"             "gTree"             </span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "grob"               "gDesc"</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>violin_plot_highjacked <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span>)</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Error in violin_plot_highjacked + labs(title = "Violin plot with data-driven legend key glyphs"): non-numeric argument to binary operator</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(violin_plot_keyglyph)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "gg"     "ggplot"</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>violin_plot_keyglyph <span class="sc">+</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span>)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-38-1.png" width="100%"></p>
+<p>The lesson here is that the highjack workflow (and the {ggtrace}
+package, more broadly) is the means, not the end. Users are encouraged
+to generalize solutions beyond one-off hacks using the toolkit of
+workflow functions to determine the appropriate point of extension.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
