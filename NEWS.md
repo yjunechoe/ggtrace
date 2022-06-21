@@ -2,6 +2,8 @@
 
 # ggtrace 0.5.x
 
+- `ggtrace_inspect_vars` simplifies the output when `at` is length 1.
+
 ## ggtrace 0.5.1
 
 ### New Features

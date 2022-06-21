@@ -7,14 +7,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="ggtrace">
 <title>Debugging an extension package • ggtrace</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="../deps/_Atkinson%20Hyperlegible-0.4.0/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="../deps/_Atkinson%20Hyperlegible-0.4.1/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Debugging an extension package">
 <meta property="og:description" content="ggtrace">
+<meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -35,8 +42,28 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
-      <ul class="navbar-nav me-auto"></ul>
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <h6 class="dropdown-header" data-toc-skip>Usage</h6>
+    <a class="dropdown-item" href="../articles/intro.html">Introduction to ggtrace()</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
+    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
+    <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
+  </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
+      </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
@@ -48,7 +75,7 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<li class="active nav-item dropdown">
+<li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Usage</h6>
@@ -74,9 +101,12 @@
   </div>
 </nav><div class="container template-article">
 
+
+
+
 <div class="row">
   <main id="main"><div class="page-header">
-      <img src="" class="logo" alt=""><h1>Debugging an extension package</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Debugging an extension package</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/yjunechoe/ggtrace/blob/HEAD/vignettes/casestudy-ggxmean.Rmd" class="external-link"><code>vignettes/casestudy-ggxmean.Rmd</code></a></small>
@@ -92,9 +122,9 @@ package by <a href="https://twitter.com/EvaMaeRey" class="external-link">Gina Re
 define “exploratory debugging” here as the process of learning and
 developing simultaneously, assuming little prior knowledge about ggplot
 internals.</p>
-<div class="section level2">
-<h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
-</h2>
+<div class="section level3">
+<h3 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span>
@@ -109,18 +139,18 @@ here because I already have that version in my dev directory).</p>
 <span class="co">#&gt; Loading required package: usethis</span>
 
 <span class="co"># Current installation version</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
 <span class="co">#&gt; [1] "local"</span>
 
 <span class="co"># Activate development mode</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/dev_mode.html" class="external-link">dev_mode</a></span><span class="op">(</span>on <span class="op">=</span> <span class="cn">TRUE</span>, path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"devtools.path"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #00BB00;">v</span> Dev mode: ON</span>
+<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Dev mode: ON</span>
 
 <span class="co"># devtools::install_github("EvaMaeRey/ggxmean@cbb909c")</span>
 
 <span class="co"># Prior version installed for dev mode</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
-<span class="co">#&gt; [1] "Github (EvaMaeRey/ggxmean@cbb909c)"</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
+<span class="co">#&gt; [1] "Github (EvaMaeRey/ggxmean@cbb909cee7d4f0a4395722020a75330641e5f54c)"</span>
 
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">ggxmean</span><span class="op">)</span></code></pre></div>
 <p>I’ve also attached the code relevant to the issue at hand here, if
@@ -165,9 +195,9 @@ Relevant code from {ggxmean}
 <span class="op">}</span></code></pre></div>
 </details>
 </div>
-<div class="section level2">
-<h2 id="introduction-of-the-issue">Introduction of the issue<a class="anchor" aria-label="anchor" href="#introduction-of-the-issue"></a>
-</h2>
+<div class="section level3">
+<h3 id="introduction-of-the-issue">Introduction of the issue<a class="anchor" aria-label="anchor" href="#introduction-of-the-issue"></a>
+</h3>
 <p>{ggxmean} is a {ggplot2} extension package that offers many features,
 including the layer <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> which can be used to draw
 a line at the mean value of the variable represented by the x-axis.</p>
@@ -198,9 +228,9 @@ of grouping for <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html"
   <span class="fu"><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-6-1.png" width="1093.75"></p>
-<div class="section level3">
-<h3 id="making-a-reprex">Making a reprex<a class="anchor" aria-label="anchor" href="#making-a-reprex"></a>
-</h3>
+<div class="section level4">
+<h4 id="making-a-reprex">Making a reprex<a class="anchor" aria-label="anchor" href="#making-a-reprex"></a>
+</h4>
 <p>To isolate the problem, let’s remove <code><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html" class="external-link">geom_histogram()</a></code>
 from the examples.</p>
 <p>Here is a minimal <a href="https://reprex.tidyverse.org/" class="external-link">reprex</a>
@@ -230,9 +260,9 @@ the <code>group</code> column.</p>
 <span class="co">#&gt; 2 #00BA38 28.16038     1     2  black  0.5        1    NA</span>
 <span class="co">#&gt; 3 #619CFF 21.00000     1     3  black  0.5        1    NA</span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="expected-cases">Expected cases<a class="anchor" aria-label="anchor" href="#expected-cases"></a>
-</h3>
+<div class="section level4">
+<h4 id="expected-cases">Expected cases<a class="anchor" aria-label="anchor" href="#expected-cases"></a>
+</h4>
 <p>Here, we correctly get groups for each category of <code>drv</code>
 because lines understand the <code>color</code> aesthetic.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
@@ -250,9 +280,9 @@ when we set the <code>group</code> aesthetic explicitly.</p>
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>group <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">group</span>
 <span class="co">#&gt; [1] 1 2 3</span></code></pre></div>
 </div>
-<div class="section level3">
-<h3 id="unexpected-cases">Unexpected cases<a class="anchor" aria-label="anchor" href="#unexpected-cases"></a>
-</h3>
+<div class="section level4">
+<h4 id="unexpected-cases">Unexpected cases<a class="anchor" aria-label="anchor" href="#unexpected-cases"></a>
+</h4>
 <p>Here, we’d only like there to be 1 group/line because lines don’t
 understand the <code>shape</code> aesthetic</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -273,15 +303,15 @@ lines don’t understand the <code>fill</code> aesthetic.</p>
 <span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10 11 12</span></code></pre></div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="debugging-the-issue-with-ggtrace">Debugging the issue with {ggtrace}<a class="anchor" aria-label="anchor" href="#debugging-the-issue-with-ggtrace"></a>
-</h1>
 <div class="section level2">
-<h2 id="step-1---locating-the-problem">Step 1 - Locating the problem<a class="anchor" aria-label="anchor" href="#step-1---locating-the-problem"></a>
+<h2 id="debugging-the-issue-with-ggtrace">Debugging the issue with {ggtrace}<a class="anchor" aria-label="anchor" href="#debugging-the-issue-with-ggtrace"></a>
 </h2>
 <div class="section level3">
-<h3 id="starting-at-ggplot_build">1.1 Starting at <code>ggplot_build()</code><a class="anchor" aria-label="anchor" href="#starting-at-ggplot_build"></a>
+<h3 id="step-1---locating-the-problem">Step 1 - Locating the problem<a class="anchor" aria-label="anchor" href="#step-1---locating-the-problem"></a>
 </h3>
+<div class="section level4">
+<h4 id="starting-at-ggplot_build">1.1 Starting at <code>ggplot_build()</code><a class="anchor" aria-label="anchor" href="#starting-at-ggplot_build"></a>
+</h4>
 <p>As our very first step, let’s see where the groups are being
 calculated and added to the data by inspecting
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>, the <a href="https://ggplot2-book.org/internals.html#ggplotbuild" class="external-link">main engine
@@ -297,7 +327,7 @@ just need to know that its output is basically what’s returned by the
 <span class="co">#&gt; {</span>
 <span class="co">#&gt;     ggplot_build(plot)$data[[i]]</span>
 <span class="co">#&gt; }</span>
-<span class="co">#&gt; &lt;bytecode: 0x00000000354254d8&gt;</span>
+<span class="co">#&gt; &lt;bytecode: 0x000002223e262e28&gt;</span>
 <span class="co">#&gt; &lt;environment: namespace:ggplot2&gt;</span></code></pre></div>
 <p>We use <code><a href="../reference/get_method.html">ggbody()</a></code> function from {ggtrace} to grab the body
 of <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> as a list, and, with some metaprogramming
@@ -463,55 +493,55 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 </summary><div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump1</span>, <span class="fu">tibble</span><span class="fu">::</span><span class="va"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">)</span>
 <span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 11</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 11</span></span>
 <span class="co">#&gt;    manufacturer model      displ  year   cyl trans drv     cty   hwy fl    class</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ f        18    29 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ f        21    29 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu~ f        20    31 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto~ f        21    30 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto~ f        16    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu~ f        18    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto~ f        18    27 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ 4        18    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ 4        16    25 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu~ 4        20    28 p     comp~</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto… f        18    29 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu… f        21    29 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu… f        20    31 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto… f        21    30 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto… f        16    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu… f        18    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto… f        18    27 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu… 4        18    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto… 4        16    25 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu… 4        20    28 p     comp…</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 11</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 11</span></span>
 <span class="co">#&gt;    manufacturer model      displ  year   cyl trans drv     cty   hwy fl    class</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ f        18    29 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ f        21    29 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu~ f        20    31 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto~ f        21    30 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto~ f        16    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu~ f        18    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto~ f        18    27 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ 4        18    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ 4        16    25 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu~ 4        20    28 p     comp~</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto… f        18    29 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu… f        21    29 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu… f        20    31 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto… f        21    30 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto… f        16    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu… f        18    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto… f        18    27 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu… 4        18    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto… 4        16    25 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu… 4        20    28 p     comp…</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 12</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 12</span></span>
 <span class="co">#&gt;    manufacturer model      displ  year   cyl trans drv     cty   hwy fl    class</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ f        18    29 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ f        21    29 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu~ f        20    31 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto~ f        21    30 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto~ f        16    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu~ f        18    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto~ f        18    27 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu~ 4        18    26 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto~ 4        16    25 p     comp~</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu~ 4        20    28 p     comp~</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows, and 1 more variable: PANEL &lt;fct&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 auto… f        18    29 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> audi         a4           1.8  <span style="text-decoration: underline;">1</span>999     4 manu… f        21    29 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 manu… f        20    31 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> audi         a4           2    <span style="text-decoration: underline;">2</span>008     4 auto… f        21    30 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 auto… f        16    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> audi         a4           2.8  <span style="text-decoration: underline;">1</span>999     6 manu… f        18    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> audi         a4           3.1  <span style="text-decoration: underline;">2</span>008     6 auto… f        18    27 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 manu… 4        18    26 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> audi         a4 quattro   1.8  <span style="text-decoration: underline;">1</span>999     4 auto… 4        16    25 p     comp…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> audi         a4 quattro   2    <span style="text-decoration: underline;">2</span>008     4 manu… 4        20    28 p     comp…</span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows, and 1 more variable: PANEL &lt;fct&gt;</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[4]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 4</span></span>
 <span class="co">#&gt;    fill      x PANEL group</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
@@ -524,10 +554,10 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[5]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 4</span></span>
 <span class="co">#&gt;    fill      x PANEL group</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
@@ -540,10 +570,10 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[6]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 4</span></span>
 <span class="co">#&gt;    fill      x PANEL group</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
@@ -556,10 +586,10 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[7]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span>
 <span class="co">#&gt;       x fill  PANEL group</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
@@ -567,7 +597,7 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[8]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span>
 <span class="co">#&gt;       x fill  PANEL group</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
@@ -575,7 +605,7 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[9]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span>
 <span class="co">#&gt;       x fill  PANEL group</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
@@ -583,7 +613,7 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[10]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span>
 <span class="co">#&gt;       x fill  PANEL group</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
@@ -591,7 +621,7 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[11]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 4</span></span>
 <span class="co">#&gt;       x fill  PANEL group</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span>  19.2 4     1         1</span>
@@ -599,7 +629,7 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span>  21   r     1         3</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[12]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 8</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 8</span></span>
 <span class="co">#&gt;   fill        x PANEL group colour  size linetype alpha</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> #F8766D  19.2 1         1 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
@@ -607,7 +637,7 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> #619CFF  21   1         3 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[13]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 8</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 8</span></span>
 <span class="co">#&gt;   fill        x PANEL group colour  size linetype alpha</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> #F8766D  19.2 1         1 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
@@ -615,7 +645,7 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> #619CFF  21   1         3 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; [[14]]</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 x 8</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 8</span></span>
 <span class="co">#&gt;   fill        x PANEL group colour  size linetype alpha</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> #F8766D  19.2 1         1 black    0.5        1 <span style="color: #BB0000;">NA</span>   </span>
@@ -627,6 +657,38 @@ The evaluated trace expressions captured by <code>last_ggtrace()</code>
 <code class="sourceCode R"><span class="va">group_present1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">tracedump1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
   <span class="st">"group"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>
 <span class="op">}</span><span class="op">)</span>
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
 <span class="va">group_present1</span>
 <span class="co">#&gt;  [1] FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE</span>
 <span class="co">#&gt; [13]  TRUE  TRUE</span></code></pre></div>
@@ -655,9 +717,9 @@ The internal function <code>by_layer()</code>
 <span class="co">#&gt; }</span></code></pre></div>
 </details>
 </div>
-<div class="section level3">
-<h3 id="digging-deeper-into-layercompute_aesthetics">1.2 Digging deeper into <code>Layer$compute_aesthetics()</code><a class="anchor" aria-label="anchor" href="#digging-deeper-into-layercompute_aesthetics"></a>
-</h3>
+<div class="section level4">
+<h4 id="digging-deeper-into-layercompute_aesthetics">1.2 Digging deeper into <code>Layer$compute_aesthetics()</code><a class="anchor" aria-label="anchor" href="#digging-deeper-into-layercompute_aesthetics"></a>
+</h4>
 <p>At this point we realize that we have to go a little deeper than
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>. We need to inspect
 <code>Layer$compute_aesthetics</code> - the
@@ -840,6 +902,11 @@ computed.</p>
 <span class="va">group_present2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">tracedump2</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
   <span class="st">"group"</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">group</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span>
 <span class="op">}</span><span class="op">)</span>
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
+
+<span class="co">#&gt; Warning in "group" %in% colnames(x) &amp;&amp; sort(unique(x$group)) == 1:3: 'length(x)</span>
+<span class="co">#&gt; = 3 &gt; 1' in coercion to 'logical(1)'</span>
 <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">group_present2</span><span class="op">)</span>
 <span class="co">#&gt; [1] 22</span>
 <span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">group_present2</span><span class="op">)</span>
@@ -862,9 +929,9 @@ it can’t understand are ignored for the calculation of <em>its own
 groups</em>, but not for the groups of other layers.</p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="step-2---identifying-the-extension-point">Step 2 - Identifying the extension point<a class="anchor" aria-label="anchor" href="#step-2---identifying-the-extension-point"></a>
-</h2>
+<div class="section level3">
+<h3 id="step-2---identifying-the-extension-point">Step 2 - Identifying the extension point<a class="anchor" aria-label="anchor" href="#step-2---identifying-the-extension-point"></a>
+</h3>
 <p>At this point, we have to hunt down the <em>next time</em> that the
 Layer dispatches a Stat or Geom ggproto method with the transformed data
 after <code>group</code> is calculated, so that we can undo the grouping
@@ -906,9 +973,9 @@ passed to <code>Layer$compute_statistic</code> is by the
 <p>Let’s see what kind of information we have at this stage, and whether
 the information is sufficient for us to implement our desired design
 change to <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code></p>
-<div class="section level3">
-<h3 id="step-2-1---inspecting-the-setup_data-method">Step 2.1 - Inspecting the <code>setup_data</code> method<a class="anchor" aria-label="anchor" href="#step-2-1---inspecting-the-setup_data-method"></a>
-</h3>
+<div class="section level4">
+<h4 id="step-2-1---inspecting-the-setup_data-method">Step 2.1 - Inspecting the <code>setup_data</code> method<a class="anchor" aria-label="anchor" href="#step-2-1---inspecting-the-setup_data-method"></a>
+</h4>
 <p>First, let’s figure out what the Stat ggproto associated with
 <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> is</p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
@@ -944,10 +1011,10 @@ indeed inherits <code>Stat$setup_data</code></p>
 <p>Okay so this method just returns the data by default. But what does
 <code>data</code> look like in practice?</p>
 </div>
-<div class="section level3">
-<h3 id="step-2-2---logging-the-execution-of-statsetup_data">Step 2.2 - Logging the execution of
+<div class="section level4">
+<h4 id="step-2-2---logging-the-execution-of-statsetup_data">Step 2.2 - Logging the execution of
 <code>Stat$setup_data</code><a class="anchor" aria-label="anchor" href="#step-2-2---logging-the-execution-of-statsetup_data"></a>
-</h3>
+</h4>
 <p>The following <code><a href="../reference/ggtrace.html">ggtrace()</a></code> code is a shorthand for
 inserting a trace that simply returns the output of the last step
 (<code>-1</code>) of the method:</p>
@@ -964,7 +1031,7 @@ aesthetics and the calculated <code>PANEL</code> and <code>group</code>
 information.</p>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">(</span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 4</span></span>
 <span class="co">#&gt;    fill      x PANEL group</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
@@ -977,16 +1044,16 @@ information.</p>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span></code></pre></div>
 <p>This is sufficient information for our purposes.</p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="step-3---developing-a-solution">Step 3 - Developing a solution<a class="anchor" aria-label="anchor" href="#step-3---developing-a-solution"></a>
-</h2>
 <div class="section level3">
-<h3 id="step-3-1---devising-a-plan-pseudo-code-outline">Step 3.1 - Devising a plan (pseudo-code outline)<a class="anchor" aria-label="anchor" href="#step-3-1---devising-a-plan-pseudo-code-outline"></a>
+<h3 id="step-3---developing-a-solution">Step 3 - Developing a solution<a class="anchor" aria-label="anchor" href="#step-3---developing-a-solution"></a>
 </h3>
+<div class="section level4">
+<h4 id="step-3-1---devising-a-plan-pseudo-code-outline">Step 3.1 - Devising a plan (pseudo-code outline)<a class="anchor" aria-label="anchor" href="#step-3-1---devising-a-plan-pseudo-code-outline"></a>
+</h4>
 <p>Here’s the plan. Instead of having the <code>setup_data</code> method
 just return the data it receives, let’s have it check for two
 conditions:</p>
@@ -1006,9 +1073,9 @@ dropping those extraneous variables and passing the data through
 </li>
 </ol>
 </div>
-<div class="section level3">
-<h3 id="step-3-2---setting-up-for-testing">Step 3.2 - Setting up for testing<a class="anchor" aria-label="anchor" href="#step-3-2---setting-up-for-testing"></a>
-</h3>
+<div class="section level4">
+<h4 id="step-3-2---setting-up-for-testing">Step 3.2 - Setting up for testing<a class="anchor" aria-label="anchor" href="#step-3-2---setting-up-for-testing"></a>
+</h4>
 <p>One of the biggest perks of {ggtrace} is the ability to log the
 output of the triggered traces. We’ve been seeing a bit of that with
 <code><a href="../reference/last_ggtrace.html">last_ggtrace()</a></code> but we can scale this up.</p>
@@ -1058,7 +1125,7 @@ The value of <code>tracedump3</code>
 </summary><div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">tracedump3</span>, <span class="fu">tibble</span><span class="fu">::</span><span class="va"><a href="https://tibble.tidyverse.org/reference/as_tibble.html" class="external-link">as_tibble</a></span><span class="op">)</span>
 <span class="co">#&gt; $expected1</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 4</span></span>
 <span class="co">#&gt;    colour     x PANEL group</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f         29 1         2</span>
@@ -1071,10 +1138,10 @@ The value of <code>tracedump3</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4         26 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4         25 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4         28 1         1</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $expected2</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 3</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 3</span></span>
 <span class="co">#&gt;        x group PANEL</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>    29     2 1    </span>
@@ -1087,10 +1154,10 @@ The value of <code>tracedump3</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>    26     1 1    </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>    25     1 1    </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span>    28     1 1    </span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $unexpected1</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 4</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 4</span></span>
 <span class="co">#&gt;    shape     x PANEL group</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> f        29 1         2</span>
@@ -1103,10 +1170,10 @@ The value of <code>tracedump3</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 4        26 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 4        25 1         1</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 4        28 1         1</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $unexpected2</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 x 5</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 234 × 5</span></span>
 <span class="co">#&gt;    fill  colour     x PANEL group</span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> p     f         29 1         8</span>
@@ -1119,15 +1186,15 @@ The value of <code>tracedump3</code>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> p     4         26 1         7</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> p     4         25 1         7</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> p     4         28 1         7</span>
-<span class="co">#&gt; <span style="color: #949494;"># ... with 224 more rows</span></span></code></pre></div>
+<span class="co">#&gt; <span style="color: #949494;"># … with 224 more rows</span></span></code></pre></div>
 </details>
 </div>
-<div class="section level3">
-<h3 id="step-3-3---tackling-the-problem-piece-by-piece">Step 3.3 - Tackling the problem piece by piece<a class="anchor" aria-label="anchor" href="#step-3-3---tackling-the-problem-piece-by-piece"></a>
-</h3>
 <div class="section level4">
-<h4 id="part-1---check-if-group-is-derived">Part 1 - Check if group is derived<a class="anchor" aria-label="anchor" href="#part-1---check-if-group-is-derived"></a>
+<h4 id="step-3-3---tackling-the-problem-piece-by-piece">Step 3.3 - Tackling the problem piece by piece<a class="anchor" aria-label="anchor" href="#step-3-3---tackling-the-problem-piece-by-piece"></a>
 </h4>
+<div class="section level5">
+<h5 id="part-1---check-if-group-is-derived">Part 1 - Check if group is derived<a class="anchor" aria-label="anchor" href="#part-1---check-if-group-is-derived"></a>
+</h5>
 <p>Our first condition checking for whether <code>group</code> is
 explicitly supplied is actually very easy to implement.</p>
 <p>Going back to <code>Layer$compute_aesthetics</code>, we can see that
@@ -1157,10 +1224,10 @@ use our tracedump to validate it</p>
 <span class="fu">group_is_derived</span><span class="op">(</span><span class="va">tracedump3</span><span class="op">$</span><span class="va">expected2</span><span class="op">)</span>
 <span class="co">#&gt; [1] FALSE</span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="part-2---check-if-the-geom-can-understand-all-discrete-aesthetics">Part 2 - Check if the geom can understand all discrete
+<div class="section level5">
+<h5 id="part-2---check-if-the-geom-can-understand-all-discrete-aesthetics">Part 2 - Check if the geom can understand all discrete
 aesthetics<a class="anchor" aria-label="anchor" href="#part-2---check-if-the-geom-can-understand-all-discrete-aesthetics"></a>
-</h4>
+</h5>
 <p>For our second condition, we need to figure out which aesthetics our
 geom can understand.</p>
 <p>First, we check what geom <code><a href="https://rdrr.io/pkg/ggxmean/man/geom_x_mean.html" class="external-link">geom_x_mean()</a></code> uses. We see
@@ -1200,9 +1267,9 @@ the data that cannot be understood by GeomXline.</p>
 <span class="fu">not_understandable_aes</span><span class="op">(</span><span class="va">tracedump3</span><span class="op">$</span><span class="va">unexpected2</span><span class="op">)</span>
 <span class="co">#&gt; [1] "fill"</span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="part-3---handle-the-exception">Part 3 - Handle the exception<a class="anchor" aria-label="anchor" href="#part-3---handle-the-exception"></a>
-</h4>
+<div class="section level5">
+<h5 id="part-3---handle-the-exception">Part 3 - Handle the exception<a class="anchor" aria-label="anchor" href="#part-3---handle-the-exception"></a>
+</h5>
 <p>Lastly, in the case where groups were computed using discrete
 variables mapped to aesthetics that GeomXline <em>doesn’t</em>
 understand, we want to re-assign groups.</p>
@@ -1226,9 +1293,9 @@ with <code>fill = fl</code>).</p>
 <span class="co">#&gt; $unexpected2</span>
 <span class="co">#&gt; [1] 1 2 3</span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="part-4---bring-it-together">Part 4 - Bring it together<a class="anchor" aria-label="anchor" href="#part-4---bring-it-together"></a>
-</h4>
+<div class="section level5">
+<h5 id="part-4---bring-it-together">Part 4 - Bring it together<a class="anchor" aria-label="anchor" href="#part-4---bring-it-together"></a>
+</h5>
 <p>Now we melt the functions from Parts 1-3 into a single function that
 will become our new <code>setup_data</code> method for
 <code>StatXmean</code>.</p>
@@ -1267,9 +1334,9 @@ refactor them or copy them over before releasing the fix, but we’ll skip
 that here for the sake of time.</p>
 </div>
 </div>
-<div class="section level3">
-<h3 id="step-3-4---implementing-the-solution">Step 3.4 - Implementing the solution<a class="anchor" aria-label="anchor" href="#step-3-4---implementing-the-solution"></a>
-</h3>
+<div class="section level4">
+<h4 id="step-3-4---implementing-the-solution">Step 3.4 - Implementing the solution<a class="anchor" aria-label="anchor" href="#step-3-4---implementing-the-solution"></a>
+</h4>
 <p>We’d like to test this whole solution out as a user-facing layer
 before we call it a day.</p>
 <p>There are just two important pieces here:</p>
@@ -1332,9 +1399,9 @@ intended</p>
 <code class="sourceCode R"><span class="va">p2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">fl</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span></code></pre></div>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-51-4.png" width="1093.75"></p>
 </div>
-<div class="section level3">
-<h3 id="step-3-5---testing-the-solution">Step 3.5 - Testing the solution<a class="anchor" aria-label="anchor" href="#step-3-5---testing-the-solution"></a>
-</h3>
+<div class="section level4">
+<h4 id="step-3-5---testing-the-solution">Step 3.5 - Testing the solution<a class="anchor" aria-label="anchor" href="#step-3-5---testing-the-solution"></a>
+</h4>
 <p>If you want to write tests, we can also check whether solution
 generalizes to other cases.</p>
 <p>Here, we can see it correctly works with facets even when some groups
@@ -1369,17 +1436,17 @@ grey by default)</p>
 <p><img src="casestudy-ggxmean_files/figure-html/unnamed-chunk-54-1.png" width="1093.75"></p>
 </div>
 </div>
-<div class="section level2">
-<h2 id="wrapping-up">Wrapping up<a class="anchor" aria-label="anchor" href="#wrapping-up"></a>
-</h2>
+<div class="section level3">
+<h3 id="wrapping-up">Wrapping up<a class="anchor" aria-label="anchor" href="#wrapping-up"></a>
+</h3>
 <p>We’re satisfied so we can now turn development mode off, which lets
 us access our current installation of {ggxmean} again. We can now also
 test our solution against the current version of the package to see
 whether it’d still work (although we skip that step here).</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/dev_mode.html" class="external-link">dev_mode</a></span><span class="op">(</span>on <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; <span style="color: #00BB00;">v</span> Dev mode: OFF</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/sessioninfo/man/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
+<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Dev mode: OFF</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://r-lib.github.io/sessioninfo/reference/package_info.html" class="external-link">package_info</a></span><span class="op">(</span><span class="st">"ggxmean"</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">source</span>
 <span class="co">#&gt; [1] "local"</span></code></pre></div>
 <p>Finally, since this vignette covered a real-world debugging scenario,
 the solution has been <a href="https://github.com/EvaMaeRey/ggxmean/pull/4" class="external-link">submitted as a
@@ -1401,8 +1468,7 @@ for exploratory debugging with {ggtrace}!</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
     </footer>

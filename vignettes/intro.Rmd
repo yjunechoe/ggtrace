@@ -7,7 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Under construction
+# Introduction
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -20,10 +20,10 @@ knitr::opts_chunk$set(
 library(ggtrace)
 ```
 
-Slides from ggplot internals / {ggtrace} talk on December 4th 2021:
+Slides from [useR! 2022](https://user2022.r-project.org/) on June 22th 2022:
 
 ```{r echo = FALSE}
-xaringanExtra::embed_xaringan("https://yjunechoe.github.io/ggtrace-talk")
+xaringanExtra::embed_xaringan("https://yjunechoe.github.io/ggtrace-user2022")
 ```
 
-[https://yjunechoe.github.io/ggtrace-talk](https://yjunechoe.github.io/ggtrace-talk)
+[https://yjunechoe.github.io/ggtrace-user2022](https://yjunechoe.github.io/ggtrace-user2022)

@@ -7,14 +7,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="description" content="Debug ggproto methods with trace">
 <title>ggtrace • ggtrace</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="deps/_Atkinson%20Hyperlegible-0.4.0/font.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><link href="deps/_Atkinson%20Hyperlegible-0.4.1/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><link href="extra.css" rel="stylesheet">
 <meta property="og:title" content="ggtrace">
 <meta property="og:description" content="Debug ggproto methods with trace">
+<meta property="og:image" content="/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -35,8 +42,28 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div id="navbar" class="collapse navbar-collapse ms-2">
-      <ul class="navbar-nav me-auto"></ul>
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item">
+  <a class="nav-link" href="reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <h6 class="dropdown-header" data-toc-skip>Usage</h6>
+    <a class="dropdown-item" href="articles/intro.html">Introduction to ggtrace()</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
+    <a class="dropdown-item" href="articles/casestudy-ggxmean.html">Debugging an extension package</a>
+    <div class="dropdown-divider"></div>
+    <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
+    <a class="dropdown-item" href="articles/FAQ.html">Frequently asked questions</a>
+  </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="news/index.html">Changelog</a>
+</li>
+      </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
@@ -74,14 +101,26 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="ggtrace">
-<strong>{ggtrace}</strong><a class="anchor" aria-label="anchor" href="#ggtrace"></a>
-</h1></div>
+  <main id="main" class="col-md-9"><ul>
+<li>
+<strong>{ggtrace}</strong>
+<ul>
+<li><a href="#extending-basetrace-with-ggtrace"><strong>Extending <code>base::trace()</code> with <code>ggtrace()</code></strong></a></li>
+<li><a href="#workflows-for-interacting-with-ggplot-internals"><strong>Workflows for interacting with ggplot internals</strong></a></li>
+<li><a href="#middle-ground-approach-with_ggtrace"><strong>Middle-ground approach <code>with_ggtrace()</code></strong></a></li>
+<li><a href="#case-study-data-driven-legends"><strong>Case study: Data-driven legends</strong></a></li>
+</ul>
+</li>
+</ul>
+<!-- README.md is generated from README.Rmd. Please edit that file --><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="ggtrace-">
+<strong>{ggtrace}</strong> <a class="anchor" aria-label="anchor" href="#ggtrace-"></a>
+</h1>
+</div>
 <div class="section level4">
 <h4 id="programmatically-explore-debug-and-manipulate-ggplot-internals">
-<strong>Programmatically explore, debug, and manipulate ggplot
-internals</strong><a class="anchor" aria-label="anchor" href="#programmatically-explore-debug-and-manipulate-ggplot-internals"></a>
+<strong>Programmatically explore, debug, and manipulate ggplot internals</strong><a class="anchor" aria-label="anchor" href="#programmatically-explore-debug-and-manipulate-ggplot-internals"></a>
 </h4>
 <!-- badges: start -->
 
@@ -99,26 +138,16 @@ internals</strong><a class="anchor" aria-label="anchor" href="#programmatically-
 </div>
 <div class="section level2">
 <h2 id="extending-basetrace-with-ggtrace">
-<strong>Extending <code>base::trace()</code> with
-<code>ggtrace()</code></strong><a class="anchor" aria-label="anchor" href="#extending-basetrace-with-ggtrace"></a>
+<strong>Extending <code>base::trace()</code> with <code>ggtrace()</code></strong><a class="anchor" aria-label="anchor" href="#extending-basetrace-with-ggtrace"></a>
 </h2>
-<p>The low-level function <code><a href="reference/ggtrace.html">ggtrace()</a></code> is designed for
-interacting with functions and ggproto methods in the
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> ecosystem, from the “outside”.</p>
-<p>Formally put, <code><a href="reference/ggtrace.html">ggtrace()</a></code> allows the user to inject
-arbitrary expressions (called <strong>traces</strong>) to functions and
-methods that are evaluated over the execution of a ggplot. When
-“triggered” by the evaluation of the ggplot, these traces may modify the
-resulting graphical output, or they may simply log their values to the
-“tracedump” for further inspection by the user. Check out the <a href="https://yjunechoe.github.io/ggtrace/articles/FAQ.html" class="external-link">FAQ
-vignette</a> for more details.</p>
+<p>The low-level function <code><a href="reference/ggtrace.html">ggtrace()</a></code> is designed for interacting with functions and ggproto methods in the <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> ecosystem, from the “outside”.</p>
+<p>Formally put, <code><a href="reference/ggtrace.html">ggtrace()</a></code> allows the user to inject arbitrary expressions (called <strong>traces</strong>) to functions and methods that are evaluated over the execution of a ggplot. When “triggered” by the evaluation of the ggplot, these traces may modify the resulting graphical output, or they may simply log their values to the “tracedump” for further inspection by the user. Check out the <a href="https://yjunechoe.github.io/ggtrace/articles/FAQ.html" class="external-link">FAQ vignette</a> for more details.</p>
 <p>Briefly, there are three key arguments to <code><a href="reference/ggtrace.html">ggtrace()</a></code>:</p>
 <ul>
 <li>
 <code>method</code>: what function/method to trace</li>
 <li>
-<code>trace_steps</code>: where in the body to inject
-expressions</li>
+<code>trace_steps</code>: where in the body to inject expressions</li>
 <li>
 <code>trace_exprs</code> what expressions to inject</li>
 </ul>
@@ -129,11 +158,8 @@ expressions</li>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dummy_fn</span>()</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 3</span></span></code></pre></div>
-<p>Essentially, <code><a href="reference/ggtrace.html">ggtrace()</a></code> allows you to inject code into a
-function and safely/temporarily change its execution behavior.</p>
-<p>The following code injects the code <code>z &lt;- z * 10</code> right
-as <code>dummy_fn</code> enters the third “step” in the body, <em>right
-before</em> the line <code>return(z)</code> is ran.</p>
+<p>Essentially, <code><a href="reference/ggtrace.html">ggtrace()</a></code> allows you to inject code into a function and safely/temporarily change its execution behavior.</p>
+<p>The following code injects the code <code>z &lt;- z * 10</code> right as <code>dummy_fn</code> enters the third “step” in the body, <em>right before</em> the line <code>return(z)</code> is ran.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">body</span>(dummy_fn)[[<span class="dv">3</span>]]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; return(z)</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -143,21 +169,14 @@ before</em> the line <code>return(z)</code> is ran.</p>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_exprs =</span> <span class="fu">quote</span>(z <span class="ot">&lt;-</span> z <span class="sc">*</span> <span class="dv">10</span>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; `dummy_fn` now being traced.</span></span></code></pre></div>
-<p>Note that the value of <code>trace_exprs</code> must be of type
-“language” (a quoted expression), the idea being that we are
-<em>injecting</em> code to be evaluate inside the function when it is
-called. Often, providing the code wrapped in <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote()</a></code>
-suffices. For more complex injections see the <a href="https://adv-r.hadley.nz/expressions.html" class="external-link">Expressions chapter of
-Advanced R</a></p>
-<p>After this <code><a href="reference/ggtrace.html">ggtrace()</a></code> call, the next time
-<code>dummy_fn</code> is called it is run with this injected code.</p>
+<p>Note that the value of <code>trace_exprs</code> must be of type “language” (a quoted expression), the idea being that we are <em>injecting</em> code to be evaluate inside the function when it is called. Often, providing the code wrapped in <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote()</a></code> suffices. For more complex injections see the <a href="https://adv-r.hadley.nz/expressions.html" class="external-link">Expressions chapter of Advanced R</a></p>
+<p>After this <code><a href="reference/ggtrace.html">ggtrace()</a></code> call, the next time <code>dummy_fn</code> is called it is run with this injected code.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns 30 instead of 3</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dummy_fn</span>()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Triggering trace on `dummy_fn`</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Untracing `dummy_fn` on exit.</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30</span></span></code></pre></div>
-<p>Essentially, <code>dummy_fn</code> ran with this following modified
-code just now:</p>
+<p>Essentially, <code>dummy_fn</code> ran with this following modified code just now:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dummy_fn_traced <span class="ot">&lt;-</span> <span class="cf">function</span>(<span class="at">x =</span> <span class="dv">1</span>, <span class="at">y =</span> <span class="dv">2</span>) {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> x <span class="sc">+</span> y</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  z <span class="ot">&lt;-</span> z <span class="sc">*</span> <span class="dv">10</span> <span class="co">#&lt; injected code!</span></span>
@@ -165,56 +184,33 @@ code just now:</p>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dummy_fn_traced</span>()</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30</span></span></code></pre></div>
-<p>By default, traces created by <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> functions delete
-themselves after being triggered. You can also check whether a function
-is currently being traced with <code><a href="reference/is_traced.html">is_traced()</a></code>.</p>
+<p>By default, traces created by <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> functions delete themselves after being triggered. You can also check whether a function is currently being traced with <code><a href="reference/is_traced.html">is_traced()</a></code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is_traced</span>(dummy_fn)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-<p><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> automatically logs the output of triggered
-trace to what we call <strong>tracedumps</strong>. For example,
-<code><a href="reference/last_ggtrace.html">last_ggtrace()</a></code> stores the output of the <em>last</em> trace
-created by <code><a href="reference/ggtrace.html">ggtrace()</a></code>:</p>
+<p><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> automatically logs the output of triggered trace to what we call <strong>tracedumps</strong>. For example, <code><a href="reference/last_ggtrace.html">last_ggtrace()</a></code> stores the output of the <em>last</em> trace created by <code><a href="reference/ggtrace.html">ggtrace()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The value of `(z &lt;- z * 10)` when it was ran</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">last_ggtrace</span>() <span class="co"># Note that this is a list of length `trace_steps`</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[1]]</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 30</span></span></code></pre></div>
-<p>See the references section <a href="https://yjunechoe.github.io/ggtrace/reference/index.html#extending-base-trace-" class="external-link"><strong>Extending
-base::trace()</strong></a> for more functionalities offered by
-<code><a href="reference/ggtrace.html">ggtrace()</a></code>.</p>
+<p>See the references section <a href="https://yjunechoe.github.io/ggtrace/reference/index.html#extending-base-trace-" class="external-link"><strong>Extending base::trace()</strong></a> for more functionalities offered by <code><a href="reference/ggtrace.html">ggtrace()</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="workflows-for-interacting-with-ggplot-internals">
-<strong>Workflows for interacting with ggplot
-internals</strong><a class="anchor" aria-label="anchor" href="#workflows-for-interacting-with-ggplot-internals"></a>
+<strong>Workflows for interacting with ggplot internals</strong><a class="anchor" aria-label="anchor" href="#workflows-for-interacting-with-ggplot-internals"></a>
 </h2>
 <div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2) <span class="co"># v3.3.5</span></span></code></pre></div>
-<p>Admittedly, <code><a href="reference/ggtrace.html">ggtrace()</a></code> is a bit too clunky for
-interactive explorations of ggplot internals. To address this, we offer
-“workflow” functions in the form of
-<code>ggtrace_{action}_{value}()</code>. These are grouped into three
-workflows: Inspect, Capture, and Highjack.</p>
-<p><strong>NOTE</strong>: Making the most out of these workflow
-functions requires a hint of knowledge about ggplot internals, namely
-the fact that <strong>ggproto objects</strong> like <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#stats" class="external-link">Stat</a>
-and <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#geoms" class="external-link">Geom</a>
-exists, and that these <a href="https://ggplot2-book.org/spring1.html#methods" class="external-link">ggprotos have
-methods</a> that step in at different parts of the ggplot build/render
-pipeline to modify the data. If you are completely new to these
-concepts, you should at least watch <a href="https://twitter.com/thomasp85" class="external-link">Thomas Lin Pedersen</a>’s talk on
-<a href="https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/" class="external-link">Extending
-your ability to extend ggplot2</a> before proceeding.</p>
+<p>Admittedly, <code><a href="reference/ggtrace.html">ggtrace()</a></code> is a bit too clunky for interactive explorations of ggplot internals. To address this, we offer “workflow” functions in the form of <code>ggtrace_{action}_{value}()</code>. These are grouped into three workflows: Inspect, Capture, and Highjack.</p>
+<p><strong>NOTE</strong>: Making the most out of these workflow functions requires a hint of knowledge about ggplot internals, namely the fact that <strong>ggproto objects</strong> like <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#stats" class="external-link">Stat</a> and <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#geoms" class="external-link">Geom</a> exists, and that these <a href="https://ggplot2-book.org/spring1.html#methods" class="external-link">ggprotos have methods</a> that step in at different parts of the ggplot build/render pipeline to modify the data. If you are completely new to these concepts, you should at least watch <a href="https://twitter.com/thomasp85" class="external-link">Thomas Lin Pedersen</a>’s talk on <a href="https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/" class="external-link">Extending your ability to extend ggplot2</a> before proceeding.</p>
 <div class="section level3">
 <h3 id="walkthrough-with-geom_smooth">
 <strong>Walkthrough with <code>geom_smooth()</code></strong><a class="anchor" aria-label="anchor" href="#walkthrough-with-geom_smooth"></a>
 </h3>
-<p>Say we want to learn more about how <code>geom_smooth()</code> layer
-works, exactly</p>
+<p>Say we want to learn more about how <code>geom_smooth()</code> layer works, exactly</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_smooth</span>()</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; geom_smooth: na.rm = FALSE, orientation = NA, se = TRUE</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; stat_smooth: na.rm = FALSE, orientation = NA, se = TRUE</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; position_identity</span></span></code></pre></div>
-<p>To do this, we’re going to adopt the example from the <a href="https://ggplot2-book.org/internals.html" class="external-link">ggplot2 internals chapter
-of the ggplot book</a></p>
+<p>To do this, we’re going to adopt the example from the <a href="https://ggplot2-book.org/internals.html" class="external-link">ggplot2 internals chapter of the ggplot book</a></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(displ, hwy, <span class="at">color =</span> drv)) <span class="sc">+</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">position =</span> <span class="fu">position_jitter</span>(<span class="at">seed =</span> <span class="dv">1116</span>)) <span class="sc">+</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span> </span>
@@ -222,16 +218,13 @@ of the ggplot book</a></p>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"A plot for expository purposes"</span>)</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-11-1.png" width="100%"></p>
-<p>Let’s focus on the Stat ggproto. We see that
-<code>geom_smooth()</code> uses the <code>StatSmooth</code> ggproto</p>
+<p>Let’s focus on the Stat ggproto. We see that <code>geom_smooth()</code> uses the <code>StatSmooth</code> ggproto</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>( <span class="fu">geom_smooth</span>()<span class="sc">$</span>stat )</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "StatSmooth" "Stat"       "ggproto"    "gg"</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(StatSmooth, <span class="fu">geom_smooth</span>()<span class="sc">$</span>stat)</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>The bulk of the work by a Stat is done in the <code>compute_*</code>
-family of methods, which are essentially just functions. We’ll focus on
-<code>compute_group</code> here:</p>
+<p>The bulk of the work by a Stat is done in the <code>compute_*</code> family of methods, which are essentially just functions. We’ll focus on <code>compute_group</code> here:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ggproto methods wrap over the actual function and print extra info</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>( StatSmooth<span class="sc">$</span>compute_group )</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "ggproto_method"</span></span>
@@ -254,20 +247,11 @@ family of methods, which are essentially just functions. We’ll focus on
 <h3 id="inspect">
 <strong>Inspect</strong><a class="anchor" aria-label="anchor" href="#inspect"></a>
 </h3>
-<p>Here we introduce our first workflow function
-<code><a href="reference/ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code>, which takes a ggplot as the first
-argument and a ggproto method as the second argument, returning the
-number of times the ggproto method has been called in the ggplot’s
-evaluation:</p>
+<p>Here we introduce our first workflow function <code><a href="reference/ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code>, which takes a ggplot as the first argument and a ggproto method as the second argument, returning the number of times the ggproto method has been called in the ggplot’s evaluation:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_inspect_n</span>(<span class="at">x =</span> p, <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 6</span></span></code></pre></div>
-<p>As we might have guessed, <code>StatSmooth$compute_group</code> is
-called for each fitted line (each group) in the plot. But if
-<code>StatSmooth$compute_group</code> is essentially a function, what
-does it return?</p>
-<p>We can answer that with another workflow function
-<code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code>, which shares a similar
-syntax:</p>
+<p>As we might have guessed, <code>StatSmooth$compute_group</code> is called for each fitted line (each group) in the plot. But if <code>StatSmooth$compute_group</code> is essentially a function, what does it return?</p>
+<p>We can answer that with another workflow function <code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code>, which shares a similar syntax:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>return_val <span class="ot">&lt;-</span> <span class="fu">ggtrace_inspect_return</span>(<span class="at">x =</span> p, <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(return_val)</span>
@@ -281,22 +265,12 @@ syntax:</p>
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 1.978481 23.86395 22.68738 25.04052 0.5848527       FALSE</span></span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 2.037975 23.70663 22.55658 24.85668 0.5716673       FALSE</span></span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 2.097468 23.54931 22.42554 24.67307 0.5586045       FALSE</span></span></code></pre></div>
-<p>Note that <code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code> only gave us 1
-dataframe, corresponding to the return value of
-<code>StatSmooth$compute_group</code> the <em>first time</em> it was
-called. This comes from the default value of the third argument
-<code>cond</code> being set to <code>quote(._counter_ == 1)</code>.</p>
-<p>Here, <code>._counter_</code> is an internal variable that keeps
-track of how many times the method has been called. It’s available for
-all workflow functions and you can read more in the <a href="https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_return.html#tracing-context" class="external-link"><strong>Tracing
-context</strong></a> section of the docs.</p>
-<p>If we instead wanted to get the return value of
-<code>StatSmooth$compute_group</code> for the third group of the second
-panel, for example, we can do so in one of two ways:</p>
+<p>Note that <code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code> only gave us 1 dataframe, corresponding to the return value of <code>StatSmooth$compute_group</code> the <em>first time</em> it was called. This comes from the default value of the third argument <code>cond</code> being set to <code>quote(._counter_ == 1)</code>.</p>
+<p>Here, <code>._counter_</code> is an internal variable that keeps track of how many times the method has been called. It’s available for all workflow functions and you can read more in the <a href="https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_return.html#tracing-context" class="external-link"><strong>Tracing context</strong></a> section of the docs.</p>
+<p>If we instead wanted to get the return value of <code>StatSmooth$compute_group</code> for the third group of the second panel, for example, we can do so in one of two ways:</p>
 <ol style="list-style-type: decimal">
 <li>
-<p>Set the value of <code>cond</code> to an expression that
-evaluates to true for that panel and group:</p>
+<p>Set the value of <code>cond</code> to an expression that evaluates to true for that panel and group:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>return_val_2_3_A <span class="ot">&lt;-</span> <span class="fu">ggtrace_inspect_return</span>(</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
@@ -304,10 +278,7 @@ evaluates to true for that panel and group:</p>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </li>
 <li>
-<p>Find the counter value when that condition is satisfied with
-<code><a href="reference/ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code>, and then simply check for the
-value of <code>._counter_</code> back in
-<code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code>:</p>
+<p>Find the counter value when that condition is satisfied with <code><a href="reference/ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code>, and then simply check for the value of <code>._counter_</code> back in <code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_inspect_which</span>(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
@@ -330,32 +301,18 @@ value of <code>._counter_</code> back in
 <h3 id="capture">
 <strong>Capture</strong><a class="anchor" aria-label="anchor" href="#capture"></a>
 </h3>
-<p>Okay, so we know what <code>StatSmooth$compute_group</code> returns,
-but how does this return value change with different input? More
-generally put, how does <code>StatSmooth$compute_group</code> behave
-under different contexts?</p>
-<p>We <em>could</em> answer this by making a bunch of different plots
-using <code>geom_smooth()</code> and repeating the inspection workflow.
-Alternatively, we can capture a call to
-<code>StatSmooth$compute_group</code> and extract it as a function with
-<code><a href="reference/ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>:</p>
+<p>Okay, so we know what <code>StatSmooth$compute_group</code> returns, but how does this return value change with different input? More generally put, how does <code>StatSmooth$compute_group</code> behave under different contexts?</p>
+<p>We <em>could</em> answer this by making a bunch of different plots using <code>geom_smooth()</code> and repeating the inspection workflow. Alternatively, we can capture a call to <code>StatSmooth$compute_group</code> and extract it as a function with <code><a href="reference/ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>captured_fn_2_3 <span class="ot">&lt;-</span> <span class="fu">ggtrace_capture_fn</span>(</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">quote</span>(data<span class="sc">$</span>PANEL[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>)</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-<p><code>captured_fn_2_3</code> is essentially a snapshot of the
-<code>compute_group</code> when it is called for the third group of the
-second panel. Simply calling <code>captured_fn_2_3</code> gives us the
-expected return value:</p>
+<p><code>captured_fn_2_3</code> is essentially a snapshot of the <code>compute_group</code> when it is called for the third group of the second panel. Simply calling <code>captured_fn_2_3</code> gives us the expected return value:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">identical</span>(return_val_2_3_A, <span class="fu">captured_fn_2_3</span>())</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-<p>But the true power of the “capture” workflow functions lies in the
-ability to interact with what has been captured. In the case of
-<code><a href="reference/ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>, the returned function has all of the
-arguments passed to it at its execution stored in the formals.</p>
-<p>In other words, it is “pre-filled” with its original values, which we
-can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals()</a></code>:</p>
+<p>But the true power of the “capture” workflow functions lies in the ability to interact with what has been captured. In the case of <code><a href="reference/ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>, the returned function has all of the arguments passed to it at its execution stored in the formals.</p>
+<p>In other words, it is “pre-filled” with its original values, which we can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals()</a></code>:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Just showing their type/class for space</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>( <span class="fu">formals</span>(captured_fn_2_3) , class)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         data       scales       method      formula           se </span></span>
@@ -364,11 +321,8 @@ can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="exte
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    "numeric"    "numeric"    "logical"       "NULL"    "numeric" </span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  method.args        na.rm  flipped_aes </span></span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       "list"    "logical"    "logical"</span></span></code></pre></div>
-<p>This makes it very convenient for us to explore its behavior with
-different arguments passed to it.</p>
-<p>For example, when <code>flipped_aes = TRUE</code>, we get
-<code>xmin</code> and <code>xmax</code> columns replacing
-<code>ymin</code> and <code>ymax</code>:</p>
+<p>This makes it very convenient for us to explore its behavior with different arguments passed to it.</p>
+<p>For example, when <code>flipped_aes = TRUE</code>, we get <code>xmin</code> and <code>xmax</code> columns replacing <code>ymin</code> and <code>ymax</code>:</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( <span class="fu">captured_fn_2_3</span>(<span class="at">flipped_aes =</span> <span class="cn">TRUE</span>) )</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          y        x     xmin     xmax        se flipped_aes</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 15.00000 5.450710 4.369619 6.531802 0.4961840        TRUE</span></span>
@@ -377,12 +331,8 @@ different arguments passed to it.</p>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 15.41772 5.443068 4.417196 6.468941 0.4708400        TRUE</span></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 15.55696 5.440521 4.432846 6.448196 0.4624882        TRUE</span></span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 15.69620 5.437974 4.448381 6.427566 0.4541888        TRUE</span></span></code></pre></div>
-<p>In this sense, we can effectively simulate what happens in
-<code>geom_smooth(orientation = "y")</code> without needing to construct
-an entirely different ggplot.</p>
-<p>For another example, when we set the confidence interval to 10% with
-<code>level = 0.1</code>, the <code>ymin</code> and <code>ymax</code>
-values deviate less from the <code>y</code> value:</p>
+<p>In this sense, we can effectively simulate what happens in <code>geom_smooth(orientation = "y")</code> without needing to construct an entirely different ggplot.</p>
+<p>For another example, when we set the confidence interval to 10% with <code>level = 0.1</code>, the <code>ymin</code> and <code>ymax</code> values deviate less from the <code>y</code> value:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>( <span class="fu">captured_fn_2_3</span>(<span class="at">level =</span> <span class="fl">0.1</span>) )</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          x        y     ymin     ymax       se flipped_aes</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 4.000000 21.70513 21.46539 21.94487 1.867921       FALSE</span></span>
@@ -391,14 +341,8 @@ values deviate less from the <code>y</code> value:</p>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 4.113924 21.66936 21.44430 21.89442 1.753509       FALSE</span></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 4.151899 21.65743 21.43718 21.87769 1.716067       FALSE</span></span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 4.189873 21.64551 21.43001 21.86101 1.679011       FALSE</span></span></code></pre></div>
-<p>Lastly, let’s talk about the <code>data</code> variable we’ve been
-using inside the <code>cond</code> argument of some of these workflow
-functions. What is <code>data$group</code> and <code>data$PANEL</code>?
-How do you know what <code>data</code> looks like?</p>
-<p>The answer is actually simple: it’s an argument passed to
-<code>StatSmooth$compute_group</code>. We saw earlier that it’s stored
-in <code>formals(captured_fn_2_3)</code>, but to target it explicitly we
-can also use <code><a href="reference/ggtrace_inspect_args.html">ggtrace_inspect_args()</a></code>:</p>
+<p>Lastly, let’s talk about the <code>data</code> variable we’ve been using inside the <code>cond</code> argument of some of these workflow functions. What is <code>data$group</code> and <code>data$PANEL</code>? How do you know what <code>data</code> looks like?</p>
+<p>The answer is actually simple: it’s an argument passed to <code>StatSmooth$compute_group</code>. We saw earlier that it’s stored in <code>formals(captured_fn_2_3)</code>, but to target it explicitly we can also use <code><a href="reference/ggtrace_inspect_args.html">ggtrace_inspect_args()</a></code>:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>args_2_3 <span class="ot">&lt;-</span> <span class="fu">ggtrace_inspect_args</span>(</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
@@ -424,30 +368,18 @@ can also use <code><a href="reference/ggtrace_inspect_args.html">ggtrace_inspect
 <span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 51 4.6 22      r     2     3</span></span>
 <span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 52 5.4 20      r     2     3</span></span>
 <span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 73 5.4 18      r     2     3</span></span></code></pre></div>
-<p>We see that <code>PANEL</code> and <code>group</code> columns
-conveniently give us information about the panel and group that
-<code>compute_group</code> is doing calculations over.</p>
+<p>We see that <code>PANEL</code> and <code>group</code> columns conveniently give us information about the panel and group that <code>compute_group</code> is doing calculations over.</p>
 </div>
 <div class="section level3">
 <h3 id="highjack">
 <strong>Highjack</strong><a class="anchor" aria-label="anchor" href="#highjack"></a>
 </h3>
-<p>Once we have some understanding of how
-<code>StatSmooth$compute_group</code> works, we may want to test some
-hypotheses about what would happen to the resulting graphical output if
-the method returned something else.</p>
-<p>Let’s revisit our examples from the Capture workflow. What if the
-third group of the second panel calculated a more conservative
-confidence interval (<code>level = 0.1</code>)? What is this effect on
-the graphical output?</p>
-<p>To answer this question, we use
-<code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to have a method return an
-entirely different value by supplying it an <a href="https://adv-r.hadley.nz/expressions.html" class="external-link">expression</a>.</p>
+<p>Once we have some understanding of how <code>StatSmooth$compute_group</code> works, we may want to test some hypotheses about what would happen to the resulting graphical output if the method returned something else.</p>
+<p>Let’s revisit our examples from the Capture workflow. What if the third group of the second panel calculated a more conservative confidence interval (<code>level = 0.1</code>)? What is this effect on the graphical output?</p>
+<p>To answer this question, we use <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to have a method return an entirely different value by supplying it an <a href="https://adv-r.hadley.nz/expressions.html" class="external-link">expression</a>.</p>
 <p>First we store the modified return value in some variable:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modified_return_smooth <span class="ot">&lt;-</span> <span class="fu">captured_fn_2_3</span>(<span class="at">level =</span> <span class="fl">0.1</span>)</span></code></pre></div>
-<p>Then we target the same group inside <code>cond</code> and pass
-<code>modified_return_smooth</code> to the <code>value</code> argument
-<em>as an expression</em>, using <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute()</a></code>:</p>
+<p>Then we target the same group inside <code>cond</code> and pass <code>modified_return_smooth</code> to the <code>value</code> argument <em>as an expression</em>, using <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute()</a></code>:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
@@ -456,12 +388,8 @@ entirely different value by supplying it an <a href="https://adv-r.hadley.nz/exp
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>          <span class="co"># or `rlang::expr(!!modified_return_smooth)`</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-26-1.png" width="100%"></p>
-<p>The confidence band is now nearly invisible for that fitted line
-because it’s only capturing a 10% confidence interval!</p>
-<p>Here’s another example where we make the method fit predictions from
-a loess regression instead. To achieve this directly, we use
-<code><a href="reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> here and set the
-<code>values</code> to <code>list(method = "loess")</code>:</p>
+<p>The confidence band is now nearly invisible for that fitted line because it’s only capturing a 10% confidence interval!</p>
+<p>Here’s another example where we make the method fit predictions from a loess regression instead. To achieve this directly, we use <code><a href="reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> here and set the <code>values</code> to <code>list(method = "loess")</code>:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_args</span>(</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
@@ -469,14 +397,8 @@ a loess regression instead. To achieve this directly, we use
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-27-1.png" width="100%"></p>
-<p>Lastly, <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal
-function called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the <code>value</code>
-argument, which simply returns the original return value. Computing on
-it allows on-the-fly modifications to the graphical output.</p>
-<p>For example, we can “intercept” the dataframe output, do data
-wrangling on it, and have the method return that instead. Here, we hack
-the data for the group to make it look like there’s an absurd degree of
-heteroskedasticity:</p>
+<p>Lastly, <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal function called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the <code>value</code> argument, which simply returns the original return value. Computing on it allows on-the-fly modifications to the graphical output.</p>
+<p>For example, we can “intercept” the dataframe output, do data wrangling on it, and have the method return that instead. Here, we hack the data for the group to make it look like there’s an absurd degree of heteroskedasticity:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># v1.0.8</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
@@ -498,22 +420,11 @@ heteroskedasticity:</p>
 </div>
 <div class="section level2">
 <h2 id="middle-ground-approach-with_ggtrace">
-<strong>Middle-ground approach
-<code>with_ggtrace()</code></strong><a class="anchor" aria-label="anchor" href="#middle-ground-approach-with_ggtrace"></a>
+<strong>Middle-ground approach <code>with_ggtrace()</code></strong><a class="anchor" aria-label="anchor" href="#middle-ground-approach-with_ggtrace"></a>
 </h2>
-<p>So far we’ve seen the low-level function <code><a href="reference/ggtrace.html">ggtrace()</a></code> and
-the high-level family of workflow functions
-<code>ggtrace_{action}_{value}()</code>. But once you get more familiar
-with ggplot internals and start using <code><a href="reference/ggtrace.html">ggtrace()</a></code> to “hack
-into” the internals (moving from <em>learner</em> to <em>developer</em>,
-in a sense), you might want both exploit both the power and convenience
-that <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> provides across these two designs.</p>
-<p>For that we provide <code><a href="reference/with_ggtrace.html">with_ggtrace()</a></code>, which wraps around
-<code><a href="reference/ggtrace.html">ggtrace()</a></code> to give you access to its full power, while
-keeping its effects localized (e.g., no side-effects) and therefore
-making it more fitting for a functional programming workflow.</p>
-<p>Like <code><a href="reference/ggtrace.html">ggtrace()</a></code>, you can inject code into different steps
-of a method <em>as it runs</em>:</p>
+<p>So far we’ve seen the low-level function <code><a href="reference/ggtrace.html">ggtrace()</a></code> and the high-level family of workflow functions <code>ggtrace_{action}_{value}()</code>. But once you get more familiar with ggplot internals and start using <code><a href="reference/ggtrace.html">ggtrace()</a></code> to “hack into” the internals (moving from <em>learner</em> to <em>developer</em>, in a sense), you might want both exploit both the power and convenience that <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> provides across these two designs.</p>
+<p>For that we provide <code><a href="reference/with_ggtrace.html">with_ggtrace()</a></code>, which wraps around <code><a href="reference/ggtrace.html">ggtrace()</a></code> to give you access to its full power, while keeping its effects localized (e.g., no side-effects) and therefore making it more fitting for a functional programming workflow.</p>
+<p>Like <code><a href="reference/ggtrace.html">ggtrace()</a></code>, you can inject code into different steps of a method <em>as it runs</em>:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p <span class="sc">+</span> <span class="fu">facet_grid</span>(year <span class="sc">~</span> drv),</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> Layout<span class="sc">$</span>render,</span>
@@ -552,9 +463,7 @@ of a method <em>as it runs</em>:</p>
 <span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
 <span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-29-1.png" width="100%"></p>
-<p>And like the workflow functions, you can have conditional traces that
-only evaluate when a condition is met, using <code>if</code> statements
-inside <code>trace_exprs</code> with <code>once = FALSE</code>.</p>
+<p>And like the workflow functions, you can have conditional traces that only evaluate when a condition is met, using <code>if</code> statements inside <code>trace_exprs</code> with <code>once = FALSE</code>.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  p,</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  GeomRibbon<span class="sc">$</span>draw_group,</span>
@@ -576,9 +485,7 @@ inside <code>trace_exprs</code> with <code>once = FALSE</code>.</p>
 <span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
 <span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-30-1.png" width="100%"></p>
-<p>And of course, all of this is not limited to objects from the
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> package itself. You can have fun hacking
-extension packages as well!</p>
+<p>And of course, all of this is not limited to objects from the <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> package itself. You can have fun hacking extension packages as well!</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggh4x) <span class="co"># v0.2.1</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Example from - https://teunbrand.github.io/ggh4x/articles/Facets.html ----</span></span>
@@ -669,8 +576,7 @@ extension packages as well!</p>
 <h2 id="case-study-data-driven-legends">
 <strong>Case study: Data-driven legends</strong><a class="anchor" aria-label="anchor" href="#case-study-data-driven-legends"></a>
 </h2>
-<p>Suppose we want to change the fill legend key from squares to the
-actual violins drawn for each category:</p>
+<p>Suppose we want to change the fill legend key from squares to the actual violins drawn for each category:</p>
 <div class="sourceCode" id="cb31"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>violin_plot <span class="ot">&lt;-</span> dplyr<span class="sc">::</span>starwars <span class="sc">%&gt;%</span> </span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Human"</span>, <span class="sc">!</span><span class="fu">is.na</span>(height)) <span class="sc">%&gt;%</span> </span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(gender, height)) <span class="sc">+</span></span>
@@ -683,13 +589,10 @@ actual violins drawn for each category:</p>
 <span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>violin_plot</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-32-1.png" width="100%"></p>
-<p>We know that each violin is drawn by
-<code>GeomViolin$draw_group</code>, called for each group in the
-plot.</p>
+<p>We know that each violin is drawn by <code>GeomViolin$draw_group</code>, called for each group in the plot.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_inspect_n</span>(violin_plot, GeomViolin<span class="sc">$</span>draw_group)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div>
-<p>Let’s grab the plotted violins with
-<code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code></p>
+<p>Let’s grab the plotted violins with <code><a href="reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code></p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>violins <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, ggtrace_inspect_return,</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">x =</span> violin_plot, <span class="at">method =</span> GeomViolin<span class="sc">$</span>draw_group)</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>violins</span>
@@ -698,14 +601,7 @@ plot.</p>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [[2]]</span></span>
 <span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; polygon[geom_violin.polygon.2880]</span></span></code></pre></div>
-<p>Then, we can use <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to highjack
-the return value of the key drawing method
-<code>GeomViolin$draw_key</code> such that it returns the output from
-the <code>draw_group</code> method instead. We set
-<code>cond = 1:2</code> and
-<code>value = substitute(violins[[._counter_]])</code> so that the
-<code>draw_key</code> method returns the first violin as the first
-legend key, and the second violin as the second legend key.</p>
+<p>Then, we can use <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to highjack the return value of the key drawing method <code>GeomViolin$draw_key</code> such that it returns the output from the <code>draw_group</code> method instead. We set <code>cond = 1:2</code> and <code>value = substitute(violins[[._counter_]])</code> so that the <code>draw_key</code> method returns the first violin as the first legend key, and the second violin as the second legend key.</p>
 <div class="sourceCode" id="cb34"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  violin_plot,</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  GeomViolin<span class="sc">$</span>draw_key,</span>
@@ -713,12 +609,7 @@ legend key, and the second violin as the second legend key.</p>
 <span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">substitute</span>(violins[[._counter_]])</span>
 <span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-35-1.png" width="100%"></p>
-<p>Note that violins in the legend are drawn with respect to the panel
-coordinate system, because that’s how the <code>draw_group</code> method
-does things. For a cleaner look, we use the defined function
-<code>center_and_resize()</code> which modifies the violin grob using
-<code><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">grid::editGrob()</a></code> before passing them off to
-<code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>.</p>
+<p>Note that violins in the legend are drawn with respect to the panel coordinate system, because that’s how the <code>draw_group</code> method does things. For a cleaner look, we use the defined function <code>center_and_resize()</code> which modifies the violin grob using <code><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">grid::editGrob()</a></code> before passing them off to <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>.</p>
 <div class="sourceCode" id="cb35"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>center_and_resize <span class="ot">&lt;-</span> <span class="cf">function</span>(grob) {</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  x_range <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="fu">unclass</span>(grob<span class="sc">$</span>x))</span>
@@ -741,9 +632,7 @@ does things. For a cleaner look, we use the defined function
 <span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>violin_plot_highjacked</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-36-1.png" width="100%"></p>
-<p>To keep this effect while keeping the violin_plot a ggplot object,
-you can create a custom key glyph function that inspects the fill color
-of the original legend keys and returns the corresponding violin.</p>
+<p>To keep this effect while keeping the violin_plot a ggplot object, you can create a custom key glyph function that inspects the fill color of the original legend keys and returns the corresponding violin.</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(violins_centered_resized) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"#F8766D"</span>, <span class="st">"#00BFC4"</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>violin_plot_keyglyph <span class="ot">&lt;-</span> dplyr<span class="sc">::</span>starwars <span class="sc">%&gt;%</span> </span>
@@ -760,9 +649,7 @@ of the original legend keys and returns the corresponding violin.</p>
 <span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key.size =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"in"</span>),</span>
 <span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.key =</span> <span class="fu">element_rect</span>(<span class="at">color =</span> <span class="st">"grey"</span>, <span class="at">fill =</span> <span class="cn">NA</span>)</span>
 <span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
-<p>Note the difference in output between the two methods. While highjack
-workflow functions offer a convenient way of modifying a ggplot, it
-forces the conversion of a ggplot object into a grob.</p>
+<p>Note the difference in output between the two methods. While highjack workflow functions offer a convenient way of modifying a ggplot, it forces the conversion of a ggplot object into a grob.</p>
 <div class="sourceCode" id="cb37"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(violin_plot_highjacked)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] "ggtrace_highjacked" "gtable"             "gTree"             </span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] "grob"               "gDesc"</span></span>
@@ -775,12 +662,10 @@ forces the conversion of a ggplot object into a grob.</p>
 <span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>violin_plot_keyglyph <span class="sc">+</span></span>
 <span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-38-1.png" width="100%"></p>
-<p>The lesson here is that the highjack workflow (and the {ggtrace}
-package, more broadly) is the means, not the end. Users are encouraged
-to generalize solutions beyond one-off hacks using the toolkit of
-workflow functions to determine the appropriate point of extension.</p>
+<p>The lesson here is that the highjack workflow (and the {ggtrace} package, more broadly) is the means, not the end. Users are encouraged to generalize solutions beyond one-off hacks using the toolkit of workflow functions to determine the appropriate point of extension.</p>
 </div>
 </div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -831,8 +716,7 @@ workflow functions to determine the appropriate point of extension.</p>
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
     </footer>
