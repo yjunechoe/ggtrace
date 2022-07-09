@@ -119,7 +119,7 @@
 #' is_traced(sample)
 #' gguntrace(sample)
 #'
-get_method <- function(method, inherit = FALSE) {
+get_method <- function(method, inherit = TRUE) {
   .get_method(rlang::enquo(method), inherit = inherit)
 }
 
@@ -159,7 +159,7 @@ get_method_inheritance <- function(obj, trim_overriden = TRUE) {
 
 #' @export
 #' @rdname get_method
-ggbody <- function(method, inherit = FALSE, as.list = TRUE) {
+ggbody <- function(method, inherit = TRUE, as.list = TRUE) {
   got <- .get_method(rlang::enquo(method), inherit = inherit)
   if (rlang::is_function(got)) {
     if (as.list) {
@@ -175,7 +175,7 @@ ggbody <- function(method, inherit = FALSE, as.list = TRUE) {
 
 #' @export
 #' @rdname get_method
-ggformals <- function(method, inherit = FALSE) {
+ggformals <- function(method, inherit = TRUE) {
   got <- .get_method(rlang::enquo(method), inherit = inherit)
   if (rlang::is_function(got)) {
     formals(got)

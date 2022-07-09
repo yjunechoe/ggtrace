@@ -57,21 +57,28 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
 
   # Resolve formatting
   if (grepl("\\$", deparsed)) {
-    method_body <- ggbody(method_quo)
+
 
     # Error if not evaluatable
     evalled <- rlang::eval_tidy(method_quo)
-
-    # Error if not a method
-    if (typeof(method_body) != "list" | typeof(evalled) != "closure" | method_body[[1]] != rlang::expr(`{`)) {
-      rlang::abort("Cannot trace a non-function.")
-    }
 
     # Parse/deparse method and obj
     method_split <- split_ggproto_method(method_quo)
     what <- method_split[["method_name"]]
     where <- method_split[["obj"]]
     formatted_call <- method_split[["formatted_call"]]
+
+    method_split2 <- .get_scoped(what, where, method_split$obj_name)
+    if (!exists(what, where)) {
+      where <- method_split2$parent_obj
+    }
+    method_body <- as.list(body(method_split2$method))
+
+    # Error if not a method
+    if (typeof(method_body) != "list" | typeof(evalled) != "closure" | method_body[[1]] != rlang::expr(`{`)) {
+      rlang::abort("Cannot trace a non-function.")
+    }
+
 
     # Ensure method is untraced and body is extracted from untraced method
     traced <- .is_traced(what, where)
@@ -109,7 +116,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
 }
 
 
-.get_method <- function(method_quo, inherit = FALSE) {
+.get_method <- function(method_quo, inherit = TRUE) {
 
   method <- rlang::eval_tidy(method_quo)
   method_deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo))
@@ -148,45 +155,51 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
   obj <- method_split[["obj"]]
   obj_name <- method_split[["obj_name"]]
 
-  if (inherit) {
-    parents <- setdiff(class(obj), c("ggproto", "gg"))
-    for (parent in parents) {
-      parent_method <- tryCatch(
-        expr = get(method_name, eval(rlang::parse_expr(parent))),
-        error = function(e) {
-          if (parent == parents[length(parents)]) {
-            rlang::abort(paste0(
-              "Method '", method_name, "' not found in parents of `", obj_name, "`",
-              "\nMake sure that all relevant libraries have been loaded."
-            ))
-          }
-        }
-      )
-      if (!is.null(parent_method)) {
-        if (parent == parents[1]) {
-          rlang::inform(paste0("Method '", method_name, "' is defined for `", obj_name, "`, not inherited."))
-        } else {
-          rlang::inform(paste0("Method inherited from `", parent, "$", method_name, "`"))
-        }
-        # Inform if already being traced
-        if (arg_provided && "functionWithTrace" %in% class(parent_method)) {
-          rlang::warn(paste0("`", parent, "$", method_name, "` is currently being traced"))
-        }
-        # Break loop and return when found
-        return(parent_method)
-      }
-    }
-  } else {
-    result <- tryCatch(
-      expr = get(method_name, obj),
+  .get_scoped(method_name, obj, obj_name)$method
+
+}
+
+.get_scoped <- function(method_name, obj, obj_name) {
+  parents <- setdiff(class(obj), c("ggproto", "gg"))
+  for (parent in parents) {
+    parent_obj <- eval(rlang::parse_expr(parent))
+    parent_method <- tryCatch(
+      expr = get(method_name, parent_obj),
       error = function(e) {
-        sanitize_get_error(e, method_name, obj_name)
+        if (parent == parents[length(parents)]) {
+          rlang::abort(paste0(
+            "Method '", method_name, "' not found in self or parents of `", obj_name, "`"
+          ))
+        }
       }
     )
-    # Inform if already being traced
-    if (arg_provided && "functionWithTrace" %in% class(get(method_name, obj))) {
-      rlang::warn(paste0("`", method_deparsed, "` is currently being traced"))
+    if (!is.null(parent_method)) {
+      if (parent == parents[1]) {
+        # self - do nothing
+      }
+      else if (parent != parents[1]) {
+        rlang::inform(paste0("Using inherited method `", parent, "$", method_name, "`"))
+      }
+      # Inform if already being traced
+      if (inherits(parent_method, "functionWithTrace")) {
+        rlang::warn(paste0("`", parent, "$", method_name, "` is currently being traced"))
+      }
+      # Break loop and return when found
+      return(
+        list(method = parent_method, parent_name = parent, parent_obj = parent_obj)
+      )
     }
-    return(result)
   }
+  result <- tryCatch(
+    expr = get(method_name, obj),
+    error = function(e) {
+      sanitize_get_error(e, method_name, obj_name)
+    }
+  )
+
+  # Inform if already being traced
+  if (arg_provided && "functionWithTrace" %in% class(get(method_name, parent))) {
+    rlang::warn(paste0("`", method_deparsed, "` is currently being traced"))
+  }
+
 }
