@@ -43,7 +43,7 @@ sanitize_get_error <- function(e, method_name, obj_name) {
   if (e$message == paste0("object '", method_name, "' not found")) {
     rlang::abort(call = NULL, paste0(
       "Method '", method_name, "' is not defined for `", obj_name, "`",
-      "\nCheck inheritance with `get_method(", obj_name, "$", method_name, ", inherit = TRUE)`"
+      "\nCheck inheritance with `get_method_inheritance(", obj_name, ")`"
     ))
   }
 }
