@@ -2,6 +2,8 @@
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
+#' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
+#'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
 #' @return The number of times `method` was called in the evaluation of `x`
 #' @export
@@ -45,7 +47,7 @@
 #' ggtrace_inspect_n(p2, GeomBar$draw_panel)
 #' ggtrace_inspect_n(p2, GeomText$draw_panel)
 #'
-ggtrace_inspect_n <- function(x, method) {
+ggtrace_inspect_n <- function(x, method, error = FALSE) {
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
@@ -58,7 +60,20 @@ ggtrace_inspect_n <- function(x, method) {
     rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1L)
   })))
 
-  ggeval_silent(x)
+  if (error) {
+    log <- NULL
+    x_expr <- substitute(ggeval_silent(x))
+    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+      log <<- e
+    })
+    if (!is.null(log)) {
+      log$trace <- NULL
+      print(log)
+    }
+  } else {
+    ggeval_silent(x)
+  }
+
   suppressMessages(untrace(what = what, where = where))
 
   ._counter_
@@ -71,6 +86,8 @@ ggtrace_inspect_n <- function(x, method) {
 #' @param x A ggplot object
 #' @inheritParams get_method
 #' @param cond Expression evaluating to a logical inside `method` when `x` is evaluated.
+#' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
+#'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
 #' @inheritSection topic-tracing-context Tracing context
 #'
@@ -104,7 +121,7 @@ ggtrace_inspect_n <- function(x, method) {
 #' # Behaves like `base::which()` and returns `integer(0)` when no matches are found
 #' ggtrace_inspect_which(p2, StatBoxplot$compute_group, quote(data$PANEL[1] == 2))
 #'
-ggtrace_inspect_which <- function(x, method, cond) {
+ggtrace_inspect_which <- function(x, method, cond, error = FALSE) {
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
   indices <- integer(0)
@@ -126,7 +143,20 @@ ggtrace_inspect_which <- function(x, method, cond) {
     }
   })))
 
-  ggeval_silent(x)
+  if (error) {
+    log <- NULL
+    x_expr <- substitute(ggeval_silent(x))
+    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+      log <<- e
+    })
+    if (!is.null(log)) {
+      log$trace <- NULL
+      print(log)
+    }
+  } else {
+    ggeval_silent(x)
+  }
+
   suppressMessages(untrace(what = what, where = where))
 
   indices
@@ -148,6 +178,8 @@ ggtrace_inspect_which <- function(x, method, cond) {
 #'     step specified by `at`.
 #'   - `FALSE`: returns a list of steps, where each element holds the value of `vars`
 #'     at each step of `at`. Unchanged variable values are not dropped.
+#' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
+#'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
 #' @inheritSection topic-tracing-context Tracing context
 #'
@@ -193,7 +225,7 @@ ggtrace_inspect_which <- function(x, method, cond) {
 #' ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
 #'
 #'
-ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var = TRUE) {
+ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var = TRUE, error = FALSE) {
 
   cond <- resolve_cond(cond)
 
@@ -248,7 +280,19 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
     )
   )
 
-  ggeval_silent(x)
+  if (error) {
+    log <- NULL
+    x_expr <- substitute(ggeval_silent(x))
+    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+      log <<- e
+    })
+    if (!is.null(log)) {
+      log$trace <- NULL
+      print(log)
+    }
+  } else {
+    ggeval_silent(x)
+  }
 
   if (.is_traced(what, where)) {
     suppressMessages(untrace(what = what, where = where))
@@ -300,6 +344,8 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
 #' @param cond When the arguments should be inspected. Defaults to `1L`.
 #' @param hoist_dots Whether treat arguments passed to `...` like regular arguments. If `FALSE`,
 #'   the `...` is treated as an argument
+#' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
+#'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
 #' @inheritSection topic-tracing-context Tracing context
 #'
@@ -327,7 +373,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
 #' names(with_dots)
 #' with_dots$`...`
 #'
-ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE) {
+ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error = FALSE) {
 
   cond <- resolve_cond(cond)
 
@@ -360,7 +406,19 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE) {
     }
   })))
 
-  ggeval_silent(x)
+  if (error) {
+    log <- NULL
+    x_expr <- substitute(ggeval_silent(x))
+    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+      log <<- e
+    })
+    if (!is.null(log)) {
+      log$trace <- NULL
+      print(log)
+    }
+  } else {
+    ggeval_silent(x)
+  }
 
   if (.is_traced(what, where)) {
     suppressMessages(untrace(what = what, where = where))
@@ -382,6 +440,8 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE) {
 #' @param x A ggplot object
 #' @inheritParams get_method
 #' @param cond When the return value should be inspected. Defaults to `1L`.
+#' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
+#'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
 #' @inheritSection topic-tracing-context Tracing context
 #'
@@ -411,7 +471,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE) {
 #'   cond = quote(data$PANEL[1] == 4 && data$group == 2)
 #' )
 #'
-ggtrace_inspect_return <- function(x, method, cond = 1L) {
+ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
 
   cond <- resolve_cond(cond)
 
@@ -437,7 +497,19 @@ ggtrace_inspect_return <- function(x, method, cond = 1L) {
     }
   })))
 
-  ggeval_silent(x)
+  if (error) {
+    log <- NULL
+    x_expr <- substitute(ggeval_silent(x))
+    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+      log <<- e
+    })
+    if (!is.null(log)) {
+      log$trace <- NULL
+      print(log)
+    }
+  } else {
+    ggeval_silent(x)
+  }
 
   if (.is_traced(what, where)) {
     suppressMessages(untrace(what = what, where = where))
