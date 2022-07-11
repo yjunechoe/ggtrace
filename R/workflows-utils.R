@@ -26,6 +26,7 @@ print.ggtrace_highjacked <- function(x, ...) {
 }
 
 resolve_cond <- function(x, multiple = FALSE) {
+  ._counter_ <- NULL # bypass notes
   if (is.numeric(x)) {
     if (multiple && length(x) > 1L) {
       x <- rlang::expr(._counter_ %in% !!as.integer(x))

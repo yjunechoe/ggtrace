@@ -399,7 +399,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
       cur_fn <- attr(rlang::current_fn(), "original")
       args <- names(formals(cur_fn))
       if ("..." %in% args) {
-        args_pairs <- c(as.list(mget(args[args != "..."])), list(`...` = list(...)))
+        args_pairs <- c(as.list(mget(args[args != "..."])), list(`...` = rlang::dots_list(...)))
       } else {
         args_pairs <- mget(args)
       }
