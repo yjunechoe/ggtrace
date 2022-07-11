@@ -299,7 +299,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
       suppressMessages(untrace(what = what, where = where))
     }
     rlang::abort(paste0("No values detected from `", method_info$formatted_call,
-                        "` during evaluation of the plot"))
+                        "` for the given `at` and `cond` during execution of the plot"))
   }
 
   .values <- stats::setNames(.values, paste0("Step", at))
@@ -427,7 +427,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
       suppressMessages(untrace(what = what, where = where))
     }
     rlang::abort(paste0("No call to `", method_info$formatted_call,
-                        "` detected during evaluation of the plot"))
+                        "` detected at `cond` during execution of the plot"))
   } else {
     if (hoist_dots && "..." %in% names(._args)) {
       c(._args[names(._args) != "..."], ._args$`...`)
@@ -519,8 +519,8 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
     if (.is_traced(what, where)) {
       suppressMessages(untrace(what = what, where = where))
     }
-    rlang::abort(paste0("No return detected from `", method_info$formatted_call,
-                        "` during evaluation of the plot"))
+    rlang::abort(paste0("No call to `", method_info$formatted_call,
+                        "` detected at `cond` during execution of the plot"))
   } else {
     ._return
   }

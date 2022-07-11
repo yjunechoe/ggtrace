@@ -138,7 +138,8 @@ ggtrace_capture_fn <- function(x, method, cond = 1L) {
 
   if (.is_traced(what, where)) {
     suppressMessages(untrace(what = what, where = where))
-    rlang::abort(paste0("`", method_info$formatted_call, "` was not called during evaluation of the plot"))
+    rlang::abort(paste0("No call to `", method_info$formatted_call,
+                        "` detected at `cond` during execution of the plot"))
   } else {
     captured
   }
@@ -260,7 +261,8 @@ ggtrace_capture_env <- function(x, method, cond = 1L, at = -1L) {
 
   if (.is_traced(what, where)) {
     suppressMessages(untrace(what = what, where = where))
-    rlang::abort(paste0("`", method_info$formatted_call, "` was not called during evaluation of the plot"))
+    rlang::abort(paste0("No call to `", method_info$formatted_call,
+                        "` detected at `cond` during execution of the plot"))
   } else {
     captured
   }
