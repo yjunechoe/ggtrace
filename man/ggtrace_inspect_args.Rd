@@ -4,7 +4,7 @@
 \alias{ggtrace_inspect_args}
 \title{Inspect the arguments passed into a method}
 \usage{
-ggtrace_inspect_args(x, method, cond = 1L, hoist_dots = TRUE)
+ggtrace_inspect_args(x, method, cond = 1L, hoist_dots = TRUE, error = FALSE)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -21,6 +21,9 @@ The ggproto method may be specified using any of the following forms:
 
 \item{hoist_dots}{Whether treat arguments passed to \code{...} like regular arguments. If \code{FALSE},
 the \code{...} is treated as an argument}
+
+\item{error}{If \code{TRUE}, continues inspecting the method until the ggplot errors.
+This is useful for debugging but note that it can sometimes return incomplete output.}
 }
 \value{
 A list of argument-value pairs from the \code{method} when it is called.

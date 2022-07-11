@@ -63,7 +63,7 @@ ggtrace_inspect_n <- function(x, method, error = FALSE) {
   if (error) {
     log <- NULL
     x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+    tryCatch(expr = eval(x_expr), error = function(e) {
       log <<- e
     })
     if (!is.null(log)) {
@@ -146,7 +146,7 @@ ggtrace_inspect_which <- function(x, method, cond, error = FALSE) {
   if (error) {
     log <- NULL
     x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+    tryCatch(expr = eval(x_expr), error = function(e) {
       log <<- e
     })
     if (!is.null(log)) {
@@ -232,7 +232,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 1L
 
-  .values <- NULL
+  .values <- .ggtrace_placeholder
 
   method_quo <- rlang::enquo(method)
   method_info <- resolve_formatting(method_quo)
@@ -260,7 +260,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
 
             if (rlang::is_true(cond)) {
 
-              bindings <- rlang::env_get_list(cur_env, !!vars, default = ".ggtrace_missing")
+              bindings <- rlang::env_get_list(cur_env, !!vars, default = structure(list(), class = "ggtrace_placeholder"))
 
               rlang::env_bind(!!wrapper_env,
                               .values = c(rlang::env_get(!!wrapper_env, ".values"), list(bindings)))
@@ -283,7 +283,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
   if (error) {
     log <- NULL
     x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+    tryCatch(expr = eval(x_expr), error = function(e) {
       log <<- e
     })
     if (!is.null(log)) {
@@ -294,14 +294,16 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
     ggeval_silent(x)
   }
 
-  if (.is_traced(what, where)) {
-    suppressMessages(untrace(what = what, where = where))
+  if (.is_traced(what, where) || is.ggtrace_placeholder(.values)) {
+    if (.is_traced(what, where)) {
+      suppressMessages(untrace(what = what, where = where))
+    }
     rlang::abort(paste0("No values detected from `", method_info$formatted_call,
                         "` during evaluation of the plot"))
   }
 
   .values <- stats::setNames(.values, paste0("Step", at))
-  .values <- lapply(.values, function(x) x[x != ".ggtrace_missing"])
+  .values <- lapply(.values, function(y) { Filter(function(y) { !is.ggtrace_placeholder(y) }, x) })
   present_vars <- unique(unlist(lapply(.values, names), use.names = FALSE))
 
   if (!all(vars %in% present_vars)) {
@@ -314,7 +316,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
   if (by_var) {
     vars_uniques <- lapply(logged_vars, function(v) {
       which_defined <- vapply(.values, function(x) {
-        ( v %in% names(x) ) && ( !identical(x[[v]], ".ggtrace_missing") )
+        ( v %in% names(x) ) && ( !is.ggtrace_placeholder(x[[v]]) )
       }, logical(1))
       v_defined <- lapply(.values[which_defined], `[[`, v)
       v_pairs <- matrix(c(1L, seq_len(length(v_defined) - 1L), seq_along(v_defined)), nrow = 2, byrow = TRUE)
@@ -379,7 +381,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
-  ._args <- NULL
+  ._args <- .ggtrace_placeholder
 
   method_quo <- rlang::enquo(method)
   method_info <- resolve_formatting(method_quo)
@@ -409,7 +411,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
   if (error) {
     log <- NULL
     x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+    tryCatch(expr = eval(x_expr), error = function(e) {
       log <<- e
     })
     if (!is.null(log)) {
@@ -420,8 +422,10 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
     ggeval_silent(x)
   }
 
-  if (.is_traced(what, where)) {
-    suppressMessages(untrace(what = what, where = where))
+  if (.is_traced(what, where) || is.ggtrace_placeholder(._args)) {
+    if (.is_traced(what, where)) {
+      suppressMessages(untrace(what = what, where = where))
+    }
     rlang::abort(paste0("No call to `", method_info$formatted_call,
                         "` detected during evaluation of the plot"))
   } else {
@@ -477,7 +481,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
-  ._return <- NULL
+  ._return <- .ggtrace_placeholder
 
   method_quo <- rlang::enquo(method)
   method_info <- resolve_formatting(method_quo)
@@ -492,7 +496,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
       rlang::current_env()
     )
     if (cond) {
-      rlang::env_bind(!!wrapper_env, ._return = returnValue())
+      rlang::env_bind(!!wrapper_env, ._return = returnValue(structure(list(), class = "ggtrace_placeholder")))
       suppressMessages(untrace(what = !!what, where = !!where))
     }
   })))
@@ -500,7 +504,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
   if (error) {
     log <- NULL
     x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = print(eval(x_expr)), error = function(e) {
+    tryCatch(expr = eval(x_expr), error = function(e) {
       log <<- e
     })
     if (!is.null(log)) {
@@ -511,8 +515,10 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
     ggeval_silent(x)
   }
 
-  if (.is_traced(what, where)) {
-    suppressMessages(untrace(what = what, where = where))
+  if (.is_traced(what, where) || is.ggtrace_placeholder(._return)) {
+    if (.is_traced(what, where)) {
+      suppressMessages(untrace(what = what, where = where))
+    }
     rlang::abort(paste0("No return detected from `", method_info$formatted_call,
                         "` during evaluation of the plot"))
   } else {

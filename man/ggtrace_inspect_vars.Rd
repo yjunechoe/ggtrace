@@ -4,7 +4,15 @@
 \alias{ggtrace_inspect_vars}
 \title{Inspect the value of variables from a method}
 \usage{
-ggtrace_inspect_vars(x, method, cond = 1L, at = "all", vars, by_var = TRUE)
+ggtrace_inspect_vars(
+  x,
+  method,
+  cond = 1L,
+  at = "all",
+  vars,
+  by_var = TRUE,
+  error = FALSE
+)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -32,6 +40,9 @@ step specified by \code{at}.
 \item \code{FALSE}: returns a list of steps, where each element holds the value of \code{vars}
 at each step of \code{at}. Unchanged variable values are not dropped.
 }}
+
+\item{error}{If \code{TRUE}, continues inspecting the method until the ggplot errors.
+This is useful for debugging but note that it can sometimes return incomplete output.}
 }
 \value{
 A list of values of \code{vars} at each step \code{at}. Simplifies if \code{vars} and/or \code{at} is length-1.

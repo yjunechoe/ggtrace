@@ -4,7 +4,7 @@
 \alias{ggtrace_inspect_which}
 \title{Inspect which calls to a ggproto method met a particular condition}
 \usage{
-ggtrace_inspect_which(x, method, cond)
+ggtrace_inspect_which(x, method, cond, error = FALSE)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -18,6 +18,9 @@ The ggproto method may be specified using any of the following forms:
 }}
 
 \item{cond}{Expression evaluating to a logical inside \code{method} when \code{x} is evaluated.}
+
+\item{error}{If \code{TRUE}, continues inspecting the method until the ggplot errors.
+This is useful for debugging but note that it can sometimes return incomplete output.}
 }
 \value{
 The values of the tracing context variable \code{._counter_} when \code{cond} is evaluated as \code{TRUE}.

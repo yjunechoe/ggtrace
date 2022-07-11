@@ -4,7 +4,7 @@
 \alias{ggtrace_inspect_return}
 \title{Inspect the return value of a method}
 \usage{
-ggtrace_inspect_return(x, method, cond = 1L)
+ggtrace_inspect_return(x, method, cond = 1L, error = FALSE)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -18,6 +18,9 @@ The ggproto method may be specified using any of the following forms:
 }}
 
 \item{cond}{When the return value should be inspected. Defaults to \code{1L}.}
+
+\item{error}{If \code{TRUE}, continues inspecting the method until the ggplot errors.
+This is useful for debugging but note that it can sometimes return incomplete output.}
 }
 \value{
 The return value from \code{method} when it is called.

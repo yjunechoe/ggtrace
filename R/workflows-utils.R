@@ -9,7 +9,7 @@
 #' @return A gtable
 #' @export
 ggeval_silent <- function(x) {
-  asNamespace("ggplot2")$ggplotGrob(x)
+  invisible(asNamespace("ggplot2")$ggplotGrob(x))
 }
 
 #' @export
@@ -35,3 +35,7 @@ resolve_cond <- function(x, multiple = FALSE) {
   }
   x
 }
+
+.ggtrace_placeholder <- structure(list(), class = "ggtrace_placeholder")
+
+is.ggtrace_placeholder <- function(x) class(x) == "ggtrace_placeholder"

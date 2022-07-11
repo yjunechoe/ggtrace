@@ -40,7 +40,7 @@ and represents the youngest call in the backtrace.
 Set this when you would like to capture a backtrace without the
 capture context.
 
-Can also be an integer that will be passed to \code{\link[rlang:stack]{caller_env()}}.}
+Can also be an integer that will be passed to \code{\link[rlang:caller_env]{caller_env()}}.}
   }}
 }
 \description{
