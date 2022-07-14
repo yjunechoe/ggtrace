@@ -37,6 +37,21 @@ resolve_cond <- function(x, multiple = FALSE) {
   x
 }
 
+simulate_plot <- function(x, error) {
+  if (error) {
+    log <- NULL
+    tryCatch(expr = ggeval_silent(x), error = function(e) {
+      log <<- e
+    })
+    if (!is.null(log)) {
+      log$trace <- NULL
+      print(log)
+    }
+  } else {
+    ggeval_silent(x)
+  }
+}
+
 .ggtrace_placeholder <- structure(list(), class = "ggtrace_placeholder")
 
 is.ggtrace_placeholder <- function(x) class(x) == "ggtrace_placeholder"

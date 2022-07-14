@@ -60,19 +60,7 @@ ggtrace_inspect_n <- function(x, method, error = FALSE) {
     rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1L)
   })))
 
-  if (error) {
-    log <- NULL
-    x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = eval(x_expr), error = function(e) {
-      log <<- e
-    })
-    if (!is.null(log)) {
-      log$trace <- NULL
-      print(log)
-    }
-  } else {
-    ggeval_silent(x)
-  }
+  simulate_plotting(x, error)
 
   suppressMessages(untrace(what = what, where = where))
 
@@ -143,19 +131,7 @@ ggtrace_inspect_which <- function(x, method, cond, error = FALSE) {
     }
   })))
 
-  if (error) {
-    log <- NULL
-    x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = eval(x_expr), error = function(e) {
-      log <<- e
-    })
-    if (!is.null(log)) {
-      log$trace <- NULL
-      print(log)
-    }
-  } else {
-    ggeval_silent(x)
-  }
+  simulate_plotting(x, error)
 
   suppressMessages(untrace(what = what, where = where))
 
@@ -280,19 +256,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
     )
   )
 
-  if (error) {
-    log <- NULL
-    x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = eval(x_expr), error = function(e) {
-      log <<- e
-    })
-    if (!is.null(log)) {
-      log$trace <- NULL
-      print(log)
-    }
-  } else {
-    ggeval_silent(x)
-  }
+  simulate_plotting(x, error)
 
   if (.is_traced(what, where) || is.ggtrace_placeholder(.values)) {
     if (.is_traced(what, where)) {
@@ -408,19 +372,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
     }
   })))
 
-  if (error) {
-    log <- NULL
-    x_expr <- substitute(ggeval_silent(x))
-    tryCatch(expr = eval(x_expr), error = function(e) {
-      log <<- e
-    })
-    if (!is.null(log)) {
-      log$trace <- NULL
-      print(log)
-    }
-  } else {
-    ggeval_silent(x)
-  }
+  simulate_plotting(x, error)
 
   if (.is_traced(what, where) || is.ggtrace_placeholder(._args)) {
     if (.is_traced(what, where)) {
@@ -501,23 +453,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
     }
   })))
 
-  if (error) {
-    log <- NULL
-    if (rlang::is_call(x)) {
-      x_expr <- x
-    } else {
-      x_expr <- substitute(ggeval_silent(x))
-    }
-    tryCatch(expr = eval(x_expr), error = function(e) {
-      log <<- e
-    })
-    if (!is.null(log)) {
-      log$trace <- NULL
-      print(log)
-    }
-  } else {
-    ggeval_silent(x)
-  }
+  simulate_plotting(x, error)
 
   if (.is_traced(what, where) || is.ggtrace_placeholder(._return)) {
     if (.is_traced(what, where)) {
