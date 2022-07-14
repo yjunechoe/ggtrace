@@ -503,7 +503,11 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
 
   if (error) {
     log <- NULL
-    x_expr <- substitute(ggeval_silent(x))
+    if (rlang::is_call(x)) {
+      x_expr <- x
+    } else {
+      x_expr <- substitute(ggeval_silent(x))
+    }
     tryCatch(expr = eval(x_expr), error = function(e) {
       log <<- e
     })
