@@ -2,7 +2,8 @@
 
 # ggtrace 0.5.x
 
-- `ggtrace_inspect_vars` simplifies the output when `at` is length 1.
+- `ggtrace_inspect_vars()` simplifies the output when `at` is length 1.
+- Inspect workflow functions gain an `error` argument which. When `TRUE`, allows intermediate values to be inspected even when the ggplot itself fails to build (#89).
 
 ## ggtrace 0.5.1
 
