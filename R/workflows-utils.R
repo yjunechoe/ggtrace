@@ -45,11 +45,13 @@ simulate_plot <- function(x, error) {
     })
     if (!is.null(log)) {
       log$trace <- NULL
-      print(log)
+      msg <- paste0(rlang::cnd_message(log, prefix = TRUE), "\n")
+      writeLines(msg)
     }
   } else {
     ggeval_silent(x)
   }
+  invisible(NULL)
 }
 
 .ggtrace_placeholder <- structure(list(), class = "ggtrace_placeholder")

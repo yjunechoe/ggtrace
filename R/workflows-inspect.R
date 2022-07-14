@@ -60,7 +60,7 @@ ggtrace_inspect_n <- function(x, method, error = FALSE) {
     rlang::env_bind(!!wrapper_env, ._counter_ = rlang::env_get(!!wrapper_env, "._counter_") + 1L)
   })))
 
-  simulate_plotting(x, error)
+  simulate_plot(x, error)
 
   suppressMessages(untrace(what = what, where = where))
 
@@ -131,7 +131,7 @@ ggtrace_inspect_which <- function(x, method, cond, error = FALSE) {
     }
   })))
 
-  simulate_plotting(x, error)
+  simulate_plot(x, error)
 
   suppressMessages(untrace(what = what, where = where))
 
@@ -256,7 +256,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
     )
   )
 
-  simulate_plotting(x, error)
+  simulate_plot(x, error)
 
   if (.is_traced(what, where) || is.ggtrace_placeholder(.values)) {
     if (.is_traced(what, where)) {
@@ -372,7 +372,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
     }
   })))
 
-  simulate_plotting(x, error)
+  simulate_plot(x, error)
 
   if (.is_traced(what, where) || is.ggtrace_placeholder(._args)) {
     if (.is_traced(what, where)) {
@@ -453,7 +453,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
     }
   })))
 
-  simulate_plotting(x, error)
+  simulate_plot(x, error)
 
   if (.is_traced(what, where) || is.ggtrace_placeholder(._return)) {
     if (.is_traced(what, where)) {
