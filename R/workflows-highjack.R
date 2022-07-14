@@ -78,7 +78,7 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
 
       if ("..." %in% method_args) {
         method_args <- method_args[method_args != "..."]
-        args_vals <- c(mget(method_args, cur_env), rlang::dots_list(...))
+        args_vals <- c(mget(method_args, cur_env), list(...))
       } else {
         args_vals <- mget(method_args, cur_env)
       }

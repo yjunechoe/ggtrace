@@ -101,7 +101,7 @@ ggtrace_capture_fn <- function(x, method, cond = 1L) {
       cur_fn <- attr(rlang::current_fn(), "original")
       args <- names(formals(cur_fn))
       if ("..." %in% args) {
-        dots_params <- rlang::dots_list(...)
+        dots_params <- list(...)
         args_pairs <- as.list(mget(args[args != "..."]))
 
         # define inner function
