@@ -267,7 +267,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
   }
 
   .values <- stats::setNames(.values, paste0("Step", at))
-  .values <- lapply(.values, function(y) { Filter(function(y) { !is.ggtrace_placeholder(y) }, x) })
+  .values <- lapply(.values, function(x) { Filter(function(y) { !is.ggtrace_placeholder(y) }, x) })
   present_vars <- unique(unlist(lapply(.values, names), use.names = FALSE))
 
   if (!all(vars %in% present_vars)) {
