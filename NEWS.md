@@ -2,8 +2,15 @@
 
 # ggtrace 0.5.x
 
+## ggtrace 0.5.2
+
+### Breaking Changes
+
 - `ggtrace_inspect_vars()` simplifies the output when `at` is length 1.
-- Inspect workflow functions gain an `error` argument which. When `TRUE`, allows intermediate values to be inspected even when the ggplot itself fails to build (#89).
+
+### Bug fixes
+
+- `ggtrace_capture_env()` removes ggtrace-internal variables before snapshotting the environment (#88)
 
 ## ggtrace 0.5.1
 

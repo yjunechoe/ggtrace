@@ -249,6 +249,7 @@ ggtrace_capture_env <- function(x, method, cond = 1L, at = -1L) {
     if (rlang::is_true(cond)) {
 
       captured_env <- rlang::env_clone(rlang::current_env())
+      rlang::env_unbind(captured_env, c("new_counter", "cur_env", "cond"))
       rlang::env_bind(!!wrapper_env, captured = captured_env)
       suppressMessages(untrace(what = !!what, where = !!where))
 
