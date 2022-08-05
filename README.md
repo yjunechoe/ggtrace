@@ -1,4 +1,5 @@
--   **{ggtrace}**
+-   [**{ggtrace}**
+    <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />](#ggtrace)
     -   [**Extending `base::trace()` with
         `ggtrace()`**](#extending-basetrace-with-ggtrace)
     -   [**Workflows for interacting with ggplot
@@ -16,7 +17,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.5.1-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.5.2-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ### **Installation**
@@ -27,7 +28,7 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.5.1
+    library(ggtrace) # v0.5.2
 
 More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
@@ -671,6 +672,11 @@ Let’s grab the plotted violins with `ggtrace_inspect_return()`
 
     violins <- lapply(1:2, ggtrace_inspect_return,
                       x = violin_plot, method = GeomViolin$draw_group)
+    #> Warning in .is_traced(what, where) || is.ggtrace_placeholder(._return):
+    #> 'length(x) = 3 > 1' in coercion to 'logical(1)'
+
+    #> Warning in .is_traced(what, where) || is.ggtrace_placeholder(._return):
+    #> 'length(x) = 3 > 1' in coercion to 'logical(1)'
     violins
     #> [[1]]
     #> polygon[geom_violin.polygon.2816] 

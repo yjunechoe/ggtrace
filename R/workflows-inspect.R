@@ -424,7 +424,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
 #' # Return value for 4th panel, 2nd group (bar)
 #' ggtrace_inspect_return(
 #'   x = p1, method = StatCount$compute_group,
-#'   cond = quote(data$PANEL[1] == 4 && data$group == 2)
+#'   cond = quote(data$PANEL[1] == 4 && data$group[1] == 2)
 #' )
 #'
 ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
