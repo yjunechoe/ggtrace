@@ -55,3 +55,4 @@ triggered. For more complex inspections of the call stack, \code{ggedit()} is re
 The output of \code{rlang::trace_back()} is not logged to the tracedumps (\code{last_ggtrace()} and
 \code{global_ggtrace()})
 }
+\keyword{internal}

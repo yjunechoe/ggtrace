@@ -34,8 +34,8 @@ ggundebug <- function(method, ...) {
 #' @inheritParams ggbody
 #' @inheritDotParams rlang::trace_back
 #'
+#' @keywords internal
 #' @return NULL
-#' @export
 ggtraceback <- function(method, ...) {
   params <- rlang::list2(...)
   method_quo <- rlang::enquo(method)

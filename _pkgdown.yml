@@ -89,7 +89,7 @@ articles:
 - title: Usage
   navbar: Usage
   contents:
-  - intro
+  - getting-started
   # - showcase-ggplot_build
   # - showcase-aes_evaluation
 - title: Case Studies

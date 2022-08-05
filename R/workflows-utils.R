@@ -7,7 +7,7 @@
 #' @param x A ggplot
 #'
 #' @return A gtable
-#' @export
+#' @keywords internal
 ggeval_silent <- function(x) {
   invisible(asNamespace("ggplot2")$ggplotGrob(x))
 }

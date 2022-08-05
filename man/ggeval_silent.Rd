@@ -20,3 +20,4 @@ A gtable
 renders the grob with \code{{grid}}. Combined, these two functions simulate \code{ggplot2:::print.ggplot}
 without overriding \code{last_plot()}.
 }
+\keyword{internal}
