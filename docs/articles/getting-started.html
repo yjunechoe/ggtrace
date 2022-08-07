@@ -115,12 +115,26 @@
 
     
     
+<div class="section level2">
+<h2 id="short-version">Short version<a class="anchor" aria-label="anchor" href="#short-version"></a>
+</h2>
+<p>Are you a <strong>user</strong> wanting to fully master the grammar
+of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>? Start <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">here</a>!</p>
+<p>Are you an <strong>aspiring developer</strong> wanting to extend
+<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>? Start <a href="https://github.com/yjunechoe/ggtrace-user2022" class="external-link">here</a>!</p>
+</div>
+<div class="section level2">
+<h2 id="long-version">Long version<a class="anchor" aria-label="anchor" href="#long-version"></a>
+</h2>
 <p>There’s a lot that can be said about ggplot internals, and what you
 can get from using <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> depends on how comfortable you
 are with <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> and ggplot internals. Whether you’re
 here because you want to become a better ggplot user or because you’re
-an aspiring extension developer, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> has you
-covered!</p>
+an aspiring extension developer, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> has you covered
+for all stages of your <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> journey!</p>
+<div class="section level3">
+<h3 id="stage-0-user">Stage 0 (user)<a class="anchor" aria-label="anchor" href="#stage-0-user"></a>
+</h3>
 <p>If this is your first time hearing about ggplot internals, I
 recommend starting with <a href="https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/" class="external-link">part
 1 of my blog post series on delayed aesthetic evaluation</a>, a case
@@ -130,20 +144,33 @@ user-facing code and ggplot internals. You might also want to start with
 another blog post of mine on <a href="https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/" class="external-link">stat_*()
 layers</a>, for extra scaffolding. These will give you minimal
 background on ggplot internals to get started.</p>
+</div>
+<div class="section level3">
+<h3 id="stage-1-advanced-user">Stage 1 (advanced user)<a class="anchor" aria-label="anchor" href="#stage-1-advanced-user"></a>
+</h3>
 <p>Then, you can watch my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
-talk on {ggtrace} and ggplot internals</a>. This is where I showcase the
-<em>inspect</em> family of workflow functions in <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a>
-and at this point point you will be introduced to <a href="https://ggplot2-book.org/internals.html#introducing-ggproto" class="external-link"><code>ggproto</code></a>.
-The talk essentially covers the contents of <a href="https://ggplot2-book.org/internals.html#ggplotbuild" class="external-link">Chapter 20.2
+talk on {ggtrace} and ggplot internals</a>. If that felt a little too
+fast/dense, you can watch a <a href="https://www.youtube.com/watch?v=NhMI-GvppMo&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=28" class="external-link">slower
+(hour-long), broken down version</a> of me covering the same content.
+This is where I showcase the <em>inspect</em> family of workflow
+functions in <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> and you also will be introduced to
+<a href="https://ggplot2-book.org/internals.html#introducing-ggproto" class="external-link"><code>ggproto</code></a>.
+The talk(s) essentially covers the contents of <a href="https://ggplot2-book.org/internals.html#ggplotbuild" class="external-link">Chapter 20.2
 of the ggplot2 book</a>, but with emphasis on practicality for the user.
-I’d actually recommend reading the entire <a href="https://ggplot2-book.org/internals.html" class="external-link">Chapter 20 of the ggplot2
-book</a> anyways, as it goes over many fundamental concepts that may
+I’d actually recommend reading the entire book chapter anyways (or read
+it with a recording of me going over <a href="https://www.youtube.com/watch?v=__yndiht_gw&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=24" class="external-link">Part
+1</a> and <a href="https://www.youtube.com/watch?v=JFBROPy_BeU&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=26" class="external-link">Part
+2</a> of the chapter), as it covers many fundamental concepts that may
 come off as unintuitive at first. As you read through it, I highly
 recommend referencing <a href="https://twitter.com/statsgen" class="external-link">Emi
 Tanaka</a>’s awesome <a href="https://emitanaka.org/datavis-adv-workshop/slides/day1-session2.html" class="external-link">slides
 on ggplot2 internals</a> and <a href="https://twitter.com/hrbrmstr" class="external-link">Bob
 Rudis</a>’s <a href="https://rud.is/books/creating-ggplot2-extensions/demystifying-ggplot2.html" class="external-link">short
 chapter on demystifying ggplot2</a> as companion guides.</p>
+</div>
+<div class="section level3">
+<h3 id="stage-2-aspiring-developer">Stage 2 (aspiring developer)<a class="anchor" aria-label="anchor" href="#stage-2-aspiring-developer"></a>
+</h3>
 <p>If you’re not scared away by ggproto methods and want to keep
 exploring the internals, you should continue by watching <a href="https://twitter.com/thomasp85" class="external-link">Thomas Lin Pedersen</a>’s <a href="https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/" class="external-link">rstudio::conf(2020)
 talk on extending ggplot</a>, which gives a nice overview of what kind
@@ -174,8 +201,13 @@ Graphics (3rd edition)</a>, but there are also some resources written
 with ggplot internals in mind, like yet another one of Emi’s <a href="https://emitanaka.org/datavis-adv-workshop/slides/day1-session1.html" class="external-link">slides</a>,
 and functions for interacting with <a href="https://github.com/r-lib/gtable" class="external-link">gtable</a> objects from <a href="https://cran.r-project.org/web/packages/lemon/vignettes/gtable_show_lemonade.html" class="external-link"><code>{lemon}</code></a>
 and <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/gtable.html" class="external-link"><code>{gridExtra}</code></a>.</p>
+</div>
+<div class="section level3">
+<h3 id="stage-4-developer">Stage 4 (developer)<a class="anchor" aria-label="anchor" href="#stage-4-developer"></a>
+</h3>
 <p>At this point you know enough internals to go off and write your own
-extensions. Your training wheels are off and you’re in the territory of
+extensions. You are now a <em>developer</em> (even if you’re just
+starting!) - your training wheels are off and you’re in the territory of
 figuring things out for yourself. A few people have written on the topic
 of debugging ggplot, including <a href="https://twitter.com/yutannihilat_en" class="external-link">Hiroaki Yutani</a>’s <a href="https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/" class="external-link">blog post on
 using browser() for debugging ggproto methods</a> and <a href="https://twitter.com/paleolimbot" class="external-link">Dewey Dunnington</a>’s <a href="https://github.com/paleolimbot/ggdebug" class="external-link">{ggdebug}</a> package
@@ -190,20 +222,27 @@ aims to offer the best of both worlds, with high-level workflow
 functions in the form of <code>ggtrace_{action}_{value}()</code>, the
 low-level functions <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and
 <code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code>, and the interactive debugging functions
-<code><a href="../reference/ggedit.html">ggedit()</a></code> and <code><a href="../reference/ggdebug.html">ggdebugonce()</a></code>. There’s not much
-new that ggtrace offers in this space (the package isn’t even
-<em>that</em> much code) other than a reframing of ggplot internals in
-familiar functional programming terms. I hope this overview of what
-people have written about ggplot internals over the years can compensate
-for the (at least current) lack of vignettes in the package.</p>
+<code><a href="../reference/ggedit.html">ggedit()</a></code> and <code><a href="../reference/ggdebug.html">ggdebugonce()</a></code>. There’s not a
+whole lot of new stuff that ggtrace offers in this space (the package
+isn’t even <em>that</em> much code) but it embodies a transformative
+reframing of ggplot internals as functional programming, the kind that
+we’re familiar with as R users. I hope this overview of what people have
+written about ggplot internals over the years can compensate for the (at
+least current) lack of vignettes in the package.</p>
 <p>Lastly, <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is always evolving! It might not be
 obvious as users, but the internals are undergoing constant change. So
 at some point you might also want to start keeping an eye on the <a href="https://github.com/tidyverse/ggplot2/issues" class="external-link">Github issues</a>.
 It’s also a nice place to be because you can eavesdrop on the thoughts
-and insights from the core developers, which can actually directly help
-you understand the motivation behind how and why things in the internals
-are designed that way.</p>
-  </main>
+and insights from the core developers (e.g., <a href="https://github.com/tidyverse/ggplot2/issues/4269" class="external-link">should users be
+able to specify pieces of a <code>scale_*()</code> modularly?</a>, <a href="https://github.com/tidyverse/ggplot2/issues/3329" class="external-link">should the
+guides system be converted to ggproto?</a>, <a href="https://github.com/tidyverse/ggplot2/issues/3175" class="external-link">should layers
+get “state”?</a>), which can actually directly help you understand the
+motivation behind how and why things in the internals are designed that
+way.</p>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
