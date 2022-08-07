@@ -1,13 +1,11 @@
--   [**{ggtrace}**
-    <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />](#ggtrace)
-    -   [**Extending `base::trace()` with
-        `ggtrace()`**](#extending-basetrace-with-ggtrace)
-    -   [**Workflows for interacting with ggplot
-        internals**](#workflows-for-interacting-with-ggplot-internals)
-    -   [**Middle-ground approach
-        `with_ggtrace()`**](#middle-ground-approach-with_ggtrace)
-    -   [**Case study: Data-driven
-        legends**](#case-study-data-driven-legends)
+-   [**Extending `base::trace()` with
+    `ggtrace()`**](#extending-basetrace-with-ggtrace)
+-   [**Workflows for interacting with ggplot
+    internals**](#workflows-for-interacting-with-ggplot-internals)
+-   [**Middle-ground approach
+    `with_ggtrace()`**](#middle-ground-approach-with_ggtrace)
+-   [**Case study: Data-driven
+    legends**](#case-study-data-driven-legends)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
