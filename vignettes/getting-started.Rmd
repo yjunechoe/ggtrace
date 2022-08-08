@@ -9,9 +9,9 @@ vignette: >
 
 ## Short version
 
-Are you a **user** wanting to fully master the grammar of `{ggplot2}`? Start [here](https://github.com/yjunechoe/ggtrace-rstudioconf2022)!
+Are you a **user** wanting to fully master the grammar of `{ggplot2}`? Start with my [rstudio::conf(2022) talk on {ggtrace}](https://github.com/yjunechoe/ggtrace-rstudioconf2022)!
 
-Are you an **aspiring developer** wanting to extend `{ggplot2}`? Start [here](https://github.com/yjunechoe/ggtrace-user2022)!
+Are you an **aspiring developer** wanting to extend `{ggplot2}`? Start with my [useR! 2022 talk on {ggtrace}](https://github.com/yjunechoe/ggtrace-user2022)!
 
 ## Long version
 
@@ -21,46 +21,60 @@ Traditionally, the `{ggplot2}` community has been thought to split between users
 
 ### Stage 1 (user)
 
-If this is your first time hearing about ggplot internals, I recommend starting with [part 1 of my blog post series on delayed aesthetic evaluation](https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/), a case study of [somewhat niche {ggplot2} functions](https://ggplot2.tidyverse.org/reference/aes_eval.html) that lie at the intersection between user-facing code and ggplot internals. You might also want to start with another blog post of mine on [stat_*() layers](https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/), for extra scaffolding. These will give you minimal background on ggplot internals to get started.
+**You are someone who have not heard about ggplot internals before.** I recommend starting with [part 1 of my blog post series on delayed aesthetic evaluation](https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/), a case study of [somewhat niche {ggplot2} functions](https://ggplot2.tidyverse.org/reference/aes_eval.html) that lie at the intersection between user-facing code and ggplot internals. You might also want to start with another blog post of mine on [stat_*() layers](https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/), for extra scaffolding. These will give you minimal background on ggplot internals to get started.
 
 **Learning objectives:**
+
 - Every layer has a `stat` and a `geom`. `stat_*()` and `geom_*()` functions are two sides of the same coin.
+
 - The job of users ends with the code we write. The job of the internals is to spell out the assumptions behind the concise ggplot code that we write as users to make the plot.
+
 - Layers have an underlying dataframe representation that contains information about what's being plotted.
 
 ### Stage 2 (advanced user)
 
-Then, you can watch my [rstudio::conf(2022) talk on {ggtrace} and ggplot internals](https://github.com/yjunechoe/ggtrace-rstudioconf2022). If that felt a little too fast/dense, you can watch a [slower (hour-long), broken down version](https://www.youtube.com/watch?v=NhMI-GvppMo&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=28) of me covering the same content. This is where I showcase the _inspect_ family of workflow functions in `{ggtrace}` and you also will be introduced to [`ggproto`](https://ggplot2-book.org/internals.html#introducing-ggproto). The talk(s) essentially covers the contents of [Chapter 20.2 of the ggplot2 book](https://ggplot2-book.org/internals.html#ggplotbuild), but with emphasis on practicality for the user. I'd actually recommend reading the entire book chapter anyways (or read it with a recording of me going over [Part 1](https://www.youtube.com/watch?v=__yndiht_gw&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=24) and [Part 2](https://www.youtube.com/watch?v=JFBROPy_BeU&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=26) of the chapter), as it covers many fundamental concepts that may come off as unintuitive at first. As you read through it, I highly recommend referencing [Emi Tanaka](https://twitter.com/statsgen)'s awesome [slides on ggplot2 internals](https://emitanaka.org/datavis-adv-workshop/slides/day1-session2.html) and [Bob Rudis](https://twitter.com/hrbrmstr)'s [short chapter on demystifying ggplot2](https://rud.is/books/creating-ggplot2-extensions/demystifying-ggplot2.html) as companion guides.
+**You are someone who understands the division of labor between the user and the internals.** To get a better sense of what the internals does, I recommend watching my [rstudio::conf(2022) talk on {ggtrace} and ggplot internals](https://github.com/yjunechoe/ggtrace-rstudioconf2022). If that felt a little too fast/dense, you can watch a [slower (hour-long), broken down version](https://www.youtube.com/watch?v=NhMI-GvppMo&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=28) of me covering the same content. This is where I showcase the _inspect_ family of workflow functions in `{ggtrace}` and you also will be introduced to [`ggproto`](https://ggplot2-book.org/internals.html#introducing-ggproto). The talk(s) essentially covers the contents of [Chapter 20.2 of the ggplot2 book](https://ggplot2-book.org/internals.html#ggplotbuild), but with emphasis on practicality for the user. I'd actually recommend reading the entire book chapter anyways (or read it with a recording of me going over [Part 1](https://www.youtube.com/watch?v=__yndiht_gw&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=24) and [Part 2](https://www.youtube.com/watch?v=JFBROPy_BeU&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=26) of the chapter), as it covers many fundamental concepts that may come off as unintuitive at first. As you read through it, I highly recommend referencing [Emi Tanaka](https://twitter.com/statsgen)'s awesome [slides on ggplot2 internals](https://emitanaka.org/datavis-adv-workshop/slides/day1-session2.html) and [Bob Rudis](https://twitter.com/hrbrmstr)'s [short chapter on demystifying ggplot2](https://rud.is/books/creating-ggplot2-extensions/demystifying-ggplot2.html) as companion guides.
 
 **Learning objectives:**
+
 - A ggplot object is not the ggplot figure itself. A ggplot object merely contains the instructions for plotting the figure. The figure is what you get as a result of executing those instructions in the internals, by `print()`/`plot()`-ing the ggplot object.
+
 - The internals "renders" a figure in steps, by first making the data drawing-ready and then drawing the prepared data.
+
 - The internals are implemented in the ggproto object oriented system.
+
 - We can get pretty far using `{ggtrace}` to just focus on understanding the part of the internals that takes the user-supplied raw data and turns it into a "drawing-ready" data.
 
 ### Stage 3 (aspiring developer)
 
-If you're not scared away by ggproto methods and want to keep exploring the internals, you should continue by watching [Thomas Lin Pedersen](https://twitter.com/thomasp85)'s [rstudio::conf(2020) talk on extending ggplot](https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/), which gives a nice overview of what kind of ggproto methods exist and what the most relevant ones are / what they do. Now you're entering developer territory. In case you want a more comprehensive documentation on ggproto (though not necessary to read them at this stage), check out the [package vignette on ggproto](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html) and [Brodie Gaslam](https://twitter.com/BrodieGaslam)'s even more comprehensive [unofficial reference for ggplot internals](https://htmlpreview.github.io/?https://raw.githubusercontent.com/brodieG/ggbg/development/inst/doc/extensions.html#ggproto-method).
+**You are someone who is aware of the existence of ggproto, and you are interested in knowing more about the implementational details of the internals.** I recommend you gear up for a deep dive into the internals by first watching [Thomas Lin Pedersen](https://twitter.com/thomasp85)'s [rstudio::conf(2020) talk on extending ggplot](https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/), which gives a nice overview of what kind of ggproto methods exist and what the most relevant ones are / what they do. Now you're entering developer territory. In case you want a more comprehensive documentation on ggproto (though not necessary to read them at this stage), check out the [package vignette on ggproto](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html) and [Brodie Gaslam](https://twitter.com/BrodieGaslam)'s even more comprehensive [unofficial reference for ggplot internals](https://htmlpreview.github.io/?https://raw.githubusercontent.com/brodieG/ggbg/development/inst/doc/extensions.html#ggproto-method).
 
 You can follow up on Thomas's talk by watching my [useR! 2022 talk on {ggtrace} and ggplot internals](https://github.com/yjunechoe/ggtrace-user2022), which showcases all workflows in `{ggtrace}` (_inspect_, _capture_, _highjack_) for interacting with ggproto methods. The [part 2 of my blog post series on delayed aesthetic evaluation](https://yjunechoe.github.io/posts/2022-07-06-ggplot2-delayed-aes-2/) picks up where I left off in that talk to expand on the possible extension points to different `Stat` methods.
 
 That leads nicely into the [case study chapter of the ggplot2 book](https://ggplot2-book.org/spring1.html). It's a huge chapter, so if you want some diversity you can also reference Emi's [slides on writing ggplot2 extensions ggplot](https://emitanaka.org/datavis-adv-workshop/slides/day1-session3.html) and read the [package vignette on extending ggplot](https://ggplot2.tidyverse.org/articles/extending-ggplot2.html#creating-your-own-theme) side-by-side, which touches on the same topics but with different examples. In the process, you'll inevitably encounter `{grid}`, which is itself a whole 'nother monster. There are a lot of resources on `{grid}`, most notably the [R Graphics (3rd edition)](https://www.routledge.com/R-Graphics-Third-Edition/Murrell/p/book/9780367780692) book, but there are also some resources written with ggplot internals in mind, like yet another one of Emi's [slides on {grid}](https://emitanaka.org/datavis-adv-workshop/slides/day1-session1.html), and functions for interacting with `{gtable}` objects from [`{lemon}`](https://cran.r-project.org/web/packages/lemon/vignettes/gtable_show_lemonade.html) and [`{gridExtra}`](https://cran.r-project.org/web/packages/gridExtra/vignettes/gtable.html).
 
 **Learning objectives:**
+
 - ggproto methods are called one-by-one in the internals to the execute instructions for plotting.
+
 - The ggproto objects `Stat` and `Geom` do a bulk of the work, and offer flexible extension points.
-- ggproto methods are essentially functions, though they defy common expectations about how a function should look like and behave. `{ggtrace}` allows users to interact with these ggproto methods as if they are functions, and learn their behavior through trial and error. 
+
+- ggproto methods are essentially functions, though they defy common expectations about how a function should look like and behave. `{ggtrace}` allows users to interact with these ggproto methods as if they are functions, and learn their behavior through trial and error.
 
 ### Stage 4 (developer)
 
-At this point you know enough internals to go off and write your own extensions. You are now a _developer_ (even if you're just starting!) - your training wheels are off and you're in the territory of figuring things out for yourself. Being a developer requires a new skill - **debugging**. A few people have written on the topic of debugging ggplot, including [Hiroaki Yutani](https://twitter.com/yutannihilat_en)'s blog post on [using browser() for debugging ggproto methods](https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/) and [Dewey Dunnington](https://twitter.com/paleolimbot)'s [{ggdebug}](https://github.com/paleolimbot/ggdebug) package which gives you freakishly powerful control over the internals. People have also written packages for less "intrusive" ways of debugging and interacting with the internals, including [{gginnards}](https://cran.r-project.org/web/packages/gginnards/vignettes/user-guide-1.html) by [Pedro J. Aphalo](https://github.com/aphalo) and [{gggrid}](https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html) by [Paul Murrell](https://www.stat.auckland.ac.nz/~paul/).
+**You understand the role of ggproto objects and methods in the internals and feel ready to jump in and write your own extensions.** At this point you are now a _developer_ (even if you're just starting!) - your training wheels are off and you're in the territory of figuring things out for yourself. Being a developer requires a new skill - **debugging**. A few people have written on the topic of debugging ggplot, including [Hiroaki Yutani](https://twitter.com/yutannihilat_en)'s blog post on [using browser() for debugging ggproto methods](https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/) and [Dewey Dunnington](https://twitter.com/paleolimbot)'s [{ggdebug}](https://github.com/paleolimbot/ggdebug) package which gives you freakishly powerful control over the internals. People have also written packages for less "intrusive" ways of debugging and interacting with the internals, including [{gginnards}](https://cran.r-project.org/web/packages/gginnards/vignettes/user-guide-1.html) by [Pedro J. Aphalo](https://github.com/aphalo) and [{gggrid}](https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html) by [Paul Murrell](https://www.stat.auckland.ac.nz/~paul/).
 
 Standing on the shoulders of these giants, `{ggtrace}` aims to offer the best of both worlds for developers, with high-level workflow functions in the form of `ggtrace_{action}_{value}()`, the low-level functions `ggtrace()` and `with_ggtrace()`, and the interactive debugging functions `ggedit()` and `ggdebugonce()`. There's not a whole lot of new stuff that ggtrace offers in this space (the package isn't even _that_ much code) but it embodies a transformative reframing of ggplot internals as functional programming, the kind that we're familiar with as R users. I hope this overview of what people have written about ggplot internals over the years can compensate for the (at least current) lack of vignettes in the package.
 
 **Learning objectives:**
+
 - Only a small subset of ggprotos are exported by `{ggplot2}` and available for subclassing.
+
 - Only a handful of ggproto methods are productive extension points.
+
 - A big part of developing an extension is identifying the appropriate extension point. `{ggtrace}` allows developers to work backwards from getting the desired output to work first, then tracking down the implementational details that need to be changed to produce that output. In other words, you can find a hack that works first through trial and error, then develop on a principled way of implementing the solution by consulting best practices for extending ggplot.
+
 - In the process of writing new ggproto objects and ggproto methods, developers need to debug frequently. `{ggtrace}` functions implement different strategies of debugging, spanning the spectrum of interactive to programmatic.
 
 ### Stage 5 (contributor)
