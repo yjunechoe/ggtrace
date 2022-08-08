@@ -133,58 +133,65 @@ want to become a better ggplot user or because you’re an aspiring
 extension developer, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> has you covered for all
 stages of your ggplot journey!</p>
 <p>Traditionally, the ggplot community has been thought to split between
-users (people who use ggplot to make plots) and developers (people who
-write extension packages and contribute to <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>). I
-believe that this binary distinction is outdated for many reasons, the
-most convincing one being that the capacity of the user has been
-expanding and encroaching on the “internals” territory. The following
+<strong>users</strong> (people who use ggplot to make plots) and
+<strong>developers</strong> (people who write extension packages and
+contribute to <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>). I believe that this binary
+distinction is outdated for many reasons, the most convincing one being
+that the capacity of the user has been expanding and encroaching on the
+“internals” territory. In other words, while the distinction between
+<em>user-facing code</em> and <em>ggplot internals</em> is clear, that
+doesn’t map neatly onto the user-developer dichotomy.</p>
+<p>Here is one attempt at trying to address that issue. The following
 outlines the five “stages” of the ggplot2 journey, and where
 <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> fits in.</p>
 <div class="section level3">
-<h3 id="stage-1-user">Stage 1 (user)<a class="anchor" aria-label="anchor" href="#stage-1-user"></a>
+<h3 id="stage-1-experienced-user">Stage 1 (experienced user)<a class="anchor" aria-label="anchor" href="#stage-1-experienced-user"></a>
 </h3>
-<p><strong>You are someone who have not heard about ggplot internals
-before.</strong> I recommend starting with <a href="https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/" class="external-link">part
+<p><strong>You are someone who is familiar with using ggplot but have
+not heard about ggplot internals before.</strong> I recommend starting
+with <a href="https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/" class="external-link">part
 1 of my blog post series on delayed aesthetic evaluation</a>, a case
-study of <a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">somewhat
-niche {ggplot2} functions</a> that lie at the intersection between
-user-facing code and ggplot internals. You might also want to start with
-another blog post of mine on <a href="https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/" class="external-link">stat_*()
+study of <a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">a set of
+somewhat niche {ggplot2} functions</a> that lie at the intersection
+between user-facing code and ggplot internals. You might also want to
+start with another blog post of mine on <a href="https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/" class="external-link">stat_*()
 layers</a>, for extra scaffolding. These will give you minimal
 background on ggplot internals to get started.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
-<li><p>Every layer has a <code>stat</code> and a <code>geom</code>.
+<li><p>Every layer has a <code>stat</code> and a <code>geom</code>. The
 <code>stat_*()</code> and <code>geom_*()</code> layer functions are two
 sides of the same coin.</p></li>
 <li><p>The job of users ends with the code we write. The job of the
 internals is to spell out the assumptions behind the concise ggplot code
 that we write as users to make the plot.</p></li>
 <li><p>Each layer has an underlying dataframe representation that
-contains information for drawing.</p></li>
+contains only the kind of information that’s relevant for drawing that
+layer.</p></li>
 </ul>
 </div>
 <div class="section level3">
-<h3 id="stage-2-advanced-user">Stage 2 (advanced user)<a class="anchor" aria-label="anchor" href="#stage-2-advanced-user"></a>
+<h3 id="stage-2-curious-user">Stage 2 (curious user)<a class="anchor" aria-label="anchor" href="#stage-2-curious-user"></a>
 </h3>
-<p><strong>You are someone who understands the division of labor between
-the user and the internals.</strong> To get a better sense of what the
+<p><strong>You are someone who recognizes the division of labor between
+the user and the internals, and feel empowered by this
+knowledge</strong> To continue to get a better sense of what the
 internals does, I recommend watching my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
 talk on {ggtrace} and ggplot internals</a>. If that felt a little too
 fast/dense, you can watch a <a href="https://www.youtube.com/watch?v=NhMI-GvppMo&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=28" class="external-link">slower
 (hour-long), broken down version</a> of me covering the same content.
 This is where I showcase the <em>inspect</em> family of workflow
-functions in <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> and you also will be introduced to
-<a href="https://ggplot2-book.org/internals.html#introducing-ggproto" class="external-link"><code>ggproto</code></a>.
-The talk(s) essentially covers the contents of <a href="https://ggplot2-book.org/internals.html#ggplotbuild" class="external-link">Chapter 20.2
+functions in <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> and it is also where you will be
+introduced to <a href="https://ggplot2-book.org/internals.html#introducing-ggproto" class="external-link"><code>ggproto</code></a>.
+The talks cover the content from <a href="https://ggplot2-book.org/internals.html#ggplotbuild" class="external-link">Chapter 20.2
 of the ggplot2 book</a>, but with emphasis on practicality for the user.
-I’d actually recommend reading the entire book chapter anyways (or read
+I’d actually recommend reading that entire book chapter anyways (or read
 it with a recording of me going over <a href="https://www.youtube.com/watch?v=__yndiht_gw&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=24" class="external-link">Part
 1</a> and <a href="https://www.youtube.com/watch?v=JFBROPy_BeU&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=26" class="external-link">Part
-2</a> of the chapter), as it covers many fundamental concepts that may
-come off as unintuitive at first. As you read through it, I highly
-recommend referencing <a href="https://twitter.com/statsgen" class="external-link">Emi
-Tanaka</a>’s awesome <a href="https://emitanaka.org/datavis-adv-workshop/slides/day1-session2.html" class="external-link">slides
+2</a> of the chapter), as it covers many fundamental concepts that take
+some time to digest. As you read through it, I also highly recommend
+referencing <a href="https://twitter.com/statsgen" class="external-link">Emi Tanaka</a>’s
+awesome <a href="https://emitanaka.org/datavis-adv-workshop/slides/day1-session2.html" class="external-link">slides
 on ggplot2 internals</a> and <a href="https://twitter.com/hrbrmstr" class="external-link">Bob
 Rudis</a>’s <a href="https://rud.is/books/creating-ggplot2-extensions/demystifying-ggplot2.html" class="external-link">short
 chapter on demystifying ggplot2</a> as companion guides.</p>
@@ -201,7 +208,7 @@ layer’s data drawing-ready and then drawing the prepared data.</p></li>
 system.</p></li>
 <li><p>We can get pretty far using <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> to just focus
 on understanding the part of the internals that takes the user-supplied
-raw data and turns it into a “drawing-ready” data.</p></li>
+data and turns it into a “drawing-ready” data.</p></li>
 </ul>
 </div>
 <div class="section level3">
@@ -255,13 +262,13 @@ and error.</p></li>
 <div class="section level3">
 <h3 id="stage-4-developer">Stage 4 (developer)<a class="anchor" aria-label="anchor" href="#stage-4-developer"></a>
 </h3>
-<p><strong>You understand the role of ggproto objects and methods in the
-internals and feel ready to jump in and write your own
-extensions.</strong> At this point you are now a <em>developer</em>
-(even if you’re just starting!) - your training wheels are off and
-you’re in the territory of figuring things out for yourself. Being a
-developer requires a new skill - <strong>debugging</strong>. A few
-people have written on the topic of debugging ggplot, including <a href="https://twitter.com/yutannihilat_en" class="external-link">Hiroaki Yutani</a>’s blog
+<p><strong>You understand the role that ggproto objects and methods play
+in the internals and you are excited about writing your own
+extensions.</strong> At this point you are now a <em>developer</em> -
+your training wheels are off and you’re in the territory of figuring
+things out for yourself. Being a developer requires a new skill -
+<strong>debugging</strong>. A few people have written on the topic of
+debugging ggplot internals, including <a href="https://twitter.com/yutannihilat_en" class="external-link">Hiroaki Yutani</a>’s blog
 post on <a href="https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/" class="external-link">using
 browser() for debugging ggproto methods</a> and <a href="https://twitter.com/paleolimbot" class="external-link">Dewey Dunnington</a>’s <a href="https://github.com/paleolimbot/ggdebug" class="external-link">{ggdebug}</a> package
 which gives you freakishly powerful control over the internals. People
