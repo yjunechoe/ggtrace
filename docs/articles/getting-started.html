@@ -53,8 +53,7 @@
     <h6 class="dropdown-header" data-toc-skip>Usage</h6>
     <a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
+    <h6 class="dropdown-header" data-toc-skip>Workflows (WIP)</h6>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -81,8 +80,7 @@
     <h6 class="dropdown-header" data-toc-skip>Usage</h6>
     <a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
+    <h6 class="dropdown-header" data-toc-skip>Workflows (WIP)</h6>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -119,10 +117,10 @@
 <h2 id="short-version">Short version<a class="anchor" aria-label="anchor" href="#short-version"></a>
 </h2>
 <p>Are you a <strong>user</strong> wanting to fully master the grammar
-of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>? Start with my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
+of ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
 talk on {ggtrace}</a>!</p>
 <p>Are you an <strong>aspiring developer</strong> wanting to extend
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>? Start with my <a href="https://github.com/yjunechoe/ggtrace-user2022" class="external-link">useR! 2022 talk on
+ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-user2022" class="external-link">useR! 2022 talk on
 {ggtrace}</a>!</p>
 </div>
 <div class="section level2">
@@ -130,19 +128,18 @@ talk on {ggtrace}</a>!</p>
 </h2>
 <p>There’s a lot that can be said about ggplot internals, and what you
 can get from using <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> depends on how comfortable you
-are with <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> and ggplot internals. Whether you’re
-here because you want to become a better ggplot user or because you’re
-an aspiring extension developer, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> has you covered
-for all stages of your <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> journey!</p>
-<p>Traditionally, the <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> community has been thought
-to split between users (people who use ggplot to make plots) and
-developers (people who write extension packages and contribute to
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>). I believe that this binary distinction is
-outdated for many reasons, the most convincing one being that the
-capacity of the user has been expanding and encroaching on the
-“internals” territory. The following outlines the five “stages” of the
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> journey, and where <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> fits
-in.</p>
+are with ggplot and ggplot internals. Whether you’re here because you
+want to become a better ggplot user or because you’re an aspiring
+extension developer, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> has you covered for all
+stages of your ggplot journey!</p>
+<p>Traditionally, the ggplot community has been thought to split between
+users (people who use ggplot to make plots) and developers (people who
+write extension packages and contribute to <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>). I
+believe that this binary distinction is outdated for many reasons, the
+most convincing one being that the capacity of the user has been
+expanding and encroaching on the “internals” territory. The following
+outlines the five “stages” of the ggplot2 journey, and where
+<a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> fits in.</p>
 <div class="section level3">
 <h3 id="stage-1-user">Stage 1 (user)<a class="anchor" aria-label="anchor" href="#stage-1-user"></a>
 </h3>
@@ -158,13 +155,13 @@ background on ggplot internals to get started.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
 <li><p>Every layer has a <code>stat</code> and a <code>geom</code>.
-<code>stat_*()</code> and <code>geom_*()</code> functions are two sides
-of the same coin.</p></li>
+<code>stat_*()</code> and <code>geom_*()</code> layer functions are two
+sides of the same coin.</p></li>
 <li><p>The job of users ends with the code we write. The job of the
 internals is to spell out the assumptions behind the concise ggplot code
 that we write as users to make the plot.</p></li>
-<li><p>Layers have an underlying dataframe representation that contains
-information about what’s being plotted.</p></li>
+<li><p>Each layer has an underlying dataframe representation that
+contains information for drawing.</p></li>
 </ul>
 </div>
 <div class="section level3">
@@ -198,8 +195,8 @@ merely contains the instructions for plotting the figure. The figure is
 what you get as a result of executing those instructions in the
 internals, by <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-ing the ggplot
 object.</p></li>
-<li><p>The internals “renders” a figure in steps, by first making the
-data drawing-ready and then drawing the prepared data.</p></li>
+<li><p>The internals “renders” a figure in steps, by first making each
+layer’s data drawing-ready and then drawing the prepared data.</p></li>
 <li><p>The internals are implemented in the ggproto object oriented
 system.</p></li>
 <li><p>We can get pretty far using <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> to just focus
@@ -244,10 +241,10 @@ objects from <a href="https://cran.r-project.org/web/packages/lemon/vignettes/gt
 and <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/gtable.html" class="external-link"><code>{gridExtra}</code></a>.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
-<li><p>ggproto methods are called one-by-one in the internals to the
+<li><p>ggproto methods are called step-by-step in the internals to the
 execute instructions for plotting.</p></li>
 <li><p>The ggproto objects <code>Stat</code> and <code>Geom</code> do a
-bulk of the work, and offer flexible extension points.</p></li>
+lof of the work, and offer powerful extension points.</p></li>
 <li><p>ggproto methods are essentially functions, though they defy
 common expectations about how a function should look like and behave.
 <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> allows users to interact with these ggproto
@@ -289,17 +286,16 @@ vignettes in the package.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
 <li><p>Only a small subset of ggprotos are exported by
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> and available for subclassing.</p></li>
-<li><p>Only a handful of ggproto methods are productive extension
-points.</p></li>
-<li><p>A big part of developing an extension is identifying the
-appropriate extension point. <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> allows developers to
-work backwards from getting the desired output to work first, then
-tracking down the implementational details that need to be changed to
-produce that output. In other words, you can find a hack that works
-first through trial and error, then develop on a principled way of
-implementing the solution by consulting best practices for extending
-ggplot.</p></li>
+<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> and available for subclassing, and only a handful
+of ggproto methods are productive extension points. A big part of
+developing an extension is identifying the appropriate extension
+point.</p></li>
+<li><p><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> allows developers to work backwards from
+getting the desired output to work first, then tracking down the
+implementational details that need to be changed to produce that output.
+In other words, you can find a hack that works first through trial and
+error, then develop on a principled way of implementing the solution by
+following best practices for extending ggplot.</p></li>
 <li><p>In the process of writing new ggproto objects and ggproto
 methods, developers need to debug frequently. <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a>
 functions implement different strategies of debugging, spanning the

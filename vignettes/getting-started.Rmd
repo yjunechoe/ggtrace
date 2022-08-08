@@ -9,15 +9,15 @@ vignette: >
 
 ## Short version
 
-Are you a **user** wanting to fully master the grammar of `{ggplot2}`? Start with my [rstudio::conf(2022) talk on {ggtrace}](https://github.com/yjunechoe/ggtrace-rstudioconf2022)!
+Are you a **user** wanting to fully master the grammar of ggplot? Start with my [rstudio::conf(2022) talk on {ggtrace}](https://github.com/yjunechoe/ggtrace-rstudioconf2022)!
 
-Are you an **aspiring developer** wanting to extend `{ggplot2}`? Start with my [useR! 2022 talk on {ggtrace}](https://github.com/yjunechoe/ggtrace-user2022)!
+Are you an **aspiring developer** wanting to extend ggplot? Start with my [useR! 2022 talk on {ggtrace}](https://github.com/yjunechoe/ggtrace-user2022)!
 
 ## Long version
 
-There's a lot that can be said about ggplot internals, and what you can get from using `{ggtrace}` depends on how comfortable you are with `{ggplot2}` and ggplot internals. Whether you're here because you want to become a better ggplot user or because you're an aspiring extension developer, `{ggtrace}` has you covered for all stages of your `{ggplot2}` journey!
+There's a lot that can be said about ggplot internals, and what you can get from using `{ggtrace}` depends on how comfortable you are with ggplot and ggplot internals. Whether you're here because you want to become a better ggplot user or because you're an aspiring extension developer, `{ggtrace}` has you covered for all stages of your ggplot journey!
 
-Traditionally, the `{ggplot2}` community has been thought to split between users (people who use ggplot to make plots) and developers (people who write extension packages and contribute to `{ggplot2}`). I believe that this binary distinction is outdated for many reasons, the most convincing one being that the capacity of the user has been expanding and encroaching on the "internals" territory. The following outlines the five "stages" of the `{ggplot2}` journey, and where `{ggtrace}` fits in.
+Traditionally, the ggplot community has been thought to split between users (people who use ggplot to make plots) and developers (people who write extension packages and contribute to `{ggplot2}`). I believe that this binary distinction is outdated for many reasons, the most convincing one being that the capacity of the user has been expanding and encroaching on the "internals" territory. The following outlines the five "stages" of the ggplot2 journey, and where `{ggtrace}` fits in.
 
 ### Stage 1 (user)
 
@@ -25,11 +25,11 @@ Traditionally, the `{ggplot2}` community has been thought to split between users
 
 **Learning objectives:**
 
-- Every layer has a `stat` and a `geom`. `stat_*()` and `geom_*()` functions are two sides of the same coin.
+- Every layer has a `stat` and a `geom`. `stat_*()` and `geom_*()` layer functions are two sides of the same coin.
 
 - The job of users ends with the code we write. The job of the internals is to spell out the assumptions behind the concise ggplot code that we write as users to make the plot.
 
-- Layers have an underlying dataframe representation that contains information about what's being plotted.
+- Each layer has an underlying dataframe representation that contains information for drawing.
 
 ### Stage 2 (advanced user)
 
@@ -39,7 +39,7 @@ Traditionally, the `{ggplot2}` community has been thought to split between users
 
 - A ggplot object is not the ggplot figure itself. A ggplot object merely contains the instructions for plotting the figure. The figure is what you get as a result of executing those instructions in the internals, by `print()`/`plot()`-ing the ggplot object.
 
-- The internals "renders" a figure in steps, by first making the data drawing-ready and then drawing the prepared data.
+- The internals "renders" a figure in steps, by first making each layer's data drawing-ready and then drawing the prepared data.
 
 - The internals are implemented in the ggproto object oriented system.
 
@@ -55,9 +55,9 @@ That leads nicely into the [case study chapter of the ggplot2 book](https://ggpl
 
 **Learning objectives:**
 
-- ggproto methods are called one-by-one in the internals to the execute instructions for plotting.
+- ggproto methods are called step-by-step in the internals to the execute instructions for plotting.
 
-- The ggproto objects `Stat` and `Geom` do a bulk of the work, and offer flexible extension points.
+- The ggproto objects `Stat` and `Geom` do a lof of the work, and offer powerful extension points.
 
 - ggproto methods are essentially functions, though they defy common expectations about how a function should look like and behave. `{ggtrace}` allows users to interact with these ggproto methods as if they are functions, and learn their behavior through trial and error.
 
@@ -69,11 +69,9 @@ Standing on the shoulders of these giants, `{ggtrace}` aims to offer the best of
 
 **Learning objectives:**
 
-- Only a small subset of ggprotos are exported by `{ggplot2}` and available for subclassing.
+- Only a small subset of ggprotos are exported by `{ggplot2}` and available for subclassing, and only a handful of ggproto methods are productive extension points. A big part of developing an extension is identifying the appropriate extension point.
 
-- Only a handful of ggproto methods are productive extension points.
-
-- A big part of developing an extension is identifying the appropriate extension point. `{ggtrace}` allows developers to work backwards from getting the desired output to work first, then tracking down the implementational details that need to be changed to produce that output. In other words, you can find a hack that works first through trial and error, then develop on a principled way of implementing the solution by consulting best practices for extending ggplot.
+- `{ggtrace}` allows developers to work backwards from getting the desired output to work first, then tracking down the implementational details that need to be changed to produce that output. In other words, you can find a hack that works first through trial and error, then develop on a principled way of implementing the solution by following best practices for extending ggplot.
 
 - In the process of writing new ggproto objects and ggproto methods, developers need to debug frequently. `{ggtrace}` functions implement different strategies of debugging, spanning the spectrum of interactive to programmatic.
 
