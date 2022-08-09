@@ -43,26 +43,7 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>Usage</h6>
-    <a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Workflows (WIP)</h6>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
-    <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
-  </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
-      </ul>
+      <ul class="navbar-nav me-auto"></ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
@@ -74,7 +55,7 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Usage</h6>
@@ -116,8 +97,8 @@
 <div class="section level2">
 <h2 id="short-version">Short version<a class="anchor" aria-label="anchor" href="#short-version"></a>
 </h2>
-<p>Are you a <strong>user</strong> wanting to fully master the grammar
-of ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
+<p>Are you an <strong>experienced user</strong> wanting to fully master
+the grammar of ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
 talk on {ggtrace}</a>!</p>
 <p>Are you an <strong>aspiring developer</strong> wanting to extend
 ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-user2022" class="external-link">useR! 2022 talk on
@@ -127,47 +108,51 @@ ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-user2022" cl
 <h2 id="long-version">Long version<a class="anchor" aria-label="anchor" href="#long-version"></a>
 </h2>
 <p>There’s a lot that can be said about ggplot internals, and what you
-can get from using <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> depends on how comfortable you
-are with ggplot and ggplot internals. Whether you’re here because you
-want to become a better ggplot user or because you’re an aspiring
+can get out of using <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> depends on how comfortable
+you are with ggplot and ggplot internals. Whether you’re here because
+you want to become a better ggplot user or because you’re an aspiring
 extension developer, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> has you covered for all
 stages of your ggplot journey!</p>
 <p>Traditionally, the ggplot community has been thought to split between
 <strong>users</strong> (people who use ggplot to make plots) and
 <strong>developers</strong> (people who write extension packages and
 contribute to <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>). I believe that this binary
-distinction is outdated for many reasons, the most convincing one being
-that the capacity of the user has been expanding and encroaching on the
-“internals” territory. In other words, while the distinction between
-<em>user-facing code</em> and <em>ggplot internals</em> is clear, that
-doesn’t map neatly onto the user-developer dichotomy.</p>
+distinction is outdated for many reasons, a recent one being that the
+capacity of the user is ever-expanding and encroaching on the
+“internals” territory. While the distinction between <em>user-facing
+code</em> and <em>ggplot internals</em> is clear, that doesn’t map
+neatly onto the user-developer dichotomy.</p>
 <p>Here is one attempt at trying to address that issue. The following
 outlines the five “stages” of the ggplot2 journey, and where
 <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> fits in.</p>
 <div class="section level3">
 <h3 id="stage-1-experienced-user">Stage 1 (experienced user)<a class="anchor" aria-label="anchor" href="#stage-1-experienced-user"></a>
 </h3>
-<p><strong>You are someone who is familiar with using ggplot but have
-not heard about ggplot internals before.</strong> I recommend starting
-with <a href="https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/" class="external-link">part
+<p><strong>You are someone who is comfortable with using ggplot but have
+not heard about ggplot internals before.</strong> If you are wondering
+why you’d even bother learning about ggplot internals, see <a href="https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/" class="external-link">part
 1 of my blog post series on delayed aesthetic evaluation</a>, a case
 study of <a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">a set of
-somewhat niche {ggplot2} functions</a> that lie at the intersection
-between user-facing code and ggplot internals. You might also want to
-start with another blog post of mine on <a href="https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/" class="external-link">stat_*()
-layers</a>, for extra scaffolding. These will give you minimal
-background on ggplot internals to get started.</p>
+somewhat niche {ggplot2} functions</a> that lie at the intersection of
+user-facing code and ggplot internals. You might also want to start with
+another blog post of mine on <a href="https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/" class="external-link">stat_*()
+layers</a>, for extra scaffolding. These will give you a
+<em>practical</em> background on ggplot internals, just to get started.
+Hopefully this will also get you excited about the internals too.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
 <li><p>Every layer has a <code>stat</code> and a <code>geom</code>. The
 <code>stat_*()</code> and <code>geom_*()</code> layer functions are two
 sides of the same coin.</p></li>
-<li><p>The job of users ends with the code we write. The job of the
-internals is to spell out the assumptions behind the concise ggplot code
-that we write as users to make the plot.</p></li>
+<li><p>The job of <em>users</em> ends with the ggplot code we write. The
+job of the <em>internals</em> is to spell out the assumptions behind the
+concise code that we write as users to make the figure.</p></li>
 <li><p>Each layer has an underlying dataframe representation that
 contains only the kind of information that’s relevant for drawing that
 layer.</p></li>
+<li><p>We can use <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> to reference internals
+snapshots of a layer’s data for declaring more complex aesthetic
+mappings and using unconventional stat-geom pairs in a layer.</p></li>
 </ul>
 </div>
 <div class="section level3">
@@ -175,7 +160,7 @@ layer.</p></li>
 </h3>
 <p><strong>You are someone who recognizes the division of labor between
 the user and the internals, and feel empowered by this
-knowledge</strong> To continue to get a better sense of what the
+knowledge.</strong> To continue to get a better sense of what the
 internals does, I recommend watching my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
 talk on {ggtrace} and ggplot internals</a>. If that felt a little too
 fast/dense, you can watch a <a href="https://www.youtube.com/watch?v=NhMI-GvppMo&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=28" class="external-link">slower
@@ -197,18 +182,21 @@ Rudis</a>’s <a href="https://rud.is/books/creating-ggplot2-extensions/demystif
 chapter on demystifying ggplot2</a> as companion guides.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
-<li><p>A ggplot object is not the ggplot figure itself. A ggplot object
-merely contains the instructions for plotting the figure. The figure is
-what you get as a result of executing those instructions in the
-internals, by <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-ing the ggplot
-object.</p></li>
-<li><p>The internals “renders” a figure in steps, by first making each
-layer’s data drawing-ready and then drawing the prepared data.</p></li>
+<li><p>A ggplot <em>object</em> is not the ggplot <em>figure</em>
+itself. A ggplot object merely contains the instructions for plotting
+the figure. The figure is what you get as a result of executing those
+instructions in the internals, by
+<code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-ing the ggplot object.</p></li>
+<li><p>The the process of making a figure in the internals happens in
+steps, by first making each layer’s data drawing-ready
+(<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>) and then drawing the plot
+(<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_gtable.html" class="external-link">ggplot_gtable()</a></code>).</p></li>
 <li><p>The internals are implemented in the ggproto object oriented
-system.</p></li>
-<li><p>We can get pretty far using <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> to just focus
-on understanding the part of the internals that takes the user-supplied
-data and turns it into a “drawing-ready” data.</p></li>
+system which is difficult to grok, but a lot of it is just data
+wrangling. We can get pretty far in understanding the internals by using
+<a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> to just focus on the part of the internals that
+takes the user-supplied data and turns it into a “drawing-ready”
+data.</p></li>
 </ul>
 </div>
 <div class="section level3">
@@ -216,13 +204,13 @@ data and turns it into a “drawing-ready” data.</p></li>
 </h3>
 <p><strong>You are someone who is aware of the existence of ggproto, and
 you are interested in knowing more about the implementational details of
-the internals.</strong> I recommend you gear up for a deep dive into the
+the internals.</strong> You can gear up for a deep dive into the
 internals by first watching <a href="https://twitter.com/thomasp85" class="external-link">Thomas Lin Pedersen</a>’s <a href="https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/" class="external-link">rstudio::conf(2020)
 talk on extending ggplot</a>, which gives a nice overview of what kind
-of ggproto methods exist and what the most relevant ones are / what they
-do. Now you’re entering developer territory. In case you want a more
-comprehensive documentation on ggproto (though not necessary to read
-them at this stage), check out the <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">package
+of ggproto objects and methods exist and what the most relevant ones are
+/ what they do. In case you want a more comprehensive documentation on
+ggproto (though not necessary to read them at this stage), check out the
+<a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html" class="external-link">package
 vignette on ggproto</a> and <a href="https://twitter.com/BrodieGaslam" class="external-link">Brodie Gaslam</a>’s even more
 comprehensive <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/brodieG/ggbg/development/inst/doc/extensions.html#ggproto-method" class="external-link">unofficial
 reference for ggplot internals</a>.</p>
@@ -239,12 +227,12 @@ can also reference Emi’s <a href="https://emitanaka.org/datavis-adv-workshop/s
 on writing ggplot2 extensions ggplot</a> and read the <a href="https://ggplot2.tidyverse.org/articles/extending-ggplot2.html#creating-your-own-theme" class="external-link">package
 vignette on extending ggplot</a> side-by-side, which touches on the same
 topics but with different examples. In the process, you’ll inevitably
-encounter <code>{grid}</code>, which is itself a whole ’nother monster.
-There are a lot of resources on <code>{grid}</code>, most notably the <a href="https://www.routledge.com/R-Graphics-Third-Edition/Murrell/p/book/9780367780692" class="external-link">R
+encounter <code>{grid}</code>, which is itself a scary beast. There are
+a lot of resources on <code>{grid}</code>, most notably the <a href="https://www.routledge.com/R-Graphics-Third-Edition/Murrell/p/book/9780367780692" class="external-link">R
 Graphics (3rd edition)</a> book, but there are also some resources
-written with ggplot internals in mind, like yet another one of Emi’s <a href="https://emitanaka.org/datavis-adv-workshop/slides/day1-session1.html" class="external-link">slides
-on {grid}</a>, and functions for interacting with <a href="https://github.com/r-lib/gtable" class="external-link">gtable</a>
-objects from <a href="https://cran.r-project.org/web/packages/lemon/vignettes/gtable_show_lemonade.html" class="external-link"><code>{lemon}</code></a>
+written with ggplot in mind, like yet another one of Emi’s <a href="https://emitanaka.org/datavis-adv-workshop/slides/day1-session1.html" class="external-link">slides
+on {grid}</a>, and functions for interacting with ggplot’s
+<a href="https://github.com/r-lib/gtable" class="external-link">gtable</a> graphical objects from <a href="https://cran.r-project.org/web/packages/lemon/vignettes/gtable_show_lemonade.html" class="external-link"><code>{lemon}</code></a>
 and <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/gtable.html" class="external-link"><code>{gridExtra}</code></a>.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
@@ -252,11 +240,12 @@ and <a href="https://cran.r-project.org/web/packages/gridExtra/vignettes/gtable.
 execute instructions for plotting.</p></li>
 <li><p>The ggproto objects <code>Stat</code> and <code>Geom</code> do a
 lof of the work, and offer powerful extension points.</p></li>
-<li><p>ggproto methods are essentially functions, though they defy
-common expectations about how a function should look like and behave.
-<a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> allows users to interact with these ggproto
-methods as if they are functions, and learn their behavior through trial
-and error.</p></li>
+<li><p>ggprotos are mostly stateless and ggproto methods are essentially
+functions, though they defy common expectations about how a function
+should look like and behave. <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> allows you to
+interact with these ggproto methods as if they are stand-alone
+functions, so you can learn their behavior through trial and
+error.</p></li>
 </ul>
 </div>
 <div class="section level3">
@@ -266,10 +255,11 @@ and error.</p></li>
 in the internals and you are excited about writing your own
 extensions.</strong> At this point you are now a <em>developer</em> -
 your training wheels are off and you’re in the territory of figuring
-things out for yourself. Being a developer requires a new skill -
-<strong>debugging</strong>. A few people have written on the topic of
-debugging ggplot internals, including <a href="https://twitter.com/yutannihilat_en" class="external-link">Hiroaki Yutani</a>’s blog
-post on <a href="https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/" class="external-link">using
+things out for yourself.</p>
+<p>Being a developer requires a new skill - <strong>debugging</strong>.
+A few people have written on the topic of debugging ggplot internals,
+including <a href="https://twitter.com/yutannihilat_en" class="external-link">Hiroaki
+Yutani</a>’s blog post on <a href="https://yutani.rbind.io/post/a-tip-to-debug-ggplot2/" class="external-link">using
 browser() for debugging ggproto methods</a> and <a href="https://twitter.com/paleolimbot" class="external-link">Dewey Dunnington</a>’s <a href="https://github.com/paleolimbot/ggdebug" class="external-link">{ggdebug}</a> package
 which gives you freakishly powerful control over the internals. People
 have also written packages for less “intrusive” ways of debugging and
@@ -286,19 +276,18 @@ interactive debugging functions <code><a href="../reference/ggedit.html">ggedit(
 <code><a href="../reference/ggdebug.html">ggdebugonce()</a></code>. There’s not a whole lot of new stuff that
 ggtrace offers in this space (the package isn’t even <em>that</em> much
 code) but it embodies a transformative reframing of ggplot internals as
-functional programming, the kind that we’re familiar with as R users. I
-hope this overview of what people have written about ggplot internals
-over the years can compensate for the (at least current) lack of
-vignettes in the package.</p>
+functional programming, the kind that we’re familiar with as R users. By
+treating ggproto methods like functions, we can leverage our existing
+debugging skills for understanding the extending ggplot internals.</p>
 <p><strong>Learning objectives:</strong></p>
 <ul>
 <li><p>Only a small subset of ggprotos are exported by
 <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> and available for subclassing, and only a handful
 of ggproto methods are productive extension points. A big part of
-developing an extension is identifying the appropriate extension
+developing an extension is locating the appropriate extension
 point.</p></li>
 <li><p><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> allows developers to work backwards from
-getting the desired output to work first, then tracking down the
+getting the desired output to work first, then identifying the
 implementational details that need to be changed to produce that output.
 In other words, you can find a hack that works first through trial and
 error, then develop on a principled way of implementing the solution by
@@ -313,12 +302,12 @@ spectrum of interactive to programmatic.</p></li>
 <h3 id="stage-5-contributor">Stage 5 (contributor)<a class="anchor" aria-label="anchor" href="#stage-5-contributor"></a>
 </h3>
 <p>Lastly, <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is always evolving, and you can take
-part in the process! It might not be obvious as users, but the internals
-are undergoing constant change. So at some point you might also want to
-start keeping an eye on the <a href="https://github.com/tidyverse/ggplot2/issues" class="external-link">Github issues</a>.
+part in the process! It might not be obvious as users, but the
+<em>internals</em> are undergoing constant change. So at some point you
+might also want to start keeping an eye on the <a href="https://github.com/tidyverse/ggplot2/issues" class="external-link">Github issues</a>.
 It’s also a nice place to be because you can eavesdrop on the thoughts
 and insights from the core developers (e.g., <a href="https://github.com/tidyverse/ggplot2/issues/4269" class="external-link">should users be
-able to specify pieces of a <code>scale_*()</code> modularly?</a>, <a href="https://github.com/tidyverse/ggplot2/issues/3329" class="external-link">should the
+able to specify pieces of a <code>scale_*()</code> modularly?</a>, <a href="https://github.com/tidyverse/ggplot2/issues/3329" class="external-link">how should the
 guides system be converted to ggproto?</a>, <a href="https://github.com/tidyverse/ggplot2/issues/3175" class="external-link">should layers
 get “state”?</a>), which can help you understand the motivation behind
 how and why things in the internals are designed that way. If reading

@@ -407,15 +407,13 @@ First we store the modified return value in some variable:
     modified_return_smooth <- captured_fn_2_3(level = 0.1)
 
 Then we target the same group inside `cond` and pass
-`modified_return_smooth` to the `value` argument *as an expression*,
-using `substitute()`:
+`modified_return_smooth` to the `value` argument:
 
     ggtrace_highjack_return(
       x = p,
       method = StatSmooth$compute_group,
       cond = quote(data$PANEL[1] == 2 && data$group[1] == 3),
-      value = substitute(modified_return_smooth)
-              # or `rlang::expr(!!modified_return_smooth)`
+      value = modified_return_smooth
     )
 
 <img src="man/figures/README-unnamed-chunk-26-1.png" width="100%" />
@@ -439,13 +437,14 @@ loess regression instead. To achieve this directly, we use
 
 Lastly, `ggtrace_highjack_return()` exposes an internal function called
 `returnValue()` in the `value` argument, which simply returns the
-original return value. Computing on it allows on-the-fly modifications
-to the graphical output.
+original return value. Passing the `value` argument an **expression**
+computing on `returnValue()` allows on-the-fly modifications to the
+graphical output.
 
-For example, we can “intercept” the dataframe output, do data wrangling
-on it, and have the method return that instead. Here, we hack the data
-for the group to make it look like there’s an absurd degree of
-heteroskedasticity:
+For example, we can “intercept” the dataframe output of a ggproto
+method, do data wrangling on it, and have the method return that new
+dataframe instead. Here, we hack the data for the group to make it look
+like there’s an absurd degree of heteroskedasticity:
 
     library(dplyr) # v1.0.8
 

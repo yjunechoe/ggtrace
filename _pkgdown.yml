@@ -110,6 +110,7 @@ articles:
 navbar:
   structure:
     right: [reference, news, articles, github]
+    left: []
 
 figures:
   dev: ragg::agg_png

@@ -2,8 +2,7 @@ pandoc: 2.17.1.1
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
-  casestudy-ggxmean: casestudy-ggxmean.html
   FAQ: FAQ.html
   getting-started: getting-started.html
-last_built: 2022-08-05T23:36Z
+last_built: 2022-08-09T15:01Z
 

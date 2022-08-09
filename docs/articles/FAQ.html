@@ -43,27 +43,7 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="../reference/index.html">Reference</a>
-</li>
-<li class="active nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>Usage</h6>
-    <a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
-    <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
-  </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="../news/index.html">Changelog</a>
-</li>
-      </ul>
+      <ul class="navbar-nav me-auto"></ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
@@ -75,14 +55,13 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<li class="nav-item dropdown">
+<li class="active nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <h6 class="dropdown-header" data-toc-skip>Usage</h6>
     <a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="../articles/casestudy-ggxmean.html">Debugging an extension package</a>
+    <h6 class="dropdown-header" data-toc-skip>Workflows (WIP)</h6>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a>
@@ -187,7 +166,7 @@ traced function</p>
 <span><span class="co">#&gt;     x[list] &lt;- values</span></span>
 <span><span class="co">#&gt;     x</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x00000274357d74f8&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x000002296561d698&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a
 call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
@@ -320,24 +299,24 @@ untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code
 <span><span class="co">#&gt; `StatBoxplot$compute_group` no longer being traced.</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x0000027442044680`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x0000027442044680`[[1]]</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002296063f5c0`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002296063f5c0`[[1]]</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span></span>
 <span><span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span></span>
 <span><span class="co">#&gt;   relvarwidth flipped_aes</span></span>
 <span><span class="co">#&gt; 1    10.14889       FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x0000027442e75870`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x0000027442e75870`[[1]]</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002296c7af580`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002296c7af580`[[1]]</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span></span>
 <span><span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span></span>
 <span><span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span></span>
 <span><span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002743e0a9908`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002743e0a9908`[[1]]</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x0000022969052d68`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x0000022969052d68`[[1]]</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span></span>
 <span><span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span></span>
 <span><span class="co">#&gt;   relvarwidth flipped_aes</span></span>

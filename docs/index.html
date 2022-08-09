@@ -43,27 +43,7 @@
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto">
-<li class="nav-item">
-  <a class="nav-link" href="reference/index.html">Reference</a>
-</li>
-<li class="nav-item dropdown">
-  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
-  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <h6 class="dropdown-header" data-toc-skip>Usage</h6>
-    <a class="dropdown-item" href="articles/getting-started.html">Getting Started</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="articles/casestudy-ggxmean.html">Debugging an extension package</a>
-    <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
-    <a class="dropdown-item" href="articles/FAQ.html">Frequently asked questions</a>
-  </div>
-</li>
-<li class="nav-item">
-  <a class="nav-link" href="news/index.html">Changelog</a>
-</li>
-      </ul>
+      <ul class="navbar-nav me-auto"></ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="search.json" id="search-input" placeholder="Search for" autocomplete="off">
 </form>
@@ -81,8 +61,7 @@
     <h6 class="dropdown-header" data-toc-skip>Usage</h6>
     <a class="dropdown-item" href="articles/getting-started.html">Getting Started</a>
     <div class="dropdown-divider"></div>
-    <h6 class="dropdown-header" data-toc-skip>Case Studies</h6>
-    <a class="dropdown-item" href="articles/casestudy-ggxmean.html">Debugging an extension package</a>
+    <h6 class="dropdown-header" data-toc-skip>Workflows (WIP)</h6>
     <div class="dropdown-divider"></div>
     <h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6>
     <a class="dropdown-item" href="articles/FAQ.html">Frequently asked questions</a>
@@ -369,14 +348,13 @@
 <p>To answer this question, we use <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to have a method return an entirely different value by supplying it an <a href="https://adv-r.hadley.nz/expressions.html" class="external-link">expression</a>.</p>
 <p>First we store the modified return value in some variable:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modified_return_smooth <span class="ot">&lt;-</span> <span class="fu">captured_fn_2_3</span>(<span class="at">level =</span> <span class="fl">0.1</span>)</span></code></pre></div>
-<p>Then we target the same group inside <code>cond</code> and pass <code>modified_return_smooth</code> to the <code>value</code> argument <em>as an expression</em>, using <code><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute()</a></code>:</p>
+<p>Then we target the same group inside <code>cond</code> and pass <code>modified_return_smooth</code> to the <code>value</code> argument:</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> p,</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> StatSmooth<span class="sc">$</span>compute_group,</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> <span class="fu">quote</span>(data<span class="sc">$</span>PANEL[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">2</span> <span class="sc">&amp;&amp;</span> data<span class="sc">$</span>group[<span class="dv">1</span>] <span class="sc">==</span> <span class="dv">3</span>),</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">substitute</span>(modified_return_smooth)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>          <span class="co"># or `rlang::expr(!!modified_return_smooth)`</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> modified_return_smooth</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-26-1.png" width="100%"></p>
 <p>The confidence band is now nearly invisible for that fitted line because it’s only capturing a 10% confidence interval!</p>
 <p>Here’s another example where we make the method fit predictions from a loess regression instead. To achieve this directly, we use <code><a href="reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> here and set the <code>values</code> to <code>list(method = "loess")</code>:</p>
@@ -387,8 +365,8 @@
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-27-1.png" width="100%"></p>
-<p>Lastly, <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal function called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the <code>value</code> argument, which simply returns the original return value. Computing on it allows on-the-fly modifications to the graphical output.</p>
-<p>For example, we can “intercept” the dataframe output, do data wrangling on it, and have the method return that instead. Here, we hack the data for the group to make it look like there’s an absurd degree of heteroskedasticity:</p>
+<p>Lastly, <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal function called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the <code>value</code> argument, which simply returns the original return value. Passing the <code>value</code> argument an <strong>expression</strong> computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> allows on-the-fly modifications to the graphical output.</p>
+<p>For example, we can “intercept” the dataframe output of a ggproto method, do data wrangling on it, and have the method return that new dataframe instead. Here, we hack the data for the group to make it look like there’s an absurd degree of heteroskedasticity:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># v1.0.8</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
