@@ -345,7 +345,7 @@
 </h3>
 <p>Once we have some understanding of how <code>StatSmooth$compute_group</code> works, we may want to test some hypotheses about what would happen to the resulting graphical output if the method returned something else.</p>
 <p>Let’s revisit our examples from the Capture workflow. What if the third group of the second panel calculated a more conservative confidence interval (<code>level = 0.1</code>)? What is this effect on the graphical output?</p>
-<p>To answer this question, we use <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to have a method return an entirely different value by supplying it an <a href="https://adv-r.hadley.nz/expressions.html" class="external-link">expression</a>.</p>
+<p>To answer this question, we use <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to have a method return an entirely different value.</p>
 <p>First we store the modified return value in some variable:</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>modified_return_smooth <span class="ot">&lt;-</span> <span class="fu">captured_fn_2_3</span>(<span class="at">level =</span> <span class="fl">0.1</span>)</span></code></pre></div>
 <p>Then we target the same group inside <code>cond</code> and pass <code>modified_return_smooth</code> to the <code>value</code> argument:</p>
@@ -365,7 +365,7 @@
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">values =</span> <span class="fu">list</span>(<span class="at">method =</span> <span class="st">"loess"</span>)</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-27-1.png" width="100%"></p>
-<p>Lastly, <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal function called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the <code>value</code> argument, which simply returns the original return value. Passing the <code>value</code> argument an <strong>expression</strong> computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> allows on-the-fly modifications to the graphical output.</p>
+<p>Lastly, <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal function called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the <code>value</code> argument, which simply returns the original return value. Passing the <code>value</code> argument an <a href="https://adv-r.hadley.nz/expressions.html" class="external-link"><strong>expression</strong></a> computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> allows on-the-fly modifications to the graphical output.</p>
 <p>For example, we can “intercept” the dataframe output of a ggproto method, do data wrangling on it, and have the method return that new dataframe instead. Here, we hack the data for the group to make it look like there’s an absurd degree of heteroskedasticity:</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># v1.0.8</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -636,6 +636,7 @@
 <span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span>)</span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-38-1.png" width="100%"></p>
 <p>The lesson here is that the highjack workflow (and the {ggtrace} package, more broadly) is the means, not the end. Users are encouraged to generalize solutions beyond one-off hacks using the toolkit of workflow functions to determine the appropriate point of extension.</p>
+<p>Read more about the philosophy behind ggtrace in the <a href="https://yjunechoe.github.io/ggtrace/articles/getting-started.html" class="external-link">Getting Started</a> vignette.</p>
 </div>
 </div>
 

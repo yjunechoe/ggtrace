@@ -399,8 +399,7 @@ group of the second panel calculated a more conservative confidence
 interval (`level = 0.1`)? What is this effect on the graphical output?
 
 To answer this question, we use `ggtrace_highjack_return()` to have a
-method return an entirely different value by supplying it an
-[expression](https://adv-r.hadley.nz/expressions.html).
+method return an entirely different value.
 
 First we store the modified return value in some variable:
 
@@ -437,9 +436,9 @@ loess regression instead. To achieve this directly, we use
 
 Lastly, `ggtrace_highjack_return()` exposes an internal function called
 `returnValue()` in the `value` argument, which simply returns the
-original return value. Passing the `value` argument an **expression**
-computing on `returnValue()` allows on-the-fly modifications to the
-graphical output.
+original return value. Passing the `value` argument an
+[**expression**](https://adv-r.hadley.nz/expressions.html) computing on
+`returnValue()` allows on-the-fly modifications to the graphical output.
 
 For example, we can “intercept” the dataframe output of a ggproto
 method, do data wrangling on it, and have the method return that new
@@ -771,3 +770,7 @@ The lesson here is that the highjack workflow (and the {ggtrace}
 package, more broadly) is the means, not the end. Users are encouraged
 to generalize solutions beyond one-off hacks using the toolkit of
 workflow functions to determine the appropriate point of extension.
+
+Read more about the philosophy behind ggtrace in the [Getting
+Started](https://yjunechoe.github.io/ggtrace/articles/getting-started.html)
+vignette.
