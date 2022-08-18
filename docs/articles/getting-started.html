@@ -98,11 +98,11 @@
 <h2 id="short-version">Short version<a class="anchor" aria-label="anchor" href="#short-version"></a>
 </h2>
 <p>Are you an <strong>experienced user</strong> wanting to fully master
-the grammar of ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
+the grammar of ggplot? Start with my <a href="https://www.rstudio.com/conference/2022/talks/cracking-open-ggplot-internals-ggtrace/" class="external-link">rstudio::conf(2022)
 talk on {ggtrace}</a>!</p>
 <p>Are you an <strong>aspiring developer</strong> wanting to extend
-ggplot? Start with my <a href="https://github.com/yjunechoe/ggtrace-user2022" class="external-link">useR! 2022 talk on
-{ggtrace}</a>!</p>
+ggplot? Start with my <a href="https://www.youtube.com/watch?v=2JX8zu4QxMg&amp;t=2959s" class="external-link">useR!
+2022 talk on {ggtrace}</a>!</p>
 </div>
 <div class="section level2">
 <h2 id="long-version">Long version<a class="anchor" aria-label="anchor" href="#long-version"></a>
@@ -161,7 +161,7 @@ mappings and using unconventional stat-geom pairs in a layer.</p></li>
 <p><strong>You are someone who recognizes the division of labor between
 the user and the internals, and feel empowered by this
 knowledge.</strong> To continue to get a better sense of what the
-internals does, I recommend watching my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf(2022)
+internals does, I recommend watching my <a href="https://www.rstudio.com/conference/2022/talks/cracking-open-ggplot-internals-ggtrace/" class="external-link">rstudio::conf(2022)
 talk on {ggtrace} and ggplot internals</a>. If that felt a little too
 fast/dense, you can watch a <a href="https://www.youtube.com/watch?v=NhMI-GvppMo&amp;list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&amp;index=28" class="external-link">slower
 (hour-long), broken down version</a> of me covering the same content.
@@ -189,8 +189,8 @@ instructions in the internals, by
 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-ing the ggplot object.</p></li>
 <li><p>The the process of making a figure in the internals happens in
 steps, by first making each layer’s data drawing-ready
-(<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>) and then drawing the plot
-(<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_gtable.html" class="external-link">ggplot_gtable()</a></code>).</p></li>
+(<code>ggplot_build()</code>) and then drawing the plot
+(<code>ggplot_gtable()</code>).</p></li>
 <li><p>The internals are implemented in the ggproto object oriented
 system which is difficult to grok, but a lot of it is just data
 wrangling. We can get pretty far in understanding the internals by using
@@ -214,9 +214,9 @@ ggproto (though not necessary to read them at this stage), check out the
 vignette on ggproto</a> and <a href="https://twitter.com/BrodieGaslam" class="external-link">Brodie Gaslam</a>’s even more
 comprehensive <a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/brodieG/ggbg/development/inst/doc/extensions.html#ggproto-method" class="external-link">unofficial
 reference for ggplot internals</a>.</p>
-<p>You can follow up on Thomas’s talk by watching my <a href="https://github.com/yjunechoe/ggtrace-user2022" class="external-link">useR! 2022 talk on
-{ggtrace} and ggplot internals</a>, which showcases all workflows in
-<a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> (<em>inspect</em>, <em>capture</em>,
+<p>You can follow up on Thomas’s talk by watching my <a href="https://www.youtube.com/watch?v=2JX8zu4QxMg&amp;t=2959s" class="external-link">useR!
+2022 talk on {ggtrace} and ggplot internals</a>, which showcases all
+workflows in <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> (<em>inspect</em>, <em>capture</em>,
 <em>highjack</em>) for interacting with ggproto methods. The <a href="https://yjunechoe.github.io/posts/2022-07-06-ggplot2-delayed-aes-2/" class="external-link">part
 2 of my blog post series on delayed aesthetic evaluation</a> picks up
 where I left off in that talk to expand on the possible extension points
