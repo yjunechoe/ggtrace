@@ -90,6 +90,7 @@ articles:
   navbar: Usage
   contents:
   - getting-started
+  - overview
   # - showcase-ggplot_build
   # - showcase-aes_evaluation
 - title: Workflows (WIP)
