@@ -9,7 +9,7 @@
 [![](https://img.shields.io/badge/devel%20version-0.5.2-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
-![](https://i.imgur.com/8JJiyqb.png)
+![](https://i.imgur.com/kpTffyw.jpg)
 
 ### **Installation**
 
