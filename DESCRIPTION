@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically explore, debug, and manipulate ggplot internals
-Version: 0.5.2
+Version: 0.5.3
 Authors@R: c(
       person(given = "June",
            family = "Choe",
@@ -17,7 +17,7 @@ Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.2
 Collate:
   'utils.R'
   'helpers.R'

@@ -85,11 +85,11 @@ test_that("environment properties are as expected", {
   expect_true(all(boxplot_tracedump[["env_start"]]$a == 1, boxplot_tracedump[["env_end"]]$a == 1))
 
   # possible to manually execute steps of the body with the environment
-  expect_true(is.list(boxplot_tracedump2[[2]]))
-  expect_equal(
-    eval(as.list(body(get("compute_panel", Stat)))[[6]], boxplot_tracedump2[[1]])[,1:12],
-    ggplot2:::rbind_dfs(boxplot_tracedump2[[2]])
-  )
+  # expect_true(is.list(boxplot_tracedump2[[2]]))
+  # expect_equal(
+  #   eval(as.list(body(get("compute_panel", Stat)))[[6]], boxplot_tracedump2[[1]])[,1:12],
+  #   do.call(rbind, boxplot_tracedump2[[2]])
+  # )
 
   gguntrace(Stat$compute_panel)
   expect_null(clear_global_ggtrace())

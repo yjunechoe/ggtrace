@@ -58,12 +58,14 @@ Read more about the philosophy behind `{ggtrace}` in the [Getting Started](https
 
 ### **Example usage**
 
+#### **Clipped polar coordinates**
+
 Plot in polar coordinates:
 
 ```{r polar-plot, message = FALSE}
 library(ggplot2) # v3.3.6
 
-polar_plot <- ggplot(mtcars ,aes(hp, mpg)) +
+polar_plot <- ggplot(mtcars, aes(hp, mpg)) +
   geom_point() +
   geom_smooth(method = "lm") +
   expand_limits(y = c(0, 60)) +
@@ -72,7 +74,7 @@ polar_plot <- ggplot(mtcars ,aes(hp, mpg)) +
 polar_plot
 ```
 
-Clipping the plot panel with `{ggtrace}`:
+Clipping the plot panel with `{ggtrace}` by highjacking the `Layout$render()` method:
 
 ```{r polar-plot-clipped}
 ggtrace::with_ggtrace(
@@ -85,4 +87,25 @@ ggtrace::with_ggtrace(
   out = "g"
 )
 ```
+
+#### **Highlighting a stacked bar**
+
+```{r}
+stacked_barplot <- ggplot(mpg, aes(factor(drv), fill = factor(cyl))) +
+  geom_bar(position = position_fill()) +
+  geom_label(
+    aes(label = paste("n =", after_stat(count)), group = factor(cyl)),
+    fill = "white",
+    stat = StatCount,
+    position = position_fill(vjust = 0.5)
+  ) +
+  scale_y_continuous(labels = scales::label_percent()) +
+  facet_wrap(~ year)
+```
+
+```{r}
+
+stacked_barplot
+```
+
 

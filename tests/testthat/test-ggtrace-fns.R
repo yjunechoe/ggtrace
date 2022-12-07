@@ -128,43 +128,4 @@ test_that("ggbody supports functions", {
 
 })
 
-test_that("Inspect returns same whether from ggplot_build method or Layer method", {
-  # Real world examples
-  library(ggplot2)
-
-  # Bar plot using computed/"mapped" aesthetics with `after_stat()` and `after_scale()`
-  barplot_plot <- ggplot(data = iris) +
-    geom_bar(
-      mapping = aes(
-        x = Species,                           # Discrete x-axis representing species
-        y = after_stat(count / sum(count)),    # Bars represent count of species as proportions
-        color = Species,                       # The outline of the bars are colored by species
-        fill = after_scale(alpha(color, 0.5))  # The fill of the bars are lighter than the outline color
-      ),
-      size = 3
-    )
-
-  clear_global_ggtrace()
-
-  ggtrace(method = ggplot2:::Layer$map_statistic, trace_steps = -1, verbose = FALSE)
-  invisible(ggplot_build(barplot_plot))
-  inside <- last_ggtrace()[[1]]
-
-  expect_equal(length(as.list(body(ggplot2:::ggplot_build.ggplot))), 33)
-  ggtrace(ggplot2:::ggplot_build.ggplot, 19, verbose = FALSE)
-  expect_equal(length(as.list(body(ggplot2:::ggplot_build.ggplot))), 3)
-  invisible(ggplot_build(barplot_plot))
-  outside <- last_ggtrace()[[1]]
-
-  combined <- global_ggtrace()
-
-  expect_equal(inside, combined[[1]][[1]])
-  expect_equal(outside, combined[[2]][[1]])
-  expect_equal(inside, outside[[1]])
-  expect_true(grepl("^ggplot2:::Layer\\$map_statistic", names(combined)[1]))
-  expect_true(grepl("^ggplot2:::ggplot_build\\.ggplot", names(combined)[2]))
-
-  clear_global_ggtrace()
-})
-
 global_ggtrace_state(FALSE)

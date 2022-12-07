@@ -120,7 +120,7 @@
 #' ## We also set `print_output = FALSE` to disable printing of the output
 #' ggtrace(
 #'   PositionJitter$compute_layer,
-#'   trace_steps = 12,
+#'   trace_steps = 14,
 #'   trace_exprs = quote(~step), # This is the default if `trace_exprs` is not provided
 #'   print_output = FALSE
 #' )
@@ -137,7 +137,7 @@
 #' ## (named) list of expressions.
 #' ggtrace(
 #'   PositionJitter$compute_layer,
-#'   trace_steps = c(1, 12),
+#'   trace_steps = c(1, 14),
 #'   trace_exprs = rlang::exprs(
 #'     before_jitter = data,
 #'     after_jitter = ~step

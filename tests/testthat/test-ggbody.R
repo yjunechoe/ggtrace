@@ -167,15 +167,15 @@ test_that("returns same with or without :: and :::", {
 test_that("handles non-functions", {
   expect_equal(
     ggbody(PositionJitter$required_aes),
-    c("x", "y")
+    PositionJitter$required_aes
   )
   expect_equal(
     ggbody(GeomBar$extra_params),
-    c("na.rm", "orientation")
+    GeomBar$extra_params
   )
   expect_equal(
     ggbody(StatDensityCommon$required_aes),
-    "x"
+    StatDensityCommon$required_aes
   )
 })
 

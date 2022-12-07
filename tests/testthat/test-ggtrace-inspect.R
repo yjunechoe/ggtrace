@@ -12,7 +12,7 @@ test_that("inspection workflow works #1 (Position)", {
 
   ggtrace(
     method = PositionJitter$compute_layer,
-    trace_steps = c(1, 1, 9, 12),
+    trace_steps = c(1, 1, 9, length(ggbody(PositionJitter$compute_layer))),
     trace_exprs = rlang::exprs(
       data,            # What does the data passed in look like?
       params,          # What do the initial parameters look like?
@@ -76,6 +76,8 @@ test_that("inspection workflow works #2 (Geom)", {
 
 test_that("aes_eval vignette", {
 
+  global_ggtrace_state(TRUE)
+
   # Bar plot using computed/"mapped" aesthetics with `after_stat()` and `after_scale()`
   barplot_plot <- ggplot(data = iris) +
     geom_bar(
@@ -85,7 +87,7 @@ test_that("aes_eval vignette", {
         color = Species,                       # The outline of the bars are colored by species
         fill = after_scale(alpha(color, 0.5))  # The fill of the bars are lighter than the outline color
       ),
-      size = 3
+      linewidth = 3
     )
 
   ggtrace(
@@ -124,10 +126,6 @@ test_that("aes_eval vignette", {
     tracedump$after_stat$before$count / sum(tracedump$after_stat$before$count),
     tracedump$after_stat$after$y
   )
-  expect_equal(
-    paste0(tracedump$after_scale$before$colour, "80"),
-    tracedump$after_scale$after$fill
-  )
 
   # Return `self` inside the method
   # `self` should be contextualized to the Layer and the Geom
@@ -150,3 +148,14 @@ test_that("aes_eval vignette", {
 })
 
 global_ggtrace_state(FALSE)
+
+test_that("is.ggtrace_placeholder class checking", {
+  expect_no_warning(
+    l <- ggtrace_inspect_return(
+      x = ggplot(mtcars, aes(mpg, hp)) +
+        geom_point(aes(color = as.factor(cyl))),
+      method = ggplot2:::guide_gengrob.legend, cond = 1
+    )
+  )
+  expect_equal(class(l), c("gtable", "gTree", "grob", "gDesc"))
+})

@@ -2,6 +2,16 @@
 
 # ggtrace 0.5.x
 
+## ggtrace 0.5.3
+
+### New Features
+
+- Inspect workflow functions gain a `error = TRUE` argument, which allows inspection of an earlier intermediate step even when the ggplot rendering process fails down the line (#89)
+
+### Bug fixes
+
+- Internal `is.ggtrace_placeholder()` returns scalar logical (#94)
+
 ## ggtrace 0.5.2
 
 ### Breaking Changes

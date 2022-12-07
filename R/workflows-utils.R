@@ -56,4 +56,6 @@ simulate_plot <- function(x, error) {
 
 .ggtrace_placeholder <- structure(list(), class = "ggtrace_placeholder")
 
-is.ggtrace_placeholder <- function(x) class(x) == "ggtrace_placeholder"
+is.ggtrace_placeholder <- function(x) {
+  (length(class(x)) == 1) && (class(x) == "ggtrace_placeholder")
+}
