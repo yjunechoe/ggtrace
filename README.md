@@ -19,7 +19,7 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.5.2
+    library(ggtrace) # v0.5.3
 
 More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
@@ -42,15 +42,17 @@ vignette, and see examples in the
 [Overview](https://yjunechoe.github.io/ggtrace/articles/overview.html)
 vignette.
 
-### **Example usage**
+## **Example usage**
+
+    library(ggplot2) # v3.4.0
+
+### 1) **Crop polar coordinate plots**
 
 Plot in polar coordinates:
 
-    library(ggplot2) # v3.3.6
-
-    polar_plot <- ggplot(mtcars ,aes(hp, mpg)) +
+    polar_plot <- ggplot(mtcars, aes(hp, mpg)) +
       geom_point() +
-      geom_smooth(method = "lm") +
+      geom_smooth(method = "lm", formula = y ~ x) +
       expand_limits(y = c(0, 60)) +
       coord_polar(start = 0, theta = "y")
 
@@ -58,7 +60,8 @@ Plot in polar coordinates:
 
 <img src="man/figures/README-polar-plot-1.png" width="100%" />
 
-Clipping the plot panel with `{ggtrace}`:
+Clipping the plot panel with `{ggtrace}` by highjacking the
+`Layout$render()` method:
 
     ggtrace::with_ggtrace(
       x = polar_plot + theme(aspect.ratio = 1/.48),
@@ -71,3 +74,65 @@ Clipping the plot panel with `{ggtrace}`:
     )
 
 <img src="man/figures/README-polar-plot-clipped-1.png" width="100%" />
+
+See implementation in
+[`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
+
+### 2) **Highjack the drawing context**
+
+Flashy example adopted from my [UseR!
+talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
+
+    library(palmerpenguins)
+    p <- na.omit(palmerpenguins::penguins) |> 
+      ggplot(aes(x = species, y = flipper_length_mm)) +
+      geom_boxplot(aes(fill = species), width = .7) +
+      facet_wrap(~ year)
+
+    ggtrace_highjack_return(
+      p, Geom$draw_panel, cond = TRUE,
+      value = quote({
+        y_pos <- .25 * ._counter_ #<- internal counter tracking nth time the method is called
+        grobTree( circleGrob(y = y_pos, gp = gpar(fill = linearGradient())), # R >= 4.1
+                  editGrob(returnValue(), vp = viewport(clip = circleGrob(y = y_pos))) )
+      }))
+
+<img src="man/figures/README-flashy-1.png" width="100%" />
+
+<!-- ### **Extract legends** -->
+<!-- ```{r legend-plot} -->
+<!-- p_legend <- ggplot(mtcars, aes(hp, mpg, color = factor(cyl))) + -->
+<!--   geom_point() + -->
+<!--   geom_smooth(method = "lm", formula = y ~ x) -->
+<!-- p_legend -->
+<!-- ``` -->
+<!-- For more control over legends, we can use `ggplot2::guide_*(override.aes = ...)`: -->
+<!-- ```{r legends-make} -->
+<!-- p_legend1 <- p_legend + -->
+<!--   scale_color_discrete( -->
+<!--     name = "cyl", -->
+<!--     guide = guide_legend(override.aes = list(shape = NA, fill = NA)) -->
+<!--   ) + -->
+<!--   theme(legend.key = element_rect(fill = "white")) -->
+<!-- p_legend2 <- p_legend + -->
+<!--   scale_color_discrete( -->
+<!--     name = NULL, labels = c("observation", "linear fit", "95% interval"), -->
+<!--     guide = guide_legend( -->
+<!--       override.aes = list( -->
+<!--         shape = c(16, NA, NA), color = c("black", "black", NA), -->
+<!--         linetype = c(NA, 1, NA), fill = c(NA, NA, "grey60") -->
+<!--       ) -->
+<!--     ) -->
+<!--   ) + -->
+<!--   theme(legend.key = element_rect(fill = "white")) -->
+<!-- library(patchwork) -->
+<!-- p_legend1 + p_legend2 -->
+<!-- ``` -->
+<!-- Using `ggtrace_inspect_return()`, we can grab the return value from the legend-making function for each plot and then plot them over the panel using `{patchwork}`: -->
+<!-- ```{r legends-inset} -->
+<!-- legend1 <- ggtrace_inspect_return(p_legend1, ggplot2:::guide_gengrob.legend) -->
+<!-- legend2 <- ggtrace_inspect_return(p_legend2, ggplot2:::guide_gengrob.legend) -->
+<!-- (p_legend + guides(color = guide_none())) + -->
+<!--   inset_element(legend1, .7, .8, .7, .8) + -->
+<!--   inset_element(legend2, .85, .8, .85, .8) -->
+<!-- ``` -->

@@ -24,6 +24,10 @@ ggdraw_silent <- function(x) {
 print.ggtrace_highjacked <- function(x, ...) {
   ggdraw_silent(x)
 }
+#' @export
+plot.ggtrace_highjacked <- function(x, ...) {
+  ggdraw_silent(x)
+}
 
 resolve_cond <- function(x, multiple = FALSE) {
   ._counter_ <- NULL # bypass notes

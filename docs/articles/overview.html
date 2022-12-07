@@ -15,7 +15,7 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.2/font.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><link href="../deps/Atkinson_Hyperlegible-0.4.4/font.css" rel="stylesheet">
 <!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
@@ -35,7 +35,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -251,8 +251,8 @@ family of methods, which are essentially just functions. We’ll focus on
 <span><span class="fu"><a href="../reference/get_method.html">get_method_inheritance</a></span><span class="op">(</span><span class="va">StatSmooth</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $Stat</span></span>
 <span><span class="co">##  [1] "aesthetics"      "compute_layer"   "compute_panel"   "default_aes"    </span></span>
-<span><span class="co">##  [5] "finish_layer"    "non_missing_aes" "optional_aes"    "parameters"     </span></span>
-<span><span class="co">##  [9] "retransform"     "setup_data"     </span></span>
+<span><span class="co">##  [5] "dropped_aes"     "finish_layer"    "non_missing_aes" "optional_aes"   </span></span>
+<span><span class="co">##  [9] "parameters"      "retransform"     "setup_data"     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## $StatSmooth</span></span>
 <span><span class="co">## [1] "compute_group" "extra_params"  "required_aes"  "setup_params"</span></span></code></pre>
@@ -547,20 +547,20 @@ of a method <em>as it runs</em>:</p>
 <span>    <span class="op">{</span></span>
 <span>      <span class="co"># First, turn all panels except the 4th semi-transparent</span></span>
 <span>      <span class="va">panels</span><span class="op">[</span><span class="op">-</span><span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">panels</span><span class="op">[</span><span class="op">-</span><span class="fl">4</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">panel</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu">editGrob</span><span class="op">(</span><span class="va">panel</span>, gp <span class="op">=</span> <span class="fu">gpar</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span><span class="va">panel</span>, gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span><span class="op">)</span></span>
 <span>      <span class="op">}</span><span class="op">)</span></span>
 <span>      <span class="co"># Second, give red outline and fill to 4th panel</span></span>
-<span>      <span class="va">panels</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">gTree</span><span class="op">(</span>children <span class="op">=</span> <span class="fu">gList</span><span class="op">(</span><span class="va">panels</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>        <span class="fu">rectGrob</span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                 gp <span class="op">=</span> <span class="fu">gpar</span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">5</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
+<span>      <span class="va">panels</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gTree</a></span><span class="op">(</span>children <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gList</a></span><span class="op">(</span><span class="va">panels</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.rect.html" class="external-link">rectGrob</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>                 gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">5</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span>      <span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">}</span>,</span>
 <span>    </span>
 <span>    <span class="op">{</span></span>
 <span>      <span class="co"># Third, give it some emphasis by connecting to facet strips</span></span>
-<span>      <span class="va">outline_rect</span> <span class="op">&lt;-</span> <span class="fu">rectGrob</span><span class="op">(</span></span>
+<span>      <span class="va">outline_rect</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.rect.html" class="external-link">rectGrob</a></span><span class="op">(</span></span>
 <span>        x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>        gp <span class="op">=</span> <span class="fu">gpar</span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
+<span>        gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
 <span>      <span class="op">)</span></span>
 <span>      <span class="va">plot_table</span> <span class="op">&lt;-</span> <span class="fu">gtable_add_grob</span><span class="op">(</span></span>
 <span>        <span class="va">plot_table</span>, <span class="va">outline_rect</span>,</span>
@@ -587,9 +587,9 @@ inside <code>trace_exprs</code> with <code>once = FALSE</code>.</p>
 <span>  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>    <span class="co"># Give gradient fill to the confidence bands for third group</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">group</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">g_poly</span> <span class="op">&lt;-</span> <span class="fu">editGrob</span><span class="op">(</span></span>
+<span>      <span class="va">g_poly</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span></span>
 <span>        <span class="va">g_poly</span>,</span>
-<span>        gp <span class="op">=</span> <span class="fu">gpar</span><span class="op">(</span>fill <span class="op">=</span> <span class="fu">linearGradient</span><span class="op">(</span></span>
+<span>        gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/patterns.html" class="external-link">linearGradient</a></span><span class="op">(</span></span>
 <span>          colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"purple"</span>, <span class="st">"skyblue"</span>, <span class="st">"pink"</span><span class="op">)</span>,</span>
 <span>          stops <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span>,</span>
 <span>          x1 <span class="op">=</span> <span class="fl">0</span>, x2 <span class="op">=</span> <span class="fl">1</span>, y1 <span class="op">=</span> <span class="fl">0</span>, y2 <span class="op">=</span> <span class="fl">0</span></span>
@@ -645,28 +645,28 @@ extension packages as well!</p>
 <span>    </span>
 <span>    <span class="co">### SECOND, replace target panel with a version of itself ####</span></span>
 <span>    <span class="co">### that has axes attached to it, using `grid::gTree()`</span></span>
-<span>    <span class="va">panels</span><span class="op">[[</span><span class="va">target_panel</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">gTree</span><span class="op">(</span></span>
+<span>    <span class="va">panels</span><span class="op">[[</span><span class="va">target_panel</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gTree</a></span><span class="op">(</span></span>
 <span>      </span>
 <span>      <span class="co">##### Argument `children`: a list (`grid::gList()`) of three grobs:</span></span>
-<span>      children <span class="op">=</span> <span class="fu">gList</span><span class="op">(</span></span>
+<span>      children <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gList</a></span><span class="op">(</span></span>
 <span>        </span>
 <span>        <span class="co">###### 1. The original panel itself</span></span>
 <span>        <span class="va">panels</span><span class="op">[[</span><span class="va">target_panel</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>        </span>
 <span>        <span class="co">###### 2. Resized/repositioned left y-axis for that panel</span></span>
-<span>        <span class="fu">editGrob</span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span></span>
 <span>          <span class="va">left_axis</span>,</span>
-<span>          vp <span class="op">=</span> <span class="fu">viewport</span><span class="op">(</span></span>
-<span>            x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="st">"npc"</span><span class="op">)</span> <span class="op">-</span> <span class="fu">grobWidth</span><span class="op">(</span><span class="va">left_axis</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
+<span>          vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span></span>
+<span>            x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="st">"npc"</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grobWidth.html" class="external-link">grobWidth</a></span><span class="op">(</span><span class="va">left_axis</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
 <span>            just <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"right"</span><span class="op">)</span></span>
 <span>          <span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
 <span>        </span>
 <span>        <span class="co">###### 3. Resized/repositioned bottom x-axis for that panel</span></span>
-<span>        <span class="fu">editGrob</span><span class="op">(</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span></span>
 <span>          <span class="va">bottom_axis</span>,</span>
-<span>          vp <span class="op">=</span> <span class="fu">viewport</span><span class="op">(</span></span>
-<span>            y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="st">"npc"</span><span class="op">)</span> <span class="op">-</span> <span class="fu">grobHeight</span><span class="op">(</span><span class="va">bottom_axis</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
+<span>          vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span></span>
+<span>            y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="st">"npc"</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grobWidth.html" class="external-link">grobHeight</a></span><span class="op">(</span><span class="va">bottom_axis</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
 <span>            just <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"top"</span><span class="op">)</span></span>
 <span>          <span class="op">)</span></span>
 <span>        <span class="op">)</span></span>
@@ -674,7 +674,7 @@ extension packages as well!</p>
 <span>      <span class="op">)</span>,</span>
 <span>      </span>
 <span>      <span class="co">##### Argument `vp`: Rotation for this combination of three grobs</span></span>
-<span>      vp <span class="op">=</span> <span class="fu">viewport</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.7</span>, height <span class="op">=</span> <span class="fl">.7</span>, angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span></span>
+<span>      vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.7</span>, height <span class="op">=</span> <span class="fl">.7</span>, angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span></span>
 <span>      </span>
 <span>    <span class="op">)</span></span>
 <span>    </span>
@@ -720,14 +720,8 @@ plot.</p>
 <code><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code></p>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">violins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">ggtrace_inspect_return</span>,</span>
-<span>                  x <span class="op">=</span> <span class="va">violin_plot</span>, method <span class="op">=</span> <span class="va">GeomViolin</span><span class="op">$</span><span class="va">draw_group</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in .is_traced(what, where) || is.ggtrace_placeholder(._return):</span></span>
-<span><span class="co">## 'length(x) = 3 &gt; 1' in coercion to 'logical(1)'</span></span>
-<span></span>
-<span><span class="co">## Warning in .is_traced(what, where) || is.ggtrace_placeholder(._return):</span></span>
-<span><span class="co">## 'length(x) = 3 &gt; 1' in coercion to 'logical(1)'</span></span></code></pre>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">violins</span></span></code></pre></div>
+<span>                  x <span class="op">=</span> <span class="va">violin_plot</span>, method <span class="op">=</span> <span class="va">GeomViolin</span><span class="op">$</span><span class="va">draw_group</span><span class="op">)</span></span>
+<span><span class="va">violins</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
 <span><span class="co">## polygon[geom_violin.polygon.2816] </span></span>
 <span><span class="co">## </span></span>
@@ -741,7 +735,7 @@ the <code>draw_group</code> method instead. We set
 <code>value = substitute(violins[[._counter_]])</code> so that the
 <code>draw_key</code> method returns the first violin as the first
 legend key, and the second violin as the second legend key.</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return</a></span><span class="op">(</span></span>
 <span>  <span class="va">violin_plot</span>,</span>
 <span>  <span class="va">GeomViolin</span><span class="op">$</span><span class="va">draw_key</span>,</span>
@@ -755,7 +749,7 @@ does things. For a cleaner look, we use the defined function
 <code>center_and_resize()</code> which modifies the violin grob using
 <code><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">grid::editGrob()</a></code> before passing them off to
 <code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>.</p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span></span>
 <span><span class="va">center_and_resize</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">grob</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">x_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span><span class="va">grob</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
@@ -781,7 +775,7 @@ does things. For a cleaner look, we use the defined function
 <p>To keep this effect while keeping the violin_plot a ggplot object,
 you can create a custom key glyph function that inspects the fill color
 of the original legend keys and returns the corresponding violin.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">violins_centered_resized</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#F8766D"</span>, <span class="st">"#00BFC4"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">violin_plot_keyglyph</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/starwars.html" class="external-link">starwars</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -801,18 +795,18 @@ of the original legend keys and returns the corresponding violin.</p>
 <p>Note the difference in output between the two methods. While highjack
 workflow functions offer a convenient way of modifying a ggplot, it
 forces the conversion of a ggplot object into a grob.</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">violin_plot_highjacked</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "ggtrace_highjacked" "gtable"             "gTree"             </span></span>
 <span><span class="co">## [4] "grob"               "gDesc"</span></span></code></pre>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">violin_plot_highjacked</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Error in violin_plot_highjacked + labs(title = "Violin plot with data-driven legend key glyphs"): non-numeric argument to binary operator</span></span></code></pre>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">violin_plot_keyglyph</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "gg"     "ggplot"</span></span></code></pre>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">violin_plot_keyglyph</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="overview_files/figure-html/unnamed-chunk-37-1.png" width="1093.75"></p>
