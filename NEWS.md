@@ -1,5 +1,11 @@
 # ggtrace (development version)
 
+### New Features
+
+- Interactive debugging functions `last_layer_errorcontext()` and `last_sublayer_errorcontext()` which return the internal context of layer errors at the level of the `Layer` and sub-`Layer` (e.g., `Stat` or `Geom`) ggproto methods, respectively.
+
+- New Inspect workflow function `ggtrace_inspect_on_error()` which returns information about the ggproto `method` that errors while rendering `x`.
+
 # ggtrace 0.5.x
 
 ## ggtrace 0.5.3

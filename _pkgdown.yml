@@ -31,6 +31,7 @@ reference:
   - ggtrace_inspect_vars
   - ggtrace_inspect_args
   - ggtrace_inspect_return
+  - ggtrace_inspect_on_error
 
 - subtitle: Capture
   desc: >
@@ -46,6 +47,12 @@ reference:
   - ggtrace_highjack_args
   - ggtrace_highjack_return
 
+- title: Contextualize layer errors
+  desc: >
+    Return information about the (sub-)layer ggproto method that errors while rendering
+  contents:
+  - last_layer_errorcontext
+  - last_sublayer_errorcontext
 
 - title: Extending base::trace()
   desc: >

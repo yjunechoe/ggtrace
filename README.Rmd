@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 #### **Programmatically explore, debug, and manipulate ggplot internals**
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/devel%20version-0.5.2-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.5.3.9000-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ![](https://i.imgur.com/kpTffyw.jpg)
@@ -41,7 +41,7 @@ remotes::install_github("yjunechoe/ggtrace")
 ```
 
 ```{r setup}
-library(ggtrace) # v0.5.3
+library(ggtrace) # v0.5.3.9000
 ```
 
 More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://yjunechoe.github.io/ggtrace)
@@ -59,10 +59,42 @@ Read more about the philosophy behind `{ggtrace}` in the [Getting Started](https
 ## **Example usage**
 
 ```{r ggplot}
-library(ggplot2) # v3.4.0
+library(ggplot2)
+packageVersion("ggplot2")
 ```
 
-### 1) **Crop polar coordinate plots**
+### 1) **Remove boxplot outliers from data (vs. just hiding it visually)**
+
+You can hide outliers in `geom_boxplot()`, but they'll still be in the layer's underlying dataframe representation. This makes the plot look stretched:
+
+```{r boxplot-hide-outliers, warning = TRUE}
+boxplot_plot <- ggplot(mpg, aes(hwy, class)) +
+  geom_boxplot(outlier.shape = NA)
+boxplot_plot
+```
+
+This is because the scales are re-trained after the calculation of the boxplot statistics. In other words, the "final" min/max value of the x-scale are derived from the calculated outliers, even if they're not drawn.
+
+```{r boxplot-layer-data}
+layer_data(boxplot_plot)[, c("xmin", "xmax", "outliers", "xmin_final", "xmax_final")]
+```
+
+One solution is to highjack the calculation of the boxplot layer's statistics such that values of the `outliers` column is set to `NULL`. In `ggtrace_highjack_return()`, we pass an expression that modifies `returnValue()` to the `value` argument, which evaluates to the value about to be returned by the method.
+
+```{r boxplot-remove-outliers}
+ggtrace_highjack_return(
+  x = boxplot_plot,
+  method = Stat$compute_layer,
+  cond = 1L,
+  value = quote({
+    transform(returnValue(), outliers = NULL)
+  })
+)
+```
+
+Problem inspired by [https://github.com/tidyverse/ggplot2/issues/4892](https://github.com/tidyverse/ggplot2/issues/4892).
+
+### 2) **Crop polar coordinate plots**
 
 Plot in polar coordinates:
 
@@ -92,7 +124,7 @@ ggtrace::with_ggtrace(
 
 See implementation in [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
-### 2) **Highjack the drawing context**
+### 3) **Highjack the drawing context**
 
 Flashy example adopted from my [UseR! talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
 
@@ -106,7 +138,7 @@ p <- na.omit(palmerpenguins::penguins) |>
 ggtrace_highjack_return(
   p, Geom$draw_panel, cond = TRUE,
   value = quote({
-    y_pos <- .25 * ._counter_ #<- internal counter tracking nth time the method is called
+    y_pos <- .25 * ._counter_
     grobTree( circleGrob(y = y_pos, gp = gpar(fill = linearGradient())), # R >= 4.1
               editGrob(returnValue(), vp = viewport(clip = circleGrob(y = y_pos))) )
   }))

@@ -466,3 +466,67 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
   }
 
 }
+
+#' Get information about a ggproto method on error
+#'
+#' @param x A ggplot object
+#' @inheritParams get_method
+#'
+#' @return A list of three elements: `counter`, `args`, and `env`.
+#' @export
+#'
+#' @examplesIf interactive()
+#' library(ggplot2)
+#' erroring_barplot <- ggplot(mtcars, aes(mpg, hp)) +
+#'   stat_summary() +
+#'   geom_bar()
+#' ggtrace_inspect_on_error(erroring_barplot, StatCount$setup_params)
+#' ggtrace_inspect_on_error(erroring_barplot, ggplot2:::Layer$compute_statistic)
+ggtrace_inspect_on_error <- function(x, method) {
+
+  wrapper_env <- rlang::current_env()
+  ._env <- NULL
+  ._counter_ <- 0L
+  ._args <- .ggtrace_placeholder
+
+  method_quo <- rlang::enquo(method)
+  method_info <- resolve_formatting(method_quo)
+  what <- method_info$what
+  where <- method_info$where
+  suppressMessages(trace(what = what, where = where, at = 1L, print = FALSE, tracer = rlang::expr({
+    new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
+    args <- names(formals(attr(rlang::current_fn(), "original")))
+    if ("..." %in% args) {
+      args_pairs <- c(as.list(mget(args[args != "..."])), list(`...` = list(...)))
+    } else {
+      args_pairs <- mget(args)
+    }
+    rlang::env_bind(
+      !!wrapper_env,
+      ._counter_ = new_counter,
+      ._args = args_pairs,
+      ._env = rlang::current_env()
+    )
+  })))
+
+  utils::capture.output(simulate_plot(x, error = TRUE))
+  suppressMessages(untrace(what = what, where = where))
+
+  if (._counter_ == 0L) {
+    rlang::abort(paste0("No call to `", method_info$formatted_call,
+                        "` detected at `cond` during execution of the plot"))
+  }
+
+  if ("..." %in% names(._args)) {
+    ._args <- c(._args[names(._args) != "..."], ._args$`...`)
+  }
+
+  ._env <- rlang::env_unbind(rlang::env_clone(._env), c("new_counter", "args", "args_pairs"))
+
+  list(
+    counter = ._counter_,
+    args = ._args,
+    env = ._env
+  )
+
+}

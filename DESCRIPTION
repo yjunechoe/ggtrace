@@ -1,7 +1,7 @@
 Package: ggtrace
 Type: Package
 Title: Programmatically explore, debug, and manipulate ggplot internals
-Version: 0.5.3
+Version: 0.5.3.9000
 Authors@R: c(
       person(given = "June",
            family = "Choe",
@@ -17,7 +17,7 @@ Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Collate:
   'utils.R'
   'helpers.R'
@@ -33,11 +33,13 @@ Collate:
   'workflows-inspect.R'
   'workflows-capture.R'
   'workflows-highjack.R'
+  'last-errorcontext.R'
   'zzz.R'
 Imports: 
+    cli,
     rlang (>= 1.0.0)
 Suggests: 
-    ggplot2 (>= 3.3.0),
+    ggplot2 (>= 3.4.0),
     dplyr,
     grid,
     ggforce,

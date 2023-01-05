@@ -106,6 +106,9 @@
     <loc>/reference/ggtrace_inspect_n.html</loc>
   </url>
   <url>
+    <loc>/reference/ggtrace_inspect_on_error.html</loc>
+  </url>
+  <url>
     <loc>/reference/ggtrace_inspect_return.html</loc>
   </url>
   <url>
@@ -131,6 +134,9 @@
   </url>
   <url>
     <loc>/reference/last_ggtrace.html</loc>
+  </url>
+  <url>
+    <loc>/reference/last_layer_errorcontext.html</loc>
   </url>
   <url>
     <loc>/reference/one-offs.html</loc>
