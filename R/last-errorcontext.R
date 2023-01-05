@@ -132,8 +132,13 @@ last_sublayer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TR
   call_expr <- tr$parent$call
   method_expr <- call_expr[[1]]
   callstack <- sublayer_tr$trace$call
+  by_layer_frame <- which(callstack == quote(f(l = layers[[i]], d = data[[i]])))
   parent_call <- callstack[[which(callstack == call_expr) - 1]]
-  if (rlang::is_call_simple(parent_call)) stop("Expected error from a sub-Layer <ggproto_method>, not a simple call.")
+  if (rlang::is_call_simple(parent_call)) {
+    stop("Expected error from a sub-Layer <ggproto_method>, not a simple call.")
+  } else if (parent_call == callstack[[by_layer_frame + 1]]) {
+    stop("Error does not propagate from a sub-Layer <ggproto_method>. Use `last_layer_errorcontext()` instead.")
+  }
   method_contextualized <- parent_call[[1]]
   method <- rlang::eval_tidy(method_contextualized, list(self = p$layers[[layer_i]]))
   obj <- rlang::eval_tidy(method_contextualized[[2]], list(self = p$layers[[layer_i]]))
