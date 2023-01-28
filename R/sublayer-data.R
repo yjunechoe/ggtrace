@@ -14,76 +14,64 @@ NULL
 
 #' @keywords internal
 .sublayer_stages <- list(
-  before_stat = "ggplot2:::Layer$compute_statistic",
-  after_stat = "ggplot2:::Layer$compute_statistic"
+  before_stat = c("args", "ggplot2:::Layer$compute_statistic"),
+  after_stat = c("return", "ggplot2:::Layer$map_statistic"),
+  before_geom = c("args", "ggplot2:::Layer$compute_geom_1"),
+  after_scale = c("return", "ggplot2:::Layer$compute_geom_2")
 )
 
+#' @keywords internal
+sublayer_data <- function(x, cond, error,
+                          step = c("before_stat", "after_stat", "before_geom", "after_scale"), ...) {
+
+  step <- .sublayer_stages[[match.arg(step)]]
+
+  if (rlang::quo_is_missing(x)) {
+    x_expr <- call("last_plot")
+  } else {
+    x_expr <- rlang::quo_get_expr(x)
+  }
+
+  inspect_expr <- call(
+    paste0("ggtrace_inspect_", step[1]),
+    x_expr,
+    rlang::parse_expr(step[2])
+  )
+
+  if (cond != 1L) inspect_expr$cond <- cond
+  if (!isFALSE(error)) inspect_expr$error <- error
+  if (step[1] == "args") inspect_expr <- call("$", inspect_expr, quote(data))
+
+  out <- eval(inspect_expr, envir = rlang::quo_get_env(x))
+
+  inspect_expr_fmt <- rlang::expr_deparse(inspect_expr, width = Inf)
+  cli::cli_alert_success("Executed {.code {inspect_expr_fmt}}")
+
+  if (rlang::is_installed("tibble")) {
+    out <- asNamespace("tibble")$as_tibble(out)
+  }
+
+  out
+
+}
+
 #' @rdname sublayer-data
-#'
-#' @export
 layer_before_stat <- function(x, cond = 1L, error = FALSE, ...) {
-
-  if (missing(x)) {
-    x <- call("last_plot")
-  } else {
-    x_expr <- rlang::enexpr(x)
-    if (!rlang::is_symbol(x)) x <- x_expr
-  }
-
-  inspect_expr <- call(
-    "ggtrace_inspect_args",
-    x,
-    rlang::parse_expr(.sublayer_stages$before_stat)
-  )
-
-  if (!missing(cond)) inspect_expr$cond <- cond
-  if (!missing(error)) inspect_expr$error <- error
-
-  inspect_expr <- call("$", inspect_expr, quote(data))
-
-  out <- eval.parent(inspect_expr)
-
-  inspect_expr_fmt <- rlang::expr_deparse(inspect_expr, width = Inf)
-  cli::cli_alert_success("Executed {.code {inspect_expr_fmt}}")
-
-  if (rlang::is_installed("tibble")) {
-    out <- asNamespace("tibble")$as_tibble(out)
-  }
-
-  out
-
+  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "before_stat", ...)
 }
 
 #' @rdname sublayer-data
-#'
-#' @export
 layer_after_stat <- function(x, cond = 1L, error = FALSE, ...) {
-
-  if (missing(x)) {
-    x <- call("last_plot")
-  } else {
-    x_expr <- rlang::enexpr(x)
-    if (!rlang::is_symbol(x)) x <- x_expr
-  }
-
-  inspect_expr <- call(
-    "ggtrace_inspect_return",
-    x,
-    rlang::parse_expr(.sublayer_stages$after_stat)
-  )
-
-  if (!missing(cond)) inspect_expr$cond <- cond
-  if (!missing(error)) inspect_expr$error <- error
-
-  out <- eval.parent(inspect_expr)
-
-  inspect_expr_fmt <- rlang::expr_deparse(inspect_expr, width = Inf)
-  cli::cli_alert_success("Executed {.code {inspect_expr_fmt}}")
-
-  if (rlang::is_installed("tibble")) {
-    out <- asNamespace("tibble")$as_tibble(out)
-  }
-
-  out
-
+  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "after_stat", ...)
 }
+
+#' @rdname sublayer-data
+layer_before_geom <- function(x, cond = 1L, error = FALSE, ...) {
+  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "before_geom", ...)
+}
+
+#' @rdname sublayer-data
+layer_after_scale <- function(x, cond = 1L, error = FALSE, ...) {
+  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "after_scale", ...)
+}
+

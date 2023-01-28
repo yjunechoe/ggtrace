@@ -4,11 +4,17 @@
 \alias{sublayer-data}
 \alias{layer_before_stat}
 \alias{layer_after_stat}
+\alias{layer_before_geom}
+\alias{layer_after_scale}
 \title{Inspect snapshots of sub-layer data}
 \usage{
 layer_before_stat(x, cond = 1L, error = FALSE, ...)
 
 layer_after_stat(x, cond = 1L, error = FALSE, ...)
+
+layer_before_geom(x, cond = 1L, error = FALSE, ...)
+
+layer_after_scale(x, cond = 1L, error = FALSE, ...)
 }
 \arguments{
 \item{x}{A ggplot object. If missing, defaults to \code{ggplot2::last_plot()}.}
