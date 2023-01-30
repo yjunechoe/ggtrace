@@ -2,6 +2,8 @@
 
 ### New Features
 
+- Convenience functions `layer_before_stat()`, `layer_after_stat()`, `layer_before_geom()`, and `layer_after_scale()` that returns a snapshot of layer data in the internals. Inspired by `ggplot2::layer_data()` with a similar interface.
+
 - Interactive debugging functions `last_layer_errorcontext()` and `last_sublayer_errorcontext()` which return the internal context of layer errors at the level of the `Layer` and sub-`Layer` (e.g., `Stat` or `Geom`) ggproto methods, respectively.
 
 - New Inspect workflow function `ggtrace_inspect_on_error()` which returns information about the ggproto `method` that errors while rendering `x`.
