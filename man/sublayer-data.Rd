@@ -33,9 +33,8 @@ A dataframe
 are helper functions that return a snapshot of a layer's data in the internals.
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(ggplot2)
-ggplot(mpg, aes(displ, class)) +
+p1 <- ggplot(mpg, aes(displ, class)) +
   geom_boxplot(outlier.shape = NA) +
   geom_text(
     aes(
@@ -44,6 +43,7 @@ ggplot(mpg, aes(displ, class)) +
     ),
     stat = "boxplot", hjust = -0.5
   )
+p1
 
 # Before Stat snapshot of first layer's data
 layer_before_stat()
@@ -55,10 +55,25 @@ layer_after_stat()
 identical(layer_before_stat(), layer_before_stat(i = 2))
 identical(layer_after_stat(), layer_after_stat(i = 2))
 
-# `after_stat()` mappings adds new columns to the second layer's data
+# `after_stat()` mappings add new columns to the second layer's data
 # by the time the geom receives the data in the Before Geom stage
+library(dplyr)
 layer_before_geom(i = 2)
-waldo::compare(layer_before_geom(), layer_before_geom(i = 2))
-\dontshow{\}) # examplesIf}
+
+# After Scale data reflects `after_scale()` mappings
+p2 <- ggplot(mpg, aes(as.factor(cyl), hwy, color = as.factor(cyl))) +
+  theme(legend.position = 0)
+p2a <- p2 +
+  geom_boxplot(aes(fill = as.factor(cyl)))
+p2b <- p2 +
+  geom_boxplot(aes(fill = after_scale(alpha(color, .6))))
+
+library(patchwork)
+p2a + p2b
+
+layer_after_scale(p2a)$fill
+layer_after_scale(p2b)$fill
+alpha( layer_after_scale(p2a)$fill, .6 )
+
 }
 \keyword{internal}
