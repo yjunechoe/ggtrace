@@ -15,7 +15,7 @@ NULL
 #' @keywords internal
 .sublayer_stages <- list(
   before_stat = c("args", "ggplot2:::Layer$compute_statistic"),
-  after_stat = c("return", "ggplot2:::Layer$map_statistic"),
+  after_stat = c("return", "ggplot2:::Layer$compute_statistic"),
   before_geom = c("args", "ggplot2:::Layer$compute_geom_1"),
   after_scale = c("return", "ggplot2:::Layer$compute_geom_2")
 )
@@ -56,21 +56,25 @@ sublayer_data <- function(x, cond, error,
 }
 
 #' @rdname sublayer-data
+#' @export
 layer_before_stat <- function(x, cond = 1L, error = FALSE, ...) {
   sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "before_stat", ...)
 }
 
 #' @rdname sublayer-data
+#' @export
 layer_after_stat <- function(x, cond = 1L, error = FALSE, ...) {
   sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "after_stat", ...)
 }
 
 #' @rdname sublayer-data
+#' @export
 layer_before_geom <- function(x, cond = 1L, error = FALSE, ...) {
   sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "before_geom", ...)
 }
 
 #' @rdname sublayer-data
+#' @export
 layer_after_scale <- function(x, cond = 1L, error = FALSE, ...) {
   sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "after_scale", ...)
 }
