@@ -21,7 +21,7 @@ Prioritizes showing the state of layer data whenever possible (by extracting the
 \description{
 \itemize{
 \item \code{last_layer_errorcontext()} returns the error context at the level of the \code{Layer} ggproto.
-\item \code{last_sublayer_errorcontext()} returns the error context at the sub-\code{Layer} level (e.g., \code{Stat} or \code{Geom}).
+\item \code{last_sublayer_errorcontext()} (EXPERIMENTAL) returns the error context at the sub-\code{Layer} level (e.g., \code{Stat} or \code{Geom}).
 }
 }
 \section{Scope}{

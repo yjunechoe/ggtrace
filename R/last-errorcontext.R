@@ -2,7 +2,7 @@
 #'
 #' @description
 #' - `last_layer_errorcontext()` returns the error context at the level of the `Layer` ggproto.
-#' - `last_sublayer_errorcontext()` returns the error context at the sub-`Layer` level (e.g., `Stat` or `Geom`).
+#' - `last_sublayer_errorcontext()` (EXPERIMENTAL) returns the error context at the sub-`Layer` level (e.g., `Stat` or `Geom`).
 #'
 #' @section Scope:
 #' These functions can only retrieve information from errors propagating from
