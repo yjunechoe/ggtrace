@@ -1,11 +1,14 @@
 #' Inspect snapshots of sub-layer data
 #'
+#' `layer_before_stat()`, `layer_after_stat()`, `layer_before_geom()`, and `layer_after_scale()`
+#' are helper functions that return a snapshot of a layer's data in the internals.
+#'
 #' @name sublayer-data
 #'
-#' @param x A ggplot object. If missing, defaults to `ggplot2::last_plot()`.
-#' @param cond Index of the layer to inspect. Defaults to `1L`.
-#' @param error For debugging. If `TRUE`, continues inspecting the method until the ggplot errors.
+#' @param plot A ggplot object. If missing, defaults to `ggplot2::last_plot()`.
+#' @param i Index of the layer to inspect. Defaults to `1L`.
 #' @param ... Unused.
+#' @param error For debugging. If `TRUE`, continues inspecting the method until the ggplot errors.
 #'
 #' @return A dataframe
 #'
@@ -21,15 +24,15 @@ NULL
 )
 
 #' @keywords internal
-sublayer_data <- function(x, cond, error,
+sublayer_data <- function(x, cond = 1L, error = TRUE,
                           step = c("before_stat", "after_stat", "before_geom", "after_scale"), ...) {
 
   step <- .sublayer_stages[[match.arg(step)]]
 
-  if (rlang::quo_is_missing(x)) {
+  if (rlang::is_missing(x)) {
     x_expr <- call("last_plot")
   } else {
-    x_expr <- rlang::quo_get_expr(x)
+    x_expr <- x
   }
 
   inspect_expr <- call(
@@ -42,7 +45,7 @@ sublayer_data <- function(x, cond, error,
   if (!isFALSE(error)) inspect_expr$error <- error
   if (step[1] == "args") inspect_expr <- call("$", inspect_expr, quote(data))
 
-  out <- eval(inspect_expr, envir = rlang::quo_get_env(x))
+  out <- eval.parent(inspect_expr, 2)
 
   inspect_expr_fmt <- rlang::expr_deparse(inspect_expr, width = Inf)
   cli::cli_alert_success("Executed {.code {inspect_expr_fmt}}")
@@ -57,25 +60,25 @@ sublayer_data <- function(x, cond, error,
 
 #' @rdname sublayer-data
 #' @export
-layer_before_stat <- function(x, cond = 1L, error = FALSE, ...) {
-  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "before_stat", ...)
+layer_before_stat <- function(plot, i = 1L, ..., error = FALSE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "before_stat", ...)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_after_stat <- function(x, cond = 1L, error = FALSE, ...) {
-  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "after_stat", ...)
+layer_after_stat <- function(plot, i = 1L, ..., error = FALSE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "after_stat", ...)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_before_geom <- function(x, cond = 1L, error = FALSE, ...) {
-  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "before_geom", ...)
+layer_before_geom <- function(plot, i = 1L, ..., error = FALSE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "before_geom", ...)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_after_scale <- function(x, cond = 1L, error = FALSE, ...) {
-  sublayer_data(rlang::new_quosure(rlang::enexpr(x), parent.frame()), cond, error, step = "after_scale", ...)
+layer_after_scale <- function(plot, i = 1L, ..., error = FALSE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "after_scale", ...)
 }
 

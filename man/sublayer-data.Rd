@@ -8,27 +8,28 @@
 \alias{layer_after_scale}
 \title{Inspect snapshots of sub-layer data}
 \usage{
-layer_before_stat(x, cond = 1L, error = FALSE, ...)
+layer_before_stat(plot, i = 1L, ..., error = FALSE)
 
-layer_after_stat(x, cond = 1L, error = FALSE, ...)
+layer_after_stat(plot, i = 1L, ..., error = FALSE)
 
-layer_before_geom(x, cond = 1L, error = FALSE, ...)
+layer_before_geom(plot, i = 1L, ..., error = FALSE)
 
-layer_after_scale(x, cond = 1L, error = FALSE, ...)
+layer_after_scale(plot, i = 1L, ..., error = FALSE)
 }
 \arguments{
-\item{x}{A ggplot object. If missing, defaults to \code{ggplot2::last_plot()}.}
+\item{plot}{A ggplot object. If missing, defaults to \code{ggplot2::last_plot()}.}
 
-\item{cond}{Index of the layer to inspect. Defaults to \code{1L}.}
-
-\item{error}{For debugging. If \code{TRUE}, continues inspecting the method until the ggplot errors.}
+\item{i}{Index of the layer to inspect. Defaults to \code{1L}.}
 
 \item{...}{Unused.}
+
+\item{error}{For debugging. If \code{TRUE}, continues inspecting the method until the ggplot errors.}
 }
 \value{
 A dataframe
 }
 \description{
-Inspect snapshots of sub-layer data
+\code{layer_before_stat()}, \code{layer_after_stat()}, \code{layer_before_geom()}, and \code{layer_after_scale()}
+are helper functions that return a snapshot of a layer's data in the internals.
 }
 \keyword{internal}
