@@ -32,4 +32,33 @@ A dataframe
 \code{layer_before_stat()}, \code{layer_after_stat()}, \code{layer_before_geom()}, and \code{layer_after_scale()}
 are helper functions that return a snapshot of a layer's data in the internals.
 }
+\examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+library(ggplot2)
+ggplot(mpg, aes(displ, class)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_text(
+    aes(
+      label = after_stat(xmax),
+      x = stage(displ, after_stat = xmax)
+    ),
+    stat = "boxplot", hjust = -0.5
+  )
+
+# Before Stat snapshot of first layer's data
+layer_before_stat()
+
+# After Stat snapshot of first layer's data
+layer_after_stat()
+
+# First and second layer's data are identical for those two stages
+identical(layer_before_stat(), layer_before_stat(i = 2))
+identical(layer_after_stat(), layer_after_stat(i = 2))
+
+# `after_stat()` mappings adds new columns to the second layer's data
+# by the time the geom receives the data in the Before Geom stage
+layer_before_geom(i = 2)
+waldo::compare(layer_before_geom(), layer_before_geom(i = 2))
+\dontshow{\}) # examplesIf}
+}
 \keyword{internal}
