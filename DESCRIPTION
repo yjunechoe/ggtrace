@@ -34,6 +34,7 @@ Collate:
   'workflows-capture.R'
   'workflows-highjack.R'
   'last-errorcontext.R'
+  'sublayer-data.R'
   'zzz.R'
 Imports: 
     cli,
