@@ -22,6 +22,9 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
+  <a class="external-link nav-link" href="https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf">Paper</a>
+</li>
+<li class="nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
 </li>
 <li class="active nav-item">
@@ -61,7 +64,8 @@
 <h2 class="pkg-version" data-toc-text="development version" id="ggtrace-development-version">ggtrace (development version)<a class="anchor" aria-label="anchor" href="#ggtrace-development-version"></a></h2>
 <div class="section level4">
 <h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
-<ul><li><p>Interactive debugging functions <code><a href="../reference/last_layer_errorcontext.html">last_layer_errorcontext()</a></code> and <code><a href="../reference/last_layer_errorcontext.html">last_sublayer_errorcontext()</a></code> which return the internal context of layer errors at the level of the <code>Layer</code> and sub-<code>Layer</code> (e.g., <code>Stat</code> or <code>Geom</code>) ggproto methods, respectively.</p></li>
+<ul><li><p>Convenience functions <code><a href="../reference/sublayer-data.html">layer_before_stat()</a></code>, <code><a href="../reference/sublayer-data.html">layer_after_stat()</a></code>, <code><a href="../reference/sublayer-data.html">layer_before_geom()</a></code>, and <code><a href="../reference/sublayer-data.html">layer_after_scale()</a></code> that returns a snapshot of layer data in the internals. Inspired by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::layer_data()</a></code> with a similar interface.</p></li>
+<li><p>Interactive debugging functions <code><a href="../reference/last_layer_errorcontext.html">last_layer_errorcontext()</a></code> and <code><a href="../reference/last_layer_errorcontext.html">last_sublayer_errorcontext()</a></code> which return the internal context of layer errors at the level of the <code>Layer</code> and sub-<code>Layer</code> (e.g., <code>Stat</code> or <code>Geom</code>) ggproto methods, respectively.</p></li>
 <li><p>New Inspect workflow function <code><a href="../reference/ggtrace_inspect_on_error.html">ggtrace_inspect_on_error()</a></code> which returns information about the ggproto <code>method</code> that errors while rendering <code>x</code>.</p></li>
 </ul></div>
 </div>

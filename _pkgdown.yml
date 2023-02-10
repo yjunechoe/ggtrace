@@ -47,6 +47,15 @@ reference:
   - ggtrace_highjack_args
   - ggtrace_highjack_return
 
+- title: Sub-layer stages
+  desc: >
+    Convenience functions to debug layer data for delayed aesthetic evaluation
+  contents:
+  - layer_before_stat
+  - layer_after_stat
+  - layer_before_geom
+  - layer_after_scale
+
 - title: Contextualize layer errors
   desc: >
     Return information about the (sub-)layer ggproto method that errors while rendering
@@ -117,8 +126,12 @@ articles:
 
 navbar:
   structure:
-    right: [reference, news, articles, github]
+    right: [paper, reference, news, articles, github]
     left: []
+  components:
+    paper:
+      text: Paper
+      href: https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf
 
 figures:
   dev: ragg::agg_png
