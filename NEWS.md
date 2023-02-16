@@ -1,12 +1,18 @@
 # ggtrace (development version)
 
+# ggtrace 0.6.x
+
+## ggtrace 0.6.0
+
+Significant usability improvements, including `{cli}` integration.
+
 ### New Features
 
-- Convenience functions `layer_before_stat()`, `layer_after_stat()`, `layer_before_geom()`, and `layer_after_scale()` that returns a snapshot of layer data in the internals. Inspired by `ggplot2::layer_data()` with a similar interface.
+- Convenience functions `layer_before_stat()`, `layer_after_stat()`, `layer_before_geom()`, and `layer_after_scale()` that returns a snapshot of layer data in the internals. Inspired by `ggplot2::layer_data()` with a similar interface. (#97)
 
-- Interactive debugging functions `last_layer_errorcontext()` and `last_sublayer_errorcontext()` which return the internal context of layer errors at the level of the `Layer` and sub-`Layer` (e.g., `Stat` or `Geom`) ggproto methods, respectively.
-
-- New Inspect workflow function `ggtrace_inspect_on_error()` which returns information about the ggproto `method` that errors while rendering `x`.
+- Interactive debugging functions `last_layer_errorcontext()` and `last_sublayer_errorcontext()` which return the internal context of layer errors at the level of the `Layer` and sub-`Layer` (e.g., `Stat` or `Geom`) ggproto methods, respectively. `last_sublayer_errorcontext()` is still in experimental phase (error-prone, may be removed in future).
+ 
+- New Inspect workflow function `ggtrace_inspect_on_error()` which dumps information about the `method` that errors while rendering `x`.
 
 # ggtrace 0.5.x
 

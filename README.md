@@ -6,7 +6,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.5.3.9000-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.6.0-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ![](https://i.imgur.com/kpTffyw.jpg)
@@ -19,7 +19,7 @@ You can install the development version from
     # install.packages("remotes")
     remotes::install_github("yjunechoe/ggtrace")
 
-    library(ggtrace) # v0.5.3.9000
+    library(ggtrace)
 
 More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
@@ -48,7 +48,77 @@ vignette.
     packageVersion("ggplot2")
     #> [1] '3.4.0'
 
-### 1) **Remove boxplot outliers from data (vs. just hiding it visually)**
+### 1) **Inspect sub-layer data**
+
+A bar plot of counts with `geom_bar()` with `stat = "count"` default:
+
+    bar_plot <- ggplot(mpg, aes(class, fill = class)) +
+      geom_bar() +
+      theme(legend.position = "none")
+
+State of bar layer’s data after the statistical transformation step:
+
+    ggtrace::layer_after_stat(bar_plot)
+    #> ✔ Executed `ggtrace_inspect_return(bar_plot, ggplot2:::Layer$compute_statistic)`
+    #> # A tibble: 7 × 8
+    #>   count  prop x          width flipped_aes fill       PANEL group
+    #>   <dbl> <dbl> <mppd_dsc> <dbl> <lgl>       <chr>      <fct> <int>
+    #> 1     5     1 1            0.9 FALSE       2seater    1         1
+    #> 2    47     1 2            0.9 FALSE       compact    1         2
+    #> 3    41     1 3            0.9 FALSE       midsize    1         3
+    #> 4    11     1 4            0.9 FALSE       minivan    1         4
+    #> 5    33     1 5            0.9 FALSE       pickup     1         5
+    #> 6    35     1 6            0.9 FALSE       subcompact 1         6
+    #> 7    62     1 7            0.9 FALSE       suv        1         7
+
+We can map aesthetics to variables from the after-stat data using
+`after_stat()`:
+
+    bar_plot +
+      geom_text(
+        aes(label = after_stat(count)),
+        stat = "count",
+        position = position_nudge(y = 1), vjust = 0
+      )
+
+<img src="man/figures/README-sub-layer-data-after-stat-aes-1.png" width="100%" />
+
+Same idea with `after_scale()`:
+
+    scatter_plot <- ggplot(mpg, aes(displ, hwy, fill = class)) +
+      scale_fill_viridis_d(option = "magma")
+    scatter_plot +
+      geom_point(shape = 21, size = 4, stroke = 1)
+
+<img src="man/figures/README-sub-layer-data-scatter-1.png" width="100%" />
+
+    # `fill` column available for `after_scale(fill)`
+    ggtrace::layer_after_scale(scatter_plot)
+    #> ✔ Executed `ggtrace_inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2)`
+    #> # A tibble: 234 × 5
+    #>    fill          x     y PANEL group
+    #>    <chr>     <dbl> <dbl> <fct> <int>
+    #>  1 #2D1160FF   1.8    29 1         2
+    #>  2 #2D1160FF   1.8    29 1         2
+    #>  3 #2D1160FF   2      31 1         2
+    #>  4 #2D1160FF   2      30 1         2
+    #>  5 #2D1160FF   2.8    26 1         2
+    #>  6 #2D1160FF   2.8    26 1         2
+    #>  7 #2D1160FF   3.1    27 1         2
+    #>  8 #2D1160FF   1.8    26 1         2
+    #>  9 #2D1160FF   1.8    25 1         2
+    #> 10 #2D1160FF   2      28 1         2
+    #> # … with 224 more rows
+
+    scatter_plot +
+      geom_point(
+        aes(color = after_scale(prismatic::best_contrast(fill))),
+        shape = 21, size = 4, stroke = 1
+      )
+
+<img src="man/figures/README-sub-layer-data-after-scale-aes-1.png" width="100%" />
+
+### 2) **Highjack ggproto (remove boxplot outliers)**
 
 You can hide outliers in `geom_boxplot()`, but they’ll still be in the
 layer’s underlying dataframe representation. This makes the plot look
@@ -94,7 +164,52 @@ about to be returned by the method.
 
 Problem inspired by <https://github.com/tidyverse/ggplot2/issues/4892>.
 
-### 2) **Crop polar coordinate plots**
+Note that this is also possible in “vanilla” ggplot. Following our
+earlier discussion of `after_stat()`:
+
+    # Suppress warning from mapping to `outliers` aesthetic
+    update_geom_defaults("boxplot", list(outliers = NULL))
+
+    ggplot(mpg, aes(hwy, class)) +
+      geom_boxplot(
+        # Equivalent effect of modifying the after-stat data
+        aes(outliers = after_stat(list(NULL)))
+      )
+
+<img src="man/figures/README-boxplot-remove-outliers-after-stat-1.png" width="100%" />
+
+### 3) **Not just ggproto**
+
+The `method` argument of `ggtrace_*()` workflow functions can be
+(almost) any function-like object called during the rendering of a
+ggplot.
+
+    set.seed(2023)
+    # Example from `?stat_summary`
+    summary_plot <- ggplot(mtcars, aes(mpg, factor(cyl))) +
+      geom_point() +
+      stat_summary(fun.data = "mean_cl_boot", colour = "red", linewidth = 2, size = 3)
+    summary_plot
+
+<img src="man/figures/README-not-just-ggproto-1.png" width="100%" />
+
+    ggtrace_inspect_args(x = summary_plot, method = mean_cl_boot)
+    #> $x
+    #>  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4
+    ggtrace_inspect_return(x = summary_plot, method = mean_cl_boot)
+    #>          y     ymin     ymax
+    #> 1 26.66364 24.11727 29.19159
+
+    ggtrace_highjack_return(
+      x = summary_plot, method = mean_cl_boot,
+      value = quote({
+        data.frame(y = 50, ymin = 25, ymax = 75)
+      })
+    )
+
+<img src="man/figures/README-not-just-ggproto-highjack-1.png" width="100%" />
+
+### 4) **Crop polar coordinate plots**
 
 Plot in polar coordinates:
 
@@ -126,26 +241,29 @@ Clipping the plot panel with `{ggtrace}` by highjacking the
 See implementation in
 [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
-### 3) **Highjack the drawing context**
+### 5) **Highjack the drawing context**
 
 Flashy example adopted from my [UseR!
 talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
 
     library(palmerpenguins)
-    p <- na.omit(palmerpenguins::penguins) |> 
+    flashy_plot <- na.omit(palmerpenguins::penguins) |> 
       ggplot(aes(x = species, y = flipper_length_mm)) +
       geom_boxplot(aes(fill = species), width = .7) +
       facet_wrap(~ year)
+    flashy_plot
+
+<img src="man/figures/README-flashy-plot-1.png" width="100%" />
 
     ggtrace_highjack_return(
-      p, Geom$draw_panel, cond = TRUE,
+      flashy_plot, Geom$draw_panel, cond = TRUE,
       value = quote({
-        y_pos <- .25 * ._counter_
-        grobTree( circleGrob(y = y_pos, gp = gpar(fill = linearGradient())), # R >= 4.1
-                  editGrob(returnValue(), vp = viewport(clip = circleGrob(y = y_pos))) )
+        circ <- circleGrob(y = .25 * ._counter_)
+        grobTree( editGrob(circ, gp = gpar(fill = linearGradient())),
+                  editGrob(returnValue(), vp = viewport(clip = circ)) )
       }))
 
-<img src="man/figures/README-flashy-1.png" width="100%" />
+<img src="man/figures/README-flashy-highjack-1.png" width="100%" />
 
 <!-- ### **Extract legends** -->
 <!-- ```{r legend-plot} -->
