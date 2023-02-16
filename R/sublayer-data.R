@@ -79,10 +79,11 @@ sublayer_data <- function(x, cond = 1L, error = TRUE,
     x_expr <- x
   }
 
-  inspect_expr <- call(
+  inspect_expr <- rlang::call2(
     paste0("ggtrace_inspect_", step[1]),
     x_expr,
-    rlang::parse_expr(step[2])
+    rlang::parse_expr(step[2]),
+    .ns = "ggtrace"
   )
 
   if (cond != 1L) inspect_expr$cond <- cond
@@ -92,6 +93,7 @@ sublayer_data <- function(x, cond = 1L, error = TRUE,
   out <- eval.parent(inspect_expr, 2)
 
   inspect_expr_fmt <- rlang::expr_deparse(inspect_expr, width = Inf)
+  inspect_expr_fmt <- gsub("^ggtrace::", "", inspect_expr_fmt)
   cli::cli_alert_success("Executed {.code {inspect_expr_fmt}}")
 
   if (rlang::is_installed("tibble")) {
