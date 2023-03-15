@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.3.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.6.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,12 +62,24 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="ggtrace-development-version">ggtrace (development version)<a class="anchor" aria-label="anchor" href="#ggtrace-development-version"></a></h2>
+<div class="section level3">
+<h3 id="ggtrace-development-version-1">ggtrace 0.6.1<a class="anchor" aria-label="anchor" href="#ggtrace-development-version-1"></a></h3>
+<div class="section level4">
+<h4 id="bug-fixes-development-version">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-development-version"></a></h4>
+<ul><li>
+<code><a href="../reference/get_method.html">get_method_inheritance()</a></code> now works correctly for top-level ggprotos - ex: <code>get_method_inheritance(Geom)</code> (<a href="https://github.com/yjunechoe/ggtrace/issues/99" class="external-link">#99</a>; thanks <a href="https://github.com/yjing14" class="external-link">@yjing14</a> for bug report).</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="ggtrace-development-version-2">ggtrace 0.6.0<a class="anchor" aria-label="anchor" href="#ggtrace-development-version-2"></a></h3>
+<p>Significant usability improvements, including <a href="https://cli.r-lib.org" class="external-link">cli</a> integration.</p>
 <div class="section level4">
 <h4 id="new-features-development-version">New Features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h4>
-<ul><li><p>Convenience functions <code><a href="../reference/sublayer-data.html">layer_before_stat()</a></code>, <code><a href="../reference/sublayer-data.html">layer_after_stat()</a></code>, <code><a href="../reference/sublayer-data.html">layer_before_geom()</a></code>, and <code><a href="../reference/sublayer-data.html">layer_after_scale()</a></code> that returns a snapshot of layer data in the internals. Inspired by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::layer_data()</a></code> with a similar interface.</p></li>
-<li><p>Interactive debugging functions <code><a href="../reference/last_layer_errorcontext.html">last_layer_errorcontext()</a></code> and <code><a href="../reference/last_layer_errorcontext.html">last_sublayer_errorcontext()</a></code> which return the internal context of layer errors at the level of the <code>Layer</code> and sub-<code>Layer</code> (e.g., <code>Stat</code> or <code>Geom</code>) ggproto methods, respectively.</p></li>
-<li><p>New Inspect workflow function <code><a href="../reference/ggtrace_inspect_on_error.html">ggtrace_inspect_on_error()</a></code> which returns information about the ggproto <code>method</code> that errors while rendering <code>x</code>.</p></li>
+<ul><li><p>Convenience functions <code><a href="../reference/sublayer-data.html">layer_before_stat()</a></code>, <code><a href="../reference/sublayer-data.html">layer_after_stat()</a></code>, <code><a href="../reference/sublayer-data.html">layer_before_geom()</a></code>, and <code><a href="../reference/sublayer-data.html">layer_after_scale()</a></code> that returns a snapshot of layer data in the internals. Inspired by <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot2::layer_data()</a></code> with a similar interface. (<a href="https://github.com/yjunechoe/ggtrace/issues/97" class="external-link">#97</a>; thanks <a href="https://github.com/JoFrhwld" class="external-link">@JoFrhwld</a> for suggestion)</p></li>
+<li><p>Interactive debugging functions <code><a href="../reference/last_layer_errorcontext.html">last_layer_errorcontext()</a></code> and <code><a href="../reference/last_layer_errorcontext.html">last_sublayer_errorcontext()</a></code> which return the internal context of layer errors at the level of the <code>Layer</code> and sub-<code>Layer</code> (e.g., <code>Stat</code> or <code>Geom</code>) ggproto methods, respectively. <code><a href="../reference/last_layer_errorcontext.html">last_sublayer_errorcontext()</a></code> is still in experimental phase (error-prone, may be removed in future).</p></li>
+<li><p>New catch-all Inspect workflow function <code><a href="../reference/ggtrace_inspect_on_error.html">ggtrace_inspect_on_error()</a></code> which dumps information about the <code>method</code> that errors while rendering <code>x</code>.</p></li>
 </ul></div>
+</div>
 </div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5" id="ggtrace-05x">ggtrace 0.5.x<a class="anchor" aria-label="anchor" href="#ggtrace-05x"></a></h2>
