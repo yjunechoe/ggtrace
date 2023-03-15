@@ -127,33 +127,31 @@ get_method <- function(method, inherit = FALSE) {
 #' @export
 #' @rdname get_method
 get_method_inheritance <- function(obj, trim_overriden = TRUE) {
-
   if (!inherits(obj, "ggproto")) {
     rlang::abort("`obj` must be a ggproto object")
   }
-
   ggprotos <- class(obj)[seq_len(which(class(obj) == "ggproto") - 1L)]
   n_parents <- length(ggprotos) - 1L
-  all_ggprotos <- Reduce(
-    function(x, y) x$super(),
-    seq_len(n_parents),
-    init = obj,
-    accumulate = TRUE
-  )
-
-  all_methods <- lapply(all_ggprotos, function(x) ls(envir = x))
-
-  if (trim_overriden) {
-    all_methods <- Reduce(
-      function(child, parent) setdiff(parent, c(child, "super")),
-      all_methods,
-      init = "",
-      accumulate = TRUE)[-1L]
+  if (n_parents == 0) {
+    all_methods <- list(sort(names(obj)))
+  } else {
+    all_ggprotos <- Reduce(
+      function(x, y) x$super(),
+      seq_len(n_parents),
+      init = obj,
+      accumulate = TRUE
+    )
+    all_methods <- lapply(all_ggprotos, function(x) ls(envir = x))
+    if (trim_overriden) {
+      all_methods <- Reduce(
+        function(child, parent) setdiff(parent, c(child, "super")),
+        all_methods,
+        init = "",
+        accumulate = TRUE)[-1L]
+    }
   }
-
   names(all_methods) <- ggprotos
   rev(all_methods)
-
 }
 
 

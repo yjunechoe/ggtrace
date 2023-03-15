@@ -6,7 +6,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.6.0-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.6.1-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
 ![](https://i.imgur.com/kpTffyw.jpg)
@@ -42,11 +42,15 @@ vignette, and see examples in the
 [Overview](https://yjunechoe.github.io/ggtrace/articles/overview.html)
 vignette.
 
+`{ggtrace}` now also has a paper! [Sub-layer modularity in the Grammar
+of
+Graphics](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf)
+
 ## **Example usage**
 
     library(ggplot2)
     packageVersion("ggplot2")
-    #> [1] '3.4.0'
+    #> [1] '3.4.1'
 
 ### 1) **Inspect sub-layer data**
 
@@ -209,9 +213,9 @@ ggplot.
 
 <img src="man/figures/README-not-just-ggproto-highjack-1.png" width="100%" />
 
-### 4) **Crop polar coordinate plots**
+### 4) **Visually crop polar coordinate plots**
 
-Plot in polar coordinates:
+Here’s a plot in polar coordinates:
 
     polar_plot <- ggplot(mtcars, aes(hp, mpg)) +
       geom_point() +
@@ -223,21 +227,23 @@ Plot in polar coordinates:
 
 <img src="man/figures/README-polar-plot-1.png" width="100%" />
 
-Clipping the plot panel with `{ggtrace}` by highjacking the
-`Layout$render()` method:
+We can clip the plot panel by highjacking the `Layout$render()` method
+using the generic workflow function `with_ggtrace()`:
 
-    ggtrace::with_ggtrace(
+    with_ggtrace(
       x = polar_plot + theme(aspect.ratio = 1/.48),
       method = Layout$render,
       trace_steps = 5L,
       trace_expr = quote({
-        panels[[1]] <- editGrob(panels[[1]], vp = viewport(xscale = c(0.48, 1)))
+        panels[[1]] <- editGrob(panels[[1]], vp = viewport(xscale = c(.48, 1)))
       }),
       out = "g"
     )
 
 <img src="man/figures/README-polar-plot-clipped-1.png" width="100%" />
 
+Inspired by a [twitter
+thread](https://twitter.com/mattansb/status/1506620436771229715?s=20).
 See implementation in
 [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
@@ -264,6 +270,12 @@ talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
       }))
 
 <img src="man/figures/README-flashy-highjack-1.png" width="100%" />
+
+Note the use of the special variable `._counter_`, which increments
+every time a function/method has been called. See the reference section
+on [tracing
+context](https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context)
+for more details.
 
 <!-- ### **Extract legends** -->
 <!-- ```{r legend-plot} -->
