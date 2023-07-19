@@ -53,7 +53,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
   if (rlang::is_quosure(method)) {
     method_quo <- method
   }
-  deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo))
+  deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo), width = Inf)
 
   # Resolve formatting
   if (grepl("\\$", deparsed)) {
@@ -112,7 +112,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
 .get_method <- function(method_quo, inherit = FALSE) {
 
   method <- rlang::eval_tidy(method_quo)
-  method_deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo))
+  method_deparsed <- rlang::expr_deparse(rlang::quo_get_expr(method_quo), width = Inf)
   arg_provided <- TRUE
 
   # Special handling for functions
