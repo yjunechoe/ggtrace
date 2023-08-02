@@ -8,13 +8,13 @@
 \alias{layer_after_scale}
 \title{Inspect snapshots of sub-layer data}
 \usage{
-layer_before_stat(plot, i = 1L, ..., error = FALSE)
+layer_before_stat(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
 
-layer_after_stat(plot, i = 1L, ..., error = FALSE)
+layer_after_stat(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
 
-layer_before_geom(plot, i = 1L, ..., error = FALSE)
+layer_before_geom(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
 
-layer_after_scale(plot, i = 1L, ..., error = FALSE)
+layer_after_scale(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
 }
 \arguments{
 \item{plot}{A ggplot object. If missing, defaults to \code{ggplot2::last_plot()}.}
@@ -23,7 +23,10 @@ layer_after_scale(plot, i = 1L, ..., error = FALSE)
 
 \item{...}{Unused.}
 
-\item{error}{For debugging. If \code{TRUE}, continues inspecting the method until the ggplot errors.}
+\item{error}{For debugging plots that error. If \code{TRUE}, continues inspecting the method
+until the point of errors.}
+
+\item{verbose}{If \code{TRUE}, prints the corresponding ggtrace code and re-prints the error if it exists.}
 }
 \value{
 A dataframe

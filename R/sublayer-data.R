@@ -8,7 +8,9 @@
 #' @param plot A ggplot object. If missing, defaults to `ggplot2::last_plot()`.
 #' @param i Index of the layer to inspect. Defaults to `1L`.
 #' @param ... Unused.
-#' @param error For debugging. If `TRUE`, continues inspecting the method until the ggplot errors.
+#' @param error For debugging plots that error. If `TRUE`, continues inspecting the method
+#'   until the point of errors.
+#' @param verbose If `TRUE`, prints the corresponding ggtrace code and re-prints the error if it exists.
 #'
 #' @return A dataframe
 #'
@@ -68,8 +70,10 @@ NULL
 )
 
 #' @keywords internal
-sublayer_data <- function(x, cond = 1L, error = TRUE,
-                          step = c("before_stat", "after_stat", "before_geom", "after_scale"), ...) {
+sublayer_data <- function(x, cond = 1L,
+                          step = c("before_stat", "after_stat", "before_geom", "after_scale"),
+                          ...,
+                          error = TRUE, verbose = TRUE) {
 
   step <- .sublayer_stages[[match.arg(step)]]
 
@@ -90,11 +94,13 @@ sublayer_data <- function(x, cond = 1L, error = TRUE,
   if (!isFALSE(error)) inspect_expr$error <- error
   if (step[1] == "args") inspect_expr <- call("$", inspect_expr, quote(data))
 
+  if (!verbose) rethrow_error <- options(ggtrace.rethrow_error = FALSE)
   out <- eval.parent(inspect_expr, 2)
+  if (!verbose) options(rethrow_error)
 
   inspect_expr_fmt <- rlang::expr_deparse(inspect_expr, width = Inf)
   inspect_expr_fmt <- gsub("^ggtrace::", "", inspect_expr_fmt)
-  cli::cli_alert_success("Executed {.code {inspect_expr_fmt}}")
+  if (verbose) cli::cli_alert_success("Executed {.code {inspect_expr_fmt}}")
 
   if (rlang::is_installed("tibble")) {
     out <- asNamespace("tibble")$as_tibble(out)
@@ -106,25 +112,29 @@ sublayer_data <- function(x, cond = 1L, error = TRUE,
 
 #' @rdname sublayer-data
 #' @export
-layer_before_stat <- function(plot, i = 1L, ..., error = FALSE) {
-  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "before_stat", ...)
+layer_before_stat <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "before_stat",
+                ..., error = error, verbose = verbose)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_after_stat <- function(plot, i = 1L, ..., error = FALSE) {
-  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "after_stat", ...)
+layer_after_stat <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "after_stat",
+                ..., error = error, verbose = verbose)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_before_geom <- function(plot, i = 1L, ..., error = FALSE) {
-  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "before_geom", ...)
+layer_before_geom <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "before_geom",
+                ..., error = error, verbose = verbose)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_after_scale <- function(plot, i = 1L, ..., error = FALSE) {
-  sublayer_data(x = rlang::enexpr(plot), cond = i, error, step = "after_scale", ...)
+layer_after_scale <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+  sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "after_scale",
+                ..., error = error, verbose = verbose)
 }
 

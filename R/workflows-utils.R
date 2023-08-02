@@ -47,7 +47,7 @@ simulate_plot <- function(x, error) {
     tryCatch(expr = ggeval_silent(x), error = function(e) {
       log <<- e
     })
-    if (!is.null(log)) {
+    if (getOption("ggtrace.rethrow_error") && !is.null(log)) {
       log$trace <- NULL
       msg <- paste0(rlang::cnd_message(log, prefix = TRUE), "\n")
       writeLines(msg)
