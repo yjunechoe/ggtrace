@@ -1,5 +1,15 @@
 # ggtrace (development version)
 
+## ggtrace 0.6.2
+
+Upkeep release for the [JSM 2023 talk](https://ww2.aievolution.com/JSMAnnual/index.cfm?do=ev.viewEv&ev=2860) "Sub-layer modularity in the Grammar of Graphics".
+
+### New Features
+
+- `layer_*()` snapshot functions gain a `verbose` argument.
+
+- `getOption("ggtrace.rethrow_error")` To control re-printing of the error by workflow functions when `error = TRUE`. Set to `FALSE` on load.
+
 ## ggtrace 0.6.1
 
 ### Bug fixes
