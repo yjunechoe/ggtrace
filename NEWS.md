@@ -1,6 +1,6 @@
 # ggtrace (development version)
 
-## ggtrace 0.6.2
+## ggtrace 0.7.0
 
 Upkeep release for the [JSM 2023 talk](https://ww2.aievolution.com/JSMAnnual/index.cfm?do=ev.viewEv&ev=2860) "Sub-layer modularity in the Grammar of Graphics".
 
