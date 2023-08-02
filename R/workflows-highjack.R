@@ -74,7 +74,7 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
 
     if (rlang::is_true(cond)) {
       cur_fn <- rlang::frame_fn(frame = cur_env)
-      method_args <- names(formals(cur_fn))
+      method_args <- formalArgs(cur_fn)
 
       if ("..." %in% method_args) {
         method_args <- method_args[method_args != "..."]

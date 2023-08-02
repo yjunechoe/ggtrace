@@ -99,7 +99,7 @@ ggtrace_capture_fn <- function(x, method, cond = 1L) {
     if (rlang::is_true(cond)) {
 
       cur_fn <- attr(rlang::current_fn(), "original")
-      args <- names(formals(cur_fn))
+      args <- formalArgs(cur_fn)
       if ("..." %in% args) {
         dots_params <- list(...)
         args_pairs <- as.list(mget(args[args != "..."]))
@@ -112,8 +112,8 @@ ggtrace_capture_fn <- function(x, method, cond = 1L) {
         # define outer function
         args_outer <- c(args_pairs, dots_params) # rlang::pairlist2("..." =)
         outer <- rlang::new_function(args_outer, rlang::expr({
-          cur_args <- mget(names(formals(rlang::current_fn())))
-          specs <- names(cur_args) %in% names(formals(inner))
+          cur_args <- mget(formalArgs(rlang::current_fn()))
+          specs <- names(cur_args) %in% formalArgs(inner)
           do.call(inner, c(cur_args[specs], cur_args[!specs]))
         }))
         attr(outer, "inner") <- inner

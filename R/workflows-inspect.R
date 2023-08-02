@@ -361,7 +361,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
     )
     if (cond) {
       cur_fn <- attr(rlang::current_fn(), "original")
-      args <- names(formals(cur_fn))
+      args <- formalArgs(cur_fn)
       if ("..." %in% args) {
         args_pairs <- c(as.list(mget(args[args != "..."])), list(`...` = list(...)))
       } else {
@@ -495,7 +495,7 @@ ggtrace_inspect_on_error <- function(x, method) {
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, at = 1L, print = FALSE, tracer = rlang::expr({
     new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
-    args <- names(formals(attr(rlang::current_fn(), "original")))
+    args <- formalArgs(attr(rlang::current_fn(), "original"))
     if ("..." %in% args) {
       args_pairs <- c(as.list(mget(args[args != "..."])), list(`...` = list(...)))
     } else {
