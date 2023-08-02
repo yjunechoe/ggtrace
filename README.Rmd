@@ -29,8 +29,6 @@ knitr::opts_chunk$set(
 [![](https://img.shields.io/badge/devel%20version-0.6.1-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
-![](https://i.imgur.com/kpTffyw.jpg)
-
 ### **Installation**
 
 You can install the development version from [GitHub](https://github.com/yjunechoe/ggtrace/) with:
@@ -48,15 +46,23 @@ More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://
 
 ### **Description**
 
-`{ggtrace}` embodies an opinionated approach to learning about ggplot internals. The internals is a difficult topic, so I recommend watching the following presentations on `{ggtrace}` before getting started on any kind of code:
+`{ggtrace}` embodies an opinionated approach to learning/debugging/hacking `{ggplot2}` internals. I recommend watching the following presentation(s) on `{ggtrace}` before getting started on any kind of code:
 
-- [Presentation at rstudio::conf(2022)](https://www.rstudio.com/conference/2022/talks/cracking-open-ggplot-internals-ggtrace/)
+- [Talk at rstudio::conf(2022)](https://github.com/yjunechoe/ggtrace-rstudioconf2022).
 
-- [Presentation at useR! 2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s)
+- [Talk at useR! 2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s) (+ accompanying [materials](https://github.com/yjunechoe/ggtrace-user2022)).
 
-Read more about the philosophy behind `{ggtrace}` in the [Getting Started](https://yjunechoe.github.io/ggtrace/articles/getting-started.html) vignette, and see examples in the [Overview](https://yjunechoe.github.io/ggtrace/articles/overview.html) vignette.
+You can read the full philosophy behind `{ggtrace}` in the [Getting Started](https://yjunechoe.github.io/ggtrace/articles/getting-started.html) vignette. But broadly speaking, `{ggtrace}` was designed with **three goals** in mind, in order of increasing complexity:
 
-`{ggtrace}` now also has a paper! [Sub-layer modularity in the Grammar of Graphics](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf)
+1) To help users understand the design of **sublayer modularity**, allowing them to write more expressive layer code using [delayed aesthetic evaluation](https://ggplot2.tidyverse.org/reference/aes_eval.html) functions. This is a primarily pedagogical goal and outlined in my paper [Sub-layer modularity in the Grammar of Graphics](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf). The family of `layer_*()` extractor functions return snapshots of layer data in the internals, to help develop an accessible mental model of sublayer processes as a data wrangling pipeline.
+
+    ![](https://i.imgur.com/OlLmz8r.png)
+
+2) To facilitate the **user-developer transition**, empowering experienced users of `{ggplot2}` to start developing their own extension packages. This is achieved via a family of `inspect`, `capture`, and `highjack` workflow functions, which provide a functional interface into the object-oriented design of the internals (the `<ggproto>` OOP).
+
+    ![](https://i.imgur.com/kpTffyw.jpg)
+
+3) To provide a **pseudo-extension mechanism** for `{ggplot2}`, by injecting custom code to hack into the rendering pipeline. This is similar in spirit to [`{gggrid}`](https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html) and [`{gginnards}`](https://github.com/aphalo/gginnards), but with a broader scope (targeting any arbitrary computation) at the cost of reproducibility (may break with even trivial changes to the `{ggplot2}` codebase). This is achieved via the low-level function `ggtrace()` (extending the capabilities of `base::trace()`) and its functional form `with_ggtrace()`. See examples in the [Overview](https://yjunechoe.github.io/ggtrace/articles/overview.html) vignette.
 
 ## **Example usage**
 
@@ -66,6 +72,8 @@ packageVersion("ggplot2")
 ```
 
 ### 1) **Inspect sub-layer data**
+
+> Example adopted from [Demystifying delayed aesthetic evaluation](https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/)
 
 A bar plot of counts with `geom_bar()` with `stat = "count"` default:
 
@@ -114,9 +122,48 @@ scatter_plot +
   )
 ```
 
-### 2) **Highjack ggproto (remove boxplot outliers)**
+### 2) **Debug sublayer data**
 
-You can hide outliers in `geom_boxplot()`, but they'll still be in the layer's underlying dataframe representation. This makes the plot look stretched:
+> Example adopted from my [rstudio::conf 2022 talk](https://github.com/yjunechoe/ggtrace-rstudioconf2022)
+
+Given a boxplot made with a `geom_boxplot()` layer, suppose that we want to add a second layer annotating the value of the upper whiskers:
+
+```{r boxplot-base}
+box_p <- ggplot(data = mtcars) +
+  aes(x = factor(cyl), y = mpg) +
+  geom_boxplot()
+box_p
+```
+
+A naive approach would be to add a layer that combines a **boxplot** stat with a **label** geom. But this errors out of the box:
+
+```{r boxplot-anno-error, error = TRUE}
+box_p +
+  geom_label(stat = "boxplot")
+```
+
+The error tells us that the geom is missing some missing aesthetics, so something must be wrong with **the data that the geom receives**. If we inspect this using `layer_before_geom()`, we find that the columns for `y` and `label` are indeed missing in the _Before Geom_ data:
+
+```{r boxplot-anno-debug}
+layer_before_geom(last_plot(), layer = 2L, error = TRUE, verbose = FALSE)
+```
+
+Thus, we need to ensure that `y` exists to satisfy both the stat and the geom, and that `label` exists after the statistical transformation step but before the geom sees the data. Crucially, we use the computed variable `ymax` to (re-)map to the `y` and `label` aesthetics.
+
+```{r boxplot-anno-success}
+box_p +
+  geom_label(
+    aes(y = stage(mpg, after_stat = ymax),
+        label = after_stat(ymax)),
+    stat = "boxplot"
+  )
+```
+
+### 3) **Highjack ggproto (remove boxplot outliers)**
+
+> Example inspired by [https://github.com/tidyverse/ggplot2/issues/4892](https://github.com/tidyverse/ggplot2/issues/4892).
+
+You can hide outliers in `geom_boxplot()` using the `outlier.` argument(s), but they'll still be present in the layer's underlying dataframe representation. Note how this method adds empty space around the boxplot:
 
 ```{r boxplot-hide-outliers, warning = TRUE}
 boxplot_plot <- ggplot(mpg, aes(hwy, class)) +
@@ -143,8 +190,6 @@ ggtrace_highjack_return(
 )
 ```
 
-Problem inspired by [https://github.com/tidyverse/ggplot2/issues/4892](https://github.com/tidyverse/ggplot2/issues/4892).
-
 Note that this is also possible in "vanilla" ggplot. Following our earlier discussion of `after_stat()`:
 
 ```{r boxplot-remove-outliers-after-stat}
@@ -158,7 +203,9 @@ ggplot(mpg, aes(hwy, class)) +
   )
 ```
 
-### 3) **Not just ggproto**
+### 4) **Not just ggproto**
+
+> Example adopted from [Github issue #97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)
 
 The `method` argument of `ggtrace_*()` workflow functions can be (almost) any function-like object called during the rendering of a ggplot.
 
@@ -185,7 +232,9 @@ ggtrace_highjack_return(
 )
 ```
 
-### 4) **Visually crop polar coordinate plots**
+### 5) **Visually crop polar plots**
+
+> Example adopted from a [twitter thread](https://twitter.com/mattansb/status/1506620436771229715?s=20)
 
 Here's a plot in polar coordinates:
 
@@ -213,11 +262,11 @@ with_ggtrace(
 )
 ```
 
-Inspired by a [twitter thread](https://twitter.com/mattansb/status/1506620436771229715?s=20). See implementation in [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
+See implementation in [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
-### 5) **Highjack the drawing context**
+### 6) **Highjack the drawing context**
 
-Flashy example adopted from my [UseR! talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
+> Example adopted from my [useR! 2022 talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
 
 ```{r flashy-plot}
 library(palmerpenguins)
@@ -238,7 +287,7 @@ ggtrace_highjack_return(
   }))
 ```
 
-Note the use of the special variable `._counter_`, which increments every time a function/method has been called. See the reference section on [tracing context](https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context) for more details.
+Note the use of the special variable `._counter_`, which increments every time a function/method has been called. See the [tracing context](https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context) topic for more details.
 
 <!-- ### **Extract legends** -->
 

@@ -96,213 +96,275 @@
 </h4>
 <!-- badges: start -->
 
-<p><img src="https://i.imgur.com/kpTffyw.jpg"></p>
 </div>
 <div class="section level3">
 <h3 id="installation">
 <strong>Installation</strong><a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
 <p>You can install the development version from <a href="https://github.com/yjunechoe/ggtrace/" class="external-link">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("remotes")</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"yjunechoe/ggtrace"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtrace)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># install.packages("remotes")</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"yjunechoe/ggtrace"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="fu">library</span>(ggtrace)</span></code></pre></div>
 <p>More on the 📦 package website: <a href="https://yjunechoe.github.io/ggtrace" class="external-link uri">https://yjunechoe.github.io/ggtrace</a></p>
 </div>
 <div class="section level3">
 <h3 id="description">
 <strong>Description</strong><a class="anchor" aria-label="anchor" href="#description"></a>
 </h3>
-<p><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> embodies an opinionated approach to learning about ggplot internals. The internals is a difficult topic, so I recommend watching the following presentations on <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> before getting started on any kind of code:</p>
+<p><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> embodies an opinionated approach to learning/debugging/hacking <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> internals. I recommend watching the following presentation(s) on <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> before getting started on any kind of code:</p>
 <ul>
-<li><p><a href="https://www.rstudio.com/conference/2022/talks/cracking-open-ggplot-internals-ggtrace/" class="external-link">Presentation at rstudio::conf(2022)</a></p></li>
-<li><p><a href="https://www.youtube.com/watch?v=2JX8zu4QxMg&amp;t=2959s" class="external-link">Presentation at useR! 2022</a></p></li>
+<li><p><a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">Talk at rstudio::conf(2022)</a>.</p></li>
+<li><p><a href="https://www.youtube.com/watch?v=2JX8zu4QxMg&amp;t=2959s" class="external-link">Talk at useR! 2022</a> (+ accompanying <a href="https://github.com/yjunechoe/ggtrace-user2022" class="external-link">materials</a>).</p></li>
 </ul>
-<p>Read more about the philosophy behind <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> in the <a href="https://yjunechoe.github.io/ggtrace/articles/getting-started.html" class="external-link">Getting Started</a> vignette, and see examples in the <a href="https://yjunechoe.github.io/ggtrace/articles/overview.html" class="external-link">Overview</a> vignette.</p>
-<p><a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> now also has a paper! <a href="https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf" class="external-link">Sub-layer modularity in the Grammar of Graphics</a></p>
+<p>You can read the full philosophy behind <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> in the <a href="https://yjunechoe.github.io/ggtrace/articles/getting-started.html" class="external-link">Getting Started</a> vignette. But broadly speaking, <a href="https://yjunechoe.github.io/ggtrace" class="external-link">ggtrace</a> was designed with <strong>three goals</strong> in mind, in order of increasing complexity:</p>
+<ol style="list-style-type: decimal">
+<li>
+<p>To help users understand the design of <strong>sublayer modularity</strong>, allowing them to write more expressive layer code using <a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">delayed aesthetic evaluation</a> functions. This is a primarily pedagogical goal and outlined in my paper <a href="https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf" class="external-link">Sub-layer modularity in the Grammar of Graphics</a>. The family of <code>layer_*()</code> extractor functions return snapshots of layer data in the internals, to help develop an accessible mental model of sublayer processes as a data wrangling pipeline.</p>
+<p><img src="https://i.imgur.com/OlLmz8r.png"></p>
+</li>
+<li>
+<p>To facilitate the <strong>user-developer transition</strong>, empowering experienced users of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> to start developing their own extension packages. This is achieved via a family of <code>inspect</code>, <code>capture</code>, and <code>highjack</code> workflow functions, which provide a functional interface into the object-oriented design of the internals (the <code>&lt;ggproto&gt;</code> OOP).</p>
+<p><img src="https://i.imgur.com/kpTffyw.jpg"></p>
+</li>
+<li><p>To provide a <strong>pseudo-extension mechanism</strong> for <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>, by injecting custom code to hack into the rendering pipeline. This is similar in spirit to <a href="https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html" class="external-link"><code>{gggrid}</code></a> and <a href="https://github.com/aphalo/gginnards" class="external-link"><code>{gginnards}</code></a>, but with a broader scope (targeting any arbitrary computation) at the cost of reproducibility (may break with even trivial changes to the <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> codebase). This is achieved via the low-level function <code><a href="reference/ggtrace.html">ggtrace()</a></code> (extending the capabilities of <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">base::trace()</a></code>) and its functional form <code><a href="reference/with_ggtrace.html">with_ggtrace()</a></code>. See examples in the <a href="https://yjunechoe.github.io/ggtrace/articles/overview.html" class="external-link">Overview</a> vignette.</p></li>
+</ol>
 </div>
 <div class="section level2">
 <h2 id="example-usage">
 <strong>Example usage</strong><a class="anchor" aria-label="anchor" href="#example-usage"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] '3.4.1'</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [1] '3.4.2'</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="id_1-inspect-sub-layer-data">1) <strong>Inspect sub-layer data</strong>
 <a class="anchor" aria-label="anchor" href="#id_1-inspect-sub-layer-data"></a>
 </h3>
+<blockquote>
+<p>Example adopted from <a href="https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/" class="external-link">Demystifying delayed aesthetic evaluation</a></p>
+</blockquote>
 <p>A bar plot of counts with <code>geom_bar()</code> with <code>stat = "count"</code> default:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>bar_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(class, <span class="at">fill =</span> class)) <span class="sc">+</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>bar_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(class, <span class="at">fill =</span> class)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div>
 <p>State of bar layer’s data after the statistical transformation step:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ggtrace<span class="sc">::</span><span class="fu">layer_after_stat</span>(bar_plot)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Executed `ggtrace_inspect_return(bar_plot, ggplot2:::Layer$compute_statistic)`</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 8</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   count  prop x          width flipped_aes fill       PANEL group</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;mppd_dsc&gt; &lt;dbl&gt; &lt;lgl&gt;       &lt;chr&gt;      &lt;fct&gt; &lt;int&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     5     1 1            0.9 FALSE       2seater    1         1</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2    47     1 2            0.9 FALSE       compact    1         2</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3    41     1 3            0.9 FALSE       midsize    1         3</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4    11     1 4            0.9 FALSE       minivan    1         4</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5    33     1 5            0.9 FALSE       pickup     1         5</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6    35     1 6            0.9 FALSE       subcompact 1         6</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7    62     1 7            0.9 FALSE       suv        1         7</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>ggtrace<span class="sc">::</span><span class="fu">layer_after_stat</span>(bar_plot)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; ✔ Executed `ggtrace_inspect_return(bar_plot, ggplot2:::Layer$compute_statistic)`</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; # A tibble: 7 × 8</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;   count  prop x          width flipped_aes fill       PANEL group</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;mppd_dsc&gt; &lt;dbl&gt; &lt;lgl&gt;       &lt;chr&gt;      &lt;fct&gt; &lt;int&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; 1     5     1 1            0.9 FALSE       2seater    1         1</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; 2    47     1 2            0.9 FALSE       compact    1         2</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; 3    41     1 3            0.9 FALSE       midsize    1         3</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 4    11     1 4            0.9 FALSE       minivan    1         4</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 5    33     1 5            0.9 FALSE       pickup     1         5</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 6    35     1 6            0.9 FALSE       subcompact 1         6</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 7    62     1 7            0.9 FALSE       suv        1         7</span></span></code></pre></div>
 <p>We can map aesthetics to variables from the after-stat data using <code>after_stat()</code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>bar_plot <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">after_stat</span>(count)),</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">stat =</span> <span class="st">"count"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="dv">1</span>), <span class="at">vjust =</span> <span class="dv">0</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>bar_plot <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">after_stat</span>(count)),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>    <span class="at">stat =</span> <span class="st">"count"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    <span class="at">position =</span> <span class="fu">position_nudge</span>(<span class="at">y =</span> <span class="dv">1</span>), <span class="at">vjust =</span> <span class="dv">0</span></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="reference/figures/README-sub-layer-data-after-stat-aes-1.png" width="100%"></p>
 <p>Same idea with <code>after_scale()</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>scatter_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(displ, hwy, <span class="at">fill =</span> class)) <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">"magma"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>scatter_plot <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">stroke =</span> <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>scatter_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(displ, hwy, <span class="at">fill =</span> class)) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">"magma"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>scatter_plot <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">stroke =</span> <span class="dv">1</span>)</span></code></pre></div>
 <p><img src="reference/figures/README-sub-layer-data-scatter-1.png" width="100%"></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `fill` column available for `after_scale(fill)`</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>ggtrace<span class="sc">::</span><span class="fu">layer_after_scale</span>(scatter_plot)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ✔ Executed `ggtrace_inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2)`</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 234 × 5</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    fill          x     y PANEL group</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;int&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1 #2D1160FF   1.8    29 1         2</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2 #2D1160FF   1.8    29 1         2</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3 #2D1160FF   2      31 1         2</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4 #2D1160FF   2      30 1         2</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5 #2D1160FF   2.8    26 1         2</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6 #2D1160FF   2.8    26 1         2</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7 #2D1160FF   3.1    27 1         2</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8 #2D1160FF   1.8    26 1         2</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9 #2D1160FF   1.8    25 1         2</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10 #2D1160FF   2      28 1         2</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 224 more rows</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>scatter_plot <span class="sc">+</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">after_scale</span>(prismatic<span class="sc">::</span><span class="fu">best_contrast</span>(fill))),</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">stroke =</span> <span class="dv">1</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># `fill` column available for `after_scale(fill)`</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>ggtrace<span class="sc">::</span><span class="fu">layer_after_scale</span>(scatter_plot)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; ✔ Executed `ggtrace_inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2)`</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 234 × 5</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;    fill          x     y PANEL group</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;int&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  1 #2D1160FF   1.8    29 1         2</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  2 #2D1160FF   1.8    29 1         2</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  3 #2D1160FF   2      31 1         2</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  4 #2D1160FF   2      30 1         2</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  5 #2D1160FF   2.8    26 1         2</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  6 #2D1160FF   2.8    26 1         2</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  7 #2D1160FF   3.1    27 1         2</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;  8 #2D1160FF   1.8    26 1         2</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;  9 #2D1160FF   1.8    25 1         2</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 10 #2D1160FF   2      28 1         2</span></span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; # ℹ 224 more rows</span></span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>scatter_plot <span class="sc">+</span></span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">color =</span> <span class="fu">after_scale</span>(prismatic<span class="sc">::</span><span class="fu">best_contrast</span>(fill))),</span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">4</span>, <span class="at">stroke =</span> <span class="dv">1</span></span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="reference/figures/README-sub-layer-data-after-scale-aes-1.png" width="100%"></p>
 </div>
 <div class="section level3">
-<h3 id="id_2-highjack-ggproto-remove-boxplot-outliers">2) <strong>Highjack ggproto (remove boxplot outliers)</strong>
-<a class="anchor" aria-label="anchor" href="#id_2-highjack-ggproto-remove-boxplot-outliers"></a>
+<h3 id="id_2-debug-sublayer-data">2) <strong>Debug sublayer data</strong>
+<a class="anchor" aria-label="anchor" href="#id_2-debug-sublayer-data"></a>
 </h3>
-<p>You can hide outliers in <code>geom_boxplot()</code>, but they’ll still be in the layer’s underlying dataframe representation. This makes the plot look stretched:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>boxplot_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(hwy, class)) <span class="sc">+</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>boxplot_plot</span></code></pre></div>
+<blockquote>
+<p>Example adopted from my <a href="https://github.com/yjunechoe/ggtrace-rstudioconf2022" class="external-link">rstudio::conf 2022 talk</a></p>
+</blockquote>
+<p>Given a boxplot made with a <code>geom_boxplot()</code> layer, suppose that we want to add a second layer annotating the value of the upper whiskers:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>box_p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> mtcars) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(cyl), <span class="at">y =</span> mpg) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>box_p</span></code></pre></div>
+<p><img src="reference/figures/README-boxplot-base-1.png" width="100%"></p>
+<p>A naive approach would be to add a layer that combines a <strong>boxplot</strong> stat with a <strong>label</strong> geom. But this errors out of the box:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>box_p <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="at">stat =</span> <span class="st">"boxplot"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt; Error in `geom_label()`:</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt; ! Problem while setting up geom.</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; ℹ Error occurred in the 2nd layer.</span></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; Caused by error in `compute_geom_1()`:</span></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; ! `geom_label()` requires the following missing aesthetics: y and label</span></span></code></pre></div>
+<p>The error tells us that the geom is missing some missing aesthetics, so something must be wrong with <strong>the data that the geom receives</strong>. If we inspect this using <code><a href="reference/sublayer-data.html">layer_before_geom()</a></code>, we find that the columns for <code>y</code> and <code>label</code> are indeed missing in the <em>Before Geom</em> data:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">layer_before_geom</span>(<span class="fu">last_plot</span>(), <span class="at">layer =</span> 2L, <span class="at">error =</span> <span class="cn">TRUE</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 3 × 14</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">#&gt;    ymin lower middle upper  ymax outliers  notchupper notchlower     x width</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;list&gt;         &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; 1  21.4  22.8   26    30.4  33.9 &lt;dbl [0]&gt;       29.6       22.4     1  0.75</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt; 2  17.8  18.6   19.7  21    21.4 &lt;dbl [0]&gt;       21.1       18.3     2  0.75</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt; 3  13.3  14.4   15.2  16.2  18.7 &lt;dbl [3]&gt;       16.0       14.4     3  0.75</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: relvarwidth &lt;dbl&gt;, flipped_aes &lt;lgl&gt;, PANEL &lt;fct&gt;,</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt; #   group &lt;int&gt;</span></span></code></pre></div>
+<p>Thus, we need to ensure that <code>y</code> exists to satisfy both the stat and the geom, and that <code>label</code> exists after the statistical transformation step but before the geom sees the data. Crucially, we use the computed variable <code>ymax</code> to (re-)map to the <code>y</code> and <code>label</code> aesthetics.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>box_p <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="fu">geom_label</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">stage</span>(mpg, <span class="at">after_stat =</span> ymax),</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>        <span class="at">label =</span> <span class="fu">after_stat</span>(ymax)),</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>    <span class="at">stat =</span> <span class="st">"boxplot"</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  )</span></code></pre></div>
+<p><img src="reference/figures/README-boxplot-anno-success-1.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="id_3-highjack-ggproto-remove-boxplot-outliers">3) <strong>Highjack ggproto (remove boxplot outliers)</strong>
+<a class="anchor" aria-label="anchor" href="#id_3-highjack-ggproto-remove-boxplot-outliers"></a>
+</h3>
+<blockquote>
+<p>Example inspired by <a href="https://github.com/tidyverse/ggplot2/issues/4892" class="external-link uri">https://github.com/tidyverse/ggplot2/issues/4892</a>.</p>
+</blockquote>
+<p>You can hide outliers in <code>geom_boxplot()</code> using the <code>outlier.</code> argument(s), but they’ll still be present in the layer’s underlying dataframe representation. Note how this method adds empty space around the boxplot:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>boxplot_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(hwy, class)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.shape =</span> <span class="cn">NA</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>boxplot_plot</span></code></pre></div>
 <p><img src="reference/figures/README-boxplot-hide-outliers-1.png" width="100%"></p>
 <p>This is because the scales are re-trained after the calculation of the boxplot statistics. In other words, the “final” min/max value of the x-scale are derived from the calculated outliers, even if they’re not drawn.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">layer_data</span>(boxplot_plot)[, <span class="fu">c</span>(<span class="st">"xmin"</span>, <span class="st">"xmax"</span>, <span class="st">"outliers"</span>, <span class="st">"xmin_final"</span>, <span class="st">"xmax_final"</span>)]</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   xmin xmax                       outliers xmin_final xmax_final</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1   23   26                                        23         26</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2   23   33                 35, 37, 35, 44         23         44</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3   23   32                                        23         32</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4   21   24                             17         17         24</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5   15   20                 12, 12, 12, 22         12         22</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6   20   36                         44, 41         20         44</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 7   14   22 12, 12, 25, 24, 27, 25, 26, 23         12         27</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">layer_data</span>(boxplot_plot)[, <span class="fu">c</span>(<span class="st">"xmin"</span>, <span class="st">"xmax"</span>, <span class="st">"outliers"</span>, <span class="st">"xmin_final"</span>, <span class="st">"xmax_final"</span>)]</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#&gt;   xmin xmax                       outliers xmin_final xmax_final</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; 1   23   26                                        23         26</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; 2   23   33                 35, 37, 35, 44         23         44</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt; 3   23   32                                        23         32</span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; 4   21   24                             17         17         24</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; 5   15   20                 12, 12, 12, 22         12         22</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; 6   20   36                         44, 41         20         44</span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; 7   14   22 12, 12, 25, 24, 27, 25, 26, 23         12         27</span></span></code></pre></div>
 <p>One solution is to highjack the calculation of the boxplot layer’s statistics such that values of the <code>outliers</code> column is set to <code>NULL</code>. In <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, we pass an expression that modifies <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to the <code>value</code> argument, which evaluates to the value about to be returned by the method.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> boxplot_plot,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> Stat<span class="sc">$</span>compute_layer,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">cond =</span> 1L,</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transform</span>(<span class="fu">returnValue</span>(), <span class="at">outliers =</span> <span class="cn">NULL</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>  <span class="at">x =</span> boxplot_plot,</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>  <span class="at">method =</span> Stat<span class="sc">$</span>compute_layer,</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>  <span class="at">cond =</span> 1L,</span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a>    <span class="fu">transform</span>(<span class="fu">returnValue</span>(), <span class="at">outliers =</span> <span class="cn">NULL</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>  })</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-boxplot-remove-outliers-1.png" width="100%"></p>
-<p>Problem inspired by <a href="https://github.com/tidyverse/ggplot2/issues/4892" class="external-link uri">https://github.com/tidyverse/ggplot2/issues/4892</a>.</p>
 <p>Note that this is also possible in “vanilla” ggplot. Following our earlier discussion of <code>after_stat()</code>:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Suppress warning from mapping to `outliers` aesthetic</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">update_geom_defaults</span>(<span class="st">"boxplot"</span>, <span class="fu">list</span>(<span class="at">outliers =</span> <span class="cn">NULL</span>))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(hwy, class)) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Equivalent effect of modifying the after-stat data</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">outliers =</span> <span class="fu">after_stat</span>(<span class="fu">list</span>(<span class="cn">NULL</span>)))</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="co"># Suppress warning from mapping to `outliers` aesthetic</span></span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a><span class="fu">update_geom_defaults</span>(<span class="st">"boxplot"</span>, <span class="fu">list</span>(<span class="at">outliers =</span> <span class="cn">NULL</span>))</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a><span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(hwy, class)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a>    <span class="co"># Equivalent effect of modifying the after-stat data</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">outliers =</span> <span class="fu">after_stat</span>(<span class="fu">list</span>(<span class="cn">NULL</span>)))</span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>  )</span></code></pre></div>
 <p><img src="reference/figures/README-boxplot-remove-outliers-after-stat-1.png" width="100%"></p>
 </div>
 <div class="section level3">
-<h3 id="id_3-not-just-ggproto">3) <strong>Not just ggproto</strong>
-<a class="anchor" aria-label="anchor" href="#id_3-not-just-ggproto"></a>
+<h3 id="id_4-not-just-ggproto">4) <strong>Not just ggproto</strong>
+<a class="anchor" aria-label="anchor" href="#id_4-not-just-ggproto"></a>
 </h3>
+<blockquote>
+<p>Example adopted from <a href="https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494" class="external-link">Github issue #97</a></p>
+</blockquote>
 <p>The <code>method</code> argument of <code>ggtrace_*()</code> workflow functions can be (almost) any function-like object called during the rendering of a ggplot.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2023</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Example from `?stat_summary`</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>summary_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(mpg, <span class="fu">factor</span>(cyl))) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> <span class="st">"mean_cl_boot"</span>, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">3</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>summary_plot</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2023</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co"># Example from `?stat_summary`</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>summary_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(mpg, <span class="fu">factor</span>(cyl))) <span class="sc">+</span></span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.data =</span> <span class="st">"mean_cl_boot"</span>, <span class="at">colour =</span> <span class="st">"red"</span>, <span class="at">linewidth =</span> <span class="dv">2</span>, <span class="at">size =</span> <span class="dv">3</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a>summary_plot</span></code></pre></div>
 <p><img src="reference/figures/README-not-just-ggproto-1.png" width="100%"></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_inspect_args</span>(<span class="at">x =</span> summary_plot, <span class="at">method =</span> mean_cl_boot)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $x</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_inspect_return</span>(<span class="at">x =</span> summary_plot, <span class="at">method =</span> mean_cl_boot)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;          y     ymin     ymax</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 26.66364 24.11727 29.19159</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> summary_plot, <span class="at">method =</span> mean_cl_boot,</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data.frame</span>(<span class="at">y =</span> <span class="dv">50</span>, <span class="at">ymin =</span> <span class="dv">25</span>, <span class="at">ymax =</span> <span class="dv">75</span>)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">ggtrace_inspect_args</span>(<span class="at">x =</span> summary_plot, <span class="at">method =</span> mean_cl_boot)</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a><span class="co">#&gt; $x</span></span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a><span class="co">#&gt;  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4</span></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="fu">ggtrace_inspect_return</span>(<span class="at">x =</span> summary_plot, <span class="at">method =</span> mean_cl_boot)</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a><span class="co">#&gt;          y     ymin     ymax</span></span>
+<span id="cb17-6"><a href="#cb17-6" tabindex="-1"></a><span class="co">#&gt; 1 26.66364 24.11727 29.19159</span></span>
+<span id="cb17-7"><a href="#cb17-7" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<span id="cb17-9"><a href="#cb17-9" tabindex="-1"></a>  <span class="at">x =</span> summary_plot, <span class="at">method =</span> mean_cl_boot,</span>
+<span id="cb17-10"><a href="#cb17-10" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
+<span id="cb17-11"><a href="#cb17-11" tabindex="-1"></a>    <span class="fu">data.frame</span>(<span class="at">y =</span> <span class="dv">50</span>, <span class="at">ymin =</span> <span class="dv">25</span>, <span class="at">ymax =</span> <span class="dv">75</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" tabindex="-1"></a>  })</span>
+<span id="cb17-13"><a href="#cb17-13" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-not-just-ggproto-highjack-1.png" width="100%"></p>
 </div>
 <div class="section level3">
-<h3 id="id_4-visually-crop-polar-coordinate-plots">4) <strong>Visually crop polar coordinate plots</strong>
-<a class="anchor" aria-label="anchor" href="#id_4-visually-crop-polar-coordinate-plots"></a>
+<h3 id="id_5-visually-crop-polar-plots">5) <strong>Visually crop polar plots</strong>
+<a class="anchor" aria-label="anchor" href="#id_5-visually-crop-polar-plots"></a>
 </h3>
+<blockquote>
+<p>Example adopted from a <a href="https://twitter.com/mattansb/status/1506620436771229715?s=20" class="external-link">twitter thread</a></p>
+</blockquote>
 <p>Here’s a plot in polar coordinates:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>polar_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(hp, mpg)) <span class="sc">+</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>)) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="at">start =</span> <span class="dv">0</span>, <span class="at">theta =</span> <span class="st">"y"</span>)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>polar_plot</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>polar_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(hp, mpg)) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula =</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>  <span class="fu">expand_limits</span>(<span class="at">y =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>)) <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  <span class="fu">coord_polar</span>(<span class="at">start =</span> <span class="dv">0</span>, <span class="at">theta =</span> <span class="st">"y"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a>polar_plot</span></code></pre></div>
 <p><img src="reference/figures/README-polar-plot-1.png" width="100%"></p>
 <p>We can clip the plot panel by highjacking the <code>Layout$render()</code> method using the generic workflow function <code><a href="reference/with_ggtrace.html">with_ggtrace()</a></code>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> polar_plot <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span><span class="sc">/</span>.<span class="dv">48</span>),</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> Layout<span class="sc">$</span>render,</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_steps =</span> 5L,</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trace_expr =</span> <span class="fu">quote</span>({</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    panels[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">editGrob</span>(panels[[<span class="dv">1</span>]], <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">xscale =</span> <span class="fu">c</span>(.<span class="dv">48</span>, <span class="dv">1</span>)))</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  }),</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">with_ggtrace</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="at">x =</span> polar_plot <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span><span class="sc">/</span>.<span class="dv">48</span>),</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="at">method =</span> Layout<span class="sc">$</span>render,</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="at">trace_steps =</span> 5L,</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>  <span class="at">trace_expr =</span> <span class="fu">quote</span>({</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>    panels[[<span class="dv">1</span>]] <span class="ot">&lt;-</span> <span class="fu">editGrob</span>(panels[[<span class="dv">1</span>]], <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">xscale =</span> <span class="fu">c</span>(.<span class="dv">48</span>, <span class="dv">1</span>)))</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>  }),</span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>  <span class="at">out =</span> <span class="st">"g"</span></span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-polar-plot-clipped-1.png" width="100%"></p>
-<p>Inspired by a <a href="https://twitter.com/mattansb/status/1506620436771229715?s=20" class="external-link">twitter thread</a>. See implementation in <a href="https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html" class="external-link"><code>MSBMisc::crop_coord_polar()</code></a>.</p>
+<p>See implementation in <a href="https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html" class="external-link"><code>MSBMisc::crop_coord_polar()</code></a>.</p>
 </div>
 <div class="section level3">
-<h3 id="id_5-highjack-the-drawing-context">5) <strong>Highjack the drawing context</strong>
-<a class="anchor" aria-label="anchor" href="#id_5-highjack-the-drawing-context"></a>
+<h3 id="id_6-highjack-the-drawing-context">6) <strong>Highjack the drawing context</strong>
+<a class="anchor" aria-label="anchor" href="#id_6-highjack-the-drawing-context"></a>
 </h3>
-<p>Flashy example adopted from my <a href="https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users" class="external-link">UseR! talk</a>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>flashy_plot <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(palmerpenguins<span class="sc">::</span>penguins) <span class="sc">|&gt;</span> </span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> flipper_length_mm)) <span class="sc">+</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> species), <span class="at">width =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>flashy_plot</span></code></pre></div>
+<blockquote>
+<p>Example adopted from my <a href="https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users" class="external-link">useR! 2022 talk</a>:</p>
+</blockquote>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>flashy_plot <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(palmerpenguins<span class="sc">::</span>penguins) <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> flipper_length_mm)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> species), <span class="at">width =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year)</span>
+<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>flashy_plot</span></code></pre></div>
 <p><img src="reference/figures/README-flashy-plot-1.png" width="100%"></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  flashy_plot, Geom<span class="sc">$</span>draw_panel, <span class="at">cond =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    circ <span class="ot">&lt;-</span> <span class="fu">circleGrob</span>(<span class="at">y =</span> .<span class="dv">25</span> <span class="sc">*</span> ._counter_)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">grobTree</span>( <span class="fu">editGrob</span>(circ, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="fu">linearGradient</span>())),</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">editGrob</span>(<span class="fu">returnValue</span>(), <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">clip =</span> circ)) )</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  }))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  flashy_plot, Geom<span class="sc">$</span>draw_panel, <span class="at">cond =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>    circ <span class="ot">&lt;-</span> <span class="fu">circleGrob</span>(<span class="at">y =</span> .<span class="dv">25</span> <span class="sc">*</span> ._counter_)</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>    <span class="fu">grobTree</span>( <span class="fu">editGrob</span>(circ, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="fu">linearGradient</span>())),</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>              <span class="fu">editGrob</span>(<span class="fu">returnValue</span>(), <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">clip =</span> circ)) )</span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>  }))</span></code></pre></div>
 <p><img src="reference/figures/README-flashy-highjack-1.png" width="100%"></p>
-<p>Note the use of the special variable <code>._counter_</code>, which increments every time a function/method has been called. See the reference section on <a href="https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context" class="external-link">tracing context</a> for more details.</p>
+<p>Note the use of the special variable <code>._counter_</code>, which increments every time a function/method has been called. See the <a href="https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context" class="external-link">tracing context</a> topic for more details.</p>
 <!-- ### **Extract legends** -->
 <!-- ```{r legend-plot} -->
 <!-- p_legend <- ggplot(mtcars, aes(hp, mpg, color = factor(cyl))) + -->

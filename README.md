@@ -9,8 +9,6 @@
 [![](https://img.shields.io/badge/devel%20version-0.6.1-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 <!-- badges: end -->
 
-![](https://i.imgur.com/kpTffyw.jpg)
-
 ### **Installation**
 
 You can install the development version from
@@ -25,34 +23,69 @@ More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
 ### **Description**
 
-`{ggtrace}` embodies an opinionated approach to learning about ggplot
-internals. The internals is a difficult topic, so I recommend watching
-the following presentations on `{ggtrace}` before getting started on any
-kind of code:
+`{ggtrace}` embodies an opinionated approach to
+learning/debugging/hacking `{ggplot2}` internals. I recommend watching
+the following presentation(s) on `{ggtrace}` before getting started on
+any kind of code:
 
--   [Presentation at
-    rstudio::conf(2022)](https://www.rstudio.com/conference/2022/talks/cracking-open-ggplot-internals-ggtrace/)
+-   [Talk at
+    rstudio::conf(2022)](https://github.com/yjunechoe/ggtrace-rstudioconf2022).
 
--   [Presentation at useR!
-    2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s)
+-   [Talk at useR!
+    2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s) (+
+    accompanying
+    [materials](https://github.com/yjunechoe/ggtrace-user2022)).
 
-Read more about the philosophy behind `{ggtrace}` in the [Getting
+You can read the full philosophy behind `{ggtrace}` in the [Getting
 Started](https://yjunechoe.github.io/ggtrace/articles/getting-started.html)
-vignette, and see examples in the
-[Overview](https://yjunechoe.github.io/ggtrace/articles/overview.html)
-vignette.
+vignette. But broadly speaking, `{ggtrace}` was designed with **three
+goals** in mind, in order of increasing complexity:
 
-`{ggtrace}` now also has a paper! [Sub-layer modularity in the Grammar
-of
-Graphics](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf)
+1.  To help users understand the design of **sublayer modularity**,
+    allowing them to write more expressive layer code using [delayed
+    aesthetic
+    evaluation](https://ggplot2.tidyverse.org/reference/aes_eval.html)
+    functions. This is a primarily pedagogical goal and outlined in my
+    paper [Sub-layer modularity in the Grammar of
+    Graphics](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf).
+    The family of `layer_*()` extractor functions return snapshots of
+    layer data in the internals, to help develop an accessible mental
+    model of sublayer processes as a data wrangling pipeline.
+
+    ![](https://i.imgur.com/OlLmz8r.png)
+
+2.  To facilitate the **user-developer transition**, empowering
+    experienced users of `{ggplot2}` to start developing their own
+    extension packages. This is achieved via a family of `inspect`,
+    `capture`, and `highjack` workflow functions, which provide a
+    functional interface into the object-oriented design of the
+    internals (the `<ggproto>` OOP).
+
+    ![](https://i.imgur.com/kpTffyw.jpg)
+
+3.  To provide a **pseudo-extension mechanism** for `{ggplot2}`, by
+    injecting custom code to hack into the rendering pipeline. This is
+    similar in spirit to
+    [`{gggrid}`](https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html)
+    and [`{gginnards}`](https://github.com/aphalo/gginnards), but with a
+    broader scope (targeting any arbitrary computation) at the cost of
+    reproducibility (may break with even trivial changes to the
+    `{ggplot2}` codebase). This is achieved via the low-level function
+    `ggtrace()` (extending the capabilities of `base::trace()`) and its
+    functional form `with_ggtrace()`. See examples in the
+    [Overview](https://yjunechoe.github.io/ggtrace/articles/overview.html)
+    vignette.
 
 ## **Example usage**
 
     library(ggplot2)
     packageVersion("ggplot2")
-    #> [1] '3.4.1'
+    #> [1] '3.4.2'
 
 ### 1) **Inspect sub-layer data**
+
+> Example adopted from [Demystifying delayed aesthetic
+> evaluation](https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/)
 
 A bar plot of counts with `geom_bar()` with `stat = "count"` default:
 
@@ -112,7 +145,7 @@ Same idea with `after_scale()`:
     #>  8 #2D1160FF   1.8    26 1         2
     #>  9 #2D1160FF   1.8    25 1         2
     #> 10 #2D1160FF   2      28 1         2
-    #> # … with 224 more rows
+    #> # ℹ 224 more rows
 
     scatter_plot +
       geom_point(
@@ -122,11 +155,70 @@ Same idea with `after_scale()`:
 
 <img src="man/figures/README-sub-layer-data-after-scale-aes-1.png" width="100%" />
 
-### 2) **Highjack ggproto (remove boxplot outliers)**
+### 2) **Debug sublayer data**
 
-You can hide outliers in `geom_boxplot()`, but they’ll still be in the
-layer’s underlying dataframe representation. This makes the plot look
-stretched:
+> Example adopted from my [rstudio::conf 2022
+> talk](https://github.com/yjunechoe/ggtrace-rstudioconf2022)
+
+Given a boxplot made with a `geom_boxplot()` layer, suppose that we want
+to add a second layer annotating the value of the upper whiskers:
+
+    box_p <- ggplot(data = mtcars) +
+      aes(x = factor(cyl), y = mpg) +
+      geom_boxplot()
+    box_p
+
+<img src="man/figures/README-boxplot-base-1.png" width="100%" />
+
+A naive approach would be to add a layer that combines a **boxplot**
+stat with a **label** geom. But this errors out of the box:
+
+    box_p +
+      geom_label(stat = "boxplot")
+    #> Error in `geom_label()`:
+    #> ! Problem while setting up geom.
+    #> ℹ Error occurred in the 2nd layer.
+    #> Caused by error in `compute_geom_1()`:
+    #> ! `geom_label()` requires the following missing aesthetics: y and label
+
+The error tells us that the geom is missing some missing aesthetics, so
+something must be wrong with **the data that the geom receives**. If we
+inspect this using `layer_before_geom()`, we find that the columns for
+`y` and `label` are indeed missing in the *Before Geom* data:
+
+    layer_before_geom(last_plot(), layer = 2L, error = TRUE, verbose = FALSE)
+    #> # A tibble: 3 × 14
+    #>    ymin lower middle upper  ymax outliers  notchupper notchlower     x width
+    #>   <dbl> <dbl>  <dbl> <dbl> <dbl> <list>         <dbl>      <dbl> <dbl> <dbl>
+    #> 1  21.4  22.8   26    30.4  33.9 <dbl [0]>       29.6       22.4     1  0.75
+    #> 2  17.8  18.6   19.7  21    21.4 <dbl [0]>       21.1       18.3     2  0.75
+    #> 3  13.3  14.4   15.2  16.2  18.7 <dbl [3]>       16.0       14.4     3  0.75
+    #> # ℹ 4 more variables: relvarwidth <dbl>, flipped_aes <lgl>, PANEL <fct>,
+    #> #   group <int>
+
+Thus, we need to ensure that `y` exists to satisfy both the stat and the
+geom, and that `label` exists after the statistical transformation step
+but before the geom sees the data. Crucially, we use the computed
+variable `ymax` to (re-)map to the `y` and `label` aesthetics.
+
+    box_p +
+      geom_label(
+        aes(y = stage(mpg, after_stat = ymax),
+            label = after_stat(ymax)),
+        stat = "boxplot"
+      )
+
+<img src="man/figures/README-boxplot-anno-success-1.png" width="100%" />
+
+### 3) **Highjack ggproto (remove boxplot outliers)**
+
+> Example inspired by
+> <https://github.com/tidyverse/ggplot2/issues/4892>.
+
+You can hide outliers in `geom_boxplot()` using the `outlier.`
+argument(s), but they’ll still be present in the layer’s underlying
+dataframe representation. Note how this method adds empty space around
+the boxplot:
 
     boxplot_plot <- ggplot(mpg, aes(hwy, class)) +
       geom_boxplot(outlier.shape = NA)
@@ -166,8 +258,6 @@ about to be returned by the method.
 
 <img src="man/figures/README-boxplot-remove-outliers-1.png" width="100%" />
 
-Problem inspired by <https://github.com/tidyverse/ggplot2/issues/4892>.
-
 Note that this is also possible in “vanilla” ggplot. Following our
 earlier discussion of `after_stat()`:
 
@@ -182,7 +272,10 @@ earlier discussion of `after_stat()`:
 
 <img src="man/figures/README-boxplot-remove-outliers-after-stat-1.png" width="100%" />
 
-### 3) **Not just ggproto**
+### 4) **Not just ggproto**
+
+> Example adopted from [Github issue
+> \#97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)
 
 The `method` argument of `ggtrace_*()` workflow functions can be
 (almost) any function-like object called during the rendering of a
@@ -213,7 +306,10 @@ ggplot.
 
 <img src="man/figures/README-not-just-ggproto-highjack-1.png" width="100%" />
 
-### 4) **Visually crop polar coordinate plots**
+### 5) **Visually crop polar plots**
+
+> Example adopted from a [twitter
+> thread](https://twitter.com/mattansb/status/1506620436771229715?s=20)
 
 Here’s a plot in polar coordinates:
 
@@ -242,15 +338,13 @@ using the generic workflow function `with_ggtrace()`:
 
 <img src="man/figures/README-polar-plot-clipped-1.png" width="100%" />
 
-Inspired by a [twitter
-thread](https://twitter.com/mattansb/status/1506620436771229715?s=20).
 See implementation in
 [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
-### 5) **Highjack the drawing context**
+### 6) **Highjack the drawing context**
 
-Flashy example adopted from my [UseR!
-talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
+> Example adopted from my [useR! 2022
+> talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
 
     library(palmerpenguins)
     flashy_plot <- na.omit(palmerpenguins::penguins) |> 
@@ -272,10 +366,9 @@ talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
 <img src="man/figures/README-flashy-highjack-1.png" width="100%" />
 
 Note the use of the special variable `._counter_`, which increments
-every time a function/method has been called. See the reference section
-on [tracing
+every time a function/method has been called. See the [tracing
 context](https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context)
-for more details.
+topic for more details.
 
 <!-- ### **Extract legends** -->
 <!-- ```{r legend-plot} -->
