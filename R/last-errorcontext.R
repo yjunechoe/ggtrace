@@ -23,7 +23,7 @@
 #' Prioritizes showing the state of layer data whenever possible (by extracting the `data` argument).
 #' @export
 #'
-#' @examplesIf interactive()
+#' @examples
 #' library(ggplot2)
 #' erroring_barplot1 <- ggplot(mtcars, aes(mpg, hp)) +
 #'   stat_summary() +
