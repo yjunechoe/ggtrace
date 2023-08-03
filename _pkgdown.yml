@@ -14,7 +14,16 @@ template:
 
 reference:
 
-- title: Workflows
+- title: Sub-layer stages
+  desc: >
+    Take a snapshot of a layer's data in the sub-layer pipeline
+  contents:
+  - layer_before_stat
+  - layer_after_stat
+  - layer_before_geom
+  - layer_after_scale
+
+- title: Workflow functions
   desc: >
     These high-level functions take a ggplot object and a function or ggproto method,
     allowing interactions with the ggplot's build pipeline as it is evaluated. Functions
@@ -22,7 +31,7 @@ reference:
   contents:
   - with_ggtrace
 
-- subtitle: Inspect
+- subtitle: Inspect workflow
   desc: >
     Return values from or information about a method's execution state for inspection
   contents:
@@ -33,30 +42,21 @@ reference:
   - ggtrace_inspect_return
   - ggtrace_inspect_on_error
 
-- subtitle: Capture
+- subtitle: Capture workflow
   desc: >
-    Take a snapshot of a method's execution state, returning it as a function or environment
+    Record a method's execution state, returning it as a function or environment
   contents:
   - ggtrace_capture_fn
   - ggtrace_capture_env
 
-- subtitle: Highjack
+- subtitle: Highjack workflow
   desc: >
     Manipulate a method's behavior as it runs and return the modified graphical output
   contents:
   - ggtrace_highjack_args
   - ggtrace_highjack_return
 
-- title: Sub-layer stages
-  desc: >
-    Convenience functions to debug layer data for delayed aesthetic evaluation
-  contents:
-  - layer_before_stat
-  - layer_after_stat
-  - layer_before_geom
-  - layer_after_scale
-
-- title: Contextualize layer errors
+- title: Contextualize errors at the layer and sub-layer level
   desc: >
     Return information about the (sub-)layer ggproto method that errors while rendering
   contents:
@@ -96,7 +96,7 @@ reference:
   - is_traced
 
 - title: Misc
-  desc: Extending other debugging tools for compatibility with ggproto
+  desc: Extending other debugging tools for use with ggplot internals
   contents:
   - ggdebug
 

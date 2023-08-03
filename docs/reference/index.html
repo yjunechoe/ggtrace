@@ -60,7 +60,23 @@
     </div>
 
     <div class="section level2">
-      <h2 id="workflows">Workflows<a class="anchor" aria-label="anchor" href="#workflows"></a></h2>
+      <h2 id="sub-layer-stages">Sub-layer stages<a class="anchor" aria-label="anchor" href="#sub-layer-stages"></a></h2>
+      
+      <p class="section-desc"></p><p>Take a snapshot of a layer’s data in the sub-layer pipeline</p>
+
+      
+    </div><div id="" class="section level2">
+      
+      
+      
+
+      <dl><dt>
+          
+          <code><a href="sublayer-data.html">layer_before_stat()</a></code> <code><a href="sublayer-data.html">layer_after_stat()</a></code> <code><a href="sublayer-data.html">layer_before_geom()</a></code> <code><a href="sublayer-data.html">layer_after_scale()</a></code> 
+        </dt>
+        <dd>Inspect snapshots of sub-layer data</dd>
+      </dl></div><div class="section level2">
+      <h2 id="workflow-functions">Workflow functions<a class="anchor" aria-label="anchor" href="#workflow-functions"></a></h2>
       
       <p class="section-desc"></p><p>These high-level functions take a ggplot object and a function or ggproto method, allowing interactions with the ggplot’s build pipeline as it is evaluated. Functions grouped into three “workflows”: Inspect, Capture, and Highjack.</p>
 
@@ -77,7 +93,7 @@
         <dd>Generic workflow function which localizes a ggtrace call to a single ggplot object</dd>
       </dl></div><div class="section level2">
       
-      <h3 id="inspect">Inspect<a class="anchor" aria-label="anchor" href="#inspect"></a></h3>
+      <h3 id="inspect-workflow">Inspect workflow<a class="anchor" aria-label="anchor" href="#inspect-workflow"></a></h3>
       <p class="section-desc"></p><p>Return values from or information about a method’s execution state for inspection</p>
 
       
@@ -118,8 +134,8 @@
         <dd>Get information about a ggproto method on error</dd>
       </dl></div><div class="section level2">
       
-      <h3 id="capture">Capture<a class="anchor" aria-label="anchor" href="#capture"></a></h3>
-      <p class="section-desc"></p><p>Take a snapshot of a method’s execution state, returning it as a function or environment</p>
+      <h3 id="capture-workflow">Capture workflow<a class="anchor" aria-label="anchor" href="#capture-workflow"></a></h3>
+      <p class="section-desc"></p><p>Record a method’s execution state, returning it as a function or environment</p>
 
       
     </div><div id="" class="section level2">
@@ -139,7 +155,7 @@
         <dd>Capture a snapshot of a method's execution environment</dd>
       </dl></div><div class="section level2">
       
-      <h3 id="highjack">Highjack<a class="anchor" aria-label="anchor" href="#highjack"></a></h3>
+      <h3 id="highjack-workflow">Highjack workflow<a class="anchor" aria-label="anchor" href="#highjack-workflow"></a></h3>
       <p class="section-desc"></p><p>Manipulate a method’s behavior as it runs and return the modified graphical output</p>
 
       
@@ -159,23 +175,7 @@
         </dt>
         <dd>Highjack a method's execution and make it return a user-supplied value</dd>
       </dl></div><div class="section level2">
-      <h2 id="sub-layer-stages">Sub-layer stages<a class="anchor" aria-label="anchor" href="#sub-layer-stages"></a></h2>
-      
-      <p class="section-desc"></p><p>Convenience functions to debug layer data for delayed aesthetic evaluation</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="sublayer-data.html">layer_before_stat()</a></code> <code><a href="sublayer-data.html">layer_after_stat()</a></code> <code><a href="sublayer-data.html">layer_before_geom()</a></code> <code><a href="sublayer-data.html">layer_after_scale()</a></code> 
-        </dt>
-        <dd>Inspect snapshots of sub-layer data</dd>
-      </dl></div><div class="section level2">
-      <h2 id="contextualize-layer-errors">Contextualize layer errors<a class="anchor" aria-label="anchor" href="#contextualize-layer-errors"></a></h2>
+      <h2 id="contextualize-errors-at-the-layer-and-sub-layer-level">Contextualize errors at the layer and sub-layer level<a class="anchor" aria-label="anchor" href="#contextualize-errors-at-the-layer-and-sub-layer-level"></a></h2>
       
       <p class="section-desc"></p><p>Return information about the (sub-)layer ggproto method that errors while rendering</p>
 
@@ -267,7 +267,7 @@
       </dl></div><div class="section level2">
       <h2 id="misc">Misc<a class="anchor" aria-label="anchor" href="#misc"></a></h2>
       
-      <p class="section-desc"></p><p>Extending other debugging tools for compatibility with ggproto</p>
+      <p class="section-desc"></p><p>Extending other debugging tools for use with ggplot internals</p>
 
       
     </div><div id="" class="section level2">
