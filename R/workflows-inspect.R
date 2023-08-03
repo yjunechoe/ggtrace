@@ -475,7 +475,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
 #' @return A list of three elements: `counter`, `args`, and `env`.
 #' @export
 #'
-#' @examplesIf interactive()
+#' @examples
 #' library(ggplot2)
 #' erroring_barplot <- ggplot(mtcars, aes(mpg, hp)) +
 #'   stat_summary() +

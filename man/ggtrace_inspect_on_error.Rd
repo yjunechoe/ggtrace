@@ -24,12 +24,10 @@ A list of three elements: \code{counter}, \code{args}, and \code{env}.
 Get information about a ggproto method on error
 }
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(ggplot2)
 erroring_barplot <- ggplot(mtcars, aes(mpg, hp)) +
   stat_summary() +
   geom_bar()
 ggtrace_inspect_on_error(erroring_barplot, StatCount$setup_params)
 ggtrace_inspect_on_error(erroring_barplot, ggplot2:::Layer$compute_statistic)
-\dontshow{\}) # examplesIf}
 }

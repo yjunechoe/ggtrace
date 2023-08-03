@@ -94,8 +94,7 @@ are helper functions that return a snapshot of a layer's data in the internals.<
 
 
 <dt>error</dt>
-<dd><p>For debugging plots that error. If <code>TRUE</code>, continues inspecting the method
-until the point of errors.</p></dd>
+<dd><p>If <code>TRUE</code>, returns the layer data early if available before the point of error.</p></dd>
 
 
 <dt>verbose</dt>
@@ -161,18 +160,18 @@ until the point of errors.</p></dd>
 <span class="r-in"><span><span class="co"># First and second layer's data are identical for those two stages</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">layer_before_stat</span><span class="op">(</span><span class="op">)</span>, <span class="fu">layer_before_stat</span><span class="op">(</span>i <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_args(last_plot(), ggplot2:::Layer$compute_statistic)$data`</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_args(last_plot(), ggplot2:::Layer$compute_statistic, cond = 2)$data`</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_args(last_plot(), ggplot2:::Layer$compute_statistic, cond = 2L)$data`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">layer_after_stat</span><span class="op">(</span><span class="op">)</span>, <span class="fu">layer_after_stat</span><span class="op">(</span>i <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_return(last_plot(), ggplot2:::Layer$compute_statistic)`</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_return(last_plot(), ggplot2:::Layer$compute_statistic, cond = 2)`</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_return(last_plot(), ggplot2:::Layer$compute_statistic, cond = 2L)`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># `after_stat()` mappings add new columns to the second layer's data</span></span></span>
 <span class="r-in"><span><span class="co"># by the time the geom receives the data in the Before Geom stage</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">layer_before_geom</span><span class="op">(</span>i <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_args(last_plot(), ggplot2:::Layer$compute_geom_1, cond = 2)$data`</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_args(last_plot(), ggplot2:::Layer$compute_geom_1, cond = 2L)$data`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 16</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       x label  xmin xlower xmiddle xupper  xmax outliers  notchupper notchlower</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
@@ -198,14 +197,11 @@ until the point of errors.</p></dd>
 <span class="r-in"><span><span class="va">p2a</span> <span class="op">+</span> <span class="va">p2b</span></span></span>
 <span class="r-plt img"><img src="sublayer-data-2.png" alt="" width="1094" height="676"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu">layer_after_scale</span><span class="op">(</span><span class="va">p2a</span><span class="op">)</span><span class="op">$</span><span class="va">fill</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_return(p2a, ggplot2:::Layer$compute_geom_2)`</span>
+<span class="r-in"><span><span class="fu">layer_after_scale</span><span class="op">(</span><span class="va">p2a</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">fill</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#F8766D" "#7CAE00" "#00BFC4" "#C77CFF"</span>
-<span class="r-in"><span><span class="fu">layer_after_scale</span><span class="op">(</span><span class="va">p2b</span><span class="op">)</span><span class="op">$</span><span class="va">fill</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_return(p2b, ggplot2:::Layer$compute_geom_2)`</span>
+<span class="r-in"><span><span class="fu">layer_after_scale</span><span class="op">(</span><span class="va">p2b</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">fill</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#F8766D99" "#7CAE0099" "#00BFC499" "#C77CFF99"</span>
-<span class="r-in"><span><span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span> <span class="fu">layer_after_scale</span><span class="op">(</span><span class="va">p2a</span><span class="op">)</span><span class="op">$</span><span class="va">fill</span>, <span class="fl">.6</span> <span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Executed `ggtrace_inspect_return(p2a, ggplot2:::Layer$compute_geom_2)`</span>
+<span class="r-in"><span><span class="fu"><a href="https://scales.r-lib.org/reference/alpha.html" class="external-link">alpha</a></span><span class="op">(</span> <span class="fu">layer_after_scale</span><span class="op">(</span><span class="va">p2a</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">fill</span>, <span class="fl">.6</span> <span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "#F8766D99" "#7CAE0099" "#00BFC499" "#C77CFF99"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

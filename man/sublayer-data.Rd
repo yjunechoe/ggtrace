@@ -23,8 +23,7 @@ layer_after_scale(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
 
 \item{...}{Unused.}
 
-\item{error}{For debugging plots that error. If \code{TRUE}, continues inspecting the method
-until the point of errors.}
+\item{error}{If \code{TRUE}, returns the layer data early if available before the point of error.}
 
 \item{verbose}{If \code{TRUE}, prints the corresponding ggtrace code and re-prints the error if it exists.}
 }
@@ -74,9 +73,9 @@ p2b <- p2 +
 library(patchwork)
 p2a + p2b
 
-layer_after_scale(p2a)$fill
-layer_after_scale(p2b)$fill
-alpha( layer_after_scale(p2a)$fill, .6 )
+layer_after_scale(p2a, verbose = FALSE)$fill
+layer_after_scale(p2b, verbose = FALSE)$fill
+alpha( layer_after_scale(p2a, verbose = FALSE)$fill, .6 )
 
 }
 \keyword{internal}

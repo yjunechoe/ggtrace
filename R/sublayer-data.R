@@ -8,8 +8,7 @@
 #' @param plot A ggplot object. If missing, defaults to `ggplot2::last_plot()`.
 #' @param i Index of the layer to inspect. Defaults to `1L`.
 #' @param ... Unused.
-#' @param error For debugging plots that error. If `TRUE`, continues inspecting the method
-#'   until the point of errors.
+#' @param error If `TRUE`, returns the layer data early if available before the point of error.
 #' @param verbose If `TRUE`, prints the corresponding ggtrace code and re-prints the error if it exists.
 #'
 #' @return A dataframe
@@ -55,9 +54,9 @@
 #' library(patchwork)
 #' p2a + p2b
 #'
-#' layer_after_scale(p2a)$fill
-#' layer_after_scale(p2b)$fill
-#' alpha( layer_after_scale(p2a)$fill, .6 )
+#' layer_after_scale(p2a, verbose = FALSE)$fill
+#' layer_after_scale(p2b, verbose = FALSE)$fill
+#' alpha( layer_after_scale(p2a, verbose = FALSE)$fill, .6 )
 #'
 NULL
 
