@@ -23,12 +23,13 @@ knitr::opts_chunk$set(
 
 # **{ggtrace}** <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />
 
-#### **Programmatically explore, debug, and manipulate ggplot internals**
-
 <!-- badges: start -->
 [![](https://img.shields.io/badge/devel%20version-0.7.0-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/yjunechoe/ggtrace/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/ggtrace?branch=main)
 <!-- badges: end -->
+
+#### **Programmatically explore, debug, and manipulate ggplot internals**
 
 ### **Installation**
 
