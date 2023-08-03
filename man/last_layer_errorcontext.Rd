@@ -37,9 +37,10 @@ get all the information necessary to debug layer code from \code{last_layer_erro
 }
 
 \examples{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 library(ggplot2)
 erroring_barplot1 <- ggplot(mtcars, aes(mpg, hp)) +
-  stat_summary() +
+  stat_summary(fun.data = "mean_se") +
   geom_bar()
 
 # Render to trigger error
@@ -64,13 +65,13 @@ library(ggforce)
 erroring_sina <- ggplot(mtcars, aes(mpg)) +
   geom_bar() +
   geom_sina()
-erroring_sina
+erroring_barplot1
 
 # The two return different snapshots of layer data here -
 # see `ggplot2:::Layer$compute_statistic` for why.
 last_layer_errorcontext()
 last_sublayer_errorcontext()
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=ggtrace_inspect_on_error]{ggtrace_inspect_on_error()}}

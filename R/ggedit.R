@@ -22,7 +22,7 @@
 #' @return NULL
 #' @export
 #'
-#' @examples
+#' @examplesIf interactive()
 #' \dontrun{
 #'
 #' jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
