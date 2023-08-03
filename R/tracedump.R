@@ -1,4 +1,4 @@
-.ggtrace_store <- function() {
+.ggtrace_store <- function() { # nocov start
   .last_ggtrace <- NULL
   .global_ggtrace <- NULL
   .global_ggtrace_state <- FALSE
@@ -14,7 +14,7 @@
     get_state = function() .global_ggtrace_state,
     set_state = function(value) .global_ggtrace_state <<- value
   )
-}
+} # nocov end
 .ggtrace_storage <- .ggtrace_store()
 
 # Moved out as functions because they're used internally in ggtrace()

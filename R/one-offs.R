@@ -7,17 +7,17 @@
 #' @return NULL
 #' @export
 ggdebug <- function(method, ...) {
-  debug(get_method(rlang::enquo(method)))
+  debug(get_method(rlang::enquo(method))) #nocov
 }
 
 #' @rdname ggdebug
 #' @export
 ggdebugonce <- function(method, ...) {
-  debugonce(get_method(rlang::enquo(method)))
+  debugonce(get_method(rlang::enquo(method))) #nocov
 }
 
 #' @rdname ggdebug
 #' @export
 ggundebug <- function(method, ...) {
-  undebug(get_method(rlang::enquo(method)))
+  undebug(get_method(rlang::enquo(method))) #nocov
 }

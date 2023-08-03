@@ -44,7 +44,7 @@
 #' jitter_plot
 #'
 #' }
-ggedit <- function(method, remove_trace = FALSE, ...) {
+ggedit <- function(method, remove_trace = FALSE, ...) { # nocov start
 
   if (interactive()) {
     # Capture method expression
@@ -67,5 +67,4 @@ ggedit <- function(method, remove_trace = FALSE, ...) {
     invisible(NULL)
   }
 
-}
-
+} # nocov end
