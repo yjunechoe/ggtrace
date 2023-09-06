@@ -32,28 +32,34 @@ the following presentation(s) on `{ggtrace}` before getting started on
 any kind of code:
 
 -   [Talk at
-    rstudio::conf(2022)](https://github.com/yjunechoe/ggtrace-rstudioconf2022).
+    rstudio::conf(2022)](https://www.youtube.com/watch?v=dUBnitXf5mk&list=PL9HYL-VRX0oTOwqzVtL_q5T8MNrzn0mdH&index=38)
+    (+ accompanying
+    [materials](https://github.com/yjunechoe/ggtrace-rstudioconf2022)).
 
 -   [Talk at useR!
     2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s) (+
     accompanying
     [materials](https://github.com/yjunechoe/ggtrace-user2022)).
 
+-   [Talk at JSM 2023
+    (pre-recorded)](https://youtu.be/613Q0j6Kjm0?feature=shared) (+
+    accompanying
+    [paper](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf))
+
 You can read the full philosophy behind `{ggtrace}` in the [Getting
 Started](https://yjunechoe.github.io/ggtrace/articles/getting-started.html)
 vignette. But broadly speaking, `{ggtrace}` was designed with **three
 goals** in mind, in order of increasing complexity:
 
-1.  To help users understand the design of **sublayer modularity**,
-    allowing them to write more expressive layer code using [delayed
-    aesthetic
-    evaluation](https://ggplot2.tidyverse.org/reference/aes_eval.html)
-    functions. This is a primarily pedagogical goal and outlined in my
-    paper [Sub-layer modularity in the Grammar of
+1.  To help users understand the design of **sublayer modularity** and
+    write more expressive layer code using [delayed aesthetic
+    evaluation](https://ggplot2.tidyverse.org/reference/aes_eval.html).
+    This is a primarily pedagogical goal and outlined in my paper
+    [Sub-layer modularity in the Grammar of
     Graphics](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf).
     The family of `layer_*()` extractor functions return snapshots of
-    layer data in the internals, to help develop an accessible mental
-    model of sublayer processes as a data wrangling pipeline.
+    layer data in the internals, to help scaffold a mental model of
+    sublayer processes as a data wrangling pipeline.
 
     ![](https://i.imgur.com/OlLmz8r.png)
 
@@ -67,23 +73,24 @@ goals** in mind, in order of increasing complexity:
     ![](https://i.imgur.com/kpTffyw.jpg)
 
 3.  To provide a **pseudo-extension mechanism** for `{ggplot2}`, by
-    injecting custom code to hack into the rendering pipeline. This is
+    injecting custom code that highjacks the rendering pipeline. This is
     similar in spirit to
     [`{gggrid}`](https://www.stat.auckland.ac.nz/~paul/Reports/gggrid/gggrid.html)
     and [`{gginnards}`](https://github.com/aphalo/gginnards), but with a
-    broader scope (targeting any arbitrary computation) at the cost of
+    broader scope (targeting any arbitrary computation) at some cost to
     reproducibility (may break with even trivial changes to the
     `{ggplot2}` codebase). This is achieved via the low-level function
-    `ggtrace()` (extending the capabilities of `base::trace()`) and its
-    functional form `with_ggtrace()`. See examples in the
+    `ggtrace()` (which improves upon `base::trace()`) and its functional
+    form `with_ggtrace()`. See examples in the
     [Overview](https://yjunechoe.github.io/ggtrace/articles/overview.html)
     vignette.
 
 ## **Example usage**
 
     library(ggplot2)
+    #> Warning: package 'ggplot2' was built under R version 4.3.1
     packageVersion("ggplot2")
-    #> [1] '3.4.2'
+    #> [1] '3.4.3'
 
 ### 1) **Inspect sub-layer data**
 
