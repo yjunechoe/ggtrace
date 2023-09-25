@@ -268,7 +268,29 @@ with_ggtrace(
 
 See implementation in [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
-### 6) **Highjack the drawing context**
+### 6) *Highjack the internal data pipeline*
+
+> Example inspired by a [stackoverflow question](https://stackoverflow.com/questions/76985690/in-ggplot2-how-to-remove-all-theme-remove-some-data-but-keep-aspect-ratio-of-t/77146460#77146460):
+
+```{r bars}
+bars <- ggplot(mpg, aes(class)) +
+  geom_bar(aes(fill = drv), color = "grey")
+bars
+```
+
+Intercepting the data at draw step to subset bars arbitrarily:
+
+```{r bars-highjacked}
+bars_subset <- ggtrace_highjack_args(
+  x = bars, method = Geom$draw_layer, cond = 1L,
+  values = expression(
+    data = data[c(2, 4, 6, 8, 11),]
+  )
+)
+bars_subset
+```
+
+### 7) **Highjack the internal drawing context**
 
 > Example adopted from my [useR! 2022 talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
 

@@ -88,9 +88,8 @@ goals** in mind, in order of increasing complexity:
 ## **Example usage**
 
     library(ggplot2)
-    #> Warning: package 'ggplot2' was built under R version 4.3.1
     packageVersion("ggplot2")
-    #> [1] '3.4.3'
+    #> [1] '3.4.3.9000'
 
 ### 1) **Inspect sub-layer data**
 
@@ -351,7 +350,30 @@ using the generic workflow function `with_ggtrace()`:
 See implementation in
 [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
-### 6) **Highjack the drawing context**
+### 6) *Highjack the internal data pipeline*
+
+> Example inspired by a [stackoverflow
+> question](https://stackoverflow.com/questions/76985690/in-ggplot2-how-to-remove-all-theme-remove-some-data-but-keep-aspect-ratio-of-t/77146460#77146460):
+
+    bars <- ggplot(mpg, aes(class)) +
+      geom_bar(aes(fill = drv), color = "grey")
+    bars
+
+<img src="man/figures/README-bars-1.png" width="100%" />
+
+Intercepting the data at draw step to subset bars arbitrarily:
+
+    bars_subset <- ggtrace_highjack_args(
+      x = bars, method = Geom$draw_layer, cond = 1L,
+      values = expression(
+        data = data[c(2, 4, 6, 8, 11),]
+      )
+    )
+    bars_subset
+
+<img src="man/figures/README-bars-highjacked-1.png" width="100%" />
+
+### 7) **Highjack the internal drawing context**
 
 > Example adopted from my [useR! 2022
 > talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):

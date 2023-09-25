@@ -136,9 +136,8 @@
 <strong>Example usage</strong><a class="anchor" aria-label="anchor" href="#example-usage"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.3.1</span></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; [1] '3.4.3'</span></span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [1] '3.4.3.9000'</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="id_1-inspect-sub-layer-data">1) <strong>Inspect sub-layer data</strong>
 <a class="anchor" aria-label="anchor" href="#id_1-inspect-sub-layer-data"></a>
@@ -345,26 +344,47 @@
 <p>See implementation in <a href="https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html" class="external-link"><code>MSBMisc::crop_coord_polar()</code></a>.</p>
 </div>
 <div class="section level3">
-<h3 id="id_6-highjack-the-drawing-context">6) <strong>Highjack the drawing context</strong>
-<a class="anchor" aria-label="anchor" href="#id_6-highjack-the-drawing-context"></a>
+<h3 id="id_6-highjack-the-internal-data-pipeline">6) <em>Highjack the internal data pipeline</em>
+<a class="anchor" aria-label="anchor" href="#id_6-highjack-the-internal-data-pipeline"></a>
+</h3>
+<blockquote>
+<p>Example inspired by a <a href="https://stackoverflow.com/questions/76985690/in-ggplot2-how-to-remove-all-theme-remove-some-data-but-keep-aspect-ratio-of-t/77146460#77146460" class="external-link">stackoverflow question</a>:</p>
+</blockquote>
+<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>bars <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mpg, <span class="fu">aes</span>(class)) <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">fill =</span> drv), <span class="at">color =</span> <span class="st">"grey"</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>bars</span></code></pre></div>
+<p><img src="reference/figures/README-bars-1.png" width="100%"></p>
+<p>Intercepting the data at draw step to subset bars arbitrarily:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>bars_subset <span class="ot">&lt;-</span> <span class="fu">ggtrace_highjack_args</span>(</span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  <span class="at">x =</span> bars, <span class="at">method =</span> Geom<span class="sc">$</span>draw_layer, <span class="at">cond =</span> 1L,</span>
+<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>  <span class="at">values =</span> <span class="fu">expression</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>    <span class="at">data =</span> data[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">8</span>, <span class="dv">11</span>),]</span>
+<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>  )</span>
+<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>)</span>
+<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>bars_subset</span></code></pre></div>
+<p><img src="reference/figures/README-bars-highjacked-1.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="id_7-highjack-the-internal-drawing-context">7) <strong>Highjack the internal drawing context</strong>
+<a class="anchor" aria-label="anchor" href="#id_7-highjack-the-internal-drawing-context"></a>
 </h3>
 <blockquote>
 <p>Example adopted from my <a href="https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users" class="external-link">useR! 2022 talk</a>:</p>
 </blockquote>
-<div class="sourceCode" id="cb20"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>flashy_plot <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(palmerpenguins<span class="sc">::</span>penguins) <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> flipper_length_mm)) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> species), <span class="at">width =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year)</span>
-<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>flashy_plot</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>flashy_plot <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(palmerpenguins<span class="sc">::</span>penguins) <span class="sc">|&gt;</span> </span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> flipper_length_mm)) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> species), <span class="at">width =</span> .<span class="dv">7</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> year)</span>
+<span id="cb22-6"><a href="#cb22-6" tabindex="-1"></a>flashy_plot</span></code></pre></div>
 <p><img src="reference/figures/README-flashy-plot-1.png" width="100%"></p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
-<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  flashy_plot, Geom<span class="sc">$</span>draw_panel, <span class="at">cond =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
-<span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>    circ <span class="ot">&lt;-</span> <span class="fu">circleGrob</span>(<span class="at">y =</span> .<span class="dv">25</span> <span class="sc">*</span> ._counter_)</span>
-<span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>    <span class="fu">grobTree</span>( <span class="fu">editGrob</span>(circ, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="fu">linearGradient</span>())),</span>
-<span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>              <span class="fu">editGrob</span>(<span class="fu">returnValue</span>(), <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">clip =</span> circ)) )</span>
-<span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>  }))</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" tabindex="-1"></a>  flashy_plot, Geom<span class="sc">$</span>draw_panel, <span class="at">cond =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">quote</span>({</span>
+<span id="cb23-4"><a href="#cb23-4" tabindex="-1"></a>    circ <span class="ot">&lt;-</span> <span class="fu">circleGrob</span>(<span class="at">y =</span> .<span class="dv">25</span> <span class="sc">*</span> ._counter_)</span>
+<span id="cb23-5"><a href="#cb23-5" tabindex="-1"></a>    <span class="fu">grobTree</span>( <span class="fu">editGrob</span>(circ, <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> <span class="fu">linearGradient</span>())),</span>
+<span id="cb23-6"><a href="#cb23-6" tabindex="-1"></a>              <span class="fu">editGrob</span>(<span class="fu">returnValue</span>(), <span class="at">vp =</span> <span class="fu">viewport</span>(<span class="at">clip =</span> circ)) )</span>
+<span id="cb23-7"><a href="#cb23-7" tabindex="-1"></a>  }))</span></code></pre></div>
 <p><img src="reference/figures/README-flashy-highjack-1.png" width="100%"></p>
 <p>Note the use of the special variable <code>._counter_</code>, which increments every time a function/method has been called. See the <a href="https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context" class="external-link">tracing context</a> topic for more details.</p>
 <!-- ### **Extract legends** -->
