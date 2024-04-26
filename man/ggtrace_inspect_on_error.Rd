@@ -4,7 +4,7 @@
 \alias{ggtrace_inspect_on_error}
 \title{Get information about a ggproto method on error}
 \usage{
-ggtrace_inspect_on_error(x, method)
+ggtrace_inspect_on_error(x, method, ...)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -16,6 +16,8 @@ The ggproto method may be specified using any of the following forms:
 \item \code{namespace::ggproto$method}
 \item \code{namespace:::ggproto$method}
 }}
+
+\item{...}{Unused.}
 }
 \value{
 A list of three elements: \code{counter}, \code{args}, and \code{env}.

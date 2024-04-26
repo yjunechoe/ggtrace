@@ -4,7 +4,7 @@
 \alias{ggtrace_capture_env}
 \title{Capture a snapshot of a method's execution environment}
 \usage{
-ggtrace_capture_env(x, method, cond = 1L, at = -1L)
+ggtrace_capture_env(x, method, cond = 1L, at = -1L, ...)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -21,6 +21,8 @@ The ggproto method may be specified using any of the following forms:
 
 \item{at}{Which step of the method body the environment should be captured.
 See \code{ggbody()} for a list of expressions/steps in the method body.}
+
+\item{...}{Unused.}
 }
 \value{
 An environment

@@ -9,6 +9,7 @@ ggtrace_highjack_return(
   method,
   cond = 1L,
   value = quote(returnValue()),
+  ...,
   draw = TRUE
 )
 }
@@ -26,6 +27,8 @@ The ggproto method may be specified using any of the following forms:
 \item{cond}{When the return value should be replaced. Defaults to \code{1L}.}
 
 \item{value}{What the method should return instead. Defaults to \code{quote(returnValue())}.}
+
+\item{...}{Unused.}
 
 \item{draw}{Whether to draw the modified graphical output from evaluating \code{x}.
 Defaults to \code{TRUE}.}

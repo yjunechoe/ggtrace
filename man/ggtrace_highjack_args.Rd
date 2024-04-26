@@ -4,7 +4,7 @@
 \alias{ggtrace_highjack_args}
 \title{Highjack a method's execution and modify its argument values}
 \usage{
-ggtrace_highjack_args(x, method, cond = 1L, values, draw = TRUE)
+ggtrace_highjack_args(x, method, cond = 1L, values, ..., draw = TRUE)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -21,6 +21,8 @@ The ggproto method may be specified using any of the following forms:
 
 \item{values}{A named list of variable-value pairings.
 When values are expressions, they are evaluated in the formals.}
+
+\item{...}{Unused.}
 
 \item{draw}{Whether to draw the modified graphical output from evaluating \code{x}.
 Defaults to \code{TRUE}.}

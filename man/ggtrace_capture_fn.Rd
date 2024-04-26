@@ -4,7 +4,7 @@
 \alias{ggtrace_capture_fn}
 \title{Capture a snapshot of a method as a pre-filled function}
 \usage{
-ggtrace_capture_fn(x, method, cond = 1L)
+ggtrace_capture_fn(x, method, cond = 1L, ...)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -18,6 +18,8 @@ The ggproto method may be specified using any of the following forms:
 }}
 
 \item{cond}{When the method function should be captured. Defaults to \code{1L}.}
+
+\item{...}{Unused.}
 }
 \value{
 A function

@@ -4,7 +4,7 @@
 \alias{ggtrace_inspect_n}
 \title{Inspect how many times a method was called}
 \usage{
-ggtrace_inspect_n(x, method, error = FALSE)
+ggtrace_inspect_n(x, method, ..., error = FALSE)
 }
 \arguments{
 \item{x}{A ggplot object}
@@ -16,6 +16,8 @@ The ggproto method may be specified using any of the following forms:
 \item \code{namespace::ggproto$method}
 \item \code{namespace:::ggproto$method}
 }}
+
+\item{...}{Unused.}
 
 \item{error}{If \code{TRUE}, continues inspecting the method until the ggplot errors.
 This is useful for debugging but note that it can sometimes return incomplete output.}

@@ -11,6 +11,7 @@ ggtrace_inspect_vars(
   at = "all",
   vars,
   by_var = TRUE,
+  ...,
   error = FALSE
 )
 }
@@ -40,6 +41,8 @@ step specified by \code{at}.
 \item \code{FALSE}: returns a list of steps, where each element holds the value of \code{vars}
 at each step of \code{at}. Unchanged variable values are not dropped.
 }}
+
+\item{...}{Unused.}
 
 \item{error}{If \code{TRUE}, continues inspecting the method until the ggplot errors.
 This is useful for debugging but note that it can sometimes return incomplete output.}
