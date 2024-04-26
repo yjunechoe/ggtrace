@@ -5,6 +5,7 @@
 #' @param cond When the return value should be replaced. Defaults to `1L`.
 #' @param values A named list of variable-value pairings.
 #'   When values are expressions, they are evaluated in the formals.
+#' @param ... Unused.
 #' @param draw Whether to draw the modified graphical output from evaluating `x`.
 #'   Defaults to `TRUE`.
 #'
@@ -50,8 +51,9 @@
 #' )
 #'
 #'
-ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
+ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE) {
 
+  rlang::check_dots_empty()
   modify_list <- NULL # bypass notes
 
   cond <- resolve_cond(cond, multiple = TRUE)
@@ -124,6 +126,7 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
 #' @inheritParams get_method
 #' @param cond When the return value should be replaced. Defaults to `1L`.
 #' @param value What the method should return instead. Defaults to `quote(returnValue())`.
+#' @param ... Unused.
 #' @param draw Whether to draw the modified graphical output from evaluating `x`.
 #'   Defaults to `TRUE`.
 #'
@@ -177,7 +180,10 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, draw = TRUE) {
 #'   })
 #' )
 #'
-ggtrace_highjack_return <- function(x, method, cond = 1L, value = quote(returnValue()), draw = TRUE) {
+ggtrace_highjack_return <- function(x, method, cond = 1L, value = quote(returnValue()),
+                                    ..., draw = TRUE) {
+
+  rlang::check_dots_empty()
 
   cond <- resolve_cond(cond, multiple = TRUE)
 

@@ -2,6 +2,7 @@
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
+#' @param ... Unused.
 #' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
 #'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
@@ -47,7 +48,9 @@
 #' ggtrace_inspect_n(p2, GeomBar$draw_panel)
 #' ggtrace_inspect_n(p2, GeomText$draw_panel)
 #'
-ggtrace_inspect_n <- function(x, method, error = FALSE) {
+ggtrace_inspect_n <- function(x, method, ..., error = FALSE) {
+
+  rlang::check_dots_empty()
 
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
@@ -74,6 +77,7 @@ ggtrace_inspect_n <- function(x, method, error = FALSE) {
 #' @param x A ggplot object
 #' @inheritParams get_method
 #' @param cond Expression evaluating to a logical inside `method` when `x` is evaluated.
+#' @param ... Unused.
 #' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
 #'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
@@ -109,7 +113,10 @@ ggtrace_inspect_n <- function(x, method, error = FALSE) {
 #' # Behaves like `base::which()` and returns `integer(0)` when no matches are found
 #' ggtrace_inspect_which(p2, StatBoxplot$compute_group, quote(data$PANEL[1] == 2))
 #'
-ggtrace_inspect_which <- function(x, method, cond, error = FALSE) {
+ggtrace_inspect_which <- function(x, method, cond, ..., error = FALSE) {
+
+  rlang::check_dots_empty()
+
   wrapper_env <- rlang::current_env()
   ._counter_ <- 0L
   indices <- integer(0)
@@ -154,6 +161,7 @@ ggtrace_inspect_which <- function(x, method, cond, error = FALSE) {
 #'     step specified by `at`.
 #'   - `FALSE`: returns a list of steps, where each element holds the value of `vars`
 #'     at each step of `at`. Unchanged variable values are not dropped.
+#' @param ... Unused.
 #' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
 #'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
@@ -201,7 +209,10 @@ ggtrace_inspect_which <- function(x, method, cond, error = FALSE) {
 #' ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
 #'
 #'
-ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var = TRUE, error = FALSE) {
+ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var = TRUE,
+                                 ..., error = FALSE) {
+
+  rlang::check_dots_empty()
 
   cond <- resolve_cond(cond)
 
@@ -310,6 +321,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
 #' @param cond When the arguments should be inspected. Defaults to `1L`.
 #' @param hoist_dots Whether treat arguments passed to `...` like regular arguments. If `FALSE`,
 #'   the `...` is treated as an argument
+#' @param ... Unused.
 #' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
 #'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
@@ -339,7 +351,10 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
 #' names(with_dots)
 #' with_dots$`...`
 #'
-ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error = FALSE) {
+ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE,
+                                 ..., error = FALSE) {
+
+  rlang::check_dots_empty()
 
   cond <- resolve_cond(cond)
 
@@ -396,6 +411,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
 #' @param x A ggplot object
 #' @inheritParams get_method
 #' @param cond When the return value should be inspected. Defaults to `1L`.
+#' @param ... Unused.
 #' @param error If `TRUE`, continues inspecting the method until the ggplot errors.
 #'   This is useful for debugging but note that it can sometimes return incomplete output.
 #'
@@ -427,7 +443,9 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE, error 
 #'   cond = quote(data$PANEL[1] == 4 && data$group[1] == 2)
 #' )
 #'
-ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
+ggtrace_inspect_return <- function(x, method, cond = 1L, ..., error = FALSE) {
+
+  rlang::check_dots_empty()
 
   cond <- resolve_cond(cond)
 
@@ -471,6 +489,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
 #'
 #' @param x A ggplot object
 #' @inheritParams get_method
+#' @param ... Unused.
 #'
 #' @return A list of three elements: `counter`, `args`, and `env`.
 #' @export
@@ -482,7 +501,9 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, error = FALSE) {
 #'   geom_bar()
 #' ggtrace_inspect_on_error(erroring_barplot, StatCount$setup_params)
 #' ggtrace_inspect_on_error(erroring_barplot, ggplot2:::Layer$compute_statistic)
-ggtrace_inspect_on_error <- function(x, method) {
+ggtrace_inspect_on_error <- function(x, method, ...) {
+
+  rlang::check_dots_empty()
 
   wrapper_env <- rlang::current_env()
   ._env <- NULL
