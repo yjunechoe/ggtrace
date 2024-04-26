@@ -89,7 +89,7 @@ goals** in mind, in order of increasing complexity:
 
     library(ggplot2)
     packageVersion("ggplot2")
-    #> [1] '3.4.3.9000'
+    #> [1] '3.5.1'
 
 ### 1) **Inspect sub-layer data**
 
@@ -188,7 +188,7 @@ stat with a **label** geom. But this errors out of the box:
     #> ! Problem while setting up geom.
     #> ℹ Error occurred in the 2nd layer.
     #> Caused by error in `compute_geom_1()`:
-    #> ! `geom_label()` requires the following missing aesthetics: y and label
+    #> ! `geom_label()` requires the following missing aesthetics: y and label.
 
 The error tells us that the geom is missing some missing aesthetics, so
 something must be wrong with **the data that the geom receives**. If we
