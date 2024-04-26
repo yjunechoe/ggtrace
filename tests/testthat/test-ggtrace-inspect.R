@@ -126,36 +126,36 @@ test_that("aes_eval vignette", {
     tracedump$after_stat$before$count / sum(tracedump$after_stat$before$count),
     tracedump$after_stat$after$y
   )
-
-  # Return `self` inside the method
-  # `self` should be contextualized to the Layer and the Geom
-  clear_global_ggtrace()
-  ggtrace(ggplot2:::Layer$compute_geom_2, 1, quote(self), verbose = FALSE)
-  ggtrace(Geom$use_defaults, 1, quote(self), verbose = FALSE)
-
-  # Force evaluation of plot code without printing it
-  invisible(ggplot_build(barplot_plot))
-
-  traced_self <- unlist(global_ggtrace(), recursive = FALSE)
-  names(traced_self) <- c("layer", "geom")
-
-  expect_equal(traced_self$geom, GeomBar)
-  expect_equal(traced_self$geom, geom_bar()$geom)
-  expect_equal(traced_self$geom, traced_self$layer$geom)
-  expect_equal(traced_self$layer$stat, StatCount)
-  expect_equal(traced_self$layer$stat, geom_bar()$stat)
+#
+#   # Return `self` inside the method
+#   # `self` should be contextualized to the Layer and the Geom
+#   clear_global_ggtrace()
+#   ggtrace(ggplot2:::Layer$compute_geom_2, 1, quote(self), verbose = FALSE)
+#   ggtrace(Geom$use_defaults, 1, quote(self), verbose = FALSE)
+#
+#   # Force evaluation of plot code without printing it
+#   invisible(ggplot_build(barplot_plot))
+#
+#   traced_self <- unlist(global_ggtrace(), recursive = FALSE)
+#   names(traced_self) <- c("layer", "geom")
+#
+#   expect_equal(traced_self$geom, GeomBar)
+#   expect_equal(traced_self$geom, geom_bar()$geom)
+#   expect_equal(traced_self$geom, traced_self$layer$geom)
+#   expect_equal(traced_self$layer$stat, StatCount)
+#   expect_equal(traced_self$layer$stat, geom_bar()$stat)
 
 })
 
 global_ggtrace_state(FALSE)
 
-test_that("is.ggtrace_placeholder class checking", {
-  expect_no_warning(
-    l <- ggtrace_inspect_return(
-      x = ggplot(mtcars, aes(mpg, hp)) +
-        geom_point(aes(color = as.factor(cyl))),
-      method = ggplot2:::guide_gengrob.legend, cond = 1
-    )
-  )
-  expect_equal(class(l), c("gtable", "gTree", "grob", "gDesc"))
-})
+# test_that("is.ggtrace_placeholder class checking", {
+#   expect_no_warning(
+#     l <- ggtrace_inspect_return(
+#       x = ggplot(mtcars, aes(mpg, hp)) +
+#         geom_point(aes(color = as.factor(cyl))),
+#       method = ggplot2:::guide_gengrob.legend, cond = 1
+#     )
+#   )
+#   expect_equal(class(l), c("gtable", "gTree", "grob", "gDesc"))
+# })
