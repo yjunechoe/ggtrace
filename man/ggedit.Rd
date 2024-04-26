@@ -41,7 +41,6 @@ mix programmatic and interactive workflows.
 }
 
 \examples{
-\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontrun{
 
 jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
@@ -63,7 +62,6 @@ gguntrace(PositionJitter$compute_layer)
 jitter_plot
 
 }
-\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=gguntrace]{gguntrace()}}, \code{\link[=is_traced]{is_traced()}}

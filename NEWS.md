@@ -1,5 +1,11 @@
 # ggtrace (development version)
 
+## ggtrace 0.7.1
+
+- Exported shorthand aliases for all workflow functions. E.g., `inspect_n()` complement to `ggtrace_inspect_n()`
+
+- Cleaned up examples and tests to align with `{ggplot2}` version 3.5.0
+
 ## ggtrace 0.7.0
 
 Upkeep release for the [JSM 2023 talk](https://ww2.aievolution.com/JSMAnnual/index.cfm?do=ev.viewEv&ev=2860) "Sub-layer modularity in the Grammar of Graphics".

@@ -23,7 +23,8 @@
 #' Prioritizes showing the state of layer data whenever possible (by extracting the `data` argument).
 #' @export
 #'
-#' @examplesIf interactive()
+#' @examples
+#' \dontrun{
 #' library(ggplot2)
 #' erroring_barplot1 <- ggplot(mtcars, aes(mpg, hp)) +
 #'   stat_summary(fun.data = "mean_se") +
@@ -58,6 +59,7 @@
 #' last_layer_errorcontext()
 #' last_sublayer_errorcontext()
 #'
+#' }
 last_layer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TRUE) { # nocov start
   p <- eval.parent(rlang::call2(call("::", rlang::sym("ggplot2"), rlang::sym("last_plot"))))
   tr <- rlang::last_trace()
