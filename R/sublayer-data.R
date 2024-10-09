@@ -11,7 +11,7 @@
 #' @param i Index of the layer to inspect. Defaults to `1L`.
 #' @param ... Unused.
 #' @param error If `TRUE`, returns the layer data early if available before the point of error.
-#' @param verbose If `TRUE`, prints the corresponding ggtrace code and re-prints the error if it exists.
+#' @param verbose If `TRUE`, prints the corresponding ggtrace code and re-prints evaluation errors.
 #'
 #' @return A dataframe
 #'
@@ -78,8 +78,11 @@ sublayer_data <- function(x, cond = 1L,
 
   step <- .sublayer_stages[[match.arg(step)]]
 
+  ns_ggplot2 <- if (!"package:ggplot2" %in% search()) "ggplot2"
+  ns_ggtrace <- if (!"package:ggtrace" %in% search()) "ggtrace"
+
   if (rlang::is_missing(x)) {
-    x_expr <- call("last_plot")
+    x_expr <- rlang::call2("last_plot", .ns = ns_ggplot2)
   } else {
     x_expr <- x
   }
@@ -88,10 +91,10 @@ sublayer_data <- function(x, cond = 1L,
     paste0("inspect_", step[1]),
     x_expr,
     rlang::parse_expr(step[2]),
-    .ns = "ggtrace"
+    .ns = ns_ggtrace
   )
 
-  inspect_expr[[4]] <- rlang::expr(layer_is(!!cond))
+  inspect_expr[[4]] <- rlang::call2("layer_is", cond, .ns = ns_ggtrace)
   if (!isFALSE(error)) inspect_expr$error <- error
   if (step[1] == "args") inspect_expr <- call("$", inspect_expr, quote(data))
 
@@ -100,10 +103,9 @@ sublayer_data <- function(x, cond = 1L,
   if (!verbose) options(rethrow_error)
 
   inspect_expr_fmt <- rlang::expr_deparse(inspect_expr, width = Inf)
-  if ("package:ggtrace" %in% search()) {
-    inspect_expr_fmt <- gsub("^ggtrace::", "", inspect_expr_fmt)
+  if (verbose) {
+    cli::cli_alert_success("Ran {.code {inspect_expr_fmt}}")
   }
-  if (verbose) cli::cli_alert_success("Ran {.code {inspect_expr_fmt}}")
 
   if (rlang::is_installed("tibble")) {
     out <- asNamespace("tibble")$as_tibble(out)
@@ -115,28 +117,32 @@ sublayer_data <- function(x, cond = 1L,
 
 #' @rdname sublayer-data
 #' @export
-layer_before_stat <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+layer_before_stat <- function(plot, i = 1L, ..., error = FALSE,
+                              verbose = rlang::is_interactive()) {
   sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "before_stat",
                 ..., error = error, verbose = verbose)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_after_stat <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+layer_after_stat <- function(plot, i = 1L, ..., error = FALSE,
+                             verbose = rlang::is_interactive()) {
   sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "after_stat",
                 ..., error = error, verbose = verbose)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_before_geom <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+layer_before_geom <- function(plot, i = 1L, ..., error = FALSE,
+                              verbose = rlang::is_interactive()) {
   sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "before_geom",
                 ..., error = error, verbose = verbose)
 }
 
 #' @rdname sublayer-data
 #' @export
-layer_after_scale <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) {
+layer_after_scale <- function(plot, i = 1L, ..., error = FALSE,
+                              verbose = rlang::is_interactive()) {
   sublayer_data(x = rlang::enexpr(plot), cond = as.integer(i), step = "after_scale",
                 ..., error = error, verbose = verbose)
 }
@@ -152,7 +158,7 @@ layer_after_scale <- function(plot, i = 1L, ..., error = FALSE, verbose = TRUE) 
 #' @export
 layer_is <- function(expr) {
   x <- rlang::enexpr(expr)
-  rlang::expr(.layer_is(!!x))
+  rlang::call2(".layer_is", x, .ns = if (!"package:ggtrace" %in% search()) "ggtrace")
 }
 
 #' @rdname sublayer-data

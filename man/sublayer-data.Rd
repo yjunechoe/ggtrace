@@ -10,13 +10,37 @@
 \alias{.layer_is}
 \title{Inspect snapshots of sub-layer data}
 \usage{
-layer_before_stat(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_before_stat(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
 
-layer_after_stat(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_after_stat(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
 
-layer_before_geom(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_before_geom(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
 
-layer_after_scale(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_after_scale(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
 
 layer_is(expr)
 
@@ -31,7 +55,7 @@ layer_is(expr)
 
 \item{error}{If \code{TRUE}, returns the layer data early if available before the point of error.}
 
-\item{verbose}{If \code{TRUE}, prints the corresponding ggtrace code and re-prints the error if it exists.}
+\item{verbose}{If \code{TRUE}, prints the corresponding ggtrace code and re-prints evaluation errors.}
 
 \item{expr}{An expression to evaluate for each call to the method, which
 exposes information about the current layer that the method is being
