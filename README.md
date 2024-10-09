@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.7.1-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.7.2-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![](https://img.shields.io/badge/tested%20on%20ggplot2%20version-3.5.1-gogreen.svg)](https://github.com/tidyverse/ggplot2/tree/v3.5.1)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
@@ -105,8 +105,8 @@ A bar plot of counts with `geom_bar()` with `stat = "count"` default:
 
 State of bar layer’s data after the statistical transformation step:
 
-    ggtrace::layer_after_stat(bar_plot)
-    #> ✔ Executed `ggtrace_inspect_return(bar_plot, ggplot2:::Layer$compute_statistic)`
+    layer_after_stat(bar_plot, verbose = TRUE)
+    #> ✔ Ran `inspect_return(bar_plot, ggplot2:::Layer$compute_statistic, layer_is(1L))`
     #> # A tibble: 7 × 8
     #>   count  prop x          width flipped_aes fill       PANEL group
     #>   <dbl> <dbl> <mppd_dsc> <dbl> <lgl>       <chr>      <fct> <int>
@@ -140,8 +140,8 @@ Same idea with `after_scale()`:
 <img src="man/figures/README-sub-layer-data-scatter-1.png" width="100%" />
 
     # `fill` column available for `after_scale(fill)`
-    ggtrace::layer_after_scale(scatter_plot)
-    #> ✔ Executed `ggtrace_inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2)`
+    layer_after_scale(scatter_plot, verbose = TRUE)
+    #> ✔ Ran `inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2, layer_is(1L))`
     #> # A tibble: 234 × 5
     #>    fill          x     y PANEL group
     #>    <chr>     <dbl> <dbl> <fct> <int>
@@ -196,7 +196,8 @@ something must be wrong with **the data that the geom receives**. If we
 inspect this using `layer_before_geom()`, we find that the columns for
 `y` and `label` are indeed missing in the *Before Geom* data:
 
-    layer_before_geom(last_plot(), layer = 2L, error = TRUE, verbose = FALSE)
+    layer_before_geom(last_plot(), i = 2L, error = TRUE, verbose = TRUE)
+    #> ✔ Ran `inspect_args(last_plot(), ggplot2:::Layer$compute_geom_1, layer_is(2L), error = TRUE)$data`
     #> # A tibble: 3 × 14
     #>    ymin lower middle upper  ymax outliers  notchupper notchlower     x width
     #>   <dbl> <dbl>  <dbl> <dbl> <dbl> <list>         <dbl>      <dbl> <dbl> <dbl>
@@ -219,6 +220,18 @@ variable `ymax` to (re-)map to the `y` and `label` aesthetics.
       )
 
 <img src="man/figures/README-boxplot-anno-success-1.png" width="100%" />
+
+Inspecting the after-stat snapshot of the successful plot above, we see
+that both `y` and `label` are now present at this stage to later satisfy
+the geom.
+
+    layer_before_geom(last_plot(), i = 2L)[, c("y", "ymax", "label")]
+    #> # A tibble: 3 × 3
+    #>       y  ymax label
+    #>   <dbl> <dbl> <dbl>
+    #> 1  33.9  33.9  33.9
+    #> 2  21.4  21.4  21.4
+    #> 3  18.7  18.7  18.7
 
 ### 3) **Highjack ggproto (remove boxplot outliers)**
 
@@ -253,9 +266,9 @@ drawn.
 
 One solution is to highjack the calculation of the boxplot layer’s
 statistics such that values of the `outliers` column is set to `NULL`.
-In `ggtrace_highjack_return()`, we pass an expression that modifies
-`returnValue()` to the `value` argument, which evaluates to the value
-about to be returned by the method.
+Using `ggtrace_highjack_return()`, we can pass an expression that
+modifies `returnValue()` to the `value` argument, which evaluates to the
+value about to be returned by the method.
 
     ggtrace_highjack_return(
       x = boxplot_plot,
@@ -268,8 +281,14 @@ about to be returned by the method.
 
 <img src="man/figures/README-boxplot-remove-outliers-1.png" width="100%" />
 
-Note that this is also possible in “vanilla” ggplot. Following our
-earlier discussion of `after_stat()`:
+Note that as of [{ggtrace}
+v0.7.1](https://github.com/yjunechoe/ggtrace/releases/tag/v0.7.1), all
+`ggtrace_*()` workflow functions have shorter aliases (e.g.,
+`ggtrace_highjack_return()` -&gt; `highjack_return()`). See
+`` ?`workflow-function-aliases` `` for details.
+
+It’s interesting to note that this is also possible in “vanilla” ggplot.
+Following our earlier discussion of `after_stat()`:
 
     # Suppress warning from mapping to `outliers` aesthetic
     update_geom_defaults("boxplot", list(outliers = NULL))
@@ -287,9 +306,8 @@ earlier discussion of `after_stat()`:
 > Example adopted from [Github issue
 > \#97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)
 
-The `method` argument of `ggtrace_*()` workflow functions can be
-(almost) any function-like object called during the rendering of a
-ggplot.
+The `method` argument of workflow functions can be (almost) any
+function-like object called during the rendering of a ggplot.
 
     set.seed(2023)
     # Example from `?stat_summary`
@@ -300,14 +318,15 @@ ggplot.
 
 <img src="man/figures/README-not-just-ggproto-1.png" width="100%" />
 
-    ggtrace_inspect_args(x = summary_plot, method = mean_cl_boot)
+    inspect_args(x = summary_plot, method = mean_cl_boot)
     #> $x
     #>  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4
-    ggtrace_inspect_return(x = summary_plot, method = mean_cl_boot)
+
+    inspect_return(x = summary_plot, method = mean_cl_boot)
     #>          y     ymin     ymax
     #> 1 26.66364 24.11727 29.19159
 
-    ggtrace_highjack_return(
+    highjack_return(
       x = summary_plot, method = mean_cl_boot,
       value = quote({
         data.frame(y = 50, ymin = 25, ymax = 75)
@@ -364,7 +383,7 @@ See implementation in
 
 Intercepting the data at draw step to subset bars arbitrarily:
 
-    bars_subset <- ggtrace_highjack_args(
+    bars_subset <- highjack_args(
       x = bars, method = Geom$draw_layer, cond = 1L,
       values = expression(
         data = data[c(2, 4, 6, 8, 11),]
@@ -388,7 +407,7 @@ Intercepting the data at draw step to subset bars arbitrarily:
 
 <img src="man/figures/README-flashy-plot-1.png" width="100%" />
 
-    ggtrace_highjack_return(
+    highjack_return(
       flashy_plot, Geom$draw_panel, cond = TRUE,
       value = quote({
         circ <- circleGrob(y = .25 * ._counter_)
@@ -402,41 +421,3 @@ Note the use of the special variable `._counter_`, which increments
 every time a function/method has been called. See the [tracing
 context](https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context)
 topic for more details.
-
-<!-- ### **Extract legends** -->
-<!-- ```{r legend-plot} -->
-<!-- p_legend <- ggplot(mtcars, aes(hp, mpg, color = factor(cyl))) + -->
-<!--   geom_point() + -->
-<!--   geom_smooth(method = "lm", formula = y ~ x) -->
-<!-- p_legend -->
-<!-- ``` -->
-<!-- For more control over legends, we can use `ggplot2::guide_*(override.aes = ...)`: -->
-<!-- ```{r legends-make} -->
-<!-- p_legend1 <- p_legend + -->
-<!--   scale_color_discrete( -->
-<!--     name = "cyl", -->
-<!--     guide = guide_legend(override.aes = list(shape = NA, fill = NA)) -->
-<!--   ) + -->
-<!--   theme(legend.key = element_rect(fill = "white")) -->
-<!-- p_legend2 <- p_legend + -->
-<!--   scale_color_discrete( -->
-<!--     name = NULL, labels = c("observation", "linear fit", "95% interval"), -->
-<!--     guide = guide_legend( -->
-<!--       override.aes = list( -->
-<!--         shape = c(16, NA, NA), color = c("black", "black", NA), -->
-<!--         linetype = c(NA, 1, NA), fill = c(NA, NA, "grey60") -->
-<!--       ) -->
-<!--     ) -->
-<!--   ) + -->
-<!--   theme(legend.key = element_rect(fill = "white")) -->
-<!-- library(patchwork) -->
-<!-- p_legend1 + p_legend2 -->
-<!-- ``` -->
-<!-- Using `ggtrace_inspect_return()`, we can grab the return value from the legend-making function for each plot and then plot them over the panel using `{patchwork}`: -->
-<!-- ```{r legends-inset} -->
-<!-- legend1 <- ggtrace_inspect_return(p_legend1, ggplot2:::guide_gengrob.legend) -->
-<!-- legend2 <- ggtrace_inspect_return(p_legend2, ggplot2:::guide_gengrob.legend) -->
-<!-- (p_legend + guides(color = guide_none())) + -->
-<!--   inset_element(legend1, .7, .8, .7, .8) + -->
-<!--   inset_element(legend2, .85, .8, .85, .8) -->
-<!-- ``` -->

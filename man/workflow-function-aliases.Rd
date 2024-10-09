@@ -2,78 +2,31 @@
 % Please edit documentation in R/aliases.R
 \name{workflow-function-aliases}
 \alias{workflow-function-aliases}
-\alias{inspect_n}
-\alias{inspect_which}
-\alias{inspect_vars}
-\alias{inspect_args}
-\alias{inspect_return}
-\alias{inspect_on_error}
-\alias{capture_fn}
-\alias{capture_env}
-\alias{highjack_args}
-\alias{highjack_return}
 \title{Shorthand aliases for workflow functions}
-\usage{
-inspect_n(x, method, ..., error = FALSE)
-
-inspect_which(x, method, cond, ..., error = FALSE)
-
-inspect_vars(
-  x,
-  method,
-  cond = 1L,
-  at = "all",
-  vars,
-  by_var = TRUE,
-  ...,
-  error = FALSE
-)
-
-inspect_args(x, method, cond = 1L, hoist_dots = TRUE, ..., error = FALSE)
-
-inspect_return(x, method, cond = 1L, ..., error = FALSE)
-
-inspect_on_error(x, method, ...)
-
-capture_fn(x, method, cond = 1L, ...)
-
-capture_env(x, method, cond = 1L, at = -1L, ...)
-
-highjack_args(x, method, cond = 1L, values, ..., draw = TRUE)
-
-highjack_return(
-  x,
-  method,
-  cond = 1L,
-  value = quote(returnValue()),
-  ...,
-  draw = TRUE
-)
-}
 \description{
 These functions are identical to their long-form counterparts suffixed
 by \code{ggtrace_}.
 
 Inspect:
 \itemize{
-\item \code{inspect_n()}
-\item \code{inspect_which()}
-\item \code{inspect_vars()}
-\item \code{inspect_args()}
-\item \code{inspect_return()}
-\item \code{inspect_on_error()}
+\item \code{\link[=inspect_n]{inspect_n()}}
+\item \code{\link[=inspect_which]{inspect_which()}}
+\item \code{\link[=inspect_vars]{inspect_vars()}}
+\item \code{\link[=inspect_args]{inspect_args()}}
+\item \code{\link[=inspect_return]{inspect_return()}}
+\item \code{\link[=inspect_on_error]{inspect_on_error()}}
 }
 
 Capture:
 \itemize{
-\item \code{capture_fn()}
-\item \code{capture_env()}
+\item \code{\link[=capture_fn]{capture_fn()}}
+\item \code{\link[=capture_env]{capture_env()}}
 }
 
 Highjack:
 \itemize{
-\item \code{highjack_args()}
-\item \code{highjack_return()}
+\item \code{\link[=highjack_args]{highjack_args()}}
+\item \code{\link[=highjack_return]{highjack_return()}}
 }
 }
 \keyword{internal}

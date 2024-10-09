@@ -6,15 +6,45 @@
 \alias{layer_after_stat}
 \alias{layer_before_geom}
 \alias{layer_after_scale}
+\alias{layer_is}
+\alias{.layer_is}
 \title{Inspect snapshots of sub-layer data}
 \usage{
-layer_before_stat(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_before_stat(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
 
-layer_after_stat(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_after_stat(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
 
-layer_before_geom(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_before_geom(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
 
-layer_after_scale(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
+layer_after_scale(
+  plot,
+  i = 1L,
+  ...,
+  error = FALSE,
+  verbose = rlang::is_interactive()
+)
+
+layer_is(expr)
+
+.layer_is(expr)
 }
 \arguments{
 \item{plot}{A ggplot object. If missing, defaults to \code{ggplot2::last_plot()}.}
@@ -25,14 +55,26 @@ layer_after_scale(plot, i = 1L, ..., error = FALSE, verbose = TRUE)
 
 \item{error}{If \code{TRUE}, returns the layer data early if available before the point of error.}
 
-\item{verbose}{If \code{TRUE}, prints the corresponding ggtrace code and re-prints the error if it exists.}
+\item{verbose}{If \code{TRUE}, prints the corresponding ggtrace code and re-prints evaluation errors.}
+
+\item{expr}{An expression to evaluate for each call to the method, which
+exposes information about the current layer that the method is being
+called for. In technical terms, \code{layer_is()} subsets calls to the method
+that are downstream of the \code{by_layer()} function in the ggplot internals.
+It exposes some context-dependent variables, including:
+\itemize{
+\item \code{i}: Scalar integer representing the nth layer
+\item \code{layers}: A list whose contents are equivalent to \verb{<ggplot>$layers}
+}}
 }
 \value{
 A dataframe
 }
 \description{
-\code{layer_before_stat()}, \code{layer_after_stat()}, \code{layer_before_geom()}, and \code{layer_after_scale()}
-are helper functions that return a snapshot of a layer's data in the internals.
+\code{layer_before_stat()}, \code{layer_after_stat()}, \code{layer_before_geom()}, and
+\code{layer_after_scale()} are convenience functions that return a snapshot of
+a layer's data in the internals. \code{layer_is()} is a helper function used by
+these.
 }
 \examples{
 library(ggplot2)
