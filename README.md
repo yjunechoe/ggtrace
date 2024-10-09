@@ -105,8 +105,8 @@ A bar plot of counts with `geom_bar()` with `stat = "count"` default:
 
 State of bar layer’s data after the statistical transformation step:
 
-    ggtrace::layer_after_stat(bar_plot)
-    #> ✔ Executed `ggtrace_inspect_return(bar_plot, ggplot2:::Layer$compute_statistic)`
+    layer_after_stat(bar_plot, verbose = TRUE)
+    #> ✔ Ran `inspect_return(bar_plot, ggplot2:::Layer$compute_statistic, layer_is(1L))`
     #> # A tibble: 7 × 8
     #>   count  prop x          width flipped_aes fill       PANEL group
     #>   <dbl> <dbl> <mppd_dsc> <dbl> <lgl>       <chr>      <fct> <int>
@@ -140,8 +140,8 @@ Same idea with `after_scale()`:
 <img src="man/figures/README-sub-layer-data-scatter-1.png" width="100%" />
 
     # `fill` column available for `after_scale(fill)`
-    ggtrace::layer_after_scale(scatter_plot)
-    #> ✔ Executed `ggtrace_inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2)`
+    layer_after_scale(scatter_plot, verbose = TRUE)
+    #> ✔ Ran `inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2, layer_is(1L))`
     #> # A tibble: 234 × 5
     #>    fill          x     y PANEL group
     #>    <chr>     <dbl> <dbl> <fct> <int>
@@ -253,9 +253,9 @@ drawn.
 
 One solution is to highjack the calculation of the boxplot layer’s
 statistics such that values of the `outliers` column is set to `NULL`.
-In `ggtrace_highjack_return()`, we pass an expression that modifies
-`returnValue()` to the `value` argument, which evaluates to the value
-about to be returned by the method.
+Using `ggtrace_highjack_return()`, we can pass an expression that
+modifies `returnValue()` to the `value` argument, which evaluates to the
+value about to be returned by the method.
 
     ggtrace_highjack_return(
       x = boxplot_plot,
@@ -268,8 +268,14 @@ about to be returned by the method.
 
 <img src="man/figures/README-boxplot-remove-outliers-1.png" width="100%" />
 
-Note that this is also possible in “vanilla” ggplot. Following our
-earlier discussion of `after_stat()`:
+Note that as of [{ggtrace}
+v0.7.1](https://github.com/yjunechoe/ggtrace/releases/tag/v0.7.1), all
+`ggtrace_*()` workflow functions have shorter aliases (e.g.,
+`ggtrace_highjack_return()` -&gt; `highjack_return()`). See
+`` ?`workflow-function-aliases` `` for details.
+
+It’s interesting to note that this is also possible in “vanilla” ggplot.
+Following our earlier discussion of `after_stat()`:
 
     # Suppress warning from mapping to `outliers` aesthetic
     update_geom_defaults("boxplot", list(outliers = NULL))
@@ -287,9 +293,8 @@ earlier discussion of `after_stat()`:
 > Example adopted from [Github issue
 > \#97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)
 
-The `method` argument of `ggtrace_*()` workflow functions can be
-(almost) any function-like object called during the rendering of a
-ggplot.
+The `method` argument of workflow functions can be (almost) any
+function-like object called during the rendering of a ggplot.
 
     set.seed(2023)
     # Example from `?stat_summary`
@@ -300,14 +305,15 @@ ggplot.
 
 <img src="man/figures/README-not-just-ggproto-1.png" width="100%" />
 
-    ggtrace_inspect_args(x = summary_plot, method = mean_cl_boot)
+    inspect_args(x = summary_plot, method = mean_cl_boot)
     #> $x
     #>  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4
-    ggtrace_inspect_return(x = summary_plot, method = mean_cl_boot)
+
+    inspect_return(x = summary_plot, method = mean_cl_boot)
     #>          y     ymin     ymax
     #> 1 26.66364 24.11727 29.19159
 
-    ggtrace_highjack_return(
+    highjack_return(
       x = summary_plot, method = mean_cl_boot,
       value = quote({
         data.frame(y = 50, ymin = 25, ymax = 75)
@@ -364,7 +370,7 @@ See implementation in
 
 Intercepting the data at draw step to subset bars arbitrarily:
 
-    bars_subset <- ggtrace_highjack_args(
+    bars_subset <- highjack_args(
       x = bars, method = Geom$draw_layer, cond = 1L,
       values = expression(
         data = data[c(2, 4, 6, 8, 11),]
@@ -388,7 +394,7 @@ Intercepting the data at draw step to subset bars arbitrarily:
 
 <img src="man/figures/README-flashy-plot-1.png" width="100%" />
 
-    ggtrace_highjack_return(
+    highjack_return(
       flashy_plot, Geom$draw_panel, cond = TRUE,
       value = quote({
         circ <- circleGrob(y = .25 * ._counter_)

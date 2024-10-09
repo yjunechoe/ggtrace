@@ -91,7 +91,7 @@ bar_plot <- ggplot(mpg, aes(class, fill = class)) +
 State of bar layer's data after the statistical transformation step:
 
 ```{r sub-layer-data-after-stat}
-ggtrace::layer_after_stat(bar_plot)
+layer_after_stat(bar_plot, verbose = TRUE)
 ```
 
 We can map aesthetics to variables from the after-stat data using `after_stat()`:
@@ -116,7 +116,7 @@ scatter_plot +
 
 ```{r sub-layer-data-after-scale}
 # `fill` column available for `after_scale(fill)`
-ggtrace::layer_after_scale(scatter_plot)
+layer_after_scale(scatter_plot, verbose = TRUE)
 ```
 
 ```{r sub-layer-data-after-scale-aes}
@@ -182,7 +182,7 @@ This is because the scales are re-trained after the calculation of the boxplot s
 layer_data(boxplot_plot)[, c("xmin", "xmax", "outliers", "xmin_final", "xmax_final")]
 ```
 
-One solution is to highjack the calculation of the boxplot layer's statistics such that values of the `outliers` column is set to `NULL`. In `ggtrace_highjack_return()`, we pass an expression that modifies `returnValue()` to the `value` argument, which evaluates to the value about to be returned by the method.
+One solution is to highjack the calculation of the boxplot layer's statistics such that values of the `outliers` column is set to `NULL`. Using `ggtrace_highjack_return()`, we can pass an expression that modifies `returnValue()` to the `value` argument, which evaluates to the value about to be returned by the method.
 
 ```{r boxplot-remove-outliers}
 ggtrace_highjack_return(
@@ -195,7 +195,9 @@ ggtrace_highjack_return(
 )
 ```
 
-Note that this is also possible in "vanilla" ggplot. Following our earlier discussion of `after_stat()`:
+Note that as of [{ggtrace} v0.7.1](https://github.com/yjunechoe/ggtrace/releases/tag/v0.7.1), all `ggtrace_*()` workflow functions have shorter aliases (e.g., `ggtrace_highjack_return()` -> `highjack_return()`). See `` ?`workflow-function-aliases` `` for details.
+
+It's interesting to note that this is also possible in "vanilla" ggplot. Following our earlier discussion of `after_stat()`:
 
 ```{r boxplot-remove-outliers-after-stat}
 # Suppress warning from mapping to `outliers` aesthetic
@@ -212,7 +214,7 @@ ggplot(mpg, aes(hwy, class)) +
 
 > Example adopted from [Github issue #97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)
 
-The `method` argument of `ggtrace_*()` workflow functions can be (almost) any function-like object called during the rendering of a ggplot.
+The `method` argument of workflow functions can be (almost) any function-like object called during the rendering of a ggplot.
 
 ```{r not-just-ggproto}
 set.seed(2023)
@@ -224,12 +226,12 @@ summary_plot
 ```
 
 ```{r not-just-ggproto-inspect}
-ggtrace_inspect_args(x = summary_plot, method = mean_cl_boot)
-ggtrace_inspect_return(x = summary_plot, method = mean_cl_boot)
+inspect_args(x = summary_plot, method = mean_cl_boot)
+inspect_return(x = summary_plot, method = mean_cl_boot)
 ```
 
 ```{r not-just-ggproto-highjack}
-ggtrace_highjack_return(
+highjack_return(
   x = summary_plot, method = mean_cl_boot,
   value = quote({
     data.frame(y = 50, ymin = 25, ymax = 75)
@@ -282,7 +284,7 @@ bars
 Intercepting the data at draw step to subset bars arbitrarily:
 
 ```{r bars-highjacked}
-bars_subset <- ggtrace_highjack_args(
+bars_subset <- highjack_args(
   x = bars, method = Geom$draw_layer, cond = 1L,
   values = expression(
     data = data[c(2, 4, 6, 8, 11),]
@@ -305,7 +307,7 @@ flashy_plot
 ```
 
 ```{r flashy-highjack}
-ggtrace_highjack_return(
+highjack_return(
   flashy_plot, Geom$draw_panel, cond = TRUE,
   value = quote({
     circ <- circleGrob(y = .25 * ._counter_)
