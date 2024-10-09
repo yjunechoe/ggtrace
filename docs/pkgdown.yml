@@ -1,9 +1,11 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
-pkgdown_sha: ~
+pandoc: 3.2.1
+pkgdown: 2.1.0.9000
+pkgdown_sha: ee72108bc3a9827dcf313817525652dbd9d4284d
 articles:
   FAQ: FAQ.html
   getting-started: getting-started.html
   overview: overview.html
-last_built: 2024-04-26T15:30Z
-
+last_built: 2024-10-09T22:15Z
+urls:
+  reference: https://yjunechoe.github.io/ggtrace/reference
+  article: https://yjunechoe.github.io/ggtrace/articles

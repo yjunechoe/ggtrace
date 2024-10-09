@@ -1,156 +1,52 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/articles/casestudy-after_scale.html</loc>
-  </url>
-  <url>
-    <loc>/articles/casestudy-ggxmean.html</loc>
-  </url>
-  <url>
-    <loc>/articles/comparisons.html</loc>
-  </url>
-  <url>
-    <loc>/articles/FAQ.html</loc>
-  </url>
-  <url>
-    <loc>/articles/getting-started.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/intro.html</loc>
-  </url>
-  <url>
-    <loc>/articles/metaprogramming.html</loc>
-  </url>
-  <url>
-    <loc>/articles/overview.html</loc>
-  </url>
-  <url>
-    <loc>/articles/showcase-aes_evaluation.html</loc>
-  </url>
-  <url>
-    <loc>/articles/showcase-ggplot_build.html</loc>
-  </url>
-  <url>
-    <loc>/articles/technical-details.html</loc>
-  </url>
-  <url>
-    <loc>/articles/usecase-aes_eval.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/get_method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggbody.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggdebug.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggdebugonce.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggedit.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggeval_silent.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtraceback.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_capture.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_capture_env.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_capture_fn.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_capture_method.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_highjack_args.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_highjack_return.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_inspect_args.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_inspect_n.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_inspect_on_error.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_inspect_return.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_inspect_vars.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_inspect_which.html</loc>
-  </url>
-  <url>
-    <loc>/reference/ggtrace_modify_return.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gguntrace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/global_ggtrace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/is_traced.html</loc>
-  </url>
-  <url>
-    <loc>/reference/last_ggtrace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/last_layer_errorcontext.html</loc>
-  </url>
-  <url>
-    <loc>/reference/one-offs.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sublayer-data.html</loc>
-  </url>
-  <url>
-    <loc>/reference/topic-tracing-context.html</loc>
-  </url>
-  <url>
-    <loc>/reference/with_ggtrace.html</loc>
-  </url>
-  <url>
-    <loc>/reference/workflow-function-aliases.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://yjunechoe.github.io/ggtrace/404.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/casestudy-after_scale.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/casestudy-ggxmean.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/comparisons.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/FAQ.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/getting-started.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/index.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/intro.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/metaprogramming.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/overview.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/showcase-aes_evaluation.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/showcase-ggplot_build.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/technical-details.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/articles/usecase-aes_eval.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/authors.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/index.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/LICENSE-text.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/LICENSE.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/news/index.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/get_method.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggdebug.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggedit.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggeval_silent.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtraceback.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_capture.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_capture_env.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_capture_fn.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_capture_method.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_return.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_args.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_n.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_on_error.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_return.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_vars.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_inspect_which.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/ggtrace_modify_return.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/gguntrace.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/global_ggtrace.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/index.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/is_traced.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/last_ggtrace.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/last_layer_errorcontext.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/one-offs.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/sublayer-data.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/topic-tracing-context.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/with_ggtrace.html</loc></url>
+<url><loc>https://yjunechoe.github.io/ggtrace/reference/workflow-function-aliases.html</loc></url>
 </urlset>
+

@@ -1,6 +1,8 @@
+url: https://yjunechoe.github.io/ggtrace/
+
 home:
   title: ggtrace
-  description: Debug ggproto methods with trace
+  description: A functional interface to ggplot2 internals
 
 authors:
   June Choe:
@@ -109,9 +111,9 @@ articles:
   - overview
   # - showcase-ggplot_build
   # - showcase-aes_evaluation
-- title: Workflows (WIP)
-  navbar: Workflows (WIP)
-  contents:
+# - title: Workflows (WIP)
+#   navbar: Workflows (WIP)
+#   contents:
 # - title: Case Studies
 #   navbar: Case Studies
 #   contents:
