@@ -76,6 +76,8 @@ sublayer_data <- function(x, cond = 1L,
                           ...,
                           error = TRUE, verbose = TRUE) {
 
+  rlang::check_dots_empty(call = rlang::caller_env())
+
   step <- .sublayer_stages[[match.arg(step)]]
 
   ns_ggplot2 <- if (!"package:ggplot2" %in% search()) "ggplot2"

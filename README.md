@@ -196,7 +196,8 @@ something must be wrong with **the data that the geom receives**. If we
 inspect this using `layer_before_geom()`, we find that the columns for
 `y` and `label` are indeed missing in the *Before Geom* data:
 
-    layer_before_geom(last_plot(), layer = 2L, error = TRUE, verbose = FALSE)
+    layer_before_geom(last_plot(), i = 2L, error = TRUE, verbose = TRUE)
+    #> ✔ Ran `inspect_args(last_plot(), ggplot2:::Layer$compute_geom_1, layer_is(2L), error = TRUE)$data`
     #> # A tibble: 3 × 14
     #>    ymin lower middle upper  ymax outliers  notchupper notchlower     x width
     #>   <dbl> <dbl>  <dbl> <dbl> <dbl> <list>         <dbl>      <dbl> <dbl> <dbl>
@@ -219,6 +220,18 @@ variable `ymax` to (re-)map to the `y` and `label` aesthetics.
       )
 
 <img src="man/figures/README-boxplot-anno-success-1.png" width="100%" />
+
+Inspecting the after-stat snapshot of the successful plot above, we see
+that both `y` and `label` are now present at this stage to later satisfy
+the geom.
+
+    layer_before_geom(last_plot(), i = 2L)[, c("y", "ymax", "label")]
+    #> # A tibble: 3 × 3
+    #>       y  ymax label
+    #>   <dbl> <dbl> <dbl>
+    #> 1  33.9  33.9  33.9
+    #> 2  21.4  21.4  21.4
+    #> 3  18.7  18.7  18.7
 
 ### 3) **Highjack ggproto (remove boxplot outliers)**
 

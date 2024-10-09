@@ -150,7 +150,7 @@ box_p +
 The error tells us that the geom is missing some missing aesthetics, so something must be wrong with **the data that the geom receives**. If we inspect this using `layer_before_geom()`, we find that the columns for `y` and `label` are indeed missing in the _Before Geom_ data:
 
 ```{r boxplot-anno-debug}
-layer_before_geom(last_plot(), layer = 2L, error = TRUE, verbose = FALSE)
+layer_before_geom(last_plot(), i = 2L, error = TRUE, verbose = TRUE)
 ```
 
 Thus, we need to ensure that `y` exists to satisfy both the stat and the geom, and that `label` exists after the statistical transformation step but before the geom sees the data. Crucially, we use the computed variable `ymax` to (re-)map to the `y` and `label` aesthetics.
@@ -162,6 +162,12 @@ box_p +
         label = after_stat(ymax)),
     stat = "boxplot"
   )
+```
+
+Inspecting the after-stat snapshot of the successful plot above, we see that both `y` and `label` are now present at this stage to later satisfy the geom.
+
+```{r boxplot-anno-success-inspect}
+layer_before_geom(last_plot(), i = 2L)[, c("y", "ymax", "label")]
 ```
 
 ### 3) **Highjack ggproto (remove boxplot outliers)**
