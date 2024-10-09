@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.7.1-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.8.0-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![](https://img.shields.io/badge/tested%20on%20ggplot2%20version-3.5.1-gogreen.svg)](https://github.com/tidyverse/ggplot2/tree/v3.5.1)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
@@ -408,41 +408,3 @@ Note the use of the special variable `._counter_`, which increments
 every time a function/method has been called. See the [tracing
 context](https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context)
 topic for more details.
-
-<!-- ### **Extract legends** -->
-<!-- ```{r legend-plot} -->
-<!-- p_legend <- ggplot(mtcars, aes(hp, mpg, color = factor(cyl))) + -->
-<!--   geom_point() + -->
-<!--   geom_smooth(method = "lm", formula = y ~ x) -->
-<!-- p_legend -->
-<!-- ``` -->
-<!-- For more control over legends, we can use `ggplot2::guide_*(override.aes = ...)`: -->
-<!-- ```{r legends-make} -->
-<!-- p_legend1 <- p_legend + -->
-<!--   scale_color_discrete( -->
-<!--     name = "cyl", -->
-<!--     guide = guide_legend(override.aes = list(shape = NA, fill = NA)) -->
-<!--   ) + -->
-<!--   theme(legend.key = element_rect(fill = "white")) -->
-<!-- p_legend2 <- p_legend + -->
-<!--   scale_color_discrete( -->
-<!--     name = NULL, labels = c("observation", "linear fit", "95% interval"), -->
-<!--     guide = guide_legend( -->
-<!--       override.aes = list( -->
-<!--         shape = c(16, NA, NA), color = c("black", "black", NA), -->
-<!--         linetype = c(NA, 1, NA), fill = c(NA, NA, "grey60") -->
-<!--       ) -->
-<!--     ) -->
-<!--   ) + -->
-<!--   theme(legend.key = element_rect(fill = "white")) -->
-<!-- library(patchwork) -->
-<!-- p_legend1 + p_legend2 -->
-<!-- ``` -->
-<!-- Using `ggtrace_inspect_return()`, we can grab the return value from the legend-making function for each plot and then plot them over the panel using `{patchwork}`: -->
-<!-- ```{r legends-inset} -->
-<!-- legend1 <- ggtrace_inspect_return(p_legend1, ggplot2:::guide_gengrob.legend) -->
-<!-- legend2 <- ggtrace_inspect_return(p_legend2, ggplot2:::guide_gengrob.legend) -->
-<!-- (p_legend + guides(color = guide_none())) + -->
-<!--   inset_element(legend1, .7, .8, .7, .8) + -->
-<!--   inset_element(legend2, .85, .8, .85, .8) -->
-<!-- ``` -->
