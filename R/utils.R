@@ -190,3 +190,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
     return(result)
   }
 }
+
+resolve_ns <- function(x) {
+  if (!paste0("package:", x) %in% search()) x
+}

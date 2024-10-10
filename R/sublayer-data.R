@@ -82,8 +82,8 @@ sublayer_data <- function(x, cond = 1L,
 
   step <- .sublayer_stages[[match.arg(step)]]
 
-  ns_ggplot2 <- if (!"package:ggplot2" %in% search()) "ggplot2"
-  ns_ggtrace <- if (!"package:ggtrace" %in% search()) "ggtrace"
+  ns_ggplot2 <- resolve_ns("ggplot2")
+  ns_ggtrace <- resolve_ns("ggtrace")
 
   if (rlang::is_missing(x)) {
     x_expr <- rlang::call2("last_plot", .ns = ns_ggplot2)
@@ -170,7 +170,7 @@ layer_after_scale <- function(plot, i = 1L, ..., error = FALSE,
 #' @export
 layer_is <- function(expr) {
   x <- rlang::enexpr(expr)
-  rlang::call2(".layer_is", x, .ns = if (!"package:ggtrace" %in% search()) "ggtrace")
+  rlang::call2(".layer_is", x, .ns = resolve_ns("ggtrace"))
 }
 
 #' @rdname sublayer-data
