@@ -177,6 +177,7 @@ layer_is <- function(expr) {
   }
   by_layer_idx <- which(sapply(sys.calls(), rlang::is_call, "by_layer"))[1]
   if (is.na(by_layer_idx)) {
+    # Don't trigger if not downstream of `by_layer()`
     return(FALSE)
   }
   by_layer_env <- rlang::env_clone(sys.frames()[[by_layer_idx]])
@@ -184,10 +185,8 @@ layer_is <- function(expr) {
   if (is.numeric(x)) {
     n_layers <- length(by_layer_env$layers)
     if (x > n_layers) {
-      cli::cli_abort(
-        "[ggtrace] Plot has {n_layers} layer{?s} - {x} is invalid.",
-        call = rlang::call2("layer_is", x)
-      )
+      # Will never trigger if targeting layer outside of number of layer
+      return(FALSE)
     }
     x <- rlang::call2("==", quote(i), as.integer(x))
   }
