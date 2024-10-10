@@ -74,9 +74,11 @@ NULL
 sublayer_data <- function(x, cond = 1L,
                           step = c("before_stat", "after_stat", "before_geom", "after_scale"),
                           ...,
-                          error = TRUE, verbose = TRUE) {
+                          error = TRUE,
+                          verbose = TRUE,
+                          .call = rlang::caller_env()) {
 
-  rlang::check_dots_empty(call = rlang::caller_env())
+  rlang::check_dots_empty(call = .call)
 
   step <- .sublayer_stages[[match.arg(step)]]
 
@@ -87,6 +89,14 @@ sublayer_data <- function(x, cond = 1L,
     x_expr <- rlang::call2("last_plot", .ns = ns_ggplot2)
   } else {
     x_expr <- x
+  }
+
+  plot <- rlang::eval_bare(x_expr, rlang::caller_env(2))
+  if (!inherits(plot, "ggplot")) {
+    cli::cli_abort(
+      "{.arg plot} must be a {.cls ggplot}, not {.obj_type_friendly {plot}}.",
+      call = .call
+    )
   }
 
   inspect_expr <- rlang::call2(

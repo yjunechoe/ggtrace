@@ -53,9 +53,26 @@ test_that("sublayer data can target layer by index", {
     layer_before_stat(p, 3)
   })
 
+})
+
+test_that("checks throwing errors", {
+
   expect_error({
     layer_before_stat(p, 0)
     layer_before_stat(p, 4)
+  })
+
+  expect_error({
+    layer_before_stat(mean)
+    layer_before_stat(1)
+  })
+
+  expect_error({
+    layer_before_stat(arg_to_dots = 1)
+  })
+
+  expect_error({
+    layer_before_stat(stop("stop"))
   })
 
 })
