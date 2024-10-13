@@ -76,3 +76,34 @@ test_that("checks throwing errors", {
   })
 
 })
+
+test_that("`layer_is()` targets layers with `i` and `layers`", {
+
+  p <- ggplot(diamonds) +
+    stat_count(geom = "label", aes(cut, label = after_stat(count))) +
+    stat_count(geom = "label", aes(cut, label = after_stat(count)), color = "red") +
+    stat_count(geom = "label", aes(cut, label = after_stat(count)))
+
+  expect_identical(
+    inspect_which(p, StatCount$compute_group, cond = TRUE),
+    c(
+      inspect_which(p, StatCount$compute_group, cond = layer_is(1)),
+      inspect_which(p, StatCount$compute_group, cond = layer_is(2)),
+      inspect_which(p, StatCount$compute_group, cond = layer_is(3))
+    )
+  )
+
+  expect_identical(
+    c(
+      inspect_which(p, StatCount$compute_group, cond = layer_is(1)),
+      inspect_which(p, StatCount$compute_group, cond = layer_is(3))
+    ),
+    inspect_which(p, StatCount$compute_group, cond = layer_is(i %in% c(1, 3)))
+  )
+
+  expect_identical(
+    inspect_which(p, StatCount$compute_group, cond = layer_is(2)),
+    inspect_which(p, StatCount$compute_group, cond = layer_is(!is.null(layers[[i]]$aes_params$colour)))
+  )
+
+})
