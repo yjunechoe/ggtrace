@@ -264,7 +264,10 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
         trace_print <- gsub("\\n", "\n ", trace_msgs[trace_idx])
 
         # Evaluate trace expression
-        trace_result <- eval(trace_exprs[[trace_idx]], envir = parent.frame())
+        trace_result <- eval(
+          expr = trace_exprs[[trace_idx]],
+          envir = rlang::env_clone(parent.frame())
+        )
 
         # Resolve printing
         if (verbose) {

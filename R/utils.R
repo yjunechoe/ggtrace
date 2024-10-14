@@ -2,7 +2,7 @@
 
 split_ggproto_method <- function(method) {
   method_expr <- rlang::enexpr(method)
-  eval_env <- parent.frame()
+  eval_env <- rlang::env_clone(parent.frame())
   if (rlang::is_quosure(method)) {
     method_expr <- rlang::quo_get_expr(method)
     eval_env <- rlang::quo_get_env(method)
