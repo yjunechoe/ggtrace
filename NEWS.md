@@ -1,5 +1,7 @@
 # ggtrace 0.7.x
 
+## ggtrace 0.7.3
+
 - New special value `ggtrace(trace_steps = "all")` which evaluates to all steps in the method body.
 
 - Bug fix in `ggtrace(trace_exprs)` doubly-evaluating a step when it should simply evaluate the existing step. This behavior is now prevented by *cloning* the method environment in such cases.
