@@ -21,7 +21,8 @@ The ggproto method may be specified using any of the following forms:
   Arguments passed on to \code{\link[=ggtrace]{ggtrace}}
   \describe{
     \item{\code{trace_steps}}{A sorted numeric vector of positions in the method's body to trace. Negative indices
-reference steps from the last, where \code{-1} references the last step in the body.}
+reference steps from the last, where \code{-1} references the last step in the body.
+Special value \code{"all"} traces all steps of the method body.}
     \item{\code{trace_exprs}}{A list of expressions to evaluate at each position specified
 in \code{trace_steps}. If a single expression is provided, it is recycled to match the length of \code{trace_steps}.
 

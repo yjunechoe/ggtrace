@@ -7,6 +7,7 @@
 #'   - `namespace:::ggproto$method`
 #' @param trace_steps A sorted numeric vector of positions in the method's body to trace. Negative indices
 #'   reference steps from the last, where `-1` references the last step in the body.
+#'   Special value `"all"` traces all steps of the method body.
 #' @param trace_exprs A list of expressions to evaluate at each position specified
 #'   in `trace_steps`. If a single expression is provided, it is recycled to match the length of `trace_steps`.
 #'
@@ -179,6 +180,12 @@ ggtrace <- function(method, trace_steps, trace_exprs,
   formatted_call <- method_info$formatted_call
 
   ## Number of steps
+  if (rlang::is_missing(trace_steps)) {
+    rlang::abort("`trace_steps` must be supplied.")
+  }
+  if (identical(trace_steps, "all")) {
+    trace_steps <- seq_len(method_body_len)
+  }
   n_steps <- length(trace_steps)
 
   ## Ensure `trace_exprs` is a list of expressions (recycle)
