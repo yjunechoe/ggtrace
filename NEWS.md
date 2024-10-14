@@ -1,5 +1,7 @@
 # ggtrace 0.7.x
 
+- Bug fix in `ggtrace()` leaking side-effects from evaluating `trace_exprs` while the method is being ran. This behavior is now prevented by *cloning* the method environment before executing evaluation.
+
 ## ggtrace 0.7.2
 
 - New helper function `layer_is()`, primarily for internal use by sublayer data inspection functions (e.g., `layer_before_stat()`). These functions now become more robust to changes in the internals, by specifically targetting the downstream of `by_layer()`.
