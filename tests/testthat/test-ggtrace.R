@@ -354,4 +354,30 @@ test_that("incomplete traces are logged appropriately", {
 
 })
 
+test_that("tracing every step of ggplot build works", {
+
+  expect_length(
+    with_ggtrace(
+      x = ggplot(),
+      method = ggplot2:::ggplot_build.ggplot,
+      trace_steps = seq_along(body(ggplot2:::ggplot_build.ggplot)),
+      out = "tracedump"
+    )
+    ,
+    length(body(ggplot2:::ggplot_build.ggplot))
+  )
+
+  expect_length(
+    with_ggtrace(
+      x = ggplot(),
+      method = ggplot2:::ggplot_gtable.ggplot_built,
+      trace_steps = seq_along(body(ggplot2:::ggplot_gtable.ggplot_built)),
+      out = "tracedump"
+    )
+    ,
+    length(body(ggplot2:::ggplot_gtable.ggplot_built))
+  )
+
+})
+
 global_ggtrace_state(FALSE)
