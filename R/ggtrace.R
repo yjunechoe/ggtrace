@@ -159,7 +159,10 @@
 #' range(jitter_distances)
 #' jitter_plot$layers[[1]]$position$width
 #'
-ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = TRUE, ..., print_output = TRUE, verbose = FALSE) {
+ggtrace <- function(method, trace_steps, trace_exprs,
+                    once = TRUE, use_names = TRUE,
+                    ...,
+                    print_output = TRUE, verbose = FALSE) {
 
   # Capture method expression
   method_quo <- rlang::enquo(method)
@@ -263,10 +266,16 @@ ggtrace <- function(method, trace_steps, trace_exprs, once = TRUE, use_names = T
 
         trace_print <- gsub("\\n", "\n ", trace_msgs[trace_idx])
 
+        eval_env <- parent.frame()
+        # Prevent double evaluation if it's just original expression
+        if (identical(trace_exprs[[trace_idx]], method_body[[trace_idx]])) {
+          eval_env <- rlang::env_clone(eval_env)
+        }
+
         # Evaluate trace expression
         trace_result <- eval(
           expr = trace_exprs[[trace_idx]],
-          envir = rlang::env_clone(parent.frame())
+          envir = eval_env
         )
 
         # Resolve printing

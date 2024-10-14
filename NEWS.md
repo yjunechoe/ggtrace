@@ -1,6 +1,6 @@
 # ggtrace 0.7.x
 
-- Bug fix in `ggtrace()` leaking side-effects from evaluating `trace_exprs` while the method is being ran. This behavior is now prevented by *cloning* the method environment before executing evaluation.
+- Bug fix in `ggtrace(trace_exprs)` doubly-evaluating a step when it should simply evaluate the existing step. This behavior is now prevented by *cloning* the method environment in such cases.
 
 ## ggtrace 0.7.2
 
