@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,7 +73,8 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 
 <dt id="arg-trace-steps">trace_steps<a class="anchor" aria-label="anchor" href="#arg-trace-steps"></a></dt>
 <dd><p>A sorted numeric vector of positions in the method's body to trace. Negative indices
-reference steps from the last, where <code>-1</code> references the last step in the body.</p></dd>
+reference steps from the last, where <code>-1</code> references the last step in the body.
+Special value <code>"all"</code> traces all steps of the method body.</p></dd>
 
 
 <dt id="arg-trace-exprs">trace_exprs<a class="anchor" aria-label="anchor" href="#arg-trace-exprs"></a></dt>

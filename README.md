@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.7.2-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.7.3-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![](https://img.shields.io/badge/tested%20on%20ggplot2%20version-3.5.1-gogreen.svg)](https://github.com/tidyverse/ggplot2/tree/v3.5.1)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
