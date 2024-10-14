@@ -45,7 +45,7 @@
 <div class="section level3">
 <h3 id="ggtrace-0-7">ggtrace 0.7.3<a class="anchor" aria-label="anchor" href="#ggtrace-0-7"></a></h3>
 <ul><li><p>New special value <code>ggtrace(trace_steps = "all")</code> which evaluates to all steps in the method body.</p></li>
-<li><p>Bug fix in <code>ggtrace(trace_exprs)</code> doubly-evaluating a step when it should simply evaluate the existing step. This behavior is now prevented by <em>cloning</em> the method environment in such cases.</p></li>
+<li><p>Bug fix in the default behavior of <code>ggtrace(trace_exprs)</code> doubly-evaluating an existing step from the method body, which sometimes caused unexpected side effects. This behavior is now prevented by cloning the method environment in such cases.</p></li>
 </ul></div>
 <div class="section level3">
 <h3 id="ggtrace-0-7-1">ggtrace 0.7.2<a class="anchor" aria-label="anchor" href="#ggtrace-0-7-1"></a></h3>
