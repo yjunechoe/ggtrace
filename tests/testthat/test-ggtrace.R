@@ -372,14 +372,12 @@ test_that("tracing every step of ggplot build works", {
       x = ggplot(),
       method = ggplot2:::ggplot_build.ggplot,
       trace_steps = seq_along(body(ggplot2:::ggplot_build.ggplot)),
-      use_names = FALSE,
       out = "tracedump"
     )),
     names(with_ggtrace(
       x = ggplot(),
       method = ggplot2:::ggplot_build.ggplot,
       trace_steps = "all",
-      use_names = FALSE,
       out = "tracedump"
     ))
   )

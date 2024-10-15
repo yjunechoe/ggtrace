@@ -51,7 +51,8 @@ test_that("basic tracing tests for for custom functions", {
   expect_message(ggtrace(test_fn, 2:4, verbose = FALSE), "now being traced")
   invisible(test_fn())
   expect_true(isFALSE(is_traced(test_fn)))
-  expect_equal(unlist(last_ggtrace()), 1:3)
+  expect_named(last_ggtrace())
+  expect_equal(unname(last_ggtrace()), list(1,2,3))
 
   expect_message(ggtrace(test_fn, 3, quote(a <- 10), verbose = FALSE), "now being traced")
   result_modified <- invisible(test_fn())
@@ -129,3 +130,4 @@ test_that("ggbody supports functions", {
 })
 
 global_ggtrace_state(FALSE)
+
