@@ -1,5 +1,11 @@
 # ggtrace 0.7.x
 
+- Streamlined the behavior of `ggtrace(use_names)` for assigning names to the tracedump, where:
+
+    - If a list of expression is provided in `trace_exprs`, uses the names of that list if `TRUE`, and uses deparsed expressions from the method steps as names if `FALSE`.
+    
+    - If `trace_exprs` is empty, uses deparsed expressions from the method steps as names if `TRUE`, and returns unnamed output if `FALSE`.
+
 ## ggtrace 0.7.3
 
 - New special value `ggtrace(trace_steps = "all")` which evaluates to all steps in the method body.

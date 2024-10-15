@@ -42,7 +42,12 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.7" id="ggtrace-07x">ggtrace 0.7.x<a class="anchor" aria-label="anchor" href="#ggtrace-07x"></a></h2>
-<div class="section level3">
+<ul><li>
+<p>Streamlined the behavior of <code>ggtrace(use_names)</code> for assigning names to the tracedump, where:</p>
+<ul><li><p>If a list of expression is provided in <code>trace_exprs</code>, uses the names of that list if <code>TRUE</code>, and uses deparsed expressions from the method steps as names if <code>FALSE</code>.</p></li>
+<li><p>If <code>trace_exprs</code> is empty, uses deparsed expressions from the method steps as names if <code>TRUE</code>, and returns unnamed output if <code>FALSE</code>.</p></li>
+</ul></li>
+</ul><div class="section level3">
 <h3 id="ggtrace-0-7">ggtrace 0.7.3<a class="anchor" aria-label="anchor" href="#ggtrace-0-7"></a></h3>
 <ul><li><p>New special value <code>ggtrace(trace_steps = "all")</code> which evaluates to all steps in the method body.</p></li>
 <li><p>Bug fix in the default behavior of <code>ggtrace(trace_exprs)</code> doubly-evaluating an existing step from the method body, which sometimes caused unexpected side effects. This behavior is now prevented by cloning the method environment in such cases.</p></li>
