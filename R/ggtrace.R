@@ -17,9 +17,12 @@
 #'
 #' @param once Whether to `untrace()` the method on exit. If `FALSE`, creates a persistent trace which is
 #'   active until `gguntrace()` is called on the method. Defaults to `TRUE`.
-#' @param use_names Whether the trace dump should use the names from `trace_exprs`. Defaults to `TRUE`.
+#' @param use_names Whether the trace dump should use the names from `trace_exprs`.
+#'   If `trace_exprs` is not specified, whether to use the method steps as names.
+#'   Defaults to `TRUE`.
 #' @param ... Unused, for extensibility.
-#' @param print_output Whether to `print()` the output of each expression to the console. Defaults to `TRUE`.
+#' @param print_output Whether to `print()` the output of each expression to the console.
+#'   Defaults to `TRUE`.
 #' @param verbose Whether logs should be printed when trace is triggered. Encompasses `print_output`,
 #'   meaning that `verbose = FALSE` also triggers the effect of `print_output = FALSE` by consequence.
 #'   Defaults to `FALSE`.
@@ -191,6 +194,8 @@ ggtrace <- function(method, trace_steps, trace_exprs,
   ## Ensure `trace_exprs` is a list of expressions (recycle)
   if (rlang::is_missing(trace_exprs)) {
     trace_exprs <- rep(list(rlang::expr(~step)), n_steps)
+    # In this case, `use_names` now mean whether the output should be named at all
+    use_names <- !use_names
   } else if (!is.list(trace_exprs)) {
     trace_exprs <- rep(list(trace_exprs), n_steps)
   } else if (is.list(trace_exprs) && length(trace_exprs) == 1) {

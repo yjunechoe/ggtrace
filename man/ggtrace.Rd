@@ -38,11 +38,14 @@ If \code{trace_exprs} is not provided, \code{ggtrace()} is called with \code{~st
 \item{once}{Whether to \code{untrace()} the method on exit. If \code{FALSE}, creates a persistent trace which is
 active until \code{gguntrace()} is called on the method. Defaults to \code{TRUE}.}
 
-\item{use_names}{Whether the trace dump should use the names from \code{trace_exprs}. Defaults to \code{TRUE}.}
+\item{use_names}{Whether the trace dump should use the names from \code{trace_exprs}.
+If \code{trace_exprs} is not specified, whether to use the method steps as names.
+Defaults to \code{TRUE}.}
 
 \item{...}{Unused, for extensibility.}
 
-\item{print_output}{Whether to \code{print()} the output of each expression to the console. Defaults to \code{TRUE}.}
+\item{print_output}{Whether to \code{print()} the output of each expression to the console.
+Defaults to \code{TRUE}.}
 
 \item{verbose}{Whether logs should be printed when trace is triggered. Encompasses \code{print_output},
 meaning that \code{verbose = FALSE} also triggers the effect of \code{print_output = FALSE} by consequence.
