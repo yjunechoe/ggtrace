@@ -211,7 +211,7 @@ Note that you can more conveniently call `last_layer_errorcontext()` to
 the same effect:
 
     last_layer_errorcontext()
-    #> ✔ Executed `inspect_args(p, ggplot2:::Layer$compute_geom_1, layer_is(2L), error = TRUE, x = last_plot())$data`
+    #> ✔ Ran `inspect_args(last_plot(), ggplot2:::Layer$compute_geom_1, layer_is(2L), error = TRUE)$data`
     #> # A tibble: 3 × 14
     #>    ymin lower middle upper  ymax outliers  notchupper notchlower     x width
     #>   <dbl> <dbl>  <dbl> <dbl> <dbl> <list>         <dbl>      <dbl> <dbl> <dbl>

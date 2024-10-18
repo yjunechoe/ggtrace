@@ -61,7 +61,9 @@
 #'
 #' }
 last_layer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TRUE) { # nocov start
-  p <- eval.parent(rlang::call2(call("::", rlang::sym("ggplot2"), rlang::sym("last_plot"))))
+
+  last_plot_expr <- rlang::call2("last_plot", .ns = resolve_ns("ggplot2"))
+  p <- eval.parent(last_plot_expr)
   tr <- rlang::last_trace()
 
   layer_i <- gsub("Error occurred in the (\\d+).. layer.", "\\1", tr$body[1])
@@ -86,7 +88,7 @@ last_layer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TRUE)
   ggtrace_ns <- resolve_ns("ggtrace")
   ggtrace_expr <- rlang::call2(
     "inspect_args",
-    quote(p),
+    last_plot_expr,
     method_expr,
     rlang::call2("layer_is", layer_i, .ns = ggtrace_ns),
     error = TRUE,
@@ -103,13 +105,12 @@ last_layer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TRUE)
   }
 
   if (ggtrace_notes) {
-    ggtrace_expr$x <- call("last_plot")
     if ("data" %in% names(out)) {
       ggtrace_expr <- call("$", ggtrace_expr, quote(data))
       out <- asNamespace("tibble")$as_tibble(out$data)
     }
     ggtrace_expr_fmt <- rlang::expr_deparse(ggtrace_expr, width = Inf)
-    cli::cli_alert_success("Executed {.code {ggtrace_expr_fmt}}")
+    cli::cli_alert_success("Ran {.code {ggtrace_expr_fmt}}")
   }
 
   out
