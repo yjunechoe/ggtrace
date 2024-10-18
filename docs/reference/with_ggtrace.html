@@ -90,10 +90,13 @@ If <code>trace_exprs</code> is not provided, <code><a href="ggtrace.html">ggtrac
 active until <code><a href="gguntrace.html">gguntrace()</a></code> is called on the method. Defaults to <code>TRUE</code>.</p></dd>
 
     <dt><code>use_names</code></dt>
-<dd><p>Whether the trace dump should use the names from <code>trace_exprs</code>. Defaults to <code>TRUE</code>.</p></dd>
+<dd><p>Whether the trace dump should use the names from <code>trace_exprs</code>.
+If <code>trace_exprs</code> is not specified, whether to use the method steps as names.
+Defaults to <code>TRUE</code>.</p></dd>
 
     <dt><code>print_output</code></dt>
-<dd><p>Whether to <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> the output of each expression to the console. Defaults to <code>TRUE</code>.</p></dd>
+<dd><p>Whether to <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code> the output of each expression to the console.
+Defaults to <code>TRUE</code>.</p></dd>
 
     <dt><code>verbose</code></dt>
 <dd><p>Whether logs should be printed when trace is triggered. Encompasses <code>print_output</code>,
