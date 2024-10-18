@@ -207,6 +207,20 @@ inspect this using `layer_before_geom()`, we find that the columns for
     #> # ℹ 4 more variables: relvarwidth <dbl>, flipped_aes <lgl>, PANEL <fct>,
     #> #   group <int>
 
+Note that you can more conveniently call `last_layer_errorcontext()` to
+the same effect:
+
+    last_layer_errorcontext()
+    #> ✔ Executed `inspect_args(p, ggplot2:::Layer$compute_geom_1, layer_is(2L), error = TRUE, x = last_plot())$data`
+    #> # A tibble: 3 × 14
+    #>    ymin lower middle upper  ymax outliers  notchupper notchlower     x width
+    #>   <dbl> <dbl>  <dbl> <dbl> <dbl> <list>         <dbl>      <dbl> <dbl> <dbl>
+    #> 1  21.4  22.8   26    30.4  33.9 <dbl [0]>       29.6       22.4     1  0.75
+    #> 2  17.8  18.6   19.7  21    21.4 <dbl [0]>       21.1       18.3     2  0.75
+    #> 3  13.3  14.4   15.2  16.2  18.7 <dbl [3]>       16.0       14.4     3  0.75
+    #> # ℹ 4 more variables: relvarwidth <dbl>, flipped_aes <lgl>, PANEL <fct>,
+    #> #   group <int>
+
 Thus, we need to ensure that `y` exists to satisfy both the stat and the
 geom, and that `label` exists after the statistical transformation step
 but before the geom sees the data. Crucially, we use the computed
@@ -289,6 +303,8 @@ v0.7.1](https://github.com/yjunechoe/ggtrace/releases/tag/v0.7.1), all
 
 It’s interesting to note that this is also possible in “vanilla” ggplot.
 Following our earlier discussion of `after_stat()`:
+
+    # NOTE: outdated solution - superseded by `outliers = FALSE` in ggplot >=v3.5.0
 
     # Suppress warning from mapping to `outliers` aesthetic
     update_geom_defaults("boxplot", list(outliers = NULL))

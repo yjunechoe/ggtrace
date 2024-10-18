@@ -153,6 +153,12 @@ The error tells us that the geom is missing some missing aesthetics, so somethin
 layer_before_geom(last_plot(), i = 2L, error = TRUE, verbose = TRUE)
 ```
 
+Note that you can more conveniently call `last_layer_errorcontext()` to the same effect:
+
+```{r boxplot-last_layer_errorcontext}
+last_layer_errorcontext()
+```
+
 Thus, we need to ensure that `y` exists to satisfy both the stat and the geom, and that `label` exists after the statistical transformation step but before the geom sees the data. Crucially, we use the computed variable `ymax` to (re-)map to the `y` and `label` aesthetics.
 
 ```{r boxplot-anno-success}
@@ -206,6 +212,8 @@ Note that as of [{ggtrace} v0.7.1](https://github.com/yjunechoe/ggtrace/releases
 It's interesting to note that this is also possible in "vanilla" ggplot. Following our earlier discussion of `after_stat()`:
 
 ```{r boxplot-remove-outliers-after-stat}
+# NOTE: outdated solution - superseded by `outliers = FALSE` in ggplot >=v3.5.0
+
 # Suppress warning from mapping to `outliers` aesthetic
 update_geom_defaults("boxplot", list(outliers = NULL))
 
