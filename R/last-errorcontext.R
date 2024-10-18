@@ -83,13 +83,14 @@ last_layer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TRUE)
   layer_obj_namespaced <- call(":::", rlang::sym(ns), rlang::sym(layer_obj))
   method_expr <- call("$", layer_obj_namespaced, layer_method[[2]])
 
-  ggtrace_expr <- rlang::expr(
-    ggtrace_inspect_args(
-      x = p,
-      method = !!method_expr,
-      cond = !!layer_i,
-      error = TRUE
-    )
+  ggtrace_ns <- resolve_ns("ggtrace")
+  ggtrace_expr <- rlang::call2(
+    "inspect_args",
+    quote(p),
+    method_expr,
+    rlang::call2("layer_is", layer_i, .ns = ggtrace_ns),
+    error = TRUE,
+    .ns = ggtrace_ns
   )
 
   print_opts <- c("suppressWarnings", "suppressMessages")
