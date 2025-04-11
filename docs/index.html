@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>ggtrace • ggtrace</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Atkinson_Hyperlegible-0.4.9/font.css" rel="stylesheet">
@@ -117,7 +116,7 @@
 </h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [1] '3.5.1'</span></span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [1] '3.5.2.9000'</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="id_1-inspect-sub-layer-data">1) <strong>Inspect sub-layer data</strong>
 <a class="anchor" aria-label="anchor" href="#id_1-inspect-sub-layer-data"></a>
@@ -160,18 +159,18 @@
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="fu">layer_after_scale</span>(scatter_plot, <span class="at">verbose =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co">#&gt; ✔ Ran `inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2, layer_is(1L))`</span></span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 234 × 5</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;    fill          x     y PANEL group</span></span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;    &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;int&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  1 #2D1160FF   1.8    29 1         2</span></span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  2 #2D1160FF   1.8    29 1         2</span></span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  3 #2D1160FF   2      31 1         2</span></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  4 #2D1160FF   2      30 1         2</span></span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  5 #2D1160FF   2.8    26 1         2</span></span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  6 #2D1160FF   2.8    26 1         2</span></span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  7 #2D1160FF   3.1    27 1         2</span></span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;  8 #2D1160FF   1.8    26 1         2</span></span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;  9 #2D1160FF   1.8    25 1         2</span></span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 10 #2D1160FF   2      28 1         2</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co">#&gt;        x     y fill      PANEL group</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;fct&gt; &lt;int&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co">#&gt;  1   1.8    29 #2D1160FF 1         2</span></span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a><span class="co">#&gt;  2   1.8    29 #2D1160FF 1         2</span></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="co">#&gt;  3   2      31 #2D1160FF 1         2</span></span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a><span class="co">#&gt;  4   2      30 #2D1160FF 1         2</span></span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a><span class="co">#&gt;  5   2.8    26 #2D1160FF 1         2</span></span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a><span class="co">#&gt;  6   2.8    26 #2D1160FF 1         2</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a><span class="co">#&gt;  7   3.1    27 #2D1160FF 1         2</span></span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a><span class="co">#&gt;  8   1.8    26 #2D1160FF 1         2</span></span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a><span class="co">#&gt;  9   1.8    25 #2D1160FF 1         2</span></span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a><span class="co">#&gt; 10   2      28 #2D1160FF 1         2</span></span>
 <span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a><span class="co">#&gt; # ℹ 224 more rows</span></span>
 <span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a></span>
 <span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>scatter_plot <span class="sc">+</span></span>
@@ -423,7 +422,7 @@
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://yjunechoe.github.io" class="external-link">June Choe</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0701-921X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<a href="https://yjunechoe.github.io" class="external-link">June Choe</a> <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-0701-921X" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
@@ -434,6 +433,7 @@
 <li><a href="https://github.com/tidyverse/ggplot2/tree/v3.5.1" class="external-link"><img src="https://img.shields.io/badge/tested%20on%20ggplot2%20version-3.5.1-gogreen.svg"></a></li>
 <li><a href="https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/yjunechoe/ggtrace?branch=main" class="external-link"><img src="https://codecov.io/gh/yjunechoe/ggtrace/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://app.codecov.io/gh/yjunechoe/ggtrace" class="external-link"><img src="https://codecov.io/gh/yjunechoe/ggtrace/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
@@ -446,7 +446,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.9000.</p>
 </div>
 
     </footer>
