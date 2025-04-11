@@ -98,12 +98,16 @@ test_that("`layer_is()` targets layers with `i` and `layers`", {
       inspect_which(p, StatCount$compute_group, cond = layer_is(1)),
       inspect_which(p, StatCount$compute_group, cond = layer_is(3))
     ),
-    inspect_which(p, StatCount$compute_group, cond = layer_is(i %in% c(1, 3)))
+    inspect_which(p, StatCount$compute_group, cond = layer_is(
+      quote(i %in% c(1, 3))
+    ))
   )
 
   expect_identical(
     inspect_which(p, StatCount$compute_group, cond = layer_is(2)),
-    inspect_which(p, StatCount$compute_group, cond = layer_is(!is.null(layers[[i]]$aes_params$colour)))
+    inspect_which(p, StatCount$compute_group, cond = layer_is(
+      quote(!is.null(layers[[i]]$aes_params$colour))
+    ))
   )
 
 })
