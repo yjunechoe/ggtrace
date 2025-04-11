@@ -106,16 +106,4 @@ ggtrace_highjack_return(
       mutate(x = sample(x))
   })
 )
-
-# Bars get a black outline and get darker from left-to-right, but only for second panel
-ggtrace_highjack_return(
-  x = p1, method = GeomBar$draw_panel,
-  cond = quote(data$PANEL[1] == 2),
-  value = quote({
-    editGrob(returnValue(), gp = gpar(
-      col = "black", alpha = seq(0.2, 1, length.out = nrow(data)
-    )))
-  })
-)
-
 }

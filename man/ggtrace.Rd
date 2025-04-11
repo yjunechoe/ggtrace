@@ -134,13 +134,14 @@ jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
 
 jitter_plot
 
-ggbody(PositionJitter$compute_layer)
+ggbody(Position$compute_layer)
 
 ## Step 1 ====
 ## Inspect what `data` look like at the start of the function
-ggtrace(PositionJitter$compute_layer, trace_steps = 1, trace_exprs = quote(head(data)))
+ggtrace(Position$compute_layer, trace_steps = 1, trace_exprs = quote(head(data)))
 
 jitter_plot
+ggtrace::last_ggtrace()
 
 ## Step 2 ====
 ## What does `data` look like at the end of the method? Unfortunately, `trace()` only lets us enter
@@ -148,8 +149,8 @@ jitter_plot
 ## address this, `ggtrace()` offers a `~step` keyword which gets substituted for the current line.
 ## We also set `print_output = FALSE` to disable printing of the output
 ggtrace(
-  PositionJitter$compute_layer,
-  trace_steps = 14,
+  Position$compute_layer,
+  trace_steps = -1, # Last step
   trace_exprs = quote(~step), # This is the default if `trace_exprs` is not provided
   print_output = FALSE
 )
@@ -165,8 +166,8 @@ head(last_ggtrace()[[1]])
 ## If we want both to be returned at the same time for an easier comparison, we can pass in a
 ## (named) list of expressions.
 ggtrace(
-  PositionJitter$compute_layer,
-  trace_steps = c(1, 14),
+  Position$compute_layer,
+  trace_steps = c(1, -1),
   trace_exprs = rlang::exprs(
     before_jitter = data,
     after_jitter = ~step
@@ -181,13 +182,6 @@ invisible(ggplotGrob(jitter_plot))
 jitter_tracedump <- last_ggtrace()
 
 lapply(jitter_tracedump, head, 3)
-
-jitter_distances <- jitter_tracedump[["before_jitter"]]$x -
-  jitter_tracedump[["after_jitter"]]$x
-
-range(jitter_distances)
-jitter_plot$layers[[1]]$position$width
-
 }
 \seealso{
 \code{\link[=gguntrace]{gguntrace()}}, \code{\link[=is_traced]{is_traced()}}, \code{\link[=last_ggtrace]{last_ggtrace()}}, \code{\link[=global_ggtrace]{global_ggtrace()}}

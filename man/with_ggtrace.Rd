@@ -102,32 +102,6 @@ with_ggtrace(
   }),
   out = "gtable" # or "g"
 )
-
-
-# With `once = FALSE` for persistent tracing (still cleaned up after)
-lm_plot <- ggplot(mpg, aes(displ, hwy, color = drv)) +
-  geom_point() +
-  geom_smooth(method = "lm")
-lm_plot
-
-with_ggtrace(
-  x = lm_plot,
-  method = StatSmooth$compute_group,
-  trace_steps = c(1, 11),
-  trace_exprs = list(
-    group = quote(data$group[1]),
-    coef = quote(model$coef)
-  )
-)
-
-with_ggtrace(
-  x = lm_plot,
-  method = StatSmooth$compute_group,
-  trace_steps = 1,
-  trace_exprs = quote(method <- c("loess", "lm", "loess")[data$group[1]]),
-  out = "g" # or "gtable"
-)
-
 }
 \seealso{
 \code{\link[=ggtrace]{ggtrace()}}, \code{\link[=ggeval_silent]{ggeval_silent()}}

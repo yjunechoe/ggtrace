@@ -7,7 +7,6 @@
 \alias{layer_before_geom}
 \alias{layer_after_scale}
 \alias{layer_is}
-\alias{.layer_is}
 \title{Inspect snapshots of sub-layer data}
 \usage{
 layer_before_stat(
@@ -42,9 +41,7 @@ layer_after_scale(
   verbose = rlang::is_interactive()
 )
 
-layer_is(expr)
-
-.layer_is(expr)
+layer_is(x)
 }
 \arguments{
 \item{plot}{A ggplot object. If missing, defaults to \code{ggplot2::last_plot()}.}
@@ -57,14 +54,18 @@ layer_is(expr)
 
 \item{verbose}{If \code{TRUE}, prints the corresponding ggtrace code and re-prints evaluation errors.}
 
-\item{expr}{An expression to evaluate for each call to the method, which
+\item{x}{An integer or an expression.
+\itemize{
+\item \strong{Integer:} A number for the nth layer
+\item \strong{Expression:} Evaluate for each call to the method, which
 exposes information about the current layer that the method is being
 called for. In technical terms, \code{layer_is()} subsets calls to the method
 that are downstream of the \code{by_layer()} function in the ggplot internals.
-It exposes some context-dependent variables, including:
+}
+The expression exposes some context-dependent variables, including:
 \itemize{
 \item \code{i}: Scalar integer representing the nth layer
-\item \code{layers}: A list whose contents are equivalent to \verb{<ggplot>$layers}
+\item \code{layers}: A list whose contents are equivalent to \code{<ggplot>$layers}
 }}
 }
 \value{

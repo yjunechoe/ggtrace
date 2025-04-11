@@ -77,7 +77,7 @@ ggtrace_highjack_args(
   x = p,
   method = StatSmooth$compute_group,
   cond = quote(data$group[1] == 2),
-  values = list(method = "loess")
+  values = list(method = loess)
 )
 
 # If value is an expression, it's evaluated in the Tracing Context
@@ -95,6 +95,4 @@ ggtrace_highjack_args(
 
   )
 )
-
-
 }
