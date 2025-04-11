@@ -8,8 +8,6 @@
 [![](https://img.shields.io/badge/tested%20on%20ggplot2%20version-3.5.1-gogreen.svg)](https://github.com/tidyverse/ggplot2/tree/v3.5.1)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/yjunechoe/ggtrace/branch/main/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/ggtrace?branch=main)
-[![Codecov test
 coverage](https://codecov.io/gh/yjunechoe/ggtrace/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/ggtrace)
 <!-- badges: end -->
 
