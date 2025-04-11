@@ -60,7 +60,7 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE
   ._counter_ <- 0L
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({
@@ -177,7 +177,7 @@ ggtrace_highjack_return <- function(x, method, cond = 1L, value = quote(returnVa
   ._counter_ <- 0L
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({

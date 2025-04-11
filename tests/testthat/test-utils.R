@@ -21,10 +21,10 @@ test_that("namespace is captured correctly", {
 test_that("handle private variables differently from methods", {
 
   method_fn <- get("compute_group", StatCount)
-  expect_equal(resolve_method(method_fn), as.list(body(method_fn)))
+  expect_equal(list_method_body(method_fn), as.list(body(method_fn)))
 
   private_var <- get("default_aes", StatCount)
-  expect_equal(resolve_method(private_var), private_var)
+  expect_equal(list_method_body(private_var), private_var)
 
 })
 

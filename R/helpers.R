@@ -7,5 +7,5 @@
 #'
 #' @inherit gguntrace examples
 is_traced <- function(method) {
-  resolve_formatting(rlang::enquo(method), remove_trace = FALSE)$traced
+  resolve_method(rlang::enquo(method), remove_trace = FALSE)$traced
 }

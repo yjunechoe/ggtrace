@@ -169,7 +169,7 @@ ggtrace <- function(method, trace_steps, trace_exprs,
   }
 
   # Resolve formatting and dump vars
-  method_info <- resolve_formatting(method_quo, remove_trace = TRUE)
+  method_info <- resolve_method(method_quo, remove_trace = TRUE)
   what <- method_info$what
   where <- method_info$where
   method_body <- method_info$method_body

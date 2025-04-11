@@ -51,7 +51,7 @@ ggedit <- function(method, remove_trace = FALSE, ...) { # nocov start
     method_quo <- rlang::enquo(method)
 
     # Resolve formatting and dump vars
-    method_info <- resolve_formatting(method_quo, remove_trace = FALSE)
+    method_info <- resolve_method(method_quo, remove_trace = FALSE)
     what <- method_info$what
     where <- method_info$where
     method_body <- method_info$method_body

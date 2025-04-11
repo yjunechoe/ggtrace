@@ -51,7 +51,7 @@ ggtrace_inspect_n <- function(x, method, ..., error = FALSE) {
   ._counter_ <- 0L
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, tracer = rlang::expr({
@@ -117,7 +117,7 @@ ggtrace_inspect_which <- function(x, method, cond, ..., error = FALSE) {
   indices <- integer(0)
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, tracer = rlang::expr({
@@ -217,7 +217,7 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
   .values <- .ggtrace_placeholder
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
 
@@ -358,7 +358,7 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE,
   ._args <- .ggtrace_placeholder
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, at = 1L, print = FALSE, tracer = rlang::expr({
@@ -449,7 +449,7 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, ..., error = FALSE) {
   ._return <- .ggtrace_placeholder
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, exit = rlang::expr({
@@ -472,8 +472,12 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, ..., error = FALSE) {
     if (.is_traced(what, where)) {
       suppressMessages(untrace(what = what, where = where))
     }
-    rlang::abort(paste0("No call to `", method_info$formatted_call,
-                        "` detected at `cond` during execution of the plot"))
+    cli::cli_abort(c(
+      "!" = paste(
+        "No call to `{method_info$formatted_call}` detected",
+        "at `cond` during execution of the plot"
+      )
+    ))
   } else {
     ._return
   }
@@ -506,7 +510,7 @@ ggtrace_inspect_on_error <- function(x, method, ...) {
   ._args <- .ggtrace_placeholder
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, at = 1L, print = FALSE, tracer = rlang::expr({

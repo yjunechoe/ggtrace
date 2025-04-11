@@ -87,7 +87,7 @@ ggtrace_capture_fn <- function(x, method, cond = 1L, ...) {
   captured <- NULL
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
   suppressMessages(trace(what = what, where = where, print = FALSE, at = 1L, tracer = rlang::expr({
@@ -232,7 +232,7 @@ ggtrace_capture_env <- function(x, method, cond = 1L, at = -1L, ...) {
   captured <- NULL
 
   method_quo <- rlang::enquo(method)
-  method_info <- resolve_formatting(method_quo)
+  method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
 
