@@ -22,13 +22,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::remotes
           needs: check
 
       # Install development version of ggplot2
       - name: Install dev version of ggplot2
         run: |
-          install.packages("remotes")
           remotes::install_github("tidyverse/ggplot2")
           cat(remotes:::local_sha("ggplot2"))
         shell: Rscript {0}
