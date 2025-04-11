@@ -262,8 +262,8 @@
 <span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co">#&gt; 5   15   20                 12, 12, 12, 22         12         22</span></span>
 <span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a><span class="co">#&gt; 6   20   36                         44, 41         20         44</span></span>
 <span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a><span class="co">#&gt; 7   14   22 12, 12, 25, 24, 27, 25, 26, 23         12         27</span></span></code></pre></div>
-<p>One solution is to highjack the calculation of the boxplot layer’s statistics such that values of the <code>outliers</code> column is set to <code>NULL</code>. Using <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, we can pass an expression that modifies <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to the <code>value</code> argument, which evaluates to the value about to be returned by the method.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">ggtrace_highjack_return</span>(</span>
+<p>One solution is to highjack the calculation of the boxplot layer’s statistics such that values of the <code>outliers</code> column is set to <code>NULL</code>. Using <code><a href="reference/ggtrace_highjack_return.html">highjack_return()</a></code>, we can pass an expression that modifies <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to the <code>value</code> argument, which evaluates to the value about to be returned by the method.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="fu">highjack_return</span>(</span>
 <span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>  <span class="at">x =</span> boxplot_plot,</span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>  <span class="at">method =</span> Stat<span class="sc">$</span>compute_layer,</span>
 <span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>  <span class="at">cond =</span> <span class="dv">1</span><span class="dt">L</span>,</span>
@@ -272,7 +272,6 @@
 <span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a>  })</span>
 <span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="reference/figures/README-boxplot-remove-outliers-1.png" width="100%"></p>
-<p>Note that as of <a href="https://github.com/yjunechoe/ggtrace/releases/tag/v0.7.1" class="external-link">{ggtrace} v0.7.1</a>, all <code>ggtrace_*()</code> workflow functions have shorter aliases (e.g., <code><a href="reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> -&gt; <code><a href="reference/ggtrace_highjack_return.html">highjack_return()</a></code>). See <code><a href="reference/workflow-function-aliases.html">?`workflow-function-aliases`</a></code> for details.</p>
 <p>It’s interesting to note that this is also possible in “vanilla” ggplot. Following our earlier discussion of <code>after_stat()</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: outdated solution - superseded by `outliers = FALSE` in ggplot &gt;=v3.5.0</span></span>
 <span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a></span>
@@ -432,7 +431,6 @@
 <li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.7.3-gogreen.svg"></a></li>
 <li><a href="https://github.com/tidyverse/ggplot2/tree/v3.5.1" class="external-link"><img src="https://img.shields.io/badge/tested%20on%20ggplot2%20version-3.5.1-gogreen.svg"></a></li>
 <li><a href="https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/yjunechoe/ggtrace?branch=main" class="external-link"><img src="https://codecov.io/gh/yjunechoe/ggtrace/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
 <li><a href="https://app.codecov.io/gh/yjunechoe/ggtrace" class="external-link"><img src="https://codecov.io/gh/yjunechoe/ggtrace/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>

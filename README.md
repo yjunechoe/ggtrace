@@ -280,11 +280,11 @@ drawn.
 
 One solution is to highjack the calculation of the boxplot layer’s
 statistics such that values of the `outliers` column is set to `NULL`.
-Using `ggtrace_highjack_return()`, we can pass an expression that
-modifies `returnValue()` to the `value` argument, which evaluates to the
-value about to be returned by the method.
+Using `highjack_return()`, we can pass an expression that modifies
+`returnValue()` to the `value` argument, which evaluates to the value
+about to be returned by the method.
 
-    ggtrace_highjack_return(
+    highjack_return(
       x = boxplot_plot,
       method = Stat$compute_layer,
       cond = 1L,
@@ -294,12 +294,6 @@ value about to be returned by the method.
     )
 
 <img src="man/figures/README-boxplot-remove-outliers-1.png" width="100%" />
-
-Note that as of [{ggtrace}
-v0.7.1](https://github.com/yjunechoe/ggtrace/releases/tag/v0.7.1), all
-`ggtrace_*()` workflow functions have shorter aliases (e.g.,
-`ggtrace_highjack_return()` -&gt; `highjack_return()`). See
-`` ?`workflow-function-aliases` `` for details.
 
 It’s interesting to note that this is also possible in “vanilla” ggplot.
 Following our earlier discussion of `after_stat()`:
