@@ -17,9 +17,9 @@
 #' @param reprint_error Re-prints the original error message to the console. Defaults to `FALSE`.
 #' @param ggtrace_notes Prints the `ggtrace_inspect_args()` call used to inspect the error context. Defaults to `TRUE`.
 #'
-#' @seealso [ggtrace_inspect_on_error()]
+#' @seealso [inspect_on_error()]
 #'
-#' @return An dynamically constructed and evaluated call to [ggtrace_inspect_args()].
+#' @return An dynamically constructed and evaluated call to [inspect_args()].
 #' Prioritizes showing the state of layer data whenever possible (by extracting the `data` argument).
 #' @export
 #'
@@ -153,7 +153,7 @@ last_sublayer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TR
   obj_namespaced <- call(c("package" = "::", "namespace" = ":::")[[obj_ns[1]]], rlang::sym(obj_ns[2]), rlang::sym(obj_name))
   method_formatted <- rlang::call2("$", obj_namespaced, method_expr)
 
-  ggtrace_expr <- rlang::expr(ggtrace_inspect_on_error(x = p, method = !!method_formatted))
+  ggtrace_expr <- rlang::expr(inspect_on_error(x = p, method = !!method_formatted))
 
   print_opts <- c("suppressWarnings", "suppressMessages")
   ggtrace_expr_print <- Reduce(rlang::call2, print_opts, ggtrace_expr, right = TRUE)
@@ -168,7 +168,7 @@ last_sublayer_errorcontext <- function(reprint_error = FALSE, ggtrace_notes = TR
     ggtrace_expr$x <- call("last_plot")
     ggtrace_expr$cond = out$counter
     ggtrace_expr$error = TRUE
-    ggtrace_expr[[1]] = rlang::sym("ggtrace_inspect_args")
+    ggtrace_expr[[1]] = rlang::sym("inspect_args")
     if ("data" %in% names(out$args)) {
       ggtrace_expr <- call("$", ggtrace_expr, quote(data))
       out <- asNamespace("tibble")$as_tibble(out$args$data)

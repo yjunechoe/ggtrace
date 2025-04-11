@@ -42,16 +42,16 @@ p1 <- ggplot(diamonds, aes(cut)) +
 p1
 
 # 1 call to Stat$compute_layer
-ggtrace_inspect_n(p1, Stat$compute_layer)
+inspect_n(p1, Stat$compute_layer)
 
 # 8 calls to Stat$compute_panel
-ggtrace_inspect_n(p1, Stat$compute_panel)
+inspect_n(p1, Stat$compute_panel)
 
 # Note that there are 0 calls to Stat$compute_group ...
-ggtrace_inspect_n(p1, Stat$compute_group)
+inspect_n(p1, Stat$compute_group)
 
 # because StatCount has its own "compute_group" method defined
-ggtrace_inspect_n(p1, StatCount$compute_group)
+inspect_n(p1, StatCount$compute_group)
 
 # How about if we add a second layer that uses StatCount?
 p2 <- p1 + geom_text(
@@ -62,7 +62,7 @@ p2 <- p1 + geom_text(
 p2
 
 # Now there are double the calls to Stat/StatCount methods
-ggtrace_inspect_n(p2, Stat$compute_layer)
-ggtrace_inspect_n(p2, Stat$compute_panel)
-ggtrace_inspect_n(p2, StatCount$compute_group)
+inspect_n(p2, Stat$compute_layer)
+inspect_n(p2, Stat$compute_panel)
+inspect_n(p2, StatCount$compute_group)
 }

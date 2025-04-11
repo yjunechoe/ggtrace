@@ -15,7 +15,7 @@ last_sublayer_errorcontext(reprint_error = FALSE, ggtrace_notes = TRUE)
 \item{ggtrace_notes}{Prints the \code{ggtrace_inspect_args()} call used to inspect the error context. Defaults to \code{TRUE}.}
 }
 \value{
-An dynamically constructed and evaluated call to \code{\link[=ggtrace_inspect_args]{ggtrace_inspect_args()}}.
+An dynamically constructed and evaluated call to \code{\link[=inspect_args]{inspect_args()}}.
 Prioritizes showing the state of layer data whenever possible (by extracting the \code{data} argument).
 }
 \description{
@@ -75,5 +75,5 @@ last_sublayer_errorcontext()
 }
 }
 \seealso{
-\code{\link[=ggtrace_inspect_on_error]{ggtrace_inspect_on_error()}}
+\code{\link[=inspect_on_error]{inspect_on_error()}}
 }

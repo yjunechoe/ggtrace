@@ -20,16 +20,16 @@
 #' p1
 #'
 #' # 1 call to Stat$compute_layer
-#' ggtrace_inspect_n(p1, Stat$compute_layer)
+#' inspect_n(p1, Stat$compute_layer)
 #'
 #' # 8 calls to Stat$compute_panel
-#' ggtrace_inspect_n(p1, Stat$compute_panel)
+#' inspect_n(p1, Stat$compute_panel)
 #'
 #' # Note that there are 0 calls to Stat$compute_group ...
-#' ggtrace_inspect_n(p1, Stat$compute_group)
+#' inspect_n(p1, Stat$compute_group)
 #'
 #' # because StatCount has its own "compute_group" method defined
-#' ggtrace_inspect_n(p1, StatCount$compute_group)
+#' inspect_n(p1, StatCount$compute_group)
 #'
 #' # How about if we add a second layer that uses StatCount?
 #' p2 <- p1 + geom_text(
@@ -40,9 +40,9 @@
 #' p2
 #'
 #' # Now there are double the calls to Stat/StatCount methods
-#' ggtrace_inspect_n(p2, Stat$compute_layer)
-#' ggtrace_inspect_n(p2, Stat$compute_panel)
-#' ggtrace_inspect_n(p2, StatCount$compute_group)
+#' inspect_n(p2, Stat$compute_layer)
+#' inspect_n(p2, Stat$compute_panel)
+#' inspect_n(p2, StatCount$compute_group)
 ggtrace_inspect_n <- function(x, method, ..., error = FALSE) {
 
   rlang::check_dots_empty()
@@ -92,7 +92,7 @@ ggtrace_inspect_n <- function(x, method, ..., error = FALSE) {
 #'
 #'
 #' # Values of `._counter_` when `compute_group` is called for groups in the second panel:
-#' ggtrace_inspect_which(p1, StatCount$compute_group, quote(data$PANEL[1] == 2))
+#' inspect_which(p1, StatCount$compute_group, quote(data$PANEL[1] == 2))
 #'
 #'
 #' # How about if we add a second layer that uses StatCount?
@@ -102,11 +102,11 @@ ggtrace_inspect_n <- function(x, method, ..., error = FALSE) {
 #' )
 #' p2
 #'
-#' ggtrace_inspect_which(p2, StatCount$compute_group, quote(data$PANEL[1] == 2))
+#' inspect_which(p2, StatCount$compute_group, quote(data$PANEL[1] == 2))
 #'
 #'
 #' # Behaves like `base::which()` and returns `integer(0)` when no matches are found
-#' ggtrace_inspect_which(p2, StatBoxplot$compute_group, quote(data$PANEL[1] == 2))
+#' inspect_which(p2, StatBoxplot$compute_group, quote(data$PANEL[1] == 2))
 #'
 ggtrace_inspect_which <- function(x, method, cond, ..., error = FALSE) {
 
@@ -174,7 +174,7 @@ ggtrace_inspect_which <- function(x, method, cond, ..., error = FALSE) {
 #' p1
 #'
 #' # The `data` variable is bound to two unique values in `compute_group` method:
-#' ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data")
+#' inspect_vars(p1, StatSmooth$compute_group, vars = "data")
 #'
 #' # Note that elements of this list capture the method's state upon entering a step,
 #' # so "Step1" and "Step5" should be interpreted as the value of `data` at the start
@@ -192,8 +192,8 @@ ggtrace_inspect_which <- function(x, method, cond, ..., error = FALSE) {
 #'
 #' # Comparing the original plot to one with log-transformed scales reveals a change
 #' # in data detected at the beginning of Step 14
-#' names(ggtrace_inspect_vars(p1, ggplot2:::ggplot_build.ggplot, vars = "data"))
-#' names(ggtrace_inspect_vars(p2, ggplot2:::ggplot_build.ggplot, vars = "data"))
+#' names(inspect_vars(p1, ggplot2:::ggplot_build.ggplot, vars = "data"))
+#' names(inspect_vars(p2, ggplot2:::ggplot_build.ggplot, vars = "data"))
 #'
 #' # We can pinpoint the calculation of scale transformations to Step 13:
 #' ggbody(ggplot2:::ggplot_build.ggplot)[[13]]
@@ -201,7 +201,7 @@ ggtrace_inspect_which <- function(x, method, cond, ..., error = FALSE) {
 #'
 #' # With `by_vars = FALSE`, elements of the returned list are steps instead of values.
 #' # Note that this does not drop unchanged values:
-#' ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
+#' inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
 #'
 #'
 ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var = TRUE,
@@ -336,13 +336,13 @@ ggtrace_inspect_vars <- function(x, method, cond = 1L, at = "all", vars, by_var 
 #' p1
 #'
 #' # Argument value of `Stat$compute_panel` for the first panel
-#' compute_panel_args_1 <- ggtrace_inspect_args(x = p1, method = Stat$compute_panel)
+#' compute_panel_args_1 <- inspect_args(x = p1, method = Stat$compute_panel)
 #' names(ggformals(Stat$compute_panel))
 #' names(compute_panel_args_1)
 #' table(compute_panel_args_1$data$fill)
 #'
 #' # `hoist_dots` preserves information about which arguments were passed to `...`
-#' with_dots <- ggtrace_inspect_args(p1, Stat$compute_panel, hoist_dots = FALSE)
+#' with_dots <- inspect_args(p1, Stat$compute_panel, hoist_dots = FALSE)
 #' names(with_dots)
 #' with_dots$`...`
 #'
@@ -426,14 +426,14 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE,
 #' p1
 #'
 #' # Return value of `Stat$compute_panel` for the first panel
-#' ggtrace_inspect_return(x = p1, method = Stat$compute_panel)
+#' inspect_return(x = p1, method = Stat$compute_panel)
 #'
 #' # Return value for 4th panel
-#' ggtrace_inspect_return(x = p1, method = Stat$compute_panel,
+#' inspect_return(x = p1, method = Stat$compute_panel,
 #'                        cond = 4L)
 #'
 #' # Return value for 4th panel, 2nd group (bar)
-#' ggtrace_inspect_return(
+#' inspect_return(
 #'   x = p1, method = StatCount$compute_group,
 #'   cond = quote(data$PANEL[1] == 4 && data$group[1] == 2)
 #' )
@@ -498,8 +498,8 @@ ggtrace_inspect_return <- function(x, method, cond = 1L, ..., error = FALSE) {
 #' erroring_barplot <- ggplot(mtcars, aes(mpg, hp)) +
 #'   stat_summary() +
 #'   geom_bar()
-#' ggtrace_inspect_on_error(erroring_barplot, StatCount$setup_params)
-#' ggtrace_inspect_on_error(erroring_barplot, ggplot2:::Layer$compute_statistic)
+#' inspect_on_error(erroring_barplot, StatCount$setup_params)
+#' inspect_on_error(erroring_barplot, ggplot2:::Layer$compute_statistic)
 ggtrace_inspect_on_error <- function(x, method, ...) {
 
   rlang::check_dots_empty()

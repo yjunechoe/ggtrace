@@ -27,7 +27,7 @@
 #' p
 #'
 #' # Fit predictions from loess regression just for second group
-#' ggtrace_highjack_args(
+#' highjack_args(
 #'   x = p,
 #'   method = StatSmooth$compute_group,
 #'   cond = quote(data$group[1] == 2),
@@ -35,7 +35,7 @@
 #' )
 #'
 #' # If value is an expression, it's evaluated in the Tracing Context
-#' ggtrace_highjack_args(
+#' highjack_args(
 #'   x = p,
 #'   method = StatSmooth$compute_group,
 #'   values = rlang::exprs(
@@ -148,7 +148,7 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE
 #'
 #' # Highjack `Stat$compute_panel` at the first panel
 #' # to return higher values for `count`
-#' ggtrace_highjack_return(
+#' highjack_return(
 #'   x = p1, method = Stat$compute_panel,
 #'   value = quote({
 #'     returnValue() %>%
@@ -158,7 +158,7 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE
 #'
 #' # Highjack `Stat$compute_panel` at the fourth panel
 #' # to shuffle bars in the x-axis
-#' ggtrace_highjack_return(
+#' highjack_return(
 #'   x = p1, method = Stat$compute_panel,
 #'   cond = quote(data$PANEL[1] == 4),
 #'   value = quote({

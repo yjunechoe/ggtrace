@@ -62,11 +62,11 @@ argument of workflow functions. For example, \code{cond = quote(._counter_ == 1L
 is evaluated as \code{TRUE} when the method is called for the first time. The
 \code{cond} argument also supports numeric shorthands like \code{cond = 1L} which evaluates to
 \code{quote(._counter_ == 1L)}, and this is the default value of \code{cond} for
-all workflow functions that only return one value (e.g., \code{ggtrace_capture_fn()}).
-It is recommended to consult the output of \code{ggtrace_inspect_n()} and
-\code{ggtrace_inspect_which()} to construct expressions that condition on \code{._counter_}.
+all workflow functions that only return one value (e.g., \code{capture_fn()}).
+It is recommended to consult the output of \code{inspect_n()} and
+\code{inspect_which()} to construct expressions that condition on \code{._counter_}.
 
-For highjack functions like \code{ggtrace_highjack_return()}, the value about to
+For highjack functions like \code{highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
 simply evaluates to the return value, but directly computing on \code{returnValue()} to
@@ -88,7 +88,7 @@ p1
 
 # Highjack `Stat$compute_panel` at the first panel
 # to return higher values for `count`
-ggtrace_highjack_return(
+highjack_return(
   x = p1, method = Stat$compute_panel,
   value = quote({
     returnValue() \%>\%
@@ -98,7 +98,7 @@ ggtrace_highjack_return(
 
 # Highjack `Stat$compute_panel` at the fourth panel
 # to shuffle bars in the x-axis
-ggtrace_highjack_return(
+highjack_return(
   x = p1, method = Stat$compute_panel,
   cond = quote(data$PANEL[1] == 4),
   value = quote({

@@ -47,11 +47,11 @@ argument of workflow functions. For example, \code{cond = quote(._counter_ == 1L
 is evaluated as \code{TRUE} when the method is called for the first time. The
 \code{cond} argument also supports numeric shorthands like \code{cond = 1L} which evaluates to
 \code{quote(._counter_ == 1L)}, and this is the default value of \code{cond} for
-all workflow functions that only return one value (e.g., \code{ggtrace_capture_fn()}).
-It is recommended to consult the output of \code{ggtrace_inspect_n()} and
-\code{ggtrace_inspect_which()} to construct expressions that condition on \code{._counter_}.
+all workflow functions that only return one value (e.g., \code{capture_fn()}).
+It is recommended to consult the output of \code{inspect_n()} and
+\code{inspect_which()} to construct expressions that condition on \code{._counter_}.
 
-For highjack functions like \code{ggtrace_highjack_return()}, the value about to
+For highjack functions like \code{highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
 simply evaluates to the return value, but directly computing on \code{returnValue()} to
@@ -70,7 +70,7 @@ base <- ggplot(df, aes(x = V1, y = V2))
 p1 <- base + stat_summary(orientation = "x")
 p1
 
-p1_compute_panel <- ggtrace_capture_fn(p1, method = StatSummary$compute_panel)
+p1_compute_panel <- capture_fn(p1, method = StatSummary$compute_panel)
 
 # `p1_compute_panel` is a copy of the ggproto method
 body(p1_compute_panel)
@@ -88,7 +88,7 @@ p1_compute_panel(flipped_aes = TRUE)
 
 # We confirm this output to be true when `orientation = "y"` in `stat_summary()`
 p2 <- base + stat_summary(orientation = "y")
-p2_compute_panel <- ggtrace_capture_fn(p2, method = StatSummary$compute_panel)
+p2_compute_panel <- capture_fn(p2, method = StatSummary$compute_panel)
 
 identical(p1_compute_panel(flipped_aes = TRUE), p2_compute_panel())
 
@@ -99,7 +99,7 @@ identical(p1_compute_panel(flipped_aes = TRUE), p2_compute_panel())
 p3 <- base + stat_smooth() + geom_jitter()
 p3
 
-p3_compute_panel <- ggtrace_capture_fn(p3, method = Stat$compute_panel)
+p3_compute_panel <- capture_fn(p3, method = Stat$compute_panel)
 
 # For one, the body is different - it's a "wrapper" around the captured method
 body(p3_compute_panel)

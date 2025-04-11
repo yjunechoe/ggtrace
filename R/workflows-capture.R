@@ -27,7 +27,7 @@
 #' p1 <- base + stat_summary(orientation = "x")
 #' p1
 #'
-#' p1_compute_panel <- ggtrace_capture_fn(p1, method = StatSummary$compute_panel)
+#' p1_compute_panel <- capture_fn(p1, method = StatSummary$compute_panel)
 #'
 #' # `p1_compute_panel` is a copy of the ggproto method
 #' body(p1_compute_panel)
@@ -45,7 +45,7 @@
 #'
 #' # We confirm this output to be true when `orientation = "y"` in `stat_summary()`
 #' p2 <- base + stat_summary(orientation = "y")
-#' p2_compute_panel <- ggtrace_capture_fn(p2, method = StatSummary$compute_panel)
+#' p2_compute_panel <- capture_fn(p2, method = StatSummary$compute_panel)
 #'
 #' identical(p1_compute_panel(flipped_aes = TRUE), p2_compute_panel())
 #'
@@ -56,7 +56,7 @@
 #' p3 <- base + stat_smooth() + geom_jitter()
 #' p3
 #'
-#' p3_compute_panel <- ggtrace_capture_fn(p3, method = Stat$compute_panel)
+#' p3_compute_panel <- capture_fn(p3, method = Stat$compute_panel)
 #'
 #' # For one, the body is different - it's a "wrapper" around the captured method
 #' body(p3_compute_panel)
@@ -173,12 +173,12 @@ ggtrace_capture_fn <- function(x, method, cond = 1L, ...) {
 #'
 #' # `after_scale()` is resolved by `Geom$use_defaults` (at Step 6)
 #'
-#' before_applying <- ggtrace_capture_env(
+#' before_applying <- capture_env(
 #'   x = after_scale_plot,
 #'   method = Geom$use_defaults,
 #'   at = 1  # To be more specific, do `at = 6`
 #' )
-#' after_applying <- ggtrace_capture_env(
+#' after_applying <- capture_env(
 #'   x = after_scale_plot,
 #'   method = Geom$use_defaults,
 #'   at = -1  # To be more specific, do `at = 7`
@@ -209,7 +209,7 @@ ggtrace_capture_fn <- function(x, method, cond = 1L, ...) {
 #' by_group_drawing_code <- rlang::call_args(ggbody(Geom$draw_panel)[[3]])[[2]]
 #' by_group_drawing_code
 #'
-#' draw_panel_env <- ggtrace_capture_env(
+#' draw_panel_env <- capture_env(
 #'   x = after_scale_plot,
 #'   method = Geom$draw_panel
 #' )
@@ -220,7 +220,6 @@ ggtrace_capture_fn <- function(x, method, cond = 1L, ...) {
 #' library(grid)
 #' grid.newpage()
 #' grid.draw(editGrob(boxes[[1]], vp = viewport()))
-#'
 ggtrace_capture_env <- function(x, method, cond = 1L, at = -1L, ...) {
 
   rlang::check_dots_empty()

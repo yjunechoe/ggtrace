@@ -46,11 +46,11 @@ argument of workflow functions. For example, \code{cond = quote(._counter_ == 1L
 is evaluated as \code{TRUE} when the method is called for the first time. The
 \code{cond} argument also supports numeric shorthands like \code{cond = 1L} which evaluates to
 \code{quote(._counter_ == 1L)}, and this is the default value of \code{cond} for
-all workflow functions that only return one value (e.g., \code{ggtrace_capture_fn()}).
-It is recommended to consult the output of \code{ggtrace_inspect_n()} and
-\code{ggtrace_inspect_which()} to construct expressions that condition on \code{._counter_}.
+all workflow functions that only return one value (e.g., \code{capture_fn()}).
+It is recommended to consult the output of \code{inspect_n()} and
+\code{inspect_which()} to construct expressions that condition on \code{._counter_}.
 
-For highjack functions like \code{ggtrace_highjack_return()}, the value about to
+For highjack functions like \code{highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
 simply evaluates to the return value, but directly computing on \code{returnValue()} to
@@ -68,14 +68,14 @@ p1 <- ggplot(diamonds, aes(cut)) +
 p1
 
 # Return value of `Stat$compute_panel` for the first panel
-ggtrace_inspect_return(x = p1, method = Stat$compute_panel)
+inspect_return(x = p1, method = Stat$compute_panel)
 
 # Return value for 4th panel
-ggtrace_inspect_return(x = p1, method = Stat$compute_panel,
+inspect_return(x = p1, method = Stat$compute_panel,
                        cond = 4L)
 
 # Return value for 4th panel, 2nd group (bar)
-ggtrace_inspect_return(
+inspect_return(
   x = p1, method = StatCount$compute_group,
   cond = quote(data$PANEL[1] == 4 && data$group[1] == 2)
 )

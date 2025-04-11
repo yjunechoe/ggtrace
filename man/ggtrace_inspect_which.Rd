@@ -46,11 +46,11 @@ argument of workflow functions. For example, \code{cond = quote(._counter_ == 1L
 is evaluated as \code{TRUE} when the method is called for the first time. The
 \code{cond} argument also supports numeric shorthands like \code{cond = 1L} which evaluates to
 \code{quote(._counter_ == 1L)}, and this is the default value of \code{cond} for
-all workflow functions that only return one value (e.g., \code{ggtrace_capture_fn()}).
-It is recommended to consult the output of \code{ggtrace_inspect_n()} and
-\code{ggtrace_inspect_which()} to construct expressions that condition on \code{._counter_}.
+all workflow functions that only return one value (e.g., \code{capture_fn()}).
+It is recommended to consult the output of \code{inspect_n()} and
+\code{inspect_which()} to construct expressions that condition on \code{._counter_}.
 
-For highjack functions like \code{ggtrace_highjack_return()}, the value about to
+For highjack functions like \code{highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
 simply evaluates to the return value, but directly computing on \code{returnValue()} to
@@ -68,7 +68,7 @@ p1
 
 
 # Values of `._counter_` when `compute_group` is called for groups in the second panel:
-ggtrace_inspect_which(p1, StatCount$compute_group, quote(data$PANEL[1] == 2))
+inspect_which(p1, StatCount$compute_group, quote(data$PANEL[1] == 2))
 
 
 # How about if we add a second layer that uses StatCount?
@@ -78,10 +78,10 @@ p2 <- p1 + geom_text(
 )
 p2
 
-ggtrace_inspect_which(p2, StatCount$compute_group, quote(data$PANEL[1] == 2))
+inspect_which(p2, StatCount$compute_group, quote(data$PANEL[1] == 2))
 
 
 # Behaves like `base::which()` and returns `integer(0)` when no matches are found
-ggtrace_inspect_which(p2, StatBoxplot$compute_group, quote(data$PANEL[1] == 2))
+inspect_which(p2, StatBoxplot$compute_group, quote(data$PANEL[1] == 2))
 
 }

@@ -78,11 +78,11 @@ argument of workflow functions. For example, \code{cond = quote(._counter_ == 1L
 is evaluated as \code{TRUE} when the method is called for the first time. The
 \code{cond} argument also supports numeric shorthands like \code{cond = 1L} which evaluates to
 \code{quote(._counter_ == 1L)}, and this is the default value of \code{cond} for
-all workflow functions that only return one value (e.g., \code{ggtrace_capture_fn()}).
-It is recommended to consult the output of \code{ggtrace_inspect_n()} and
-\code{ggtrace_inspect_which()} to construct expressions that condition on \code{._counter_}.
+all workflow functions that only return one value (e.g., \code{capture_fn()}).
+It is recommended to consult the output of \code{inspect_n()} and
+\code{inspect_which()} to construct expressions that condition on \code{._counter_}.
 
-For highjack functions like \code{ggtrace_highjack_return()}, the value about to
+For highjack functions like \code{highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
 simply evaluates to the return value, but directly computing on \code{returnValue()} to
@@ -98,7 +98,7 @@ p1 <- ggplot(mtcars[1:10,], aes(mpg, hp)) +
 p1
 
 # The `data` variable is bound to two unique values in `compute_group` method:
-ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data")
+inspect_vars(p1, StatSmooth$compute_group, vars = "data")
 
 # Note that elements of this list capture the method's state upon entering a step,
 # so "Step1" and "Step5" should be interpreted as the value of `data` at the start
@@ -116,8 +116,8 @@ p2
 
 # Comparing the original plot to one with log-transformed scales reveals a change
 # in data detected at the beginning of Step 14
-names(ggtrace_inspect_vars(p1, ggplot2:::ggplot_build.ggplot, vars = "data"))
-names(ggtrace_inspect_vars(p2, ggplot2:::ggplot_build.ggplot, vars = "data"))
+names(inspect_vars(p1, ggplot2:::ggplot_build.ggplot, vars = "data"))
+names(inspect_vars(p2, ggplot2:::ggplot_build.ggplot, vars = "data"))
 
 # We can pinpoint the calculation of scale transformations to Step 13:
 ggbody(ggplot2:::ggplot_build.ggplot)[[13]]
@@ -125,7 +125,7 @@ ggbody(ggplot2:::ggplot_build.ggplot)[[13]]
 
 # With `by_vars = FALSE`, elements of the returned list are steps instead of values.
 # Note that this does not drop unchanged values:
-ggtrace_inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
+inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
 
 
 }

@@ -46,11 +46,11 @@ argument of workflow functions. For example, \code{cond = quote(._counter_ == 1L
 is evaluated as \code{TRUE} when the method is called for the first time. The
 \code{cond} argument also supports numeric shorthands like \code{cond = 1L} which evaluates to
 \code{quote(._counter_ == 1L)}, and this is the default value of \code{cond} for
-all workflow functions that only return one value (e.g., \code{ggtrace_capture_fn()}).
-It is recommended to consult the output of \code{ggtrace_inspect_n()} and
-\code{ggtrace_inspect_which()} to construct expressions that condition on \code{._counter_}.
+all workflow functions that only return one value (e.g., \code{capture_fn()}).
+It is recommended to consult the output of \code{inspect_n()} and
+\code{inspect_which()} to construct expressions that condition on \code{._counter_}.
 
-For highjack functions like \code{ggtrace_highjack_return()}, the value about to
+For highjack functions like \code{highjack_return()}, the value about to
 be returned by the function/method can be accessed with \code{returnValue()} in the
 \code{value} argument. By default, \code{value} is set to \code{quote(returnValue())} which
 simply evaluates to the return value, but directly computing on \code{returnValue()} to
@@ -67,12 +67,12 @@ after_scale_plot
 
 # `after_scale()` is resolved by `Geom$use_defaults` (at Step 6)
 
-before_applying <- ggtrace_capture_env(
+before_applying <- capture_env(
   x = after_scale_plot,
   method = Geom$use_defaults,
   at = 1  # To be more specific, do `at = 6`
 )
-after_applying <- ggtrace_capture_env(
+after_applying <- capture_env(
   x = after_scale_plot,
   method = Geom$use_defaults,
   at = -1  # To be more specific, do `at = 7`
@@ -103,7 +103,7 @@ ggbody(Geom$draw_panel)
 by_group_drawing_code <- rlang::call_args(ggbody(Geom$draw_panel)[[3]])[[2]]
 by_group_drawing_code
 
-draw_panel_env <- ggtrace_capture_env(
+draw_panel_env <- capture_env(
   x = after_scale_plot,
   method = Geom$draw_panel
 )
@@ -114,5 +114,4 @@ boxes <- eval(by_group_drawing_code, draw_panel_env)
 library(grid)
 grid.newpage()
 grid.draw(editGrob(boxes[[1]], vp = viewport()))
-
 }

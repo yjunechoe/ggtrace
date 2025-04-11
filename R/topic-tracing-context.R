@@ -14,11 +14,11 @@
 #' is evaluated as `TRUE` when the method is called for the first time. The
 #' `cond` argument also supports numeric shorthands like `cond = 1L` which evaluates to
 #' `quote(._counter_ == 1L)`, and this is the default value of `cond` for
-#' all workflow functions that only return one value (e.g., `ggtrace_capture_fn()`).
-#' It is recommended to consult the output of `ggtrace_inspect_n()` and
-#' `ggtrace_inspect_which()` to construct expressions that condition on `._counter_`.
+#' all workflow functions that only return one value (e.g., `capture_fn()`).
+#' It is recommended to consult the output of `inspect_n()` and
+#' `inspect_which()` to construct expressions that condition on `._counter_`.
 #'
-#' For highjack functions like `ggtrace_highjack_return()`, the value about to
+#' For highjack functions like `highjack_return()`, the value about to
 #' be returned by the function/method can be accessed with `returnValue()` in the
 #' `value` argument. By default, `value` is set to `quote(returnValue())` which
 #' simply evaluates to the return value, but directly computing on `returnValue()` to

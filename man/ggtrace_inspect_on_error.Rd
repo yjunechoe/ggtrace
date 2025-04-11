@@ -33,6 +33,6 @@ library(ggplot2)
 erroring_barplot <- ggplot(mtcars, aes(mpg, hp)) +
   stat_summary() +
   geom_bar()
-ggtrace_inspect_on_error(erroring_barplot, StatCount$setup_params)
-ggtrace_inspect_on_error(erroring_barplot, ggplot2:::Layer$compute_statistic)
+inspect_on_error(erroring_barplot, StatCount$setup_params)
+inspect_on_error(erroring_barplot, ggplot2:::Layer$compute_statistic)
 }
