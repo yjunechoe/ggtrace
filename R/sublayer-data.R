@@ -160,30 +160,45 @@ layer_after_scale <- function(plot, i = 1L, ..., error = FALSE,
 }
 
 #' @rdname sublayer-data
-#' @param expr An expression to evaluate for each call to the method, which
-#'   exposes information about the current layer that the method is being
-#'   called for. In technical terms, `layer_is()` subsets calls to the method
-#'   that are downstream of the `by_layer()` function in the ggplot internals.
-#'   It exposes some context-dependent variables, including:
-#'   * `i`: Scalar integer representing the nth layer
-#'   * `layers`: A list whose contents are equivalent to `<ggplot>$layers`
+#' @param x An integer or an expression.
+#'   \itemize{
+#'     \item \strong{Integer:} A number for the nth layer
+#'     \item \strong{Expression:} Evaluate for each call to the method, which
+#'          exposes information about the current layer that the method is being
+#'          called for. In technical terms, \code{layer_is()} subsets calls to the method
+#'          that are downstream of the \code{by_layer()} function in the ggplot internals.
+#'   }
+#'   The expression exposes some context-dependent variables, including:
+#'   \itemize{
+#'     \item \code{i}: Scalar integer representing the nth layer
+#'     \item \code{layers}: A list whose contents are equivalent to \code{<ggplot>$layers}
+#'   }
 #' @export
-layer_is <- function(expr) {
-  x <- rlang::enexpr(expr)
+layer_is <- function(x) {
+  if (!rlang::is_expression(x)) {
+    if (rlang::is_integerish(x)) {
+      x <- is.integer(x)
+    } else {
+      cli::cli_abort(c(
+        "`x` must be an integer or an expression, not {.obj_type_friendly {x}}"
+      ))
+    }
+  }
   rlang::call2(".layer_is", x, .ns = resolve_ns("ggtrace"))
 }
 
-#' @rdname sublayer-data
 #' @export
 .layer_is <- function(expr) {
 
   x <- rlang::enexpr(expr)
 
-  invalid_trace_msg <- function(x) {
-    sprintf("Invalid context: must be called from {.fn %s}.", x)
-  }
-  if (!any(sapply(sys.calls(), rlang::is_call, "ggplot_build"))) {
-    cli::cli_abort(invalid_trace_msg("ggplot_build"))
+  contexts <- c("ggplot_build", "ggplot_gtable")
+  invalid_trace_msg <- sprintf(
+    "Invalid context: must be called from {.fn %s} or {.fn %s}.",
+    contexts[1], contexts[2]
+  )
+  if (!any(sapply(sys.calls(), rlang::is_call, contexts))) {
+    cli::cli_abort(invalid_trace_msg)
   }
   by_layer_idx <- which(sapply(sys.calls(), rlang::is_call, "by_layer"))[1]
   if (is.na(by_layer_idx)) {
