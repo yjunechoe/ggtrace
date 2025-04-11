@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,10 +99,10 @@ argument of workflow functions. For example, <code>cond = quote(._counter_ == 1L
 is evaluated as <code>TRUE</code> when the method is called for the first time. The
 <code>cond</code> argument also supports numeric shorthands like <code>cond = 1L</code> which evaluates to
 <code>quote(._counter_ == 1L)</code>, and this is the default value of <code>cond</code> for
-all workflow functions that only return one value (e.g., <code>ggtrace_capture_fn()</code>).
-It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code> and
-<code><a href="ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
-<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, the value about to
+all workflow functions that only return one value (e.g., <code>capture_fn()</code>).
+It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">inspect_n()</a></code> and
+<code><a href="ggtrace_inspect_which.html">inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
+<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">highjack_return()</a></code>, the value about to
 be returned by the function/method can be accessed with <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the
 <code>value</code> argument. By default, <code>value</code> is set to <code>quote(returnValue())</code> which
 simply evaluates to the return value, but directly computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to
@@ -131,7 +131,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-plt img"><img src="ggtrace_capture_fn-1.png" alt="" width="1094" height="676"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">p1_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">p1</span>, method <span class="op">=</span> <span class="va">StatSummary</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p1_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">capture_fn</span><span class="op">(</span><span class="va">p1</span>, method <span class="op">=</span> <span class="va">StatSummary</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># `p1_compute_panel` is a copy of the ggproto method</span></span></span>
@@ -176,7 +176,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># We confirm this output to be true when `orientation = "y"` in `stat_summary()`</span></span></span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">base</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span>orientation <span class="op">=</span> <span class="st">"y"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">p2_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">p2</span>, method <span class="op">=</span> <span class="va">StatSummary</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p2_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">capture_fn</span><span class="op">(</span><span class="va">p2</span>, method <span class="op">=</span> <span class="va">StatSummary</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu">p1_compute_panel</span><span class="op">(</span>flipped_aes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="fu">p2_compute_panel</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -191,7 +191,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-plt img"><img src="ggtrace_capture_fn-2.png" alt="" width="1094" height="676"></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">p3_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_fn</span><span class="op">(</span><span class="va">p3</span>, method <span class="op">=</span> <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p3_compute_panel</span> <span class="op">&lt;-</span> <span class="fu">capture_fn</span><span class="op">(</span><span class="va">p3</span>, method <span class="op">=</span> <span class="va">Stat</span><span class="op">$</span><span class="va">compute_panel</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># For one, the body is different - it's a "wrapper" around the captured method</span></span></span>
@@ -233,7 +233,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data_new &lt;- vec_rbind0(!!!stats)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     data_new[, !names(data_new) %in% non_constant_columns, drop = FALSE]</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000002c88a7821f8&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000001df3749da10&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Captured argument defaults are again available for inspection via `formals()`</span></span></span>
 <span class="r-in"><span><span class="co"># Note that arguments passed to the `...` are promoted to function arguments</span></span></span>

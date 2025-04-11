@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-in"><span><span class="va">erroring_barplot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html" class="external-link">geom_bar</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">ggtrace_inspect_on_error</span><span class="op">(</span><span class="va">erroring_barplot</span>, <span class="va">StatCount</span><span class="op">$</span><span class="va">setup_params</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">inspect_on_error</span><span class="op">(</span><span class="va">erroring_barplot</span>, <span class="va">StatCount</span><span class="op">$</span><span class="va">setup_params</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $counter</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
@@ -153,9 +153,9 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $env</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000002c88dc1eeb0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000001df4d9ad690&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="fu">ggtrace_inspect_on_error</span><span class="op">(</span><span class="va">erroring_barplot</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">inspect_on_error</span><span class="op">(</span><span class="va">erroring_barplot</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $counter</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
@@ -273,7 +273,7 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $env</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000002c88ce9cd28&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000001df3f734740&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

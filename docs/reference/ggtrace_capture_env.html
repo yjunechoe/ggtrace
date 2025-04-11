@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -99,10 +99,10 @@ argument of workflow functions. For example, <code>cond = quote(._counter_ == 1L
 is evaluated as <code>TRUE</code> when the method is called for the first time. The
 <code>cond</code> argument also supports numeric shorthands like <code>cond = 1L</code> which evaluates to
 <code>quote(._counter_ == 1L)</code>, and this is the default value of <code>cond</code> for
-all workflow functions that only return one value (e.g., <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>).
-It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code> and
-<code><a href="ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
-<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, the value about to
+all workflow functions that only return one value (e.g., <code><a href="ggtrace_capture_fn.html">capture_fn()</a></code>).
+It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">inspect_n()</a></code> and
+<code><a href="ggtrace_inspect_which.html">inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
+<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">highjack_return()</a></code>, the value about to
 be returned by the function/method can be accessed with <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the
 <code>value</code> argument. By default, <code>value</code> is set to <code>quote(returnValue())</code> which
 simply evaluates to the return value, but directly computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to
@@ -121,12 +121,12 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># `after_scale()` is resolved by `Geom$use_defaults` (at Step 6)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">before_applying</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_env</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">before_applying</span> <span class="op">&lt;-</span> <span class="fu">capture_env</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="va">after_scale_plot</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="va">Geom</span><span class="op">$</span><span class="va">use_defaults</span>,</span></span>
 <span class="r-in"><span>  at <span class="op">=</span> <span class="fl">1</span>  <span class="co"># To be more specific, do `at = 6`</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">after_applying</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_env</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">after_applying</span> <span class="op">&lt;-</span> <span class="fu">capture_env</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="va">after_scale_plot</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="va">Geom</span><span class="op">$</span><span class="va">use_defaults</span>,</span></span>
 <span class="r-in"><span>  at <span class="op">=</span> <span class="op">-</span><span class="fl">1</span>  <span class="co"># To be more specific, do `at = 7`</span></span></span>
@@ -202,12 +202,12 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     self$draw_group(group, panel_params, coord, ...)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> })</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">draw_panel_env</span> <span class="op">&lt;-</span> <span class="fu">ggtrace_capture_env</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">draw_panel_env</span> <span class="op">&lt;-</span> <span class="fu">capture_env</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="va">after_scale_plot</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="va">Geom</span><span class="op">$</span><span class="va">draw_panel</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">draw_panel_env</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000002c883376508&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000001df4195a850&gt;</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">boxes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/eval.html" class="external-link">eval</a></span><span class="op">(</span><span class="va">by_group_drawing_code</span>, <span class="va">draw_panel_env</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -215,7 +215,6 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span><span class="va">boxes</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="ggtrace_capture_env-2.png" alt="" width="1094" height="676"></span>
-<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

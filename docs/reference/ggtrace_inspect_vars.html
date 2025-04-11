@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -135,10 +135,10 @@ argument of workflow functions. For example, <code>cond = quote(._counter_ == 1L
 is evaluated as <code>TRUE</code> when the method is called for the first time. The
 <code>cond</code> argument also supports numeric shorthands like <code>cond = 1L</code> which evaluates to
 <code>quote(._counter_ == 1L)</code>, and this is the default value of <code>cond</code> for
-all workflow functions that only return one value (e.g., <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>).
-It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code> and
-<code><a href="ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
-<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, the value about to
+all workflow functions that only return one value (e.g., <code><a href="ggtrace_capture_fn.html">capture_fn()</a></code>).
+It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">inspect_n()</a></code> and
+<code><a href="ggtrace_inspect_which.html">inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
+<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">highjack_return()</a></code>, the value about to
 be returned by the function/method can be accessed with <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the
 <code>value</code> argument. By default, <code>value</code> is set to <code>quote(returnValue())</code> which
 simply evaluates to the return value, but directly computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to
@@ -157,7 +157,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-plt img"><img src="ggtrace_inspect_vars-1.png" alt="" width="1094" height="676"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The `data` variable is bound to two unique values in `compute_group` method:</span></span></span>
-<span class="r-in"><span><span class="fu">ggtrace_inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Step1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       x   y PANEL group</span>
@@ -205,10 +205,10 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Comparing the original plot to one with log-transformed scales reveals a change</span></span></span>
 <span class="r-in"><span><span class="co"># in data detected at the beginning of Step 14</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">ggtrace_inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step21" "Step36"</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">ggtrace_inspect_vars</span><span class="op">(</span><span class="va">p2</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p2</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step15" "Step21" "Step36"</span>
 <span class="r-in"><span></span></span>
@@ -219,7 +219,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With `by_vars = FALSE`, elements of the returned list are steps instead of values.</span></span></span>
 <span class="r-in"><span><span class="co"># Note that this does not drop unchanged values:</span></span></span>
-<span class="r-in"><span><span class="fu">ggtrace_inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>, vars <span class="op">=</span> <span class="st">"data"</span>, at <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, by_var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>, vars <span class="op">=</span> <span class="st">"data"</span>, at <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, by_var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Step1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Step1$data</span>

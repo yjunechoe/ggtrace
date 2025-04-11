@@ -1,6 +1,10 @@
+# ggtrace 0.7.x
+
 # ggtrace 0.7.4
 
-# ggtrace 0.7.x
+- Reworked `layer_is()` to evaluate the argument eagerly by default, for ease of programming over it (#105)
+
+- Workflow functions throw a more informative error if the ggproto method is slightly off (ex: using `StatCount$compute_layer` when it's `Stat$compute_layer`) (#104)
 
 - Streamlined the behavior of `ggtrace(use_names)` for assigning names to the tracedump, where:
 

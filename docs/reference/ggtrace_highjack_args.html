@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.4</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -104,10 +104,10 @@ argument of workflow functions. For example, <code>cond = quote(._counter_ == 1L
 is evaluated as <code>TRUE</code> when the method is called for the first time. The
 <code>cond</code> argument also supports numeric shorthands like <code>cond = 1L</code> which evaluates to
 <code>quote(._counter_ == 1L)</code>, and this is the default value of <code>cond</code> for
-all workflow functions that only return one value (e.g., <code><a href="ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>).
-It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code> and
-<code><a href="ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
-<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>, the value about to
+all workflow functions that only return one value (e.g., <code><a href="ggtrace_capture_fn.html">capture_fn()</a></code>).
+It is recommended to consult the output of <code><a href="ggtrace_inspect_n.html">inspect_n()</a></code> and
+<code><a href="ggtrace_inspect_which.html">inspect_which()</a></code> to construct expressions that condition on <code>._counter_</code>.</p>
+<p>For highjack functions like <code><a href="ggtrace_highjack_return.html">highjack_return()</a></code>, the value about to
 be returned by the function/method can be accessed with <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the
 <code>value</code> argument. By default, <code>value</code> is set to <code>quote(returnValue())</code> which
 simply evaluates to the return value, but directly computing on <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> to
@@ -130,7 +130,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-plt img"><img src="ggtrace_highjack_args-1.png" alt="" width="1094" height="676"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Fit predictions from loess regression just for second group</span></span></span>
-<span class="r-in"><span><span class="fu">ggtrace_highjack_args</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">highjack_args</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="va">p</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span></span>
 <span class="r-in"><span>  cond <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">group</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span>,</span></span>
@@ -140,7 +140,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-plt img"><img src="ggtrace_highjack_args-2.png" alt="" width="1094" height="676"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If value is an expression, it's evaluated in the Tracing Context</span></span></span>
-<span class="r-in"><span><span class="fu">ggtrace_highjack_args</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu">highjack_args</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="va">p</span>,</span></span>
 <span class="r-in"><span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span></span>
 <span class="r-in"><span>  values <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/defusing-advanced.html" class="external-link">exprs</a></span><span class="op">(</span></span></span>
