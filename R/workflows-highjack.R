@@ -31,7 +31,7 @@
 #'   x = p,
 #'   method = StatSmooth$compute_group,
 #'   cond = quote(data$group[1] == 2),
-#'   values = list(method = "loess")
+#'   values = list(method = loess)
 #' )
 #'
 #' # If value is an expression, it's evaluated in the Tracing Context
@@ -49,8 +49,6 @@
 #'
 #'   )
 #' )
-#'
-#'
 ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE) {
 
   rlang::check_dots_empty()
@@ -168,18 +166,6 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE
 #'       mutate(x = sample(x))
 #'   })
 #' )
-#'
-#' # Bars get a black outline and get darker from left-to-right, but only for second panel
-#' ggtrace_highjack_return(
-#'   x = p1, method = GeomBar$draw_panel,
-#'   cond = quote(data$PANEL[1] == 2),
-#'   value = quote({
-#'     editGrob(returnValue(), gp = gpar(
-#'       col = "black", alpha = seq(0.2, 1, length.out = nrow(data)
-#'     )))
-#'   })
-#' )
-#'
 ggtrace_highjack_return <- function(x, method, cond = 1L, value = quote(returnValue()),
                                     ..., draw = TRUE) {
 

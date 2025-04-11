@@ -43,11 +43,6 @@
 #' ggtrace_inspect_n(p2, Stat$compute_layer)
 #' ggtrace_inspect_n(p2, Stat$compute_panel)
 #' ggtrace_inspect_n(p2, StatCount$compute_group)
-#'
-#' # But separate calls to each layer's respective Geoms
-#' ggtrace_inspect_n(p2, GeomBar$draw_panel)
-#' ggtrace_inspect_n(p2, GeomText$draw_panel)
-#'
 ggtrace_inspect_n <- function(x, method, ..., error = FALSE) {
 
   rlang::check_dots_empty()

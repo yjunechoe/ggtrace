@@ -29,16 +29,16 @@
 #'   geom_point(position = position_jitter(width = 0.2, seed = 2021))
 #'
 #' # Interactively modify the method's source code in text editor
-#' ggedit(PositionJitter$compute_layer)
+#' ggedit(Position$compute_layer)
 #'
 #' # Check the edited code
-#' ggbody(PositionJitter$compute_layer)
+#' ggbody(Position$compute_layer)
 #'
 #' # Execute method with edit
 #' jitter_plot
 #'
 #' # Untrace
-#' gguntrace(PositionJitter$compute_layer)
+#' gguntrace(Position$compute_layer)
 #'
 #' # Edit is removed in the next call
 #' jitter_plot
