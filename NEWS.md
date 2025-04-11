@@ -1,3 +1,5 @@
+# ggtrace 0.7.4
+
 # ggtrace 0.7.x
 
 - Streamlined the behavior of `ggtrace(use_names)` for assigning names to the tracedump, where:
