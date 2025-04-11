@@ -4,6 +4,9 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  schedule:
+    # Run every week
+    - cron: '0 0 * * 1'
 
 name: test-with-dev-ggplot2
 
