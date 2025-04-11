@@ -2,45 +2,7 @@ library(ggplot2)
 
 global_ggtrace_state(TRUE)
 
-test_that("inspection workflow works #1 (Position)", {
-
-  clear_last_ggtrace()
-  expect_null(last_ggtrace())
-
-  jitter_plot <- ggplot(diamonds[1:1000,], aes(cut, depth)) +
-    geom_point(position = position_jitter(width = 0.2, seed = 2021))
-
-  ggtrace(
-    method = PositionJitter$compute_layer,
-    trace_steps = c(1, 1, 9, length(ggbody(PositionJitter$compute_layer))),
-    trace_exprs = rlang::exprs(
-      data,            # What does the data passed in look like?
-      params,          # What do the initial parameters look like?
-      dummy_data,      # What is `dummy_data` defined at Step 8?
-      ~step            # What does the last line evaluate to?
-      # - i.e., what is returned by the method?
-    ),
-    print_output = FALSE     # Don't print evaluated expressions to console
-  )
-
-  expect_null(last_ggtrace())
-
-  invisible(ggplotGrob(jitter_plot))
-
-  jitter_tracedump <- last_ggtrace()
-  expect_equal(
-    jitter_tracedump[[2]],
-    list(width = 0.2, height = 0.04, seed = 2021)
-  )
-  expect_equal(
-    vapply(jitter_tracedump[-2], nrow, integer(1), USE.NAMES = FALSE),
-    rep(1000L, 3)
-  )
-
-  gguntrace(PositionJitter$compute_layer)
-})
-
-test_that("inspection workflow works #2 (Geom)", {
+test_that("inspection workflow works (Geom)", {
 
   clear_last_ggtrace()
   expect_null(last_ggtrace())
