@@ -31,7 +31,7 @@ split_ggproto_method <- function(method) {
   inherits(get(method_name, obj), "functionWithTrace")
 }
 
-resolve_method <- function(got) {
+list_method_body <- function(got) {
   if (is.function(got)) {
     as.list(body(got))
   } else {
@@ -39,16 +39,37 @@ resolve_method <- function(got) {
   }
 }
 
-sanitize_get_error <- function(e, method_name, obj_name) {
+sanitize_get_error <- function(e, method_name, obj_name, obj) {
   if (e$message == paste0("object '", method_name, "' not found")) {
-    rlang::abort(call = NULL, paste0(
-      "Method '", method_name, "' is not defined for `", obj_name, "`",
-      "\nCheck inheritance with `get_method_inheritance(", obj_name, ")`"
-    ))
+    info <- "Check inheritance with `get_method_inheritance({obj_name})`"
+    guess <- find_method(obj, method_name)
+    if (!is.null(guess)) {
+      info <- "Did you mean `{guess}${method_name}` instead?"
+    }
+    cli::cli_abort(
+      message = c(
+        "Method '{method_name}' is not defined for `{obj_name}`",
+        "i" = info
+      ),
+      call = NULL
+    )
   }
 }
 
-resolve_formatting <- function(method, remove_trace = FALSE) {
+find_method <- function(obj, method_name) {
+  inheritance <- get_method_inheritance(obj)
+  for (class_name in names(inheritance)) {
+    methods <- inheritance[[class_name]]
+
+    # Check if the method exists in the current class
+    if (method_name %in% methods) {
+      return(class_name)
+    }
+  }
+  return(NULL)
+}
+
+resolve_method <- function(method, remove_trace = FALSE) {
   method_quo <- rlang::enquo(method)
   if (rlang::is_quosure(method)) {
     method_quo <- method
@@ -87,7 +108,9 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
     formatted_call <- deparsed
 
     # Error if not a function
-    if (!rlang::is_function(fn_call)) { rlang::abort("Cannot trace a non-function.") }
+    if (!rlang::is_function(fn_call)) {
+      rlang::abort("Cannot trace a non-function.")
+    }
 
     # Ensure the function is not being traced and re-evaluate fn_call
     traced <- "functionWithTrace" %in% class(get(what, envir = fn_env))
@@ -180,7 +203,7 @@ resolve_formatting <- function(method, remove_trace = FALSE) {
     result <- tryCatch(
       expr = get(method_name, obj),
       error = function(e) {
-        sanitize_get_error(e, method_name, obj_name)
+        sanitize_get_error(e, method_name, obj_name, obj)
       }
     )
     # Inform if already being traced
