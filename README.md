@@ -3,7 +3,7 @@ ggtrace
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# **{ggtrace}** <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />
+# ggtrace <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />
 
 <!-- badges: start -->
 
@@ -338,7 +338,7 @@ It’s interesting to note that this is also possible in “vanilla” ggplot.
 Following our earlier discussion of `after_stat()`:
 
 ``` r
-# NOTE: outdated solution - superseded by `outliers = FALSE` in ggplot >=v3.5.0
+# NOTE: outdated solution - now possible via `outliers = FALSE` in ggplot v3.5.0
 
 # Suppress warning from mapping to `outliers` aesthetic
 update_geom_defaults("boxplot", list(outliers = NULL))
