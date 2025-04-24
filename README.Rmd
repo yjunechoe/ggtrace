@@ -1,36 +1,31 @@
 ---
 title: "ggtrace"
 output:
-  md_document
+  github_document
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 ```{r, include = FALSE}
-ragg_png = function(...) {
-  ragg::agg_png(..., res = 300, units = "in")
-}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width = 7,
-  fig.height = 5,
-  dev = "ragg_png",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  collapse  = TRUE,
+  comment   = "#>",
+  fig.path  = "man/figures/README-",
+  fig.align = "center",
+  out.width = "80%",
+  dev       = "ragg_png",
+  dpi       = 132
 )
 ```
 
 # **{ggtrace}** <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />
 
 <!-- badges: start -->
-[![](https://img.shields.io/badge/devel%20version-0.7.3-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.7.4-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![test-with-dev-ggplot2](https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/yjunechoe/ggtrace/graph/badge.svg)](https://app.codecov.io/gh/yjunechoe/ggtrace)
 <!-- badges: end -->
-
-#### **Programmatically explore, debug, and manipulate ggplot internals**
 
 ### **Installation**
 
@@ -49,13 +44,13 @@ More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://
 
 ### **Description**
 
-`{ggtrace}` embodies an opinionated approach to learning/debugging/hacking `{ggplot2}` internals. I recommend watching the following presentation(s) on `{ggtrace}` before getting started on any kind of code:
+`{ggtrace}` is a **functional interface to ggplot2 internals**. I do a better job of what that means, practically, in my talks:
+
+- [Talk at JSM 2023 (pre-recorded)](https://youtu.be/613Q0j6Kjm0?feature=shared) (+ accompanying [paper](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf))
 
 - [Talk at rstudio::conf(2022)](https://www.youtube.com/watch?v=dUBnitXf5mk&list=PL9HYL-VRX0oTOwqzVtL_q5T8MNrzn0mdH&index=38) (+ accompanying [materials](https://github.com/yjunechoe/ggtrace-rstudioconf2022)).
 
 - [Talk at useR! 2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s) (+ accompanying [materials](https://github.com/yjunechoe/ggtrace-user2022)).
-
-- [Talk at JSM 2023 (pre-recorded)](https://youtu.be/613Q0j6Kjm0?feature=shared) (+ accompanying [paper](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf))
 
 You can read the full philosophy behind `{ggtrace}` in the [Getting Started](https://yjunechoe.github.io/ggtrace/articles/getting-started.html) vignette. But broadly speaking, `{ggtrace}` was designed with **three goals** in mind, in order of increasing complexity:
 
@@ -71,10 +66,12 @@ You can read the full philosophy behind `{ggtrace}` in the [Getting Started](htt
 
 ## **Example usage**
 
-```{r ggplot}
+```{r load-ggplot}
 library(ggplot2)
 packageVersion("ggplot2")
 ```
+
+Note that `{ggtrace}` is [routinely checked](https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml) against the dev version of `{ggplot2}`.
 
 ### 1) **Inspect sub-layer data**
 
