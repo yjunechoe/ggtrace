@@ -169,7 +169,9 @@ base::trace()</strong></a> for more functionalities offered by
 internals</strong><a class="anchor" aria-label="anchor" href="#workflows-for-interacting-with-ggplot-internals"></a>
 </h2>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span> <span class="co"># v3.3.5</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] '3.5.2.9000'</span></span></code></pre>
 <p>Admittedly, <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is a bit too clunky for
 interactive explorations of ggplot internals. To address this, we offer
 “workflow” functions in the form of
@@ -191,14 +193,14 @@ your ability to extend ggplot2</a> before proceeding.</p>
 </h3>
 <p>Say we want to learn more about how <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth()</a></code> layer
 works, exactly</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## geom_smooth: na.rm = FALSE, orientation = NA, se = TRUE</span></span>
 <span><span class="co">## stat_smooth: na.rm = FALSE, orientation = NA, se = TRUE</span></span>
 <span><span class="co">## position_identity</span></span></code></pre>
 <p>To do this, we’re going to adopt the example from the <a href="https://ggplot2-book.org/internals.html" class="external-link">ggplot2 internals chapter
 of the ggplot book</a></p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, color <span class="op">=</span> <span class="va">drv</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>position <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/position_jitter.html" class="external-link">position_jitter</a></span><span class="op">(</span>seed <span class="op">=</span> <span class="fl">1116</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, formula <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="va">x</span><span class="op">)</span> <span class="op">+</span> </span>
@@ -208,24 +210,24 @@ of the ggplot book</a></p>
 <p><img src="overview_files/figure-html/unnamed-chunk-10-1.png" width="1093.75"></p>
 <p>Let’s focus on the Stat ggproto. We see that
 <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth()</a></code> uses the <code>StatSmooth</code> ggproto</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">stat</span> <span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "StatSmooth" "Stat"       "ggproto"    "gg"</span></span></code></pre>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">StatSmooth</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">stat</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 <p>The bulk of the work by a Stat is done in the <code>compute_*</code>
 family of methods, which are essentially just functions. We’ll focus on
 <code>compute_group</code> here:</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ggproto methods wrap over the actual function and print extra info</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span> <span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "ggproto_method"</span></span></code></pre>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use `get_method` to pull out just the function component</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span> <span class="fu"><a href="../reference/get_method.html">get_method</a></span><span class="op">(</span><span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span> <span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "function"</span></span></code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># StatSmooth inherits `compute_layer`/`compute_panel` and defines `compute_group`</span></span>
 <span><span class="fu"><a href="../reference/get_method.html">get_method_inheritance</a></span><span class="op">(</span><span class="va">StatSmooth</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $Stat</span></span>
@@ -246,7 +248,7 @@ family of methods, which are essentially just functions. We’ll focus on
 argument and a ggproto method as the second argument, returning the
 number of times the ggproto method has been called in the ggplot’s
 evaluation:</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_inspect_n.html">ggtrace_inspect_n</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">p</span>, method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 6</span></span></code></pre>
 <p>As we might have guessed, <code>StatSmooth$compute_group</code> is
@@ -256,12 +258,12 @@ does it return?</p>
 <p>We can answer that with another workflow function
 <code><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code>, which shares a similar
 syntax:</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">return_val</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">p</span>, method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/dim.html" class="external-link">dim</a></span><span class="op">(</span><span class="va">return_val</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 80  6</span></span></code></pre>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">return_val</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          x        y     ymin     ymax        se flipped_aes</span></span>
 <span><span class="co">## 1 1.800000 24.33592 23.07845 25.59339 0.6250675       FALSE</span></span>
@@ -286,7 +288,7 @@ panel, for example, we can do so in one of two ways:</p>
 <li>
 <p>Set the value of <code>cond</code> to an expression that
 evaluates to true for that panel and group:</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">return_val_2_3_A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span>
@@ -298,14 +300,14 @@ evaluates to true for that panel and group:</p>
 <code><a href="../reference/ggtrace_inspect_which.html">ggtrace_inspect_which()</a></code>, and then simply check for the
 value of <code>._counter_</code> back in
 <code><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code>:</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_inspect_which.html">ggtrace_inspect_which</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span>
 <span>  cond <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">PANEL</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">&amp;&amp;</span> <span class="va">data</span><span class="op">$</span><span class="va">group</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] 6</span></span></code></pre>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">return_val_2_3_B</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span>
@@ -314,7 +316,7 @@ value of <code>._counter_</code> back in
 </li>
 </ol>
 <p>These two approaches work the same:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">return_val_2_3_A</span>, <span class="va">return_val_2_3_B</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
@@ -331,7 +333,7 @@ using <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" c
 Alternatively, we can capture a call to
 <code>StatSmooth$compute_group</code> and extract it as a function with
 <code><a href="../reference/ggtrace_capture_fn.html">ggtrace_capture_fn()</a></code>:</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">captured_fn_2_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggtrace_capture_fn.html">ggtrace_capture_fn</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span>
@@ -341,7 +343,7 @@ Alternatively, we can capture a call to
 <code>compute_group</code> when it is called for the third group of the
 second panel. Simply calling <code>captured_fn_2_3</code> gives us the
 expected return value:</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">return_val_2_3_A</span>, <span class="fu">captured_fn_2_3</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 <p>But the true power of the “capture” workflow functions lies in the
@@ -350,7 +352,7 @@ ability to interact with what has been captured. In the case of
 arguments passed to it at its execution stored in the formals.</p>
 <p>In other words, it is “pre-filled” with its original values, which we
 can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals()</a></code>:</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Just showing their type/class for space</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">captured_fn_2_3</span><span class="op">)</span> , <span class="va">class</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         data       scales       method      formula           se </span></span>
@@ -364,7 +366,7 @@ different arguments passed to it.</p>
 <p>For example, when <code>flipped_aes = TRUE</code>, we get
 <code>xmin</code> and <code>xmax</code> columns replacing
 <code>ymin</code> and <code>ymax</code>:</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span> <span class="fu">captured_fn_2_3</span><span class="op">(</span>flipped_aes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          y        x     xmin     xmax        se flipped_aes</span></span>
 <span><span class="co">## 1 15.00000 5.450710 4.369619 6.531802 0.4961840        TRUE</span></span>
@@ -379,7 +381,7 @@ an entirely different ggplot.</p>
 <p>For another example, when we set the confidence interval to 10% with
 <code>level = 0.1</code>, the <code>ymin</code> and <code>ymax</code>
 values deviate less from the <code>y</code> value:</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span> <span class="fu">captured_fn_2_3</span><span class="op">(</span>level <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span> <span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          x        y     ymin     ymax       se flipped_aes</span></span>
 <span><span class="co">## 1 4.000000 21.70513 21.46539 21.94487 1.867921       FALSE</span></span>
@@ -396,7 +398,7 @@ How do you know what <code>data</code> looks like?</p>
 <code>StatSmooth$compute_group</code>. We saw earlier that it’s stored
 in <code>formals(captured_fn_2_3)</code>, but to target it explicitly we
 can also use <code><a href="../reference/ggtrace_inspect_args.html">ggtrace_inspect_args()</a></code>:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">args_2_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggtrace_inspect_args.html">ggtrace_inspect_args</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span>
@@ -405,7 +407,7 @@ can also use <code><a href="../reference/ggtrace_inspect_args.html">ggtrace_insp
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">args_2_3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">captured_fn_2_3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">args_2_3</span><span class="op">$</span><span class="va">data</span></span></code></pre></div>
 <pre><code><span><span class="co">##      x  y colour PANEL group</span></span>
 <span><span class="co">## 10 5.3 20      r     2     3</span></span>
@@ -442,12 +444,12 @@ the graphical output?</p>
 <code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to have a method return an
 entirely different value.</p>
 <p>First we store the modified return value in some variable:</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modified_return_smooth</span> <span class="op">&lt;-</span> <span class="fu">captured_fn_2_3</span><span class="op">(</span>level <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></span></code></pre></div>
 <p>Then we target the same group inside <code>cond</code> and pass
 <code>modified_return_smooth</code> to the <code>value</code>
 argument:</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span>
@@ -461,16 +463,13 @@ because it’s only capturing a 10% confidence interval!</p>
 a loess regression instead. To achieve this directly, we use
 <code><a href="../reference/ggtrace_highjack_args.html">ggtrace_highjack_args()</a></code> here and set the
 <code>values</code> to <code>list(method = "loess")</code>:</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_highjack_args.html">ggtrace_highjack_args</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
 <span>  method <span class="op">=</span> <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>,</span>
 <span>  cond <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">PANEL</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">2</span> <span class="op">&amp;&amp;</span> <span class="va">data</span><span class="op">$</span><span class="va">group</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span>,</span>
-<span>  values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"loess"</span><span class="op">)</span></span>
+<span>  values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>method <span class="op">=</span> <span class="va">loess</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning: Failed to fit group 3.</span></span>
-<span><span class="co">## Caused by error in `method()`:</span></span>
-<span><span class="co">## <span style="color: #BBBB00;">!</span> could not find function "method"</span></span></code></pre>
 <p><img src="overview_files/figure-html/unnamed-chunk-26-1.png" width="1093.75"></p>
 <p>Lastly, <code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> exposes an internal
 function called <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">returnValue()</a></code> in the <code>value</code>
@@ -483,7 +482,7 @@ method, do data wrangling on it, and have the method return that new
 dataframe instead. Here, we hack the data for the group to make it look
 like there’s an absurd degree of heteroskedasticity:</p>
 <div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span> <span class="co"># v1.0.8</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return</a></span><span class="op">(</span></span>
 <span>  x <span class="op">=</span> <span class="va">p</span>,</span>
@@ -501,309 +500,6 @@ like there’s an absurd degree of heteroskedasticity:</p>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="overview_files/figure-html/unnamed-chunk-27-1.png" width="1093.75"></p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="middle-ground-approach-with_ggtrace">
-<strong>Middle-ground approach
-<code>with_ggtrace()</code></strong><a class="anchor" aria-label="anchor" href="#middle-ground-approach-with_ggtrace"></a>
-</h2>
-<p>So far we’ve seen the low-level function <code><a href="../reference/ggtrace.html">ggtrace()</a></code> and
-the high-level family of workflow functions
-<code>ggtrace_{action}_{value}()</code>. But once you get more familiar
-with ggplot internals and start using <code><a href="../reference/ggtrace.html">ggtrace()</a></code> to “hack
-into” the internals (moving from <em>learner</em> to <em>developer</em>,
-in a sense), you might want both exploit both the power and convenience
-that <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> provides across these two designs.</p>
-<p>For that we provide <code><a href="../reference/with_ggtrace.html">with_ggtrace()</a></code>, which wraps around
-<code><a href="../reference/ggtrace.html">ggtrace()</a></code> to give you access to its full power, while
-keeping its effects localized (e.g., no side-effects) and therefore
-making it more fitting for a functional programming workflow.</p>
-<p>Like <code><a href="../reference/ggtrace.html">ggtrace()</a></code>, you can inject code into different steps
-of a method <em>as it runs</em>:</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_ggtrace.html">with_ggtrace</a></span><span class="op">(</span></span>
-<span>  x <span class="op">=</span> <span class="va">p</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_grid.html" class="external-link">facet_grid</a></span><span class="op">(</span><span class="va">year</span> <span class="op">~</span> <span class="va">drv</span><span class="op">)</span>,</span>
-<span>  method <span class="op">=</span> <span class="va">Layout</span><span class="op">$</span><span class="va">render</span>,</span>
-<span>  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5L</span>, <span class="fl">8L</span><span class="op">)</span>,</span>
-<span>  trace_exprs <span class="op">=</span> <span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/defusing-advanced.html" class="external-link">exprs</a></span><span class="op">(</span></span>
-<span>    </span>
-<span>    <span class="op">{</span></span>
-<span>      <span class="co"># First, turn all panels except the 4th semi-transparent</span></span>
-<span>      <span class="va">panels</span><span class="op">[</span><span class="op">-</span><span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">panels</span><span class="op">[</span><span class="op">-</span><span class="fl">4</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">panel</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span><span class="va">panel</span>, gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">.4</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="op">}</span><span class="op">)</span></span>
-<span>      <span class="co"># Second, give red outline and fill to 4th panel</span></span>
-<span>      <span class="va">panels</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gTree</a></span><span class="op">(</span>children <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gList</a></span><span class="op">(</span><span class="va">panels</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.rect.html" class="external-link">rectGrob</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>                 gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">5</span>, fill <span class="op">=</span> <span class="st">"red"</span>, alpha <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="op">}</span>,</span>
-<span>    </span>
-<span>    <span class="op">{</span></span>
-<span>      <span class="co"># Third, give it some emphasis by connecting to facet strips</span></span>
-<span>      <span class="va">outline_rect</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.rect.html" class="external-link">rectGrob</a></span><span class="op">(</span></span>
-<span>        x <span class="op">=</span> <span class="fl">0.5</span>, y <span class="op">=</span> <span class="fl">0.5</span>, width <span class="op">=</span> <span class="fl">1</span>, height <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>        gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"red"</span>, lwd <span class="op">=</span> <span class="fl">2</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
-<span>      <span class="op">)</span></span>
-<span>      <span class="va">plot_table</span> <span class="op">&lt;-</span> <span class="fu">gtable_add_grob</span><span class="op">(</span></span>
-<span>        <span class="va">plot_table</span>, <span class="va">outline_rect</span>,</span>
-<span>        t <span class="op">=</span> <span class="fl">1</span>, l <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">5</span>, r <span class="op">=</span> <span class="fl">2</span>, z <span class="op">=</span> <span class="cn">Inf</span></span>
-<span>      <span class="op">)</span></span>
-<span>      <span class="va">plot_table</span> <span class="op">&lt;-</span> <span class="fu">gtable_add_grob</span><span class="op">(</span></span>
-<span>        <span class="va">plot_table</span>, <span class="va">outline_rect</span>,</span>
-<span>        t <span class="op">=</span> <span class="fl">5</span>, l <span class="op">=</span> <span class="fl">2</span>, b <span class="op">=</span> <span class="fl">5</span>, r <span class="op">=</span> <span class="fl">7</span>, z <span class="op">=</span> <span class="cn">Inf</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>    </span>
-<span>  <span class="op">)</span>,</span>
-<span>  out <span class="op">=</span> <span class="st">"g"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="overview_files/figure-html/unnamed-chunk-28-1.png" width="1093.75"></p>
-<p>And like the workflow functions, you can have conditional traces that
-only evaluate when a condition is met, using <code>if</code> statements
-inside <code>trace_exprs</code> with <code>once = FALSE</code>.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/with_ggtrace.html">with_ggtrace</a></span><span class="op">(</span></span>
-<span>  <span class="va">p</span>,</span>
-<span>  <span class="va">GeomRibbon</span><span class="op">$</span><span class="va">draw_group</span>,</span>
-<span>  trace_steps <span class="op">=</span> <span class="op">-</span><span class="fl">1L</span>,</span>
-<span>  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    <span class="co"># Give gradient fill to the confidence bands for third group</span></span>
-<span>    <span class="kw">if</span> <span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">group</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">g_poly</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span></span>
-<span>        <span class="va">g_poly</span>,</span>
-<span>        gp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/gpar.html" class="external-link">gpar</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/patterns.html" class="external-link">linearGradient</a></span><span class="op">(</span></span>
-<span>          colours <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"purple"</span>, <span class="st">"skyblue"</span>, <span class="st">"pink"</span><span class="op">)</span>,</span>
-<span>          stops <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.5</span>, <span class="fl">1</span><span class="op">)</span>,</span>
-<span>          x1 <span class="op">=</span> <span class="fl">0</span>, x2 <span class="op">=</span> <span class="fl">1</span>, y1 <span class="op">=</span> <span class="fl">0</span>, y2 <span class="op">=</span> <span class="fl">0</span></span>
-<span>        <span class="op">)</span><span class="op">)</span></span>
-<span>      <span class="op">)</span></span>
-<span>    <span class="op">}</span></span>
-<span>  <span class="op">}</span><span class="op">)</span>,</span>
-<span>  once <span class="op">=</span> <span class="cn">FALSE</span>, <span class="co"># to test `if` for all calls to method</span></span>
-<span>  out <span class="op">=</span> <span class="st">"g"</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="overview_files/figure-html/unnamed-chunk-29-1.png" width="1093.75"></p>
-<p>And of course, all of this is not limited to objects from the
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> package itself. You can have fun hacking
-extension packages as well!</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/teunbrand/ggh4x" class="external-link">ggh4x</a></span><span class="op">)</span> <span class="co"># v0.2.1</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Attaching package: 'ggh4x'</span></span></code></pre>
-<pre><code><span><span class="co">## The following object is masked from 'package:ggplot2':</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##     guide_axis_logticks</span></span></code></pre>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Example from - https://teunbrand.github.io/ggh4x/articles/Facets.html ----</span></span>
-<span></span>
-<span><span class="co">## Base plot ====</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">displ</span>, <span class="va">hwy</span>, colour <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Engine displacement"</span>, y <span class="op">=</span> <span class="st">"Highway miles per gallon"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guides.html" class="external-link">guides</a></span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"none"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Fixed-aspect plot w/ independent scales using `ggh4x::facet_grid2()` ====</span></span>
-<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">p</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggh4x</span><span class="fu">::</span><span class="fu"><a href="https://teunbrand.github.io/ggh4x/reference/facet_grid2.html" class="external-link">facet_grid2</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html" class="external-link">vars</a></span><span class="op">(</span><span class="va">drv</span><span class="op">)</span>, scales <span class="op">=</span> <span class="st">"free"</span>, independent <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_grey</a></span><span class="op">(</span>base_size <span class="op">=</span> <span class="fl">9</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Highjacking the plot's execution using `ggtrace::with_ggtrace()` ----</span></span>
-<span><span class="fu"><a href="../reference/with_ggtrace.html">with_ggtrace</a></span><span class="op">(</span></span>
-<span>  </span>
-<span>  <span class="co">## Argument 1: The ggplot to interact with durings its execution ====</span></span>
-<span>  x <span class="op">=</span> <span class="va">p2</span>,</span>
-<span>  </span>
-<span>  <span class="co">## Argument 2: The method to inject code into ====</span></span>
-<span>  method <span class="op">=</span> <span class="fu">ggh4x</span><span class="fu">::</span><span class="va"><a href="https://teunbrand.github.io/ggh4x/reference/ggh4x_extensions.html" class="external-link">FacetGrid2</a></span><span class="op">$</span><span class="va">draw_panels</span>,</span>
-<span>  </span>
-<span>  <span class="co">## Argument 3: The step in the method right before `panels` and `axes` ====</span></span>
-<span>  <span class="co">## are merged into the `panel_table` &lt;gtable&gt; and shipped off</span></span>
-<span>  trace_steps <span class="op">=</span> <span class="fl">13</span>, <span class="co"># See `ggbody(FacetGrid2$draw_panels)`</span></span>
-<span>  </span>
-<span>  <span class="co">## Argument 4: The code injection to rotate the 2nd panel ====</span></span>
-<span>  trace_exprs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    </span>
-<span>    <span class="co">### FIRST, specify row/column of panel to target ####</span></span>
-<span>    <span class="va">row</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
-<span>    <span class="va">col</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
-<span>    <span class="va">target_panel</span> <span class="op">&lt;-</span> <span class="va">layout</span><span class="op">[</span><span class="va">layout</span><span class="op">$</span><span class="va">ROW</span> <span class="op">==</span> <span class="va">row</span> <span class="op">&amp;</span> <span class="va">layout</span><span class="op">$</span><span class="va">COL</span> <span class="op">==</span> <span class="va">col</span>, <span class="op">]</span><span class="op">$</span><span class="va">PANEL</span></span>
-<span>    <span class="va">left_axis</span>    <span class="op">&lt;-</span> <span class="va">axes</span><span class="op">$</span><span class="va">left</span><span class="op">[[</span><span class="va">row</span>, <span class="va">col</span><span class="op">]</span><span class="op">]</span></span>
-<span>    <span class="va">bottom_axis</span>  <span class="op">&lt;-</span> <span class="va">axes</span><span class="op">$</span><span class="va">bottom</span><span class="op">[[</span><span class="va">row</span>, <span class="va">col</span><span class="op">]</span><span class="op">]</span></span>
-<span>    </span>
-<span>    <span class="co">### SECOND, replace target panel with a version of itself ####</span></span>
-<span>    <span class="co">### that has axes attached to it, using `grid::gTree()`</span></span>
-<span>    <span class="va">panels</span><span class="op">[[</span><span class="va">target_panel</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gTree</a></span><span class="op">(</span></span>
-<span>      </span>
-<span>      <span class="co">##### Argument `children`: a list (`grid::gList()`) of three grobs:</span></span>
-<span>      children <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/grid.grob.html" class="external-link">gList</a></span><span class="op">(</span></span>
-<span>        </span>
-<span>        <span class="co">###### 1. The original panel itself</span></span>
-<span>        <span class="va">panels</span><span class="op">[[</span><span class="va">target_panel</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>        </span>
-<span>        <span class="co">###### 2. Resized/repositioned left y-axis for that panel</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span></span>
-<span>          <span class="va">left_axis</span>,</span>
-<span>          vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span></span>
-<span>            x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="st">"npc"</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grobWidth.html" class="external-link">grobWidth</a></span><span class="op">(</span><span class="va">left_axis</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
-<span>            just <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"right"</span><span class="op">)</span></span>
-<span>          <span class="op">)</span></span>
-<span>        <span class="op">)</span>,</span>
-<span>        </span>
-<span>        <span class="co">###### 3. Resized/repositioned bottom x-axis for that panel</span></span>
-<span>        <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span></span>
-<span>          <span class="va">bottom_axis</span>,</span>
-<span>          vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span></span>
-<span>            y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="st">"npc"</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/grid/grobWidth.html" class="external-link">grobHeight</a></span><span class="op">(</span><span class="va">bottom_axis</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span>,</span>
-<span>            just <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"top"</span><span class="op">)</span></span>
-<span>          <span class="op">)</span></span>
-<span>        <span class="op">)</span></span>
-<span>        </span>
-<span>      <span class="op">)</span>,</span>
-<span>      </span>
-<span>      <span class="co">##### Argument `vp`: Rotation for this combination of three grobs</span></span>
-<span>      vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span>width <span class="op">=</span> <span class="fl">.7</span>, height <span class="op">=</span> <span class="fl">.7</span>, angle <span class="op">=</span> <span class="fl">45</span><span class="op">)</span></span>
-<span>      </span>
-<span>    <span class="op">)</span></span>
-<span>    </span>
-<span>    <span class="co">### THIRD, "remove" the original axes for that panel ####</span></span>
-<span>    <span class="va">axes</span><span class="op">$</span><span class="va">left</span><span class="op">[[</span><span class="va">row</span>, <span class="va">col</span><span class="op">]</span><span class="op">]</span>    <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/zeroGrob.html" class="external-link">zeroGrob</a></span><span class="op">(</span><span class="op">)</span> </span>
-<span>    <span class="va">axes</span><span class="op">$</span><span class="va">bottom</span><span class="op">[[</span><span class="va">row</span>, <span class="va">col</span><span class="op">]</span><span class="op">]</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/zeroGrob.html" class="external-link">zeroGrob</a></span><span class="op">(</span><span class="op">)</span></span>
-<span>    </span>
-<span>  <span class="op">}</span><span class="op">)</span>,</span>
-<span>  </span>
-<span>  <span class="co">## Argument `out`: The return value for `with_ggtrace()` ====</span></span>
-<span>  <span class="co">## "gtable" returns the graphical output after injecting the code</span></span>
-<span>  out <span class="op">=</span> <span class="st">"gtable"</span> <span class="co"># you can also use the "g" shorthand</span></span>
-<span>  </span>
-<span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in grid.Call.graphics(C_setviewport, vp, TRUE): cannot clip to rotated</span></span>
-<span><span class="co">## viewport</span></span></code></pre>
-<p><img src="overview_files/figure-html/unnamed-chunk-30-1.png" width="1093.75"></p>
-</div>
-<div class="section level2">
-<h2 id="case-study-data-driven-legends">
-<strong>Case study: Data-driven legends</strong><a class="anchor" aria-label="anchor" href="#case-study-data-driven-legends"></a>
-</h2>
-<p>Suppose we want to change the fill legend key from squares to the
-actual violins drawn for each category:</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">violin_plot</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/starwars.html" class="external-link">starwars</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"Human"</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">height</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">gender</span>, <span class="va">height</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">geom_violin</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gender</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>    aspect.ratio <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    legend.key.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"in"</span><span class="op">)</span>,</span>
-<span>    legend.key <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"grey"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span></span>
-<span><span class="va">violin_plot</span></span></code></pre></div>
-<p><img src="overview_files/figure-html/unnamed-chunk-31-1.png" width="1093.75"></p>
-<p>We know that each violin is drawn by
-<code>GeomViolin$draw_group</code>, called for each group in the
-plot.</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_inspect_n.html">ggtrace_inspect_n</a></span><span class="op">(</span><span class="va">violin_plot</span>, <span class="va">GeomViolin</span><span class="op">$</span><span class="va">draw_group</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 2</span></span></code></pre>
-<p>Let’s grab the plotted violins with
-<code><a href="../reference/ggtrace_inspect_return.html">ggtrace_inspect_return()</a></code></p>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">violins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="va">ggtrace_inspect_return</span>,</span>
-<span>                  x <span class="op">=</span> <span class="va">violin_plot</span>, method <span class="op">=</span> <span class="va">GeomViolin</span><span class="op">$</span><span class="va">draw_group</span><span class="op">)</span></span>
-<span><span class="va">violins</span></span></code></pre></div>
-<pre><code><span><span class="co">## [[1]]</span></span>
-<span><span class="co">## polygon[geom_violin.polygon.2724] </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## [[2]]</span></span>
-<span><span class="co">## polygon[geom_violin.polygon.2784]</span></span></code></pre>
-<p>Then, we can use <code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code> to highjack
-the return value of the key drawing method
-<code>GeomViolin$draw_key</code> such that it returns the output from
-the <code>draw_group</code> method instead. We set
-<code>cond = 1:2</code> and
-<code>value = substitute(violins[[._counter_]])</code> so that the
-<code>draw_key</code> method returns the first violin as the first
-legend key, and the second violin as the second legend key.</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return</a></span><span class="op">(</span></span>
-<span>  <span class="va">violin_plot</span>,</span>
-<span>  <span class="va">GeomViolin</span><span class="op">$</span><span class="va">draw_key</span>,</span>
-<span>  cond <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="co"># or `cond = TRUE` since method is called twice total</span></span>
-<span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute</a></span><span class="op">(</span><span class="va">violins</span><span class="op">[[</span><span class="va">._counter_</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p><img src="overview_files/figure-html/unnamed-chunk-34-1.png" width="1093.75"></p>
-<p>Note that violins in the legend are drawn with respect to the panel
-coordinate system, because that’s how the <code>draw_group</code> method
-does things. For a cleaner look, we use the defined function
-<code>center_and_resize()</code> which modifies the violin grob using
-<code><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">grid::editGrob()</a></code> before passing them off to
-<code><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return()</a></code>.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span></span>
-<span><span class="va">center_and_resize</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">grob</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">x_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span><span class="va">grob</span><span class="op">$</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">y_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">unclass</a></span><span class="op">(</span><span class="va">grob</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">width</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">x_range</span><span class="op">)</span></span>
-<span>  <span class="va">height</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="va">y_range</span><span class="op">)</span></span>
-<span>  <span class="va">resizing</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">0.2</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">width</span>, <span class="va">height</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/grid/grid.edit.html" class="external-link">editGrob</a></span><span class="op">(</span><span class="va">grob</span>, vp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/viewport.html" class="external-link">viewport</a></span><span class="op">(</span></span>
-<span>    xscale <span class="op">=</span> <span class="va">x_range</span>, yscale <span class="op">=</span> <span class="va">y_range</span>,</span>
-<span>    width <span class="op">=</span> <span class="va">width</span> <span class="op">*</span> <span class="va">resizing</span>, height <span class="op">=</span> <span class="va">height</span> <span class="op">*</span> <span class="va">resizing</span></span>
-<span>  <span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span>
-<span><span class="va">violins_centered_resized</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">violins</span>, <span class="va">center_and_resize</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">violin_plot_highjacked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggtrace_highjack_return.html">ggtrace_highjack_return</a></span><span class="op">(</span></span>
-<span>  <span class="va">violin_plot</span>,</span>
-<span>  <span class="va">GeomViolin</span><span class="op">$</span><span class="va">draw_key</span>,</span>
-<span>  cond <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,</span>
-<span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">substitute</a></span><span class="op">(</span><span class="va">violins_centered_resized</span><span class="op">[[</span><span class="va">._counter_</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">violin_plot_highjacked</span></span></code></pre></div>
-<p><img src="overview_files/figure-html/unnamed-chunk-35-1.png" width="1093.75"></p>
-<p>To keep this effect while keeping the violin_plot a ggplot object,
-you can create a custom key glyph function that inspects the fill color
-of the original legend keys and returns the corresponding violin.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">violins_centered_resized</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"#F8766D"</span>, <span class="st">"#00BFC4"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">violin_plot_keyglyph</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="va"><a href="https://dplyr.tidyverse.org/reference/starwars.html" class="external-link">starwars</a></span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">==</span> <span class="st">"Human"</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">height</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">gender</span>, <span class="va">height</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_violin.html" class="external-link">geom_violin</a></span><span class="op">(</span></span>
-<span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">gender</span><span class="op">)</span>,</span>
-<span>    key_glyph <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">params</span>, <span class="va">size</span><span class="op">)</span> <span class="op">{</span>   <span class="co">#&lt;</span></span>
-<span>      <span class="va">violins_centered_resized</span><span class="op">[[</span><span class="va">data</span><span class="op">$</span><span class="va">fill</span><span class="op">]</span><span class="op">]</span>      <span class="co">#&lt;  Custom `key_glyph` function</span></span>
-<span>    <span class="op">}</span>                                            <span class="co">#&lt;</span></span>
-<span>  <span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span></span>
-<span>    aspect.ratio <span class="op">=</span> <span class="fl">1</span>,</span>
-<span>    legend.key.size <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grid/unit.html" class="external-link">unit</a></span><span class="op">(</span><span class="fl">1</span>, <span class="st">"in"</span><span class="op">)</span>,</span>
-<span>    legend.key <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_rect</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"grey"</span>, fill <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
-<p>Note the difference in output between the two methods. While highjack
-workflow functions offer a convenient way of modifying a ggplot, it
-forces the conversion of a ggplot object into a grob.</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">violin_plot_highjacked</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "ggtrace_highjacked" "gtable"             "gTree"             </span></span>
-<span><span class="co">## [4] "grob"               "gDesc"</span></span></code></pre>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">violin_plot_highjacked</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## NULL</span></span></code></pre>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">violin_plot_keyglyph</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "gg"     "ggplot"</span></span></code></pre>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">violin_plot_keyglyph</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Violin plot with data-driven legend key glyphs"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="overview_files/figure-html/unnamed-chunk-37-1.png" width="1093.75"></p>
-<p>The lesson here is that the highjack workflow (and the {ggtrace}
-package, more broadly) is the means, not the end. Users are encouraged
-to generalize solutions beyond one-off hacks using the toolkit of
-workflow functions to determine the appropriate point of extension.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
