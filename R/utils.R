@@ -84,7 +84,7 @@ resolve_method <- function(method, remove_trace = FALSE) {
     evalled <- rlang::eval_tidy(method_quo)
 
     # Error if not a method
-    if (typeof(method_body) != "list" | typeof(evalled) != "closure" | method_body[[1]] != rlang::expr(`{`)) {
+    if (typeof(method_body) != "list" || typeof(evalled) != "closure") {
       rlang::abort("Cannot trace a non-function.")
     }
 
