@@ -5,7 +5,7 @@ test_that("get_method() edge case for top-level ggproto", {
   )
 })
 
-test_that("get_method() edge case for instances (vs. subclass) of class", {
+test_that("get_method() edge case for instances (vs. subclass) of class (#107)", {
   expect_identical(
     names(get_method_inheritance(ggplot2::position_jitter())),
     names(get_method_inheritance(ggplot2::PositionJitter))

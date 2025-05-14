@@ -4,7 +4,7 @@
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.7.5-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.7.6-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![test-with-dev-ggplot2](https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
@@ -91,7 +91,7 @@ goals** in mind, in order of increasing complexity:
 ``` r
 library(ggplot2)
 packageVersion("ggplot2")
-#> [1] '3.5.2.9000'
+#> [1] '3.5.2'
 ```
 
 Note that `{ggtrace}` is [routinely
@@ -158,18 +158,18 @@ scatter_plot +
 layer_after_scale(scatter_plot, verbose = TRUE)
 #> ✔ Ran `inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2, layer_is(1L))`
 #> # A tibble: 234 × 5
-#>        x     y fill      PANEL group
-#>    <dbl> <dbl> <chr>     <fct> <int>
-#>  1   1.8    29 #2D1160FF 1         2
-#>  2   1.8    29 #2D1160FF 1         2
-#>  3   2      31 #2D1160FF 1         2
-#>  4   2      30 #2D1160FF 1         2
-#>  5   2.8    26 #2D1160FF 1         2
-#>  6   2.8    26 #2D1160FF 1         2
-#>  7   3.1    27 #2D1160FF 1         2
-#>  8   1.8    26 #2D1160FF 1         2
-#>  9   1.8    25 #2D1160FF 1         2
-#> 10   2      28 #2D1160FF 1         2
+#>    fill          x     y PANEL group
+#>    <chr>     <dbl> <dbl> <fct> <int>
+#>  1 #2D1160FF   1.8    29 1         2
+#>  2 #2D1160FF   1.8    29 1         2
+#>  3 #2D1160FF   2      31 1         2
+#>  4 #2D1160FF   2      30 1         2
+#>  5 #2D1160FF   2.8    26 1         2
+#>  6 #2D1160FF   2.8    26 1         2
+#>  7 #2D1160FF   3.1    27 1         2
+#>  8 #2D1160FF   1.8    26 1         2
+#>  9 #2D1160FF   1.8    25 1         2
+#> 10 #2D1160FF   2      28 1         2
 #> # ℹ 224 more rows
 ```
 

@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -171,7 +171,7 @@ internals</strong><a class="anchor" aria-label="anchor" href="#workflows-for-int
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] '3.5.2.9000'</span></span></code></pre>
+<pre><code><span><span class="co">## [1] '3.5.2'</span></span></code></pre>
 <p>Admittedly, <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is a bit too clunky for
 interactive explorations of ggplot internals. To address this, we offer
 “workflow” functions in the form of
@@ -356,7 +356,7 @@ can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="exte
 <code class="sourceCode R"><span><span class="co"># Just showing their type/class for space</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">captured_fn_2_3</span><span class="op">)</span> , <span class="va">class</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         data       scales       method      formula           se </span></span>
-<span><span class="co">## "data.frame"       "list"   "function"    "formula"    "logical" </span></span>
+<span><span class="co">## "data.frame"       "list"  "character"    "formula"    "logical" </span></span>
 <span><span class="co">##            n         span    fullrange         xseq        level </span></span>
 <span><span class="co">##    "numeric"    "numeric"    "logical"       "NULL"    "numeric" </span></span>
 <span><span class="co">##  method.args        na.rm  flipped_aes </span></span>

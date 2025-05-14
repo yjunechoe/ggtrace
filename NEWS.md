@@ -1,5 +1,9 @@
 # ggtrace 0.7.x
 
+# ggtrace 0.7.6
+
+- Fixed bug with `get_method_inheritance()` failing to simplify an *instance* of a class (vs. a subclass) (#107)
+
 # ggtrace 0.7.5
 
 - Fixed bug with workflow functions not recognizing one-liner ggproto methods (#106)

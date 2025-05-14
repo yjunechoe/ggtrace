@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -207,14 +207,14 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-in"><span><span class="co"># in data detected at the beginning of Step 14</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step21" "Step36"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step20" "Step34"</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p2</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step15" "Step21" "Step36"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step14" "Step20" "Step34"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># We can pinpoint the calculation of scale transformations to Step 13:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">13</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data &lt;- .ignore_data(data)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data &lt;- lapply(data, scales$transform_df)</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With `by_vars = FALSE`, elements of the returned list are steps instead of values.</span></span></span>

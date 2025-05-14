@@ -13,7 +13,7 @@ these."><meta property="og:image" content="https://yjunechoe.github.io/ggtrace/l
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -96,7 +96,7 @@ these.</p>
 
 
 <dl><dt id="arg-plot">plot<a class="anchor" aria-label="anchor" href="#arg-plot"></a></dt>
-<dd><p>A ggplot object. If missing, defaults to <code><a href="https://ggplot2.tidyverse.org/reference/get_last_plot.html" class="external-link">ggplot2::last_plot()</a></code>.</p></dd>
+<dd><p>A ggplot object. If missing, defaults to <code><a href="https://ggplot2.tidyverse.org/reference/last_plot.html" class="external-link">ggplot2::last_plot()</a></code>.</p></dd>
 
 
 <dt id="arg-i">i<a class="anchor" aria-label="anchor" href="#arg-i"></a></dt>
@@ -190,21 +190,24 @@ that are downstream of the <code>by_layer()</code> function in the ggplot intern
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">layer_before_geom</span><span class="op">(</span>i <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 16</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    xmin xlower xmiddle xupper  xmax outliers  notchupper notchlower     y width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>   5.7    5.7    6.2    6.2    6.2 <span style="color: #949494;">&lt;dbl [1]&gt;</span>       6.55       5.85     1  0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>   1.8    2      2.2    2.8    3.3 <span style="color: #949494;">&lt;dbl [0]&gt;</span>       2.38       2.02     2  0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>   1.8    2.4    2.8    3.5    4.2 <span style="color: #949494;">&lt;dbl [1]&gt;</span>       3.07       2.53     3  0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>   3      3.3    3.3    3.8    4   <span style="color: #949494;">&lt;dbl [1]&gt;</span>       3.54       3.06     4  0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>   2.7    3.9    4.7    4.7    5.9 <span style="color: #949494;">&lt;dbl [0]&gt;</span>       4.92       4.48     5  0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>   1.6    1.9    2.2    3.25   4.6 <span style="color: #949494;">&lt;dbl [1]&gt;</span>       2.56       1.84     6  0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>   2.5    4      4.65   5.3    6.5 <span style="color: #949494;">&lt;dbl [0]&gt;</span>       4.91       4.39     7  0.75</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: relvarwidth &lt;dbl&gt;, flipped_aes &lt;lgl&gt;, PANEL &lt;fct&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   group &lt;int&gt;, x &lt;dbl&gt;, label &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       x label  xmin xlower xmiddle xupper  xmax outliers  notchupper notchlower</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>   6.2   6.2   5.7    5.7    6.2    6.2    6.2 <span style="color: #949494;">&lt;dbl [1]&gt;</span>       6.55       5.85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>   3.3   3.3   1.8    2      2.2    2.8    3.3 <span style="color: #949494;">&lt;dbl [0]&gt;</span>       2.38       2.02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>   4.2   4.2   1.8    2.4    2.8    3.5    4.2 <span style="color: #949494;">&lt;dbl [1]&gt;</span>       3.07       2.53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>   4     4     3      3.3    3.3    3.8    4   <span style="color: #949494;">&lt;dbl [1]&gt;</span>       3.54       3.06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>   5.9   5.9   2.7    3.9    4.7    4.7    5.9 <span style="color: #949494;">&lt;dbl [0]&gt;</span>       4.92       4.48</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>   4.6   4.6   1.6    1.9    2.2    3.25   4.6 <span style="color: #949494;">&lt;dbl [1]&gt;</span>       2.56       1.84</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>   6.5   6.5   2.5    4      4.65   5.3    6.5 <span style="color: #949494;">&lt;dbl [0]&gt;</span>       4.91       4.39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: y &lt;dbl&gt;, width &lt;dbl&gt;, relvarwidth &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   flipped_aes &lt;lgl&gt;, PANEL &lt;fct&gt;, group &lt;int&gt;</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># After Scale data reflects `after_scale()` mappings</span></span></span>
 <span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span>, <span class="va">hwy</span>, color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>legend.position <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>A numeric `legend.position` argument in `theme()` was deprecated in ggplot2</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> 3.5.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use the `legend.position.inside` argument of `theme()` instead.</span>
 <span class="r-in"><span><span class="va">p2a</span> <span class="op">&lt;-</span> <span class="va">p2</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html" class="external-link">geom_boxplot</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p2b</span> <span class="op">&lt;-</span> <span class="va">p2</span> <span class="op">+</span></span></span>

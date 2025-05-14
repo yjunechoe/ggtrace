@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.6</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,14 +65,9 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header">
-<img src="logo.png" class="logo" alt=""><h1 id="ggtrace">ggtrace<a class="anchor" aria-label="anchor" href="#ggtrace"></a>
+<img src="logo.png" class="logo" alt=""><h1 id="ggtrace-">ggtrace <a class="anchor" aria-label="anchor" href="#ggtrace-"></a>
 </h1>
 </div>
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-</div>
-<div class="section level1">
-<h1 id="ggtrace-">ggtrace <a class="anchor" aria-label="anchor" href="#ggtrace-"></a>
-</h1>
 <!-- badges: start -->
 
 <div class="section level3">
@@ -117,7 +112,7 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] '3.5.2.9000'</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] '3.5.2'</span></span></code></pre></div>
 <p>Note that <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> is <a href="https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml" class="external-link">routinely checked</a> against the dev version of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a>.</p>
 <div class="section level3">
 <h3 id="id_1-inspect-sub-layer-data">1) <strong>Inspect sub-layer data</strong>
@@ -166,18 +161,18 @@
 <span><span class="fu"><a href="reference/sublayer-data.html">layer_after_scale</a></span><span class="op">(</span><span class="va">scatter_plot</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Ran `inspect_return(scatter_plot, ggplot2:::Layer$compute_geom_2, layer_is(1L))`</span></span>
 <span><span class="co">#&gt; # A tibble: 234 × 5</span></span>
-<span><span class="co">#&gt;        x     y fill      PANEL group</span></span>
-<span><span class="co">#&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;fct&gt; &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1   1.8    29 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  2   1.8    29 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  3   2      31 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  4   2      30 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  5   2.8    26 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  6   2.8    26 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  7   3.1    27 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  8   1.8    26 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt;  9   1.8    25 #2D1160FF 1         2</span></span>
-<span><span class="co">#&gt; 10   2      28 #2D1160FF 1         2</span></span>
+<span><span class="co">#&gt;    fill          x     y PANEL group</span></span>
+<span><span class="co">#&gt;    &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt;  1 #2D1160FF   1.8    29 1         2</span></span>
+<span><span class="co">#&gt;  2 #2D1160FF   1.8    29 1         2</span></span>
+<span><span class="co">#&gt;  3 #2D1160FF   2      31 1         2</span></span>
+<span><span class="co">#&gt;  4 #2D1160FF   2      30 1         2</span></span>
+<span><span class="co">#&gt;  5 #2D1160FF   2.8    26 1         2</span></span>
+<span><span class="co">#&gt;  6 #2D1160FF   2.8    26 1         2</span></span>
+<span><span class="co">#&gt;  7 #2D1160FF   3.1    27 1         2</span></span>
+<span><span class="co">#&gt;  8 #2D1160FF   1.8    26 1         2</span></span>
+<span><span class="co">#&gt;  9 #2D1160FF   1.8    25 1         2</span></span>
+<span><span class="co">#&gt; 10 #2D1160FF   2      28 1         2</span></span>
 <span><span class="co">#&gt; # ℹ 224 more rows</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">scatter_plot</span> <span class="op">+</span></span>
@@ -212,7 +207,7 @@
 <span><span class="co">#&gt; ! `geom_label()` requires the following missing aesthetics: y and label.</span></span></code></pre></div>
 <p>The error tells us that the geom is missing some missing aesthetics, so something must be wrong with <strong>the data that the geom receives</strong>. If we inspect this using <code><a href="reference/sublayer-data.html">layer_before_geom()</a></code>, we find that the columns for <code>y</code> and <code>label</code> are indeed missing in the <em>Before Geom</em> data:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span>, error <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span>, error <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ✔ Ran `inspect_args(last_plot(), ggplot2:::Layer$compute_geom_1, layer_is(2L), error = TRUE)$data`</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 14</span></span>
 <span><span class="co">#&gt;    ymin lower middle upper  ymax outliers  notchupper notchlower     x width</span></span>
@@ -245,7 +240,7 @@
 <p><img src="reference/figures/README-boxplot-anno-success-1.png" width="80%" style="display: block; margin: auto;"></p>
 <p>Inspecting the after-stat snapshot of the successful plot above, we see that both <code>y</code> and <code>label</code> are now present at this stage to later satisfy the geom.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"ymax"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"ymax"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; # A tibble: 3 × 3</span></span>
 <span><span class="co">#&gt;       y  ymax label</span></span>
 <span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span></span>
@@ -417,7 +412,6 @@
 </div>
 </div>
 </div>
-
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -454,7 +448,7 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.7.5-gogreen.svg"></a></li>
+<li><a href="https://github.com/yjunechoe/ggtrace" class="external-link"><img src="https://img.shields.io/badge/devel%20version-0.7.6-gogreen.svg"></a></li>
 <li><a href="https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml" class="external-link"><img src="https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml/badge.svg" alt="test-with-dev-ggplot2"></a></li>
 <li><a href="https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://app.codecov.io/gh/yjunechoe/ggtrace" class="external-link"><img src="https://codecov.io/gh/yjunechoe/ggtrace/graph/badge.svg" alt="Codecov test coverage"></a></li>
