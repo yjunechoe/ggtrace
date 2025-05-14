@@ -168,10 +168,11 @@ layer_after_scale <- function(plot, i = 1L, ..., error = FALSE,
 #'          called for. In technical terms, \code{layer_is()} subsets calls to the method
 #'          that are downstream of the \code{by_layer()} function in the ggplot internals.
 #'   }
-#'   The expression exposes some context-dependent variables, including:
+#'   If `x` is an expression, the following variables are exposed:
 #'   \itemize{
 #'     \item \code{i}: Scalar integer representing the nth layer
-#'     \item \code{layers}: A list whose contents are equivalent to \code{<ggplot>$layers}
+#'     \item \code{data}: Data argument passed to the ggproto method, if available.
+#'     \item \code{layers}: A list, equivalent to \code{<ggplot>$layers}.
 #'   }
 #' @export
 layer_is <- function(x) {
@@ -216,9 +217,14 @@ layer_is <- function(x) {
     x <- rlang::call2("==", quote(i), as.integer(x))
   }
 
+  # `by_layer()` variables
   keep <- c("i", "layers")
   drop <- setdiff(rlang::env_names(by_layer_env), keep)
   rlang::env_unbind(by_layer_env, nms = drop)
+
+  # ggproto method data variable
+  # - climb one frame up to `cond <- eval_tidy(...)` call
+  by_layer_env$data <- eval.parent(quote(data))
 
   isTRUE(rlang::eval_bare(x, by_layer_env))
 

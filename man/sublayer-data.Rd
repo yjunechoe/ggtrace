@@ -62,10 +62,11 @@ exposes information about the current layer that the method is being
 called for. In technical terms, \code{layer_is()} subsets calls to the method
 that are downstream of the \code{by_layer()} function in the ggplot internals.
 }
-The expression exposes some context-dependent variables, including:
+If \code{x} is an expression, the following variables are exposed:
 \itemize{
 \item \code{i}: Scalar integer representing the nth layer
-\item \code{layers}: A list whose contents are equivalent to \code{<ggplot>$layers}
+\item \code{data}: Data argument passed to the ggproto method, if available.
+\item \code{layers}: A list, equivalent to \code{<ggplot>$layers}.
 }}
 }
 \value{
