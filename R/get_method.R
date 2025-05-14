@@ -130,28 +130,41 @@ get_method_inheritance <- function(obj, trim_overriden = TRUE) {
   if (!inherits(obj, "ggproto")) {
     rlang::abort("`obj` must be a ggproto object")
   }
-  ggprotos <- class(obj)[seq_len(which(class(obj) == "ggproto") - 1L)]
-  n_parents <- length(ggprotos) - 1L
-  if (n_parents == 0) {
-    all_methods <- list(sort(names(obj)))
-  } else {
-    all_ggprotos <- Reduce(
-      function(x, y) x$super(),
-      seq_len(n_parents),
-      init = obj,
-      accumulate = TRUE
-    )
-    all_methods <- lapply(all_ggprotos, function(x) ls(envir = x))
-    if (trim_overriden) {
-      all_methods <- Reduce(
-        function(child, parent) setdiff(parent, c(child, "super")),
-        all_methods,
-        init = "",
-        accumulate = TRUE)[-1L]
-    }
+  cur <- obj
+  all_ggprotos <- list(cur)
+  while (!is.null(cur$super)) {
+    cur <- cur$super()
+    all_ggprotos <- append(all_ggprotos, cur)
   }
+  ggprotos <- sapply(all_ggprotos, function(x) class(x)[[1]])
+  all_methods <- lapply(all_ggprotos, function(x) ls(envir = x))
   names(all_methods) <- ggprotos
-  rev(all_methods)
+
+  # Early exit
+  if (length(all_ggprotos) == 1) {
+    return(all_methods)
+  }
+
+  # Trim methods
+  if (trim_overriden) {
+    all_methods[] <- Reduce(
+      function(child, parent) setdiff(parent, c(child, "super")),
+      all_methods,
+      init = "",
+      accumulate = TRUE
+    )[-1]
+  }
+  all_methods <- rev(all_methods)
+
+  # Handle instances that acts like a subclass
+  if (anyDuplicated(names(all_methods))) {
+    all_methods <- split(
+      unlist(all_methods, FALSE, FALSE),
+      rep(names(all_methods), times = lengths(all_methods))
+    )
+  }
+
+  all_methods
 }
 
 
