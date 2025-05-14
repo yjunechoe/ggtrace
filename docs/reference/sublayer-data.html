@@ -13,7 +13,7 @@ these."><meta property="og:image" content="https://yjunechoe.github.io/ggtrace/l
 
     <a class="navbar-brand me-2" href="../index.html">ggtrace</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.7.5</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,8 +121,9 @@ these.</p>
 exposes information about the current layer that the method is being
 called for. In technical terms, <code>layer_is()</code> subsets calls to the method
 that are downstream of the <code>by_layer()</code> function in the ggplot internals.</p></li>
-</ul><p>The expression exposes some context-dependent variables, including:</p><ul><li><p><code>i</code>: Scalar integer representing the nth layer</p></li>
-<li><p><code>layers</code>: A list whose contents are equivalent to <code>&lt;ggplot&gt;$layers</code></p></li>
+</ul><p>If <code>x</code> is an expression, the following variables are exposed:</p><ul><li><p><code>i</code>: Scalar integer representing the nth layer</p></li>
+<li><p><code>data</code>: Data argument passed to the ggproto method, if available.</p></li>
+<li><p><code>layers</code>: A list, equivalent to <code>&lt;ggplot&gt;$layers</code>.</p></li>
 </ul></dd>
 
 </dl></div>

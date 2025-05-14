@@ -1,5 +1,9 @@
 # ggtrace 0.7.x
 
+# ggtrace 0.7.5
+
+- Fixed bug with workflow functions not recognizing one-liner ggproto methods (#106)
+
 # ggtrace 0.7.4
 
 - Reworked `layer_is()` to evaluate the argument eagerly by default, for ease of programming over it (#105)

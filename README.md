@@ -1,13 +1,10 @@
-ggtrace
-================
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # ggtrace <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />
 
 <!-- badges: start -->
 
-[![](https://img.shields.io/badge/devel%20version-0.7.4-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
+[![](https://img.shields.io/badge/devel%20version-0.7.5-gogreen.svg)](https://github.com/yjunechoe/ggtrace)
 [![test-with-dev-ggplot2](https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/test-with-dev-ggplot2.yaml)
 [![R-CMD-check](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/yjunechoe/ggtrace/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
