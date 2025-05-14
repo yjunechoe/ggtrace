@@ -280,7 +280,7 @@ with_ggtrace(
 
 See implementation in [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
 
-### 6) *Highjack the internal data pipeline*
+### 6) **Highjack the internal data pipeline**
 
 > Example inspired by a [stackoverflow question](https://stackoverflow.com/questions/76985690/in-ggplot2-how-to-remove-all-theme-remove-some-data-but-keep-aspect-ratio-of-t/77146460#77146460):
 
