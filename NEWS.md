@@ -1,5 +1,9 @@
 # ggtrace 0.7.x
 
+# ggtrace 0.7.7
+
+- Handle the tracing of one-liners without `{` more gracefully (#108)
+
 # ggtrace 0.7.6
 
 - Fixed bug with `get_method_inheritance()` failing to simplify an *instance* of a class (vs. a subclass) (#107)
