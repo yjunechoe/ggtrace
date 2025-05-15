@@ -361,7 +361,11 @@ ggtrace_inspect_args <- function(x, method, cond = 1L, hoist_dots = TRUE,
   method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
-  suppressMessages(trace(what = what, where = where, at = 1L, print = FALSE, tracer = rlang::expr({
+
+  # safeguard `at` for oneliners
+  at <- if (length(method_info$method_body) == 1L) NULL else 1L
+
+  suppressMessages(trace(what = what, where = where, at = at, print = FALSE, tracer = rlang::expr({
     new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
     rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
     cond <- rlang::eval_tidy(
@@ -513,7 +517,11 @@ ggtrace_inspect_on_error <- function(x, method, ...) {
   method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
-  suppressMessages(trace(what = what, where = where, at = 1L, print = FALSE, tracer = rlang::expr({
+
+  # safeguard `at` for oneliners
+  at <- if (length(method_info$method_body) == 1L) NULL else 1L
+
+  suppressMessages(trace(what = what, where = where, at = at, print = FALSE, tracer = rlang::expr({
     new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
     args <- names(formals(attr(rlang::current_fn(), "original")))
     if ("..." %in% args) {

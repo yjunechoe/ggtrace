@@ -90,7 +90,11 @@ ggtrace_capture_fn <- function(x, method, cond = 1L, ...) {
   method_info <- resolve_method(method_quo)
   what <- method_info$what
   where <- method_info$where
-  suppressMessages(trace(what = what, where = where, print = FALSE, at = 1L, tracer = rlang::expr({
+
+  # safeguard `at` for oneliners
+  at <- if (length(method_info$method_body) == 1L) NULL else 1L
+
+  suppressMessages(trace(what = what, where = where, print = FALSE, at = at, tracer = rlang::expr({
 
     new_counter <- rlang::env_get(!!wrapper_env, "._counter_") + 1L
     rlang::env_bind(!!wrapper_env, ._counter_ = new_counter)
