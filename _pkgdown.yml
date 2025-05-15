@@ -108,7 +108,7 @@ articles:
   navbar: Usage
   contents:
   - getting-started
-  - overview
+  - workflow-functions
   # - showcase-ggplot_build
   # - showcase-aes_evaluation
 # - title: Workflows (WIP)
@@ -123,13 +123,14 @@ articles:
   navbar: Miscellaneous
   contents:
   - FAQ
+  - extending-trace
   # - comparisons
   # - technical-details
 
 navbar:
   structure:
-    right: [paper, reference, news, articles, github]
-    left: []
+    left: [paper, reference, news, articles]
+    right: [search, github]
   components:
     paper:
       text: Paper

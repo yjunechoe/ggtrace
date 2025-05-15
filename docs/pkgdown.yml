@@ -2,10 +2,11 @@ pandoc: '3.4'
 pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
+  extending-trace: extending-trace.html
   FAQ: FAQ.html
   getting-started: getting-started.html
-  overview: overview.html
-last_built: 2025-05-15T17:05Z
+  workflow-functions: workflow-functions.html
+last_built: 2025-05-15T17:25Z
 urls:
   reference: https://yjunechoe.github.io/ggtrace/reference
   article: https://yjunechoe.github.io/ggtrace/articles

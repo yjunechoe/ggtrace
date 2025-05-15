@@ -1,5 +1,5 @@
 ---
-title: "Overview"
+title: "Workflow functions"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Overview}
@@ -7,80 +7,16 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r load, echo = FALSE}
-library(ggtrace)
-```
-
-## **Extending `base::trace()` with `ggtrace()`**
-
-The low-level function `ggtrace()` is designed for interacting with functions and ggproto methods in the `{ggplot2}` ecosystem, from the "outside". 
-
-Formally put, `ggtrace()` allows the user to inject arbitrary expressions (called **traces**) to functions and methods that are evaluated over the execution of a ggplot. When "triggered" by the evaluation of the ggplot, these traces may modify the resulting graphical output, or they may simply log their values to the "tracedump" for further inspection by the user. Check out the [FAQ vignette](https://yjunechoe.github.io/ggtrace/articles/FAQ.html) for more details.
-
-Briefly, there are three key arguments to `ggtrace()`:
-
-- `method`: what function/method to trace
-- `trace_steps`: where in the body to inject expressions
-- `trace_exprs` what expressions to inject
-
-A simple example:
-
-```{r}
-dummy_fn <- function(x = 1, y = 2) {
-  z <- x + y
-  return(z)
-}
-dummy_fn()
-```
-
-The following code injects the code `z <- z * 10` right as `dummy_fn` enters the third "step" in the body, _right before_ the line `return(z)` is ran.
-
-```{r}
-body(dummy_fn)[[3]]
-```
-
-```{r}
-ggtrace(
-  method = dummy_fn,
-  trace_steps = 3L, # Before `return(z)` is ran
-  trace_exprs = quote(z <- z * 10)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
 )
 ```
 
-Note that the value of `trace_exprs` must be of type "language" (a quoted expression), the idea being that we are _injecting_ code to be evaluate inside the function when it is called. Often, providing the code wrapped in `quote()` suffices. For more complex injections see the [Expressions chapter of Advanced R](https://adv-r.hadley.nz/expressions.html)
-
-After this `ggtrace()` call, the next time `dummy_fn` is called it is run with this injected code.
-
-```{r}
-# Returns 30 instead of 3
-dummy_fn()
+```{r setup}
+library(ggtrace)
 ```
-
-Essentially, `dummy_fn` ran with this following modified code just now:
-
-```{r}
-dummy_fn_traced <- function(x = 1, y = 2) {
-  z <- x + y
-  z <- z * 10 #< injected code!
-  return(z)
-}
-dummy_fn_traced()
-```
-
-By default, traces created by `{ggtrace}` functions delete themselves after being triggered. You can also check whether a function is currently being traced with `is_traced()`.
-
-```{r}
-is_traced(dummy_fn)
-```
-
-`{ggtrace}` automatically logs the output of triggered trace to what we call **tracedumps**. For example, `last_ggtrace()` stores the output of the _last_ trace created by `ggtrace()`:
-
-```{r}
-# The value of `(z <- z * 10)` when it was ran
-last_ggtrace() # Note that this is a list of length `trace_steps`
-```
-
-See the references section [**Extending base::trace()**](https://yjunechoe.github.io/ggtrace/reference/index.html#extending-base-trace-) for more functionalities offered by `ggtrace()`.
 
 ## **Workflows for interacting with ggplot internals**
 
