@@ -52,14 +52,22 @@ More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://
 
 Broadly speaking, `{ggtrace}` was designed with two goals in mind:
 
-1) To help users understand the design of **sublayer modularity** and write more expressive layer code using [delayed aesthetic evaluation](https://ggplot2.tidyverse.org/reference/aes_eval.html). This is a primarily pedagogical goal and outlined in my paper [Sub-layer modularity in the Grammar of Graphics](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf). The family of `layer_*()` extractor functions return snapshots of layer data in the internals, to help scaffold a mental model of sublayer processes as a data wrangling pipeline.
+### 1. Understanding Sublayer Modularity
 
-    ![](https://i.imgur.com/OlLmz8r.png)
+To help users write more expressive layer code using [delayed aesthetic evaluation](https://ggplot2.tidyverse.org/reference/aes_eval.html). The family of `layer_*()` extractor functions return snapshots of layer data in the internals, to help scaffold a mental model of `{ggplot2}` internals as a data wrangling pipeline. See `` ?`sublayer-data` ``
 
-2) To facilitate the **user-developer transition**, empowering experienced users of `{ggplot2}` to start developing their own extension packages. This is achieved via a family of `inspect`, `capture`, and `highjack` workflow functions, which provide a functional interface into the object-oriented design of the internals (the `<ggproto>` OOP).
+<p align="center">
+  <img src="https://i.imgur.com/OlLmz8r.png" width="550" alt="Sublayer modularity diagram">
+</p>
 
-    ![](https://i.imgur.com/kpTffyw.jpg)
-    
+### 2. Facilitating the User-Developer Transition
+
+To empower users to start developing their own extensions This is achieved via a family of `inspect_*()`, `capture_*()`, and `highjack_*()` workflow functions, which provide a functional interface into the object-oriented design of the internals (the `<ggproto>` OOP).
+
+<p align="center">
+  <img src="https://i.imgur.com/kpTffyw.jpg" width="450" alt="User-developer transition diagram">
+</p>
+
 You can read the full motivation behind `{ggtrace}` in the [Pedagogical Philosophy](https://yjunechoe.github.io/ggtrace/articles/pedagogical-philosophy.html) vignette.
 
 ## Playground

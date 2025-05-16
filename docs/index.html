@@ -99,17 +99,21 @@
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
 <p>Broadly speaking, <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> was designed with two goals in mind:</p>
-<ol style="list-style-type: decimal">
-<li>
-<p>To help users understand the design of <strong>sublayer modularity</strong> and write more expressive layer code using <a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">delayed aesthetic evaluation</a>. This is a primarily pedagogical goal and outlined in my paper <a href="https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf" class="external-link">Sub-layer modularity in the Grammar of Graphics</a>. The family of <code>layer_*()</code> extractor functions return snapshots of layer data in the internals, to help scaffold a mental model of sublayer processes as a data wrangling pipeline.</p>
-<p><img src="https://i.imgur.com/OlLmz8r.png"></p>
-</li>
-<li>
-<p>To facilitate the <strong>user-developer transition</strong>, empowering experienced users of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> to start developing their own extension packages. This is achieved via a family of <code>inspect</code>, <code>capture</code>, and <code>highjack</code> workflow functions, which provide a functional interface into the object-oriented design of the internals (the <code>&lt;ggproto&gt;</code> OOP).</p>
-<p><img src="https://i.imgur.com/kpTffyw.jpg"></p>
-</li>
-</ol>
+<div class="section level3">
+<h3 id="id_1-understanding-sublayer-modularity">1. Understanding Sublayer Modularity<a class="anchor" aria-label="anchor" href="#id_1-understanding-sublayer-modularity"></a>
+</h3>
+<p>To help users write more expressive layer code using <a href="https://ggplot2.tidyverse.org/reference/aes_eval.html" class="external-link">delayed aesthetic evaluation</a>. The family of <code>layer_*()</code> extractor functions return snapshots of layer data in the internals, to help scaffold a mental model of <a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> internals as a data wrangling pipeline. See <code><a href="reference/sublayer-data.html">?`sublayer-data`</a></code></p>
+<p align="center">
+<img src="https://i.imgur.com/OlLmz8r.png" width="550" alt="Sublayer modularity diagram"></p>
+</div>
+<div class="section level3">
+<h3 id="id_2-facilitating-the-user-developer-transition">2. Facilitating the User-Developer Transition<a class="anchor" aria-label="anchor" href="#id_2-facilitating-the-user-developer-transition"></a>
+</h3>
+<p>To empower users to start developing their own extensions This is achieved via a family of <code>inspect_*()</code>, <code>capture_*()</code>, and <code>highjack_*()</code> workflow functions, which provide a functional interface into the object-oriented design of the internals (the <code>&lt;ggproto&gt;</code> OOP).</p>
+<p align="center">
+<img src="https://i.imgur.com/kpTffyw.jpg" width="450" alt="User-developer transition diagram"></p>
 <p>You can read the full motivation behind <a href="https://yjunechoe.github.io/ggtrace">ggtrace</a> in the <a href="https://yjunechoe.github.io/ggtrace/articles/pedagogical-philosophy.html">Pedagogical Philosophy</a> vignette.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="playground">Playground<a class="anchor" aria-label="anchor" href="#playground"></a>

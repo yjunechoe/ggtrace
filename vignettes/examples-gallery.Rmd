@@ -120,28 +120,6 @@ bar_plot +
   )
 ```
 
-Same idea with `after_scale()`:
-
-```{r sub-layer-data-scatter}
-scatter_plot <- ggplot(mpg, aes(displ, hwy, fill = class)) +
-  scale_fill_viridis_d(option = "magma")
-scatter_plot +
-  geom_point(shape = 21, size = 4, stroke = 1)
-```
-
-```{r sub-layer-data-after-scale}
-# `fill` column available for `after_scale(fill)`
-layer_after_scale(scatter_plot, verbose = TRUE)
-```
-
-```{r sub-layer-data-after-scale-aes}
-scatter_plot +
-  geom_point(
-    aes(color = after_scale(prismatic::best_contrast(fill))),
-    shape = 21, size = 4, stroke = 1
-  )
-```
-
 ## Not just ggproto methods
 
 > Example adopted from [Github issue #97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)

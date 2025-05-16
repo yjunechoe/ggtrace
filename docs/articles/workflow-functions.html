@@ -83,19 +83,12 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="workflows-for-interacting-with-ggplot-internals">
-<strong>Workflows for interacting with ggplot
-internals</strong><a class="anchor" aria-label="anchor" href="#workflows-for-interacting-with-ggplot-internals"></a>
+<h2 id="workflows-for-interacting-with-ggplot-internals">Workflows for interacting with ggplot internals<a class="anchor" aria-label="anchor" href="#workflows-for-interacting-with-ggplot-internals"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] '3.5.2'</span></span></code></pre></div>
-<p>Admittedly, <code><a href="../reference/ggtrace.html">ggtrace()</a></code> is a bit too clunky for
-interactive explorations of ggplot internals. To address this, we offer
-“workflow” functions in the form of
-<code>ggtrace_{action}_{value}()</code>. These are grouped into three
-workflows: Inspect, Capture, and Highjack.</p>
 <p><strong>NOTE</strong>: Making the most out of these workflow
 functions requires a hint of knowledge about ggplot internals, namely
 the fact that <strong>ggproto objects</strong> like <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#stats" class="external-link">Stat</a>
@@ -107,8 +100,7 @@ concepts, you should at least watch <a href="https://twitter.com/thomasp85" clas
 <a href="https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/" class="external-link">Extending
 your ability to extend ggplot2</a> before proceeding.</p>
 <div class="section level3">
-<h3 id="walkthrough-with-geom_smooth">
-<strong>Walkthrough with <code>geom_smooth()</code></strong><a class="anchor" aria-label="anchor" href="#walkthrough-with-geom_smooth"></a>
+<h3 id="a-walkthrough-with-geom_smooth">A walkthrough with <code>geom_smooth()</code><a class="anchor" aria-label="anchor" href="#a-walkthrough-with-geom_smooth"></a>
 </h3>
 <p>Say we want to learn more about how <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth()</a></code> layer
 works, exactly</p>
@@ -162,8 +154,7 @@ family of methods, which are essentially just functions. We’ll focus on
 <span><span class="co">#&gt; [5] "setup_params"</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="inspect">
-<strong>Inspect</strong><a class="anchor" aria-label="anchor" href="#inspect"></a>
+<h3 id="inspect">Inspect<a class="anchor" aria-label="anchor" href="#inspect"></a>
 </h3>
 <p>Here we introduce our first workflow function
 <code><a href="../reference/ggtrace_inspect_n.html">ggtrace_inspect_n()</a></code>, which takes a ggplot as the first
@@ -245,8 +236,7 @@ value of <code>._counter_</code> back in
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="capture">
-<strong>Capture</strong><a class="anchor" aria-label="anchor" href="#capture"></a>
+<h3 id="capture">Capture<a class="anchor" aria-label="anchor" href="#capture"></a>
 </h3>
 <p>Okay, so we know what <code>StatSmooth$compute_group</code> returns,
 but how does this return value change with different input? More
@@ -354,8 +344,7 @@ conveniently give us information about the panel and group that
 <code>compute_group</code> is doing calculations over.</p>
 </div>
 <div class="section level3">
-<h3 id="highjack">
-<strong>Highjack</strong><a class="anchor" aria-label="anchor" href="#highjack"></a>
+<h3 id="highjack">Highjack<a class="anchor" aria-label="anchor" href="#highjack"></a>
 </h3>
 <p>Once we have some understanding of how
 <code>StatSmooth$compute_group</code> works, we may want to test some
