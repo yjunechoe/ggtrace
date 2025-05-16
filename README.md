@@ -67,7 +67,7 @@ into the object-oriented design of the internals (the `<ggproto>` OOP).
 
 <p align="center">
 
-<img src="https://i.imgur.com/kpTffyw.jpg" width="450" alt="User-developer transition diagram">
+<img src="https://i.imgur.com/kpTffyw.jpg" width="700" alt="User-developer transition diagram">
 </p>
 
 You can read the full motivation behind `{ggtrace}` in the [Pedagogical
