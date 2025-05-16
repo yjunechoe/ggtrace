@@ -21,34 +21,25 @@ You can install the development version from
 remotes::install_github("yjunechoe/ggtrace")
 ```
 
-``` r
-library(ggtrace)
-```
-
 More on the 📦 package website: <https://yjunechoe.github.io/ggtrace>
 
 ## Getting started
 
 `{ggtrace}` is a **functional interface to ggplot2 internals**. A little
 bit of knowledge about `{ggplot2}` internals is required to make the
-most use out of `{ggtrace}`.
+most use out of `{ggtrace}`. You can watch one of these videos for a
+quick showcase.
 
 - [Talk at JSM 2023](https://youtu.be/613Q0j6Kjm0?feature=shared)
+  ([paper](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf))
 
 - [Talk at
   rstudio::conf(2022)](https://www.youtube.com/watch?v=dUBnitXf5mk&list=PL9HYL-VRX0oTOwqzVtL_q5T8MNrzn0mdH&index=38)
-  (+ accompanying
-  [materials](https://github.com/yjunechoe/ggtrace-rstudioconf2022)).
+  ([materials](https://github.com/yjunechoe/ggtrace-rstudioconf2022)).
 
 - [Talk at useR!
-  2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s) (+
-  accompanying
-  [materials](https://github.com/yjunechoe/ggtrace-user2022)).
-
-You can read the full motivation behind `{ggtrace}` in the [Pedagogical
-Philosophy](https://yjunechoe.github.io/ggtrace/articles/pedagogical-philosophy.html)
-vignette and/or the accompanying
-[paper](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf).
+  2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s)
+  ([materials](https://github.com/yjunechoe/ggtrace-user2022)).
 
 ## Description
 
@@ -75,10 +66,14 @@ Broadly speaking, `{ggtrace}` was designed with two goals in mind:
 
     ![](https://i.imgur.com/kpTffyw.jpg)
 
+You can read the full motivation behind `{ggtrace}` in the [Pedagogical
+Philosophy](https://yjunechoe.github.io/ggtrace/articles/pedagogical-philosophy.html)
+vignette.
+
 ## Playground
 
 The best way to learn `{ggtrace}` and `{ggplot2}` internals is by
-playing around with code and breaking things as you go.
+playing around and breaking things as you go.
 
 In that spirit, you can take `{ggtrace}` for a spin on the [ggplot2
 Layer Explorer](https://yjunechoe.github.io/ggplot2-layer-explorer/)

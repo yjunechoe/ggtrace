@@ -18,18 +18,16 @@ knitr::opts_chunk$set(
 library(ggtrace)
 ```
 
-## **Workflows for interacting with ggplot internals**
+## Workflows for interacting with ggplot internals
 
 ```{r}
 library(ggplot2)
 packageVersion("ggplot2")
 ```
 
-Admittedly, `ggtrace()` is a bit too clunky for interactive explorations of ggplot internals. To address this, we offer "workflow" functions in the form of `ggtrace_{action}_{value}()`. These are grouped into three workflows: Inspect, Capture, and Highjack.
-
 **NOTE**: Making the most out of these workflow functions requires a hint of knowledge about ggplot internals, namely the fact that **ggproto objects** like [Stat](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#stats) and [Geom](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#geoms) exists, and that these [ggprotos have methods](https://ggplot2-book.org/spring1.html#methods) that step in at different parts of the ggplot build/render pipeline to modify the data. If you are completely new to these concepts, you should at least watch [Thomas Lin Pedersen](https://twitter.com/thomasp85)'s talk on [Extending your ability to extend ggplot2](https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/) before proceeding.
 
-### **Walkthrough with `geom_smooth()`**
+### A walkthrough with `geom_smooth()`
 
 Say we want to learn more about how `geom_smooth()` layer works, exactly
 
@@ -69,7 +67,7 @@ class( get_method(StatSmooth$compute_group) )
 get_method_inheritance(StatSmooth)
 ```
 
-### **Inspect**
+### Inspect
 
 Here we introduce our first workflow function `ggtrace_inspect_n()`, which takes a ggplot as the first argument and a ggproto method as the second argument, returning the number of times the ggproto method has been called in the ggplot's evaluation:
 
@@ -127,7 +125,7 @@ These two approaches work the same:
 identical(return_val_2_3_A, return_val_2_3_B)
 ```
 
-### **Capture**
+### Capture
 
 Okay, so we know what `StatSmooth$compute_group` returns, but how does this return value change with different input? More generally put, how does `StatSmooth$compute_group` behave under different contexts?
 
@@ -191,7 +189,7 @@ args_2_3$data
 We see that `PANEL` and `group` columns conveniently give us information about the panel and group that `compute_group` is doing calculations over.
 
 
-### **Highjack**
+### Highjack
 
 Once we have some understanding of how `StatSmooth$compute_group` works, we may want to test some hypotheses about what would happen to the resulting graphical output if the method returned something else.
 

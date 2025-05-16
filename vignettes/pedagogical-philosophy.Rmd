@@ -1,5 +1,5 @@
 ---
-title: "Getting Started"
+title: "Pedagogical Philosophy"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -7,21 +7,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Short version
-
-Are you an **experienced user** wanting to fully master the grammar of ggplot? Start with my [rstudio::conf(2022) talk on {ggtrace}](https://www.rstudio.com/conference/2022/talks/cracking-open-ggplot-internals-ggtrace/)!
-
-Are you an **aspiring developer** wanting to extend ggplot? Start with my [useR! 2022 talk on {ggtrace}](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s)!
-
-## Long version
-
 There's a lot that can be said about ggplot internals, and what you can get out of using `{ggtrace}` depends on how comfortable you are with ggplot and ggplot internals. Whether you're here because you want to become a better ggplot user or because you're an aspiring extension developer, `{ggtrace}` has you covered for all stages of your ggplot journey!
 
 Traditionally, the ggplot community has been thought to split between **users** (people who use ggplot to make plots) and **developers** (people who write extension packages and contribute to `{ggplot2}`). I believe that this binary distinction is outdated for many reasons, a recent one being that the capacity of the user is ever-expanding and encroaching on the "internals" territory. While the distinction between _user-facing code_ and _ggplot internals_ is clear, that doesn't map neatly onto the user-developer dichotomy.
 
 Here is one attempt at trying to address that issue. The following outlines the five "stages" of the ggplot2 journey, and where `{ggtrace}` fits in.
 
-### Stage 1 (experienced user)
+## Stage 1 (experienced user)
 
 **You are someone who is comfortable with using ggplot but have not heard about ggplot internals before.** If you are wondering why you'd even bother learning about ggplot internals, see [part 1 of my blog post series on delayed aesthetic evaluation](https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/), a case study of [a set of somewhat niche {ggplot2} functions](https://ggplot2.tidyverse.org/reference/aes_eval.html) that lie at the intersection of user-facing code and ggplot internals. You might also want to start with another blog post of mine on [stat_*() layers](https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/), for extra scaffolding. These will give you a _practical_ background on ggplot internals, just to get started. Hopefully this will also get you excited about the internals too.
 
@@ -35,7 +27,7 @@ Here is one attempt at trying to address that issue. The following outlines the 
 
 - We can use `{ggtrace}` to reference internals snapshots of a layer's data for declaring more complex aesthetic mappings and using unconventional stat-geom pairs in a layer.
 
-### Stage 2 (curious user)
+## Stage 2 (curious user)
 
 **You are someone who recognizes the division of labor between the user and the internals, and feel empowered by this knowledge.** To continue to get a better sense of what the internals does, I recommend watching my [rstudio::conf(2022) talk on {ggtrace} and ggplot internals](https://www.rstudio.com/conference/2022/talks/cracking-open-ggplot-internals-ggtrace/). If that felt a little too fast/dense, you can watch a [slower (hour-long), broken down version](https://www.youtube.com/watch?v=NhMI-GvppMo&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=28) of me covering the same content. This is where I showcase the _inspect_ family of workflow functions in `{ggtrace}` and it is also where you will be introduced to [`ggproto`](https://ggplot2-book.org/internals.html#introducing-ggproto). The talks cover the content from [Chapter 20.2 of the ggplot2 book](https://ggplot2-book.org/internals.html#ggplotbuild), but with emphasis on practicality for the user. I'd actually recommend reading that entire book chapter anyways (or read it with a recording of me going over [Part 1](https://www.youtube.com/watch?v=__yndiht_gw&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=24) and [Part 2](https://www.youtube.com/watch?v=JFBROPy_BeU&list=PL3x6DOfs2NGhUxGvu46tXQtBl0qyTcDet&index=26) of the chapter), as it covers many fundamental concepts that take some time to digest. As you read through it, I also highly recommend referencing [Emi Tanaka](https://twitter.com/statsgen)'s awesome [slides on ggplot2 internals](https://emitanaka.org/datavis-adv-workshop/slides/day1-session2.html) and [Bob Rudis](https://twitter.com/hrbrmstr)'s [short chapter on demystifying ggplot2](https://rud.is/books/creating-ggplot2-extensions/demystifying-ggplot2.html) as companion guides.
 
@@ -47,7 +39,7 @@ Here is one attempt at trying to address that issue. The following outlines the 
 
 - The internals are implemented in the ggproto object oriented system which is difficult to grok, but a lot of it is just data wrangling. We can get pretty far in understanding the internals by using `{ggtrace}` to just focus on the part of the internals that takes the user-supplied data and turns it into a "drawing-ready" data.
 
-### Stage 3 (aspiring developer)
+## Stage 3 (aspiring developer)
 
 **You are someone who is aware of the existence of ggproto, and you are interested in knowing more about the implementational details of the internals.** You can gear up for a deep dive into the internals by first watching [Thomas Lin Pedersen](https://twitter.com/thomasp85)'s [rstudio::conf(2020) talk on extending ggplot](https://www.rstudio.com/resources/rstudioconf-2020/extending-your-ability-to-extend-ggplot2/), which gives a nice overview of what kind of ggproto objects and methods exist and what the most relevant ones are / what they do. In case you want a more comprehensive documentation on ggproto (though not necessary to read them at this stage), check out the [package vignette on ggproto](https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html) and [Brodie Gaslam](https://twitter.com/BrodieGaslam)'s even more comprehensive [unofficial reference for ggplot internals](https://htmlpreview.github.io/?https://raw.githubusercontent.com/brodieG/ggbg/development/inst/doc/extensions.html#ggproto-method).
 
@@ -63,7 +55,7 @@ That leads nicely into the [case study chapter of the ggplot2 book](https://ggpl
 
 - ggprotos are mostly stateless and ggproto methods are essentially functions, though they defy common expectations about how a function should look like and behave. `{ggtrace}` allows you to interact with these ggproto methods as if they are stand-alone functions, so you can learn their behavior through trial and error.
 
-### Stage 4 (developer)
+## Stage 4 (developer)
 
 **You understand the role that ggproto objects and methods play in the internals and you are excited about writing your own extensions.** At this point you are now a _developer_ - your training wheels are off and you're in the territory of figuring things out for yourself.
 
@@ -79,7 +71,7 @@ Standing on the shoulders of these giants, `{ggtrace}` aims to offer the best of
 
 - In the process of writing new ggproto objects and ggproto methods, developers need to debug frequently. `{ggtrace}` functions implement different strategies of debugging, spanning the spectrum of interactive to programmatic.
 
-### Stage 5 (contributor)
+## Stage 5 (contributor)
 
 Lastly, `{ggplot2}` is always evolving, and you can take part in the process! It might not be obvious as users, but the _internals_ are undergoing constant change. So at some point you might also want to start keeping an eye on the [Github issues](https://github.com/tidyverse/ggplot2/issues). It's also a nice place to be because you can eavesdrop on the thoughts and insights from the core developers (e.g., [should users be able to specify pieces of a `scale_*()` modularly?](https://github.com/tidyverse/ggplot2/issues/4269), [how should the guides system be converted to ggproto?](https://github.com/tidyverse/ggplot2/issues/3329), [should layers get "state"?](https://github.com/tidyverse/ggplot2/issues/3175)), which can help you understand the motivation behind how and why things in the internals are designed that way. If reading those discussions inspire new ideas or strong feelings, you can submit an issue or PR to make your voice heard.
 

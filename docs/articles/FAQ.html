@@ -44,12 +44,13 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><hr class="dropdown-divider"></li>
     <li><h6 class="dropdown-header" data-toc-skip>Usage</h6></li>
-    <li><a class="dropdown-item" href="../articles/getting-started.html">Getting Started</a></li>
+    <li><a class="dropdown-item" href="../articles/examples-gallery.html">Examples gallery</a></li>
     <li><a class="dropdown-item" href="../articles/workflow-functions.html">Workflow functions</a></li>
     <li><hr class="dropdown-divider"></li>
-    <li><h6 class="dropdown-header" data-toc-skip>Miscellaneous</h6></li>
-    <li><a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Design</h6></li>
+    <li><a class="dropdown-item" href="../articles/pedagogical-philosophy.html">Pedagogical Philosophy</a></li>
     <li><a class="dropdown-item" href="../articles/extending-trace.html">Extending trace()</a></li>
+    <li><a class="dropdown-item" href="../articles/FAQ.html">Frequently asked questions</a></li>
   </ul>
 </li>
       </ul>
@@ -156,7 +157,7 @@ traced function</p>
 <span><span class="co">#&gt;     x[list] &lt;- values</span></span>
 <span><span class="co">#&gt;     x</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x000001cdcbf2cb68&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x000002d4b3db2ac0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a
 call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
@@ -305,24 +306,24 @@ untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001cdcfaaf380`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001cdcfaaf380`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b633c938`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b633c938`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span></span>
 <span><span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span></span>
 <span><span class="co">#&gt;   relvarwidth flipped_aes</span></span>
 <span><span class="co">#&gt; 1    10.14889       FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001cdcdd986d0`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001cdcdd986d0`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b6e56ab8`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b6e56ab8`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span></span>
 <span><span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span></span>
 <span><span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span></span>
 <span><span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001cdd189db28`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001cdd189db28`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b5ab9ce8`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b5ab9ce8`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span></span>
 <span><span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span></span>
 <span><span class="co">#&gt;   relvarwidth flipped_aes</span></span>

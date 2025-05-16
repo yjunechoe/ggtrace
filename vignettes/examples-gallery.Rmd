@@ -1,0 +1,229 @@
+---
+title: "Examples gallery"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{gallery}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(ggtrace)
+library(ggplot2)
+packageVersion("ggplot2")
+```
+
+## Highjack layer data
+
+> Example inspired by a [stackoverflow question](https://stackoverflow.com/questions/76985690/in-ggplot2-how-to-remove-all-theme-remove-some-data-but-keep-aspect-ratio-of-t/77146460#77146460):
+
+```{r bars}
+bars <- ggplot(mpg, aes(class)) +
+  geom_bar(aes(fill = drv), color = "grey")
+bars
+```
+
+Intercepting the data at draw step to subset bars arbitrarily:
+
+```{r bars-highjacked}
+bars_subset <- highjack_args(
+  x = bars, method = Geom$draw_layer, cond = 1L,
+  values = expression(
+    data = data[c(2, 4, 6, 8, 11),]
+  )
+)
+bars_subset
+```
+
+## Debug complex `aes()` expressions
+
+> Example adopted from my [rstudio::conf 2022 talk](https://github.com/yjunechoe/ggtrace-rstudioconf2022)
+
+Given a boxplot made with a `geom_boxplot()` layer, suppose that we want to add a second layer annotating the value of the upper whiskers:
+
+```{r boxplot-base}
+box_p <- ggplot(data = mtcars) +
+  aes(x = factor(cyl), y = mpg) +
+  geom_boxplot()
+box_p
+```
+
+A naive approach would be to add a layer that combines a **boxplot** stat with a **label** geom. But this errors out of the box:
+
+```{r boxplot-anno-error, error = TRUE}
+box_p +
+  geom_label(stat = "boxplot")
+```
+
+The error tells us that the geom is missing some missing aesthetics, so something must be wrong with **the data that the geom receives**. If we inspect this using `layer_before_geom()`, we find that the columns for `y` and `label` are indeed missing in the _Before Geom_ data:
+
+```{r boxplot-anno-debug}
+layer_before_geom(last_plot(), i = 2L, error = TRUE, verbose = TRUE)
+```
+
+Note that you can more conveniently call `last_layer_errorcontext()` to the same effect:
+
+```{r boxplot-last_layer_errorcontext}
+last_layer_errorcontext()
+```
+
+Thus, we need to ensure that `y` exists to satisfy both the stat and the geom, and that `label` exists after the statistical transformation step but before the geom sees the data. Crucially, we use the computed variable `ymax` to (re-)map to the `y` and `label` aesthetics.
+
+```{r boxplot-anno-success}
+box_p +
+  geom_label(
+    aes(y = stage(mpg, after_stat = ymax),
+        label = after_stat(ymax)),
+    stat = "boxplot"
+  )
+```
+
+Inspecting the after-stat snapshot of the successful plot above, we see that both `y` and `label` are now present at this stage to later satisfy the geom.
+
+```{r boxplot-anno-success-inspect}
+layer_before_geom(last_plot(), i = 2L)[, c("y", "ymax", "label")]
+```
+
+## Inspect sub-layer data
+
+> Example adopted from [Demystifying delayed aesthetic evaluation](https://yjunechoe.github.io/posts/2022-03-10-ggplot2-delayed-aes-1/)
+
+A bar plot of counts with `geom_bar()` with `stat = "count"` default:
+
+```{r sub-layer-data-bar}
+bar_plot <- ggplot(mpg, aes(class, fill = class)) +
+  geom_bar() +
+  theme(legend.position = "none")
+```
+
+State of bar layer's data after the statistical transformation step:
+
+```{r sub-layer-data-after-stat}
+layer_after_stat(bar_plot, verbose = TRUE)
+```
+
+We can map aesthetics to variables from the after-stat data using `after_stat()`:
+
+```{r sub-layer-data-after-stat-aes}
+bar_plot +
+  geom_text(
+    aes(label = after_stat(count)),
+    stat = "count",
+    position = position_nudge(y = 1), vjust = 0
+  )
+```
+
+Same idea with `after_scale()`:
+
+```{r sub-layer-data-scatter}
+scatter_plot <- ggplot(mpg, aes(displ, hwy, fill = class)) +
+  scale_fill_viridis_d(option = "magma")
+scatter_plot +
+  geom_point(shape = 21, size = 4, stroke = 1)
+```
+
+```{r sub-layer-data-after-scale}
+# `fill` column available for `after_scale(fill)`
+layer_after_scale(scatter_plot, verbose = TRUE)
+```
+
+```{r sub-layer-data-after-scale-aes}
+scatter_plot +
+  geom_point(
+    aes(color = after_scale(prismatic::best_contrast(fill))),
+    shape = 21, size = 4, stroke = 1
+  )
+```
+
+## Not just ggproto methods
+
+> Example adopted from [Github issue #97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)
+
+The `method` argument of workflow functions can be (almost) any function-like object called during the rendering of a ggplot.
+
+```{r not-just-ggproto}
+set.seed(2023)
+# Example from `?stat_summary`
+summary_plot <- ggplot(mtcars, aes(mpg, factor(cyl))) +
+  geom_point() +
+  stat_summary(fun.data = "mean_cl_boot", colour = "red", linewidth = 2, size = 3)
+summary_plot
+```
+
+```{r not-just-ggproto-inspect}
+inspect_args(x = summary_plot, method = mean_cl_boot)
+inspect_return(x = summary_plot, method = mean_cl_boot)
+```
+
+```{r not-just-ggproto-highjack}
+highjack_return(
+  x = summary_plot, method = mean_cl_boot,
+  value = quote({
+    data.frame(y = 50, ymin = 25, ymax = 75)
+  })
+)
+```
+
+## Intervene with surgical precision
+
+> Example adopted from a [twitter thread](https://twitter.com/mattansb/status/1506620436771229715?s=20)
+
+Here's a plot in polar coordinates:
+
+```{r polar-plot}
+polar_plot <- ggplot(mtcars, aes(hp, mpg)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x) +
+  expand_limits(y = c(0, 60)) +
+  coord_polar(start = 0, theta = "y")
+
+polar_plot
+```
+
+We can clip the plot panel by highjacking the `Layout$render()` method using the generic workflow function `with_ggtrace()`:
+
+```{r polar-plot-clipped}
+with_ggtrace(
+  x = polar_plot + theme(aspect.ratio = 1/.48),
+  method = Layout$render,
+  trace_steps = 5L,
+  trace_expr = quote({
+    panels[[1]] <- editGrob(panels[[1]], vp = viewport(xscale = c(.48, 1)))
+  }),
+  out = "g"
+)
+```
+
+See implementation in [`MSBMisc::crop_coord_polar()`](https://mattansb.github.io/MSBMisc/reference/crop_coord_polar.html).
+
+## Highjack the drawing context
+
+> Example adopted from my [useR! 2022 talk](https://yjunechoe.github.io/ggtrace-user2022/#/for-grid-power-users):
+
+```{r flashy-plot}
+library(palmerpenguins)
+flashy_plot <- na.omit(palmerpenguins::penguins) |> 
+  ggplot(aes(x = species, y = flipper_length_mm)) +
+  geom_boxplot(aes(fill = species), width = .7) +
+  facet_wrap(~ year)
+flashy_plot
+```
+
+```{r flashy-highjack}
+highjack_return(
+  flashy_plot, Geom$draw_panel, cond = TRUE,
+  value = quote({
+    circ <- circleGrob(y = .25 * ._counter_)
+    grobTree( editGrob(circ, gp = gpar(fill = linearGradient())),
+              editGrob(returnValue(), vp = viewport(clip = circ)) )
+  }))
+```
+
+Note the use of the special variable `._counter_`, which increments every time a function/method has been called. See the [tracing context](https://yjunechoe.github.io/ggtrace/reference/ggtrace_highjack_args.html#tracing-context) topic for more details.

@@ -107,25 +107,14 @@ articles:
 - title: Usage
   navbar: Usage
   contents:
-  - getting-started
+  - examples-gallery
   - workflow-functions
-  # - showcase-ggplot_build
-  # - showcase-aes_evaluation
-# - title: Workflows (WIP)
-#   navbar: Workflows (WIP)
-#   contents:
-# - title: Case Studies
-#   navbar: Case Studies
-#   contents:
-  # - casestudy-after_scale
-  # - casestudy-ggxmean
-- title: Miscellaneous
-  navbar: Miscellaneous
+- title: Design
+  navbar: Design
   contents:
-  - FAQ
+  - pedagogical-philosophy
   - extending-trace
-  # - comparisons
-  # - technical-details
+  - FAQ
 
 navbar:
   structure:

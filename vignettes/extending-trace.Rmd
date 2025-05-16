@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(ggtrace)
 ```
 
-## **Extending `base::trace()` with `ggtrace()`**
+## Extending `base::trace()` with `ggtrace()`
 
 The low-level function `ggtrace()` is designed for interacting with functions and ggproto methods in the `{ggplot2}` ecosystem, from the "outside". 
 
