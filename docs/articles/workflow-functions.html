@@ -88,7 +88,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] '3.5.2'</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] '3.5.2.9000'</span></span></code></pre></div>
 <p><strong>NOTE</strong>: Making the most out of these workflow
 functions requires a hint of knowledge about ggplot internals, namely
 the fact that <strong>ggproto objects</strong> like <a href="https://ggplot2.tidyverse.org/reference/ggplot2-ggproto.html#stats" class="external-link">Stat</a>
@@ -270,7 +270,7 @@ can inspect with <code><a href="https://rdrr.io/r/base/formals.html" class="exte
 <code class="sourceCode R"><span><span class="co"># Just showing their type/class for space</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span> <span class="fu"><a href="https://rdrr.io/r/base/formals.html" class="external-link">formals</a></span><span class="op">(</span><span class="va">captured_fn_2_3</span><span class="op">)</span> , <span class="va">class</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         data       scales       method      formula           se </span></span>
-<span><span class="co">#&gt; "data.frame"       "list"  "character"    "formula"    "logical" </span></span>
+<span><span class="co">#&gt; "data.frame"       "list"   "function"    "formula"    "logical" </span></span>
 <span><span class="co">#&gt;            n         span    fullrange         xseq        level </span></span>
 <span><span class="co">#&gt;    "numeric"    "numeric"    "logical"       "NULL"    "numeric" </span></span>
 <span><span class="co">#&gt;  method.args        na.rm  flipped_aes </span></span>

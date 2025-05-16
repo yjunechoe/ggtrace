@@ -131,20 +131,20 @@ set.seed(2023)
 # Example from `?stat_summary`
 summary_plot <- ggplot(mtcars, aes(mpg, factor(cyl))) +
   geom_point() +
-  stat_summary(fun.data = "mean_cl_boot", colour = "red", linewidth = 2, size = 3)
+  stat_summary(fun.data = "mean_sdl", colour = "red", linewidth = 2, size = 2)
 summary_plot
 ```
 
 ```{r not-just-ggproto-inspect}
-inspect_args(x = summary_plot, method = mean_cl_boot)
-inspect_return(x = summary_plot, method = mean_cl_boot)
+inspect_args(x = summary_plot, method = mean_sdl)
+inspect_return(x = summary_plot, method = mean_sdl)
 ```
 
 ```{r not-just-ggproto-highjack}
 highjack_return(
-  x = summary_plot, method = mean_cl_boot,
+  x = summary_plot, method = mean_sdl,
   value = quote({
-    data.frame(y = 50, ymin = 25, ymax = 75)
+    data.frame(y = 50, ymin = 0, ymax = 100)
   })
 )
 ```

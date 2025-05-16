@@ -84,7 +84,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yjunechoe.github.io/ggtrace">ggtrace</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"ggplot2"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] '3.5.2'</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] '3.5.2.9000'</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="highjack-layer-data">Highjack layer data<a class="anchor" aria-label="anchor" href="#highjack-layer-data"></a>
 </h2>
@@ -142,7 +142,7 @@ receives</strong>. If we inspect this using
 <code>y</code> and <code>label</code> are indeed missing in the
 <em>Before Geom</em> data:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span>, error <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span>, error <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Ran `inspect_args(last_plot(), ggplot2:::Layer$compute_geom_1, layer_is(2L), error = TRUE)$data`</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 14</span></span></span>
 <span><span class="co">#&gt;    ymin lower middle upper  ymax outliers  notchupper notchlower     x width</span></span>
@@ -182,7 +182,7 @@ the <code>y</code> and <code>label</code> aesthetics.</p>
 see that both <code>y</code> and <code>label</code> are now present at
 this stage to later satisfy the geom.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"ymax"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">]</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/sublayer-data.html">layer_before_geom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/get_last_plot.html" class="external-link">last_plot</a></span><span class="op">(</span><span class="op">)</span>, i <span class="op">=</span> <span class="fl">2L</span><span class="op">)</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"y"</span>, <span class="st">"ymax"</span>, <span class="st">"label"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 3</span></span></span>
 <span><span class="co">#&gt;       y  ymax label</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
@@ -244,22 +244,22 @@ ggplot.</p>
 <span><span class="co"># Example from `?stat_summary`</span></span>
 <span><span class="va">summary_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">cyl</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span>fun.data <span class="op">=</span> <span class="st">"mean_cl_boot"</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/stat_summary.html" class="external-link">stat_summary</a></span><span class="op">(</span>fun.data <span class="op">=</span> <span class="st">"mean_sdl"</span>, colour <span class="op">=</span> <span class="st">"red"</span>, linewidth <span class="op">=</span> <span class="fl">2</span>, size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">summary_plot</span></span></code></pre></div>
 <p><img src="examples-gallery_files/figure-html/not-just-ggproto-1.png" width="1093.75"></p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_inspect_args.html">inspect_args</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">summary_plot</span>, method <span class="op">=</span> <span class="va">mean_cl_boot</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_inspect_args.html">inspect_args</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">summary_plot</span>, method <span class="op">=</span> <span class="va">mean_sdl</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $x</span></span>
 <span><span class="co">#&gt;  [1] 22.8 24.4 22.8 32.4 30.4 33.9 21.5 27.3 26.0 30.4 21.4</span></span></code></pre></div>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_inspect_return.html">inspect_return</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">summary_plot</span>, method <span class="op">=</span> <span class="va">mean_cl_boot</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_inspect_return.html">inspect_return</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">summary_plot</span>, method <span class="op">=</span> <span class="va">mean_sdl</span><span class="op">)</span></span>
 <span><span class="co">#&gt;          y     ymin     ymax</span></span>
-<span><span class="co">#&gt; 1 26.66364 24.11727 29.19159</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 26.66364 17.64398 35.68329</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace_highjack_return.html">highjack_return</a></span><span class="op">(</span></span>
-<span>  x <span class="op">=</span> <span class="va">summary_plot</span>, method <span class="op">=</span> <span class="va">mean_cl_boot</span>,</span>
+<span>  x <span class="op">=</span> <span class="va">summary_plot</span>, method <span class="op">=</span> <span class="va">mean_sdl</span>,</span>
 <span>  value <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">50</span>, ymin <span class="op">=</span> <span class="fl">25</span>, ymax <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fl">50</span>, ymin <span class="op">=</span> <span class="fl">0</span>, ymax <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span>  <span class="op">}</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="examples-gallery_files/figure-html/not-just-ggproto-highjack-1.png" width="1093.75"></p>
