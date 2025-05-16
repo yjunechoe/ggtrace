@@ -27,6 +27,7 @@ Suggests:
     grid,
     Hmisc,
     knitr,
+    palmerpenguins,
     patchwork,
     pkgdown,
     R6,
