@@ -25,6 +25,7 @@ Suggests:
     ggh4x,
     ggplot2 (>= 3.4.0),
     grid,
+    Hmisc,
     knitr,
     patchwork,
     pkgdown,
