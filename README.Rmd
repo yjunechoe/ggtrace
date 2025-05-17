@@ -40,15 +40,17 @@ More on the 📦 package website: [https://yjunechoe.github.io/ggtrace](https://
 
 ## Getting started
 
-`{ggtrace}` is a **functional interface to ggplot2 internals**. A little bit of knowledge about `{ggplot2}` internals is required to make the most use out of `{ggtrace}`. You can watch one of these videos for a quick showcase.
+`{ggtrace}` is a **functional interface to ggplot2 internals**. You need to know a little bit about `{ggplot2}` internals to make the most out of `{ggtrace}`.
 
-- [Talk at JSM 2023](https://youtu.be/613Q0j6Kjm0?feature=shared) ([paper](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf))
+If you prefer watching videos, here are three talks on the topic in increasing complexity:
 
-- [Talk at rstudio::conf(2022)](https://www.youtube.com/watch?v=dUBnitXf5mk&list=PL9HYL-VRX0oTOwqzVtL_q5T8MNrzn0mdH&index=38) ([materials](https://github.com/yjunechoe/ggtrace-rstudioconf2022)).
+- [Talk at JSM 2023](https://youtu.be/613Q0j6Kjm0?feature=shared) (+ [paper](https://yjunechoe.github.io/static/papers/Choe_2022_SublayerGG.pdf))
 
-- [Talk at useR! 2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s) ([materials](https://github.com/yjunechoe/ggtrace-user2022)).
+- [Talk at rstudioconf 2022](https://www.youtube.com/watch?v=dUBnitXf5mk&list=PL9HYL-VRX0oTOwqzVtL_q5T8MNrzn0mdH&index=38) (+ [materials](https://github.com/yjunechoe/ggtrace-rstudioconf2022))
 
-## Description
+- [Talk at useR! 2022](https://www.youtube.com/watch?v=2JX8zu4QxMg&t=2959s) (+ [materials](https://github.com/yjunechoe/ggtrace-user2022))
+
+## Motivation
 
 Broadly speaking, `{ggtrace}` was designed with two goals in mind:
 
