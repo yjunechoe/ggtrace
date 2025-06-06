@@ -76,6 +76,9 @@ You can read the full motivation behind `{ggtrace}` in the [Pedagogical Philosop
 
 The best way to learn `{ggtrace}` and `{ggplot2}` internals is by playing around and breaking things as you go.
 
-In that spirit, you can take `{ggtrace}` for a spin on the [ggplot2 Layer Explorer](https://yjunechoe.github.io/ggplot2-layer-explorer/) shiny app.
+In that spirit, you can take `{ggtrace}` for a spin on the **ggplot2 layer explorer**.
 
-https://github.com/user-attachments/assets/d885ccb5-6ebb-435b-a717-4c0955c1da4b
+🚀 Live App: <https://yjunechoe.github.io/ggplot2-layer-explorer/>
+🔗 Repo: <https://github.com/yjunechoe/ggplot2-layer-explorer>
+
+![App Demo](https://raw.githubusercontent.com/yjunechoe/ggplot2-layer-explorer/refs/heads/main/app_demo.gif)

@@ -1,3 +1,6 @@
+ggtrace
+================
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # ggtrace <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />
@@ -81,8 +84,15 @@ vignette.
 The best way to learn `{ggtrace}` and `{ggplot2}` internals is by
 playing around and breaking things as you go.
 
-In that spirit, you can take `{ggtrace}` for a spin on the [ggplot2
-Layer Explorer](https://yjunechoe.github.io/ggplot2-layer-explorer/)
-shiny app.
+In that spirit, you can take `{ggtrace}` for a spin on the **ggplot2
+layer explorer**.
 
-<https://github.com/user-attachments/assets/d885ccb5-6ebb-435b-a717-4c0955c1da4b>
+🚀 Live App: <https://yjunechoe.github.io/ggplot2-layer-explorer/> 🔗
+Repo: <https://github.com/yjunechoe/ggplot2-layer-explorer>
+
+<figure>
+<img
+src="https://raw.githubusercontent.com/yjunechoe/ggplot2-layer-explorer/refs/heads/main/app_demo.gif"
+alt="App Demo" />
+<figcaption aria-hidden="true">App Demo</figcaption>
+</figure>
