@@ -1,6 +1,3 @@
-ggtrace
-================
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # ggtrace <img class="logo" src="man/figures/logo.png" align="right" style="width:120px;" />
