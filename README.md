@@ -85,6 +85,7 @@ In that spirit, you can take `{ggtrace}` for a spin on the **ggplot2
 layer explorer**.
 
 🚀 Live App: <https://yjunechoe.github.io/ggplot2-layer-explorer/>
+
 🔗 Repo: <https://github.com/yjunechoe/ggplot2-layer-explorer>
 
 <figure>
