@@ -49,10 +49,10 @@
 #'
 #'   )
 #' )
+#'
 ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE) {
 
   rlang::check_dots_empty()
-  modify_list <- get("modify_list", envir = asNamespace("ggplot2")) # bypass NOTEs
 
   cond <- resolve_cond(cond, multiple = TRUE)
 
@@ -97,7 +97,10 @@ ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE
       frame_matches <- which(sapply(frames, function(env) identical(env, cur_env)))
       return_frame <- frames[[max(frame_matches[-length(frame_matches)]) - 1L]]
 
-      return_value <- do.call(attr(cur_fn, "original"), modify_list(args_vals, values))
+      # inline modify_list()
+      for (i in names(values)) args_vals[[i]] <- values[[i]]
+
+      return_value <- do.call(attr(cur_fn, "original"), args_vals)
       return_expr <- rlang::call2(quote(return), return_value)
 
       rlang::eval_bare(return_expr, return_frame)
