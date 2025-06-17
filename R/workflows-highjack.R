@@ -52,7 +52,7 @@
 ggtrace_highjack_args <- function(x, method, cond = 1L, values, ..., draw = TRUE) {
 
   rlang::check_dots_empty()
-  modify_list <- NULL # bypass notes
+  modify_list <- get("modify_list", envir = asNamespace("ggplot2")) # bypass NOTEs
 
   cond <- resolve_cond(cond, multiple = TRUE)
 
