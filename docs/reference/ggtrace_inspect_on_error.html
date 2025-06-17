@@ -99,7 +99,7 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span>     compute_group: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     compute_layer: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     compute_panel: function</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     default_aes: uneval</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     default_aes: ggplot2::mapping, uneval, gg, S7_object</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     dropped_aes: weight</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     extra_params: na.rm orientation</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     finish_layer: function</span>
@@ -148,29 +148,23 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span> 32 21.4 109     1    -1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $args$params</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $args$params$width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $args$params$na.rm</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $args$params$orientation</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $env</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000001d4bba6f008&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000002050fac0120&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="fu">inspect_on_error</span><span class="op">(</span><span class="va">erroring_barplot</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">Layer</span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">inspect_on_error</span><span class="op">(</span><span class="va">erroring_barplot</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va"><a href="https://ggplot2.tidyverse.org/reference/Layer-class.html" class="external-link">Layer</a></span><span class="op">$</span><span class="va">compute_statistic</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> No summary function supplied, defaulting to `mean_se()`</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $counter</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $args</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $args$self</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> geom_bar: just = 0.5, width = NULL, na.rm = FALSE, orientation = NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> stat_count: width = NULL, na.rm = FALSE, orientation = NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> geom_bar: na.rm = FALSE, just = 0.5, lineend = butt, linejoin = mitre</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> stat_count: na.rm = FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> position_stack </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $args$data</span>
@@ -216,6 +210,7 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span>         clip: on</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         default: TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         distance: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panel: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         expand: TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         is_free: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         is_linear: function</span>
@@ -223,10 +218,12 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span>         limits: list</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         modify_scales: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         range: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         ratio: NULL</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         render_axis_h: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         render_axis_v: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         render_bg: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         render_fg: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         reverse: none</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         setup_layout: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         setup_panel_guides: function</span>
@@ -237,16 +234,23 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span>         super:  &lt;ggproto object: Class CoordCartesian, Coord, gg&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     coord_params: list</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     facet: &lt;ggproto object: Class FacetNull, Facet, gg&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         attach_axes: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         attach_strips: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         compute_layout: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         draw_back: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         draw_front: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         draw_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panel_content: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         draw_panels: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         finish_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         format_strip_labels: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         init_gtable: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         init_scales: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         map_data: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         params: list</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         set_panel_size: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         setup_data: function</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         setup_panel_params: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         setup_params: function</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         shrink: TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         train_scales: function</span>
@@ -272,7 +276,7 @@ The ggproto method may be specified using any of the following forms:</p><ul><li
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $env</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000001d4c442d348&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x000002051535da50&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

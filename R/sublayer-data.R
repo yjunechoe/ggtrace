@@ -193,7 +193,7 @@ layer_is <- function(x) {
 
   x <- rlang::enexpr(expr)
 
-  contexts <- c("ggplot_build", "ggplot_gtable")
+  contexts <- c("ggplot_build", "ggplot_gtable", "build_ggplot")
   invalid_trace_msg <- sprintf(
     "Invalid context: must be called from {.fn %s} or {.fn %s}.",
     contexts[1], contexts[2]

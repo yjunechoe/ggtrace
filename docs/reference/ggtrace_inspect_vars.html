@@ -151,14 +151,72 @@ derive a different return value for the function/method is also possible.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">hp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html" class="external-link">geom_smooth</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">p1</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-plt img"><img src="ggtrace_inspect_vars-1.png" alt="" width="1094" height="676"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Inspect body of `StatSmooth$compute_group` as list</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="get_method.html">ggbody</a></span><span class="op">(</span><span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> `{`</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data &lt;- flip_data(data, flipped_aes)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> if (vec_unique_count(data$x) &lt; 2) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     return(data_frame0())</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[4]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> if (is.null(data$weight)) data$weight &lt;- 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[5]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> if (is.null(xseq)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     if (is.integer(data$x)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (fullrange) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             xseq &lt;- scales$x$dimension()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             xseq &lt;- sort(unique0(data$x))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         if (fullrange) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             range &lt;- scales$x$dimension()</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         else {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             range &lt;- range(data$x, na.rm = TRUE)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         xseq &lt;- seq(range[1], range[2], length.out = n)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[6]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prediction &lt;- try_fetch({</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     model &lt;- inject(method(formula, data = data, weights = weight, </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         !!!method.args))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     predictdf(model, xseq, se, level)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }, error = function(cnd) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     cli::cli_warn("Failed to fit group {data$group[1]}.", parent = cnd)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> })</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[7]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> if (is.null(prediction)) {</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     return(NULL)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> }</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[8]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> prediction$flipped_aes &lt;- flipped_aes</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[9]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> flip_data(prediction, flipped_aes)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># The `data` variable is bound to two unique values in `compute_group` method:</span></span></span>
 <span class="r-in"><span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></span>
@@ -190,39 +248,7 @@ derive a different return value for the function/method is also possible.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 10 19.2 123     1    -1      1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Note that elements of this list capture the method's state upon entering a step,</span></span></span>
-<span class="r-in"><span><span class="co"># so "Step1" and "Step5" should be interpreted as the value of `data` at the start</span></span></span>
-<span class="r-in"><span><span class="co"># the method's execution (before "Step1") and its value as a result of running Step4</span></span></span>
-<span class="r-in"><span><span class="co"># (before "Step5"). Indeed, we see that the `weight` column is defined in Step4, so</span></span></span>
-<span class="r-in"><span><span class="co"># the data is flagged as changed at the start of Step5</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="get_method.html">ggbody</a></span><span class="op">(</span><span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span><span class="op">)</span><span class="op">[[</span><span class="fl">4</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> if (is.null(data$weight)) data$weight &lt;- 1</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Comparing the "Steps" themselves can be useful</span></span></span>
-<span class="r-in"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">p1</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_x_continuous</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>trans <span class="op">=</span> <span class="st">"log"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">p2</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
-<span class="r-plt img"><img src="ggtrace_inspect_vars-2.png" alt="" width="1094" height="676"></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Comparing the original plot to one with log-transformed scales reveals a change</span></span></span>
-<span class="r-in"><span><span class="co"># in data detected at the beginning of Step 14</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step20" "Step34"</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p2</span>, <span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, vars <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Step6"  "Step8"  "Step11" "Step12" "Step14" "Step20" "Step34"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># We can pinpoint the calculation of scale transformations to Step 13:</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="get_method.html">ggbody</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span><span class="op">)</span><span class="op">[[</span><span class="fl">13</span><span class="op">]</span><span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data &lt;- lapply(data, scales$transform_df)</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># With `by_vars = FALSE`, elements of the returned list are steps instead of values.</span></span></span>
-<span class="r-in"><span><span class="co"># Note that this does not drop unchanged values:</span></span></span>
+<span class="r-in"><span><span class="co"># With `by_vars = FALSE`, elements of the returned list are steps instead of values</span></span></span>
 <span class="r-in"><span><span class="fu">inspect_vars</span><span class="op">(</span><span class="va">p1</span>, <span class="va">StatSmooth</span><span class="op">$</span><span class="va">compute_group</span>, vars <span class="op">=</span> <span class="st">"data"</span>, at <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span>, by_var <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> `geom_smooth()` using method = 'loess' and formula = 'y ~ x'</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Step1</span>

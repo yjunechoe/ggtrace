@@ -157,7 +157,7 @@ traced function</p>
 <span><span class="co">#&gt;     x[list] &lt;- values</span></span>
 <span><span class="co">#&gt;     x</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x000002d4b3db2ac0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x000001abcde24cf0&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:base&gt;</span></span></code></pre></div>
 <p>The original function can be recovered by removing the trace with a
 call to <code><a href="https://rdrr.io/r/base/trace.html" class="external-link">untrace()</a></code></p>
@@ -306,24 +306,24 @@ untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="fu"><a href="../reference/global_ggtrace.html">global_ggtrace</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b633c938`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b633c938`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001abd3c2d2d8`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001abd3c2d2d8`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span></span>
 <span><span class="co">#&gt; 1   12    17     18    22   28            18.77841   17.22159 1  0.75</span></span>
 <span><span class="co">#&gt;   relvarwidth flipped_aes</span></span>
 <span><span class="co">#&gt; 1    10.14889       FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b6e56ab8`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b6e56ab8`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001abd5335428`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001abd5335428`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span></span>
 <span><span class="co">#&gt; 1   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span></span>
 <span><span class="co">#&gt;   notchupper notchlower x width relvarwidth flipped_aes</span></span>
 <span><span class="co">#&gt; 1   28.46039   27.53961 2  0.75    10.29563       FALSE</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b5ab9ce8`</span></span>
-<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000002d4b5ab9ce8`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001abd5f7c000`</span></span>
+<span><span class="co">#&gt; $`StatBoxplot$compute_group-0x000001abd5f7c000`$`[Step 19]&gt; flip_data(df, flipped_aes)`</span></span>
 <span><span class="co">#&gt;   ymin lower middle upper ymax outliers notchupper notchlower x width</span></span>
 <span><span class="co">#&gt; 1   15    17     21    24   26              23.212     18.788 3  0.75</span></span>
 <span><span class="co">#&gt;   relvarwidth flipped_aes</span></span>
@@ -334,64 +334,11 @@ untracing with <code><a href="../reference/gguntrace.html">gguntrace()</a></code
 <span><span class="co">#&gt; Global tracedump deactivated.</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="s3s4-generics">S3/S4 generics<a class="anchor" aria-label="anchor" href="#s3s4-generics"></a>
-</h3>
-<p>The exported generic function <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> from
-<a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a> is itself not very meaningful, but the unexported
-method for the <code>&lt;ggplot&gt;</code> class
-<code>ggplot_build.ggplot()</code> contains the actual data
-transformation pipeline.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/body.html" class="external-link">body</a></span><span class="op">(</span><span class="va">ggplot_build</span><span class="op">)</span></span>
-<span><span class="co">#&gt; {</span></span>
-<span><span class="co">#&gt;     attach_plot_env(plot$plot_env)</span></span>
-<span><span class="co">#&gt;     UseMethod("ggplot_build")</span></span>
-<span><span class="co">#&gt; }</span></span></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/methods.html" class="external-link">methods</a></span><span class="op">(</span><span class="st">"ggplot_build"</span><span class="op">)</span>, <span class="st">"info"</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                           visible                                 from</span></span>
-<span><span class="co">#&gt; ggplot_build.ggplot         FALSE registered S3method for ggplot_build</span></span>
-<span><span class="co">#&gt; ggplot_build.ggplot_built   FALSE registered S3method for ggplot_build</span></span>
-<span><span class="co">#&gt;                                generic  isS4</span></span>
-<span><span class="co">#&gt; ggplot_build.ggplot       ggplot_build FALSE</span></span>
-<span><span class="co">#&gt; ggplot_build.ggplot_built ggplot_build FALSE</span></span></code></pre></div>
-<p>You can trace the <code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code> method defined for
-<code>&lt;ggplot&gt;</code> in the same way as functions</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span></span></code></pre></div>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">boxplot_plot</span></span>
-<span><span class="co">#&gt; Triggering trace on `ggplot2:::ggplot_build.ggplot`</span></span>
-<span><span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span></span></code></pre></div>
-<p><img src="FAQ_files/figure-html/unnamed-chunk-13-1.png" width="1093.75"></p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
-<span><span class="co">#&gt;   ymin lower middle upper ymax                                   outliers</span></span>
-<span><span class="co">#&gt; 1   12    17     18    22   28                                           </span></span>
-<span><span class="co">#&gt; 2   22    26     28    29   33 17, 21, 34, 36, 36, 35, 37, 35, 44, 44, 41</span></span>
-<span><span class="co">#&gt; 3   15    17     21    24   26                                           </span></span>
-<span><span class="co">#&gt;   notchupper notchlower x flipped_aes PANEL group ymin_final ymax_final  xmin</span></span>
-<span><span class="co">#&gt; 1   18.77841   17.22159 1       FALSE     1     1         12         28 0.625</span></span>
-<span><span class="co">#&gt; 2   28.46039   27.53961 2       FALSE     1     2         17         44 1.625</span></span>
-<span><span class="co">#&gt; 3   23.21200   18.78800 3       FALSE     1     3         15         26 2.625</span></span>
-<span><span class="co">#&gt;    xmax xid newx new_width weight colour  fill alpha shape linetype linewidth</span></span>
-<span><span class="co">#&gt; 1 1.375   1    1      0.75      1 grey20 white    NA    19    solid       0.5</span></span>
-<span><span class="co">#&gt; 2 2.375   2    2      0.75      1 grey20 white    NA    19    solid       0.5</span></span>
-<span><span class="co">#&gt; 3 3.375   3    3      0.75      1 grey20 white    NA    19    solid       0.5</span></span></code></pre></div>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">layer_data</a></span><span class="op">(</span><span class="va">boxplot_plot</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
-</div>
-<div class="section level3">
 <h3 id="r6-methods">R6 methods<a class="anchor" aria-label="anchor" href="#r6-methods"></a>
 </h3>
 <p>Adopted from <a href="https://adv-r.hadley.nz/r6.html" class="external-link">Advanced R Ch.
 14.2</a></p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r6.r-lib.org" class="external-link">R6</a></span><span class="op">)</span></span>
 <span><span class="va">Accumulator</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://r6.r-lib.org/reference/R6Class.html" class="external-link">R6Class</a></span><span class="op">(</span><span class="st">"Accumulator"</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>  sum <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -404,7 +351,7 @@ transformation pipeline.</p>
 <span><span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">sum</span></span>
 <span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span></span>
 <span>  method <span class="op">=</span> <span class="va">x</span><span class="op">$</span><span class="va">add</span>,</span>
 <span>  trace_steps <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>,</span>
@@ -417,30 +364,30 @@ transformation pipeline.</p>
 <span><span class="op">)</span></span>
 <span><span class="co">#&gt; `x$add` now being traced.</span></span>
 <span><span class="co">#&gt; Creating a persistent trace. Remember to `gguntrace(x$add)`!</span></span></code></pre></div>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Triggering persistent trace on `x$add`</span></span></code></pre></div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $before</span></span>
 <span><span class="co">#&gt; [1] 1</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $after</span></span>
 <span><span class="co">#&gt; [1] 11</span></span></code></pre></div>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Triggering persistent trace on `x$add`</span></span></code></pre></div>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/last_ggtrace.html">last_ggtrace</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#&gt; $before</span></span>
 <span><span class="co">#&gt; [1] 11</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $after</span></span>
 <span><span class="co">#&gt; [1] 111</span></span></code></pre></div>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/gguntrace.html">gguntrace</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">add</span><span class="op">)</span></span>
 <span><span class="co">#&gt; `x$add` no longer being traced.</span></span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="fu">add</span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">x</span><span class="op">$</span><span class="va">sum</span></span>
 <span><span class="co">#&gt; [1] 1111</span></span></code></pre></div>
@@ -462,46 +409,47 @@ itself be an environment where the function can be searched for)</li>
 <div class="section level2">
 <h2 id="how-can-i-save-a-modified-ggplot">How can I save a modified ggplot?<a class="anchor" aria-label="anchor" href="#how-can-i-save-a-modified-ggplot"></a>
 </h2>
-<p>When you trace the internals of ggplot, that doesn’t directly modify
-the <em>instructions</em> for plotting. Instead, it changes how certain
-components behave when they are <em>executed</em>.</p>
+<p>When you trace the internals of ggplot with <code><a href="../reference/ggtrace.html">ggtrace()</a></code>,
+that doesn’t directly modify the <em>instructions</em> for plotting.
+Instead, it changes how certain components behave when they are
+<em>executed</em>.</p>
 <p>This means that you will not get a different ggplot with the
 following code if <code>original_plot</code> is being traced with
 modifications, since <code>original_plot</code> is not being executed
 here.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">original_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">mtcars</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span><span class="va">hp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span></span></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<span><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">Geom</span><span class="op">$</span><span class="va">setup_data</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; `Geom$setup_data` now being traced.</span></span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">modified_plot</span> <span class="op">&lt;-</span> <span class="va">original_plot</span></span></code></pre></div>
 <p>It looks like it worked when you first print it…</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modified_plot</span></span>
-<span><span class="co">#&gt; Triggering trace on `ggplot2:::ggplot_build.ggplot`</span></span>
-<span><span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span></span></code></pre></div>
-<p><img src="FAQ_files/figure-html/unnamed-chunk-18-1.png" width="1093.75"></p>
+<span><span class="co">#&gt; Triggering trace on `Geom$setup_data`</span></span>
+<span><span class="co">#&gt; Untracing `Geom$setup_data` on exit.</span></span></code></pre></div>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-15-1.png" width="1093.75"></p>
 <p>But the variable <code>modified_pot</code> doesn’t hold modified
 <em>code</em> for generating the plot. Instead, it just happened to
 trigger the trace on ggplot_build.ggplot(). So the next time it runs,
 it’s ran with the normal behavior of <code>original_plot</code>.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">modified_plot</span></span></code></pre></div>
-<p><img src="FAQ_files/figure-html/unnamed-chunk-19-1.png" width="1093.75"></p>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-16-1.png" width="1093.75"></p>
 <p>To capture the actual figure generated by a ggplot, you can use
 <code><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob()</a></code>, which returns the <strong>Gr</strong>aphical
 <strong>ob</strong>ject representation of the plot:</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">:::</span><span class="va">ggplot_build.ggplot</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; `ggplot2:::ggplot_build.ggplot` now being traced.</span></span></code></pre></div>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/ggtrace.html">ggtrace</a></span><span class="op">(</span><span class="va">Geom</span><span class="op">$</span><span class="va">setup_data</span>, <span class="op">-</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/substitute.html" class="external-link">quote</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">colour</span> <span class="op">&lt;-</span> <span class="st">"red"</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; `Geom$setup_data` now being traced.</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">modified_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplotGrob.html" class="external-link">ggplotGrob</a></span><span class="op">(</span><span class="va">original_plot</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Triggering trace on `ggplot2:::ggplot_build.ggplot`</span></span>
-<span><span class="co">#&gt; Untracing `ggplot2:::ggplot_build.ggplot` on exit.</span></span></code></pre></div>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; Triggering trace on `Geom$setup_data`</span></span>
+<span><span class="co">#&gt; Untracing `Geom$setup_data` on exit.</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="va">modified_plot</span></span>
 <span><span class="co">#&gt; TableGrob (16 x 13) "layout": 22 grobs</span></span>
@@ -529,42 +477,43 @@ it’s ran with the normal behavior of <code>original_plot</code>.</p>
 <span><span class="co">#&gt; 21 20 ( 3- 3, 7- 7)            title</span></span>
 <span><span class="co">#&gt; 22 21 (14-14, 7- 7)          caption</span></span>
 <span><span class="co">#&gt;                                             grob</span></span>
-<span><span class="co">#&gt; 1                rect[plot.background..rect.350]</span></span>
+<span><span class="co">#&gt; 1                rect[plot.background..rect.290]</span></span>
 <span><span class="co">#&gt; 2                                 zeroGrob[NULL]</span></span>
-<span><span class="co">#&gt; 3            absoluteGrob[GRID.absoluteGrob.339]</span></span>
+<span><span class="co">#&gt; 3            absoluteGrob[GRID.absoluteGrob.279]</span></span>
 <span><span class="co">#&gt; 4                                 zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 5                                 zeroGrob[NULL]</span></span>
-<span><span class="co">#&gt; 6                       gTree[panel-1.gTree.331]</span></span>
-<span><span class="co">#&gt; 7            absoluteGrob[GRID.absoluteGrob.335]</span></span>
+<span><span class="co">#&gt; 6                       gTree[panel-1.gTree.271]</span></span>
+<span><span class="co">#&gt; 7            absoluteGrob[GRID.absoluteGrob.275]</span></span>
 <span><span class="co">#&gt; 8                                 zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 9                                 zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 10                                zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 11                                zeroGrob[NULL]</span></span>
-<span><span class="co">#&gt; 12 titleGrob[axis.title.x.bottom..titleGrob.342]</span></span>
-<span><span class="co">#&gt; 13   titleGrob[axis.title.y.left..titleGrob.345]</span></span>
+<span><span class="co">#&gt; 12 titleGrob[axis.title.x.bottom..titleGrob.282]</span></span>
+<span><span class="co">#&gt; 13   titleGrob[axis.title.y.left..titleGrob.285]</span></span>
 <span><span class="co">#&gt; 14                                zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 15                                zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 16                                zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 17                                zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 18                                zeroGrob[NULL]</span></span>
 <span><span class="co">#&gt; 19                                zeroGrob[NULL]</span></span>
-<span><span class="co">#&gt; 20         zeroGrob[plot.subtitle..zeroGrob.347]</span></span>
-<span><span class="co">#&gt; 21            zeroGrob[plot.title..zeroGrob.346]</span></span>
-<span><span class="co">#&gt; 22          zeroGrob[plot.caption..zeroGrob.348]</span></span></code></pre></div>
-<p>What you get is an object of class <code>&lt;gtable&gt;</code>, which
-you can draw to your device like any other grob:</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<span><span class="co">#&gt; 20         zeroGrob[plot.subtitle..zeroGrob.287]</span></span>
+<span><span class="co">#&gt; 21            zeroGrob[plot.title..zeroGrob.286]</span></span>
+<span><span class="co">#&gt; 22          zeroGrob[plot.caption..zeroGrob.288]</span></span></code></pre></div>
+<p>In both approaches, what you get is an object of class
+<code>&lt;gtable&gt;</code>, which you can draw to your device like any
+other grob:</p>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">modified_plot</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "gtable" "gTree"  "grob"   "gDesc"</span></span></code></pre></div>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">grid</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/grid/grid.newpage.html" class="external-link">grid.newpage</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/grid/grid.draw.html" class="external-link">grid.draw</a></span><span class="op">(</span><span class="va">modified_plot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FAQ_files/figure-html/unnamed-chunk-21-1.png" width="1093.75"></p>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-18-1.png" width="1093.75"></p>
 <p>You can also use ggsave() to render a <code>&lt;gtable&gt;</code> to
 an image:</p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Not ran </span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsave.html" class="external-link">ggsave</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"modified_plot.png"</span>, plot <span class="op">=</span> <span class="va">modified_plot</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
 <p>Still, <code>modified_plot</code> is only the graphical
@@ -574,13 +523,30 @@ keep adding layers to it. So grobs are more limiting in that sense.</p>
 example, <a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a> has
 <code><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html" class="external-link">patchwork::wrap_ggplot_grob()</a></code> which allows a
 <code>&lt;gtable&gt;</code> to be properly aligned to other ggplots.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span>
 <span><span class="va">original_plot_titled</span> <span class="op">&lt;-</span> <span class="va">original_plot</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"original plot"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Panels get aligned since `modified_plot` contains info about that</span></span>
-<span><span class="va">original_plot_titled</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html" class="external-link">wrap_ggplot_grob</a></span><span class="op">(</span><span class="va">modified_plot</span><span class="op">)</span></span></code></pre></div>
-<p><img src="FAQ_files/figure-html/unnamed-chunk-23-1.png" width="1093.75"></p>
+<span><span class="va">original_plot_titled</span> <span class="op">+</span> <span class="fu"><a href="https://patchwork.data-imaginist.com/reference/wrap_ggplot_grob.html" class="external-link">wrap_ggplot_grob</a></span><span class="op">(</span><span class="va">modified_plot</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: annotation$theme is not a valid theme.</span></span>
+<span><span class="co">#&gt; Please use `theme()` to construct themes.</span></span></code></pre></div>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-20-1.png" width="1093.75"></p>
+<p>A pure-function approach to all of the above would be to use a
+highjack workflow function which returns a grob of class
+<code>&lt;ggtrace_highjacked&gt;</code>, a lightweight class with a
+print method that draws the grob:</p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">modified_plot2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ggtrace_highjack_args.html">highjack_args</a></span><span class="op">(</span></span>
+<span>  <span class="va">original_plot</span>, <span class="va">Geom</span><span class="op">$</span><span class="va">setup_data</span>,</span>
+<span>  values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/transform.html" class="external-link">transform</a></span><span class="op">(</span><span class="va">data</span>, colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">modified_plot2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "ggtrace_highjacked" "gtable"             "gTree"             </span></span>
+<span><span class="co">#&gt; [4] "grob"               "gDesc"</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">modified_plot2</span></span></code></pre></div>
+<p><img src="FAQ_files/figure-html/unnamed-chunk-21-1.png" width="1093.75"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

@@ -90,41 +90,19 @@ derive a different return value for the function/method is also possible.
 }
 
 \examples{
-
 library(ggplot2)
 
 p1 <- ggplot(mtcars[1:10,], aes(mpg, hp)) +
   geom_smooth()
 p1
 
+# Inspect body of `StatSmooth$compute_group` as list
+ggbody(StatSmooth$compute_group)
+
 # The `data` variable is bound to two unique values in `compute_group` method:
 inspect_vars(p1, StatSmooth$compute_group, vars = "data")
 
-# Note that elements of this list capture the method's state upon entering a step,
-# so "Step1" and "Step5" should be interpreted as the value of `data` at the start
-# the method's execution (before "Step1") and its value as a result of running Step4
-# (before "Step5"). Indeed, we see that the `weight` column is defined in Step4, so
-# the data is flagged as changed at the start of Step5
-ggbody(StatSmooth$compute_group)[[4]]
-
-
-# Comparing the "Steps" themselves can be useful
-p2 <- p1 +
-  scale_x_continuous(trans = "log") +
-  scale_y_continuous(trans = "log")
-p2
-
-# Comparing the original plot to one with log-transformed scales reveals a change
-# in data detected at the beginning of Step 14
-names(inspect_vars(p1, ggplot2:::ggplot_build.ggplot, vars = "data"))
-names(inspect_vars(p2, ggplot2:::ggplot_build.ggplot, vars = "data"))
-
-# We can pinpoint the calculation of scale transformations to Step 13:
-ggbody(ggplot2:::ggplot_build.ggplot)[[13]]
-
-
-# With `by_vars = FALSE`, elements of the returned list are steps instead of values.
-# Note that this does not drop unchanged values:
+# With `by_vars = FALSE`, elements of the returned list are steps instead of values
 inspect_vars(p1, StatSmooth$compute_group, vars = "data", at = 1:6, by_var = FALSE)
 
 

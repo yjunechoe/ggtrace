@@ -1,5 +1,7 @@
 # ggtrace 0.7.x
 
+- Prepare for dev ggplot2 transition to S7
+
 # ggtrace 0.7.7
 
 - Handle the tracing of one-liners without `{` more gracefully (#108)

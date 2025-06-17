@@ -162,8 +162,8 @@ instructions in the internals, by
 <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code>/<code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>-ing the ggplot object.</p></li>
 <li><p>The the process of making a figure in the internals happens in
 steps, by first making each layer’s data drawing-ready
-(<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_build.html" class="external-link">ggplot_build()</a></code>) and then drawing the plot
-(<code><a href="https://ggplot2.tidyverse.org/reference/ggplot_gtable.html" class="external-link">ggplot_gtable()</a></code>).</p></li>
+(<code><a href="https://ggplot2.tidyverse.org/reference/build_ggplot.html" class="external-link">ggplot_build()</a></code>) and then drawing the plot
+(<code><a href="https://ggplot2.tidyverse.org/reference/gtable_ggplot.html" class="external-link">ggplot_gtable()</a></code>).</p></li>
 <li><p>The internals are implemented in the ggproto object oriented
 system which is difficult to grok, but a lot of it is just data
 wrangling. We can get pretty far in understanding the internals by using
