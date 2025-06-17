@@ -199,6 +199,14 @@ x$sum
 
 ## How can I save a modified ggplot?
 
+```{r, echo = FALSE}
+# Ensure bracket
+if (length(body(get("setup_data", envir = ggplot2::Geom))) <= 1) {
+  assign("setup_data", function(data, params) { data }, envir = Geom)
+}
+```
+
+
 When you trace the internals of ggplot with `ggtrace()`, that doesn't directly modify the _instructions_ for plotting. Instead, it changes how certain components behave when they are _executed_.
 
 This means that you will not get a different ggplot with the following code if `original_plot` is being traced with modifications, since `original_plot` is not being executed here.
