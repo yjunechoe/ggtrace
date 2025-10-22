@@ -120,35 +120,6 @@ bar_plot +
   )
 ```
 
-## Not just ggproto methods
-
-> Example adopted from [Github issue #97](https://github.com/yjunechoe/ggtrace/issues/97#issuecomment-1402994494)
-
-The `method` argument of workflow functions can be (almost) any function-like object called during the rendering of a ggplot.
-
-```{r not-just-ggproto}
-set.seed(2023)
-# Example from `?stat_summary`
-summary_plot <- ggplot(mtcars, aes(mpg, factor(cyl))) +
-  geom_point() +
-  stat_summary(fun.data = "mean_sdl", colour = "red", linewidth = 2, size = 2)
-summary_plot
-```
-
-```{r not-just-ggproto-inspect}
-inspect_args(x = summary_plot, method = mean_sdl)
-inspect_return(x = summary_plot, method = mean_sdl)
-```
-
-```{r not-just-ggproto-highjack}
-highjack_return(
-  x = summary_plot, method = mean_sdl,
-  value = quote({
-    data.frame(y = 50, ymin = 0, ymax = 100)
-  })
-)
-```
-
 ## Intervene with surgical precision
 
 > Example adopted from a [twitter thread](https://twitter.com/mattansb/status/1506620436771229715?s=20)
